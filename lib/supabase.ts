@@ -5,7 +5,7 @@ const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export const supabase: SupabaseClient | null = url && key
-  ? createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: "rizq-auth" } })
+  ? createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "implicit", storageKey: "rizq-auth" } })
   : null;
 
 /** Version du texte de consentement : à changer si le texte change. */

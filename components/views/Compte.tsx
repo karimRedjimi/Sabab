@@ -42,10 +42,10 @@ function SignIn() {
     if (!supabase) return;
     if (!/^\S+@\S+\.\S+$/.test(email.trim())) { toast("Vérifie ton adresse e-mail"); return; }
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true } });
+    const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true, emailRedirectTo: `${window.location.origin}/compte` } });
     setBusy(false);
     if (error) { toast(errMsg(error)); return; }
-    setSent(true); toast("Code envoyé, regarde tes e-mails");
+    setSent(true); toast("E-mail envoyé, regarde ta boîte de réception");
   };
   const verify = async () => {
     if (!supabase) return;
@@ -61,11 +61,12 @@ function SignIn() {
           <label className="field"><span>Ton adresse e-mail</span>
             <input className="input" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom@exemple.fr" /></label>
           <button className="navbtn primary" disabled={busy} onClick={send}>Recevoir un code</button>
-          <p className="secintro" style={{ marginTop: 12 }}>Pas de mot de passe : tu reçois un code à 6 chiffres par e-mail.</p>
+          <p className="secintro" style={{ marginTop: 12 }}>Pas de mot de passe : tu reçois un e-mail avec un code à 6 chiffres ou un lien de connexion.</p>
         </>
       ) : (
         <>
-          <label className="field"><span>Le code reçu à {email.trim()}</span>
+          <p className="secintro">Un e-mail vient d’être envoyé à {email.trim()}. Clique sur le lien qu’il contient, ou saisis le code ci-dessous.</p>
+          <label className="field"><span>Le code reçu</span>
             <input className="input" inputMode="numeric" autoComplete="one-time-code" maxLength={8} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} placeholder="123456" /></label>
           <div className="row">
             <button className="navbtn primary" disabled={busy || code.length < 6} onClick={verify}>Me connecter</button>
