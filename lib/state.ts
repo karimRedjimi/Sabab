@@ -77,3 +77,26 @@ export function ensureDay(S: State, dk: string): DayRec {
 }
 
 export const uid8 = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+/**
+ * Fusionne les données d’un appareil avec celles du compte, à la première connexion de l’appareil :
+ * rien n’est perdu, ni d’un côté ni de l’autre. Le compte l’emporte en cas de doublon.
+ */
+export function combine(remoteRaw: unknown, localRaw: unknown): State {
+  const R = merge(remoteRaw), L = merge(localRaw);
+  const out = structuredClone(R);
+  for (const [k, d] of Object.entries(L.days)) if (!out.days[k]) out.days[k] = d;
+  const ids = new Set(out.carnet.map((c) => c.id));
+  for (const c of L.carnet) if (!ids.has(c.id) && !(c.obj && out.carnet.some((x) => x.obj))) out.carnet.push(c);
+  for (const [id, l] of Object.entries(L.learn)) if (!out.learn[id] || l.lvl > out.learn[id].lvl) out.learn[id] = l;
+  const sid = new Set((out.steps || []).map((s) => s.id));
+  out.steps = [...(out.steps || []), ...(L.steps || []).filter((s) => !sid.has(s.id))];
+  out.gratitude = { ...(L.gratitude || {}), ...(out.gratitude || {}) };
+  if (!out.objective && L.objective) out.objective = L.objective;
+  if (!out.parcours && L.parcours) out.parcours = L.parcours;
+  if (!out.prayer && L.prayer) out.prayer = L.prayer;
+  if (L.start && (!out.start || L.start < out.start)) out.start = L.start;
+  out.onboarded = R.onboarded || L.onboarded;
+  out.updated = Date.now();
+  return out;
+}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getTheme, setTheme, type Theme } from "@/lib/theme";
+import { useAccount } from "../Account";
 import { DAYS, ITEMS, OBJ_CATS, PARCOURS, PARCOURS_DAYS, SOCLE } from "@/content/programme";
 import { LEVELS, METHODS } from "@/content/reglages";
 import { FORCE_DU_PROGRAMME, LIRE_LES_SOURCES, PRECISION_WAQIA, PROGRAMME_INTRO } from "@/content/textes";
@@ -15,13 +16,15 @@ import { useStore } from "../Store";
 
 export function Plus() {
   const { S } = useStore();
+  const acc = useAccount();
   const p = S.parcours && PARCOURS[S.parcours.id];
   const pd = parcoursDay(S, today()), rw = rampWeek(S, today());
   const rows: [string, string, string][] = [
     ["/objectif", "Mon objectif", S.objective ? S.objective.title : "Pas encore fixé"],
     ...(S.objective ? [["/chemin", "Mon chemin", "Ce que tu as parcouru"] as [string, string, string]] : []),
     ["/parcours", "Parcours de 40 jours", p && pd ? `${p.title}, jour ${pd}` : "Aucun en cours"],
-    ["/communaute", "Communauté", "Bientôt"],
+    ["/compte", "Mon compte", acc.status === "in" ? acc.email || "Connecté" : acc.status === "off" ? "Bientôt" : "Se connecter"],
+    ["/communaute", "Communauté", acc.status === "in" ? "Invoquer les uns pour les autres" : acc.status === "off" ? "Bientôt" : "Avec un compte"],
     ["/binome", "Mon binôme", "Bientôt"],
     ["/bilan", "Mon bilan", "Semaine et mois"],
     ["/rythme", "Mon rythme", rw ? `Démarrage, semaine ${rw}` : "Programme complet"],
@@ -191,7 +194,7 @@ export function Confidentialite() {
       <div className="page"><h1>Confidentialité</h1>
         <p className="lead">Aucune publicité. Aucune donnée revendue. Ce que tu écris ici t’appartient.</p></div>
       <section className="sec">
-        <p>Pour l’instant, ta progression, tes notes, ton objectif et ton carnet d’invocations sont enregistrés uniquement sur cet appareil : rien n’est envoyé ailleurs. Quand les comptes arriveront, ils seront enregistrés dans un espace privé lié à ton compte, auquel personne d’autre n’aura accès, et seulement avec ton accord explicite.</p>
+        <p>Sans compte, ta progression, tes notes, ton objectif et ton carnet sont enregistrés uniquement sur cet appareil. Avec un compte, et seulement avec ton accord explicite, ils sont enregistrés dans un espace privé lié à ton compte, hébergé en Europe, auquel aucun autre membre n’a accès. Tu peux supprimer ton compte et toutes ses données à tout moment.</p>
         <p>Si tu rejoins un cercle, ses membres voient seulement deux choses : ton nom et les jours où tu as tenu ta journée, sur les 30 derniers jours. Jamais le détail de ce que tu as fait.</p>
         <p>Dans la communauté, tu apparais sous un identifiant anonyme qui n’est pas relié à ton nom. Les autres voient seulement des chiffres collectifs : combien de membres ont tenu leur journée, combien dans chaque cercle. Tes demandes de du’â et tes témoignages sont publiés sans ton nom, avec le prénom ou le pseudonyme que tu choisis, ou « Un membre ».</p>
         <p>Les horaires de prière sont calculés sur ton appareil à partir de ta ville. Ta position, si tu l’utilises, ne sert qu’à ce calcul et n’est pas envoyée.</p>
@@ -224,16 +227,6 @@ export function Rythme() {
       <section className="sec"><div className="sechead"><h2>Minimum du jour</h2></div>
         <p className="secintro">Les jours chargés, active-le depuis la page Jour : trois invocations courtes suffisent pour tenir ta journée.</p></section>
       <p><button className="link" onClick={() => { setUi(() => ({ forceOb: true })); router.push("/bienvenue"); }}>Refaire l’accueil</button></p>
-    </>
-  );
-}
-
-export function Communaute() {
-  return (
-    <>
-      <div className="page"><h1>Communauté</h1>
-        <p className="lead">Avancer ensemble, sans se montrer. Ici, personne n’a de nom ni de classement : seulement des chiffres collectifs, des demandes de du’â et des témoignages anonymes.</p></div>
-      <p className="empty">La communauté ouvrira avec les comptes : elle a besoin que tu sois connecté.</p>
     </>
   );
 }

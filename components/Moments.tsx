@@ -1,5 +1,8 @@
 "use client";
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { supabase, REQ_CAT_OF, type RequestView } from "@/lib/supabase";
+import { useAccount } from "./Account";
 import { keyOf, today } from "@/lib/dates";
 import { favorableMoments, sujud } from "@/lib/moments";
 import { needsPatience, objectiveTag } from "@/lib/objective";
@@ -69,5 +72,24 @@ export function Patience({ onPatience }: { onPatience: (e: Entry) => void }) {
         </div>
       </div>
     </div>
+  );
+}
+
+/** « 4 personnes demandent aussi pour leur mariage » : un pont vers la communauté. */
+export function SameNeed() {
+  const { S } = useStore();
+  const acc = useAccount();
+  const [n, setN] = useState<number | null>(null);
+  const cat = S.objective ? REQ_CAT_OF[S.objective.cat] : null;
+  useEffect(() => {
+    if (!supabase || acc.status !== "in" || !cat) return;
+    supabase.rpc("feed_requests", { p_cat: cat, p_limit: 50 }).then(({ data }) => setN(data ? (data as RequestView[]).filter((r) => !r.prayed).length : null));
+  }, [acc.status, cat]);
+  if (!n) return null;
+  return (
+    <Link className="banner soft" href="/communaute">
+      <div><b>{n} personne{n > 1 ? "s demandent" : " demande"} la même chose que toi</b><span>Invoque pour {n > 1 ? "elles" : "elle"}, en {n > 1 ? "leur" : "son"} absence.</span></div>
+      <span className="act">Invoquer</span>
+    </Link>
   );
 }

@@ -16,7 +16,7 @@ import { useCount } from "../Cards";
 import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
-import { FavorableMoments, Gratitude, Patience } from "../Moments";
+import { FavorableMoments, Gratitude, Patience, SameNeed } from "../Moments";
 import { Star } from "../Star";
 import { needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { fromKey } from "@/lib/dates";
@@ -420,6 +420,7 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
       {isToday && <BilanBanner />}
       <Coach s={s} />
       {isToday && <FavorableMoments />}
+      {isToday && <SameNeed />}
       <section className="sec">
         <div className="sechead"><h2>Ton socle quotidien</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
         <div className="list">{socle.map(([m, l]) => <SocleRow key={m} m={m} list={l} cur={cur} />)}</div>

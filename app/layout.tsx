@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Amiri, DM_Sans, Newsreader } from "next/font/google";
 import { StoreProvider } from "@/components/Store";
 import { AppShell } from "@/components/AppShell";
+import { AccountProvider } from "@/components/Account";
 import { ServiceWorker } from "@/components/ServiceWorker";
 import { THEME_BOOT } from "@/lib/theme";
 import "./globals.css";
@@ -38,7 +39,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <StoreProvider>
-          <AppShell>{children}</AppShell>
+          <AccountProvider>
+            <AppShell>{children}</AppShell>
+          </AccountProvider>
         </StoreProvider>
         <ServiceWorker />
       </body>

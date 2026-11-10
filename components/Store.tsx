@@ -28,6 +28,8 @@ interface Ctx {
   hydrated: boolean;
   /** Modifie les données personnelles et les enregistre. */
   update: (fn: (S: State) => void) => void;
+  /** Remplace toutes les données (synchronisation depuis le compte). */
+  replace: (S: State) => void;
   ui: UI;
   setUi: (fn: (u: UI) => Partial<UI>) => void;
   toast: (msg: string) => void;
@@ -64,6 +66,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     saveLocal(next);
   }, []);
 
+  const replace = useCallback((next: State) => { ref.current = next; setS(next); saveLocal(next); }, []);
+
   const setUi = useCallback((fn: (u: UI) => Partial<UI>) => setUiState((u) => ({ ...u, ...fn(u) })), []);
 
   const toast = useCallback((msg: string) => {
@@ -94,7 +98,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  const value = useMemo(() => ({ S, hydrated, update, ui, setUi, toast, toastMsg, now }), [S, hydrated, update, ui, setUi, toast, toastMsg, now]);
+  const value = useMemo(() => ({ S, hydrated, update, replace, ui, setUi, toast, toastMsg, now }), [S, hydrated, update, replace, ui, setUi, toast, toastMsg, now]);
   return <StoreCtx.Provider value={value}>{children}</StoreCtx.Provider>;
 }
 

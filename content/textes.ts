@@ -45,3 +45,9 @@ export const MOMENTS_FAVORABLES = {
 /** Quand la réponse tarde : les formes que prend la réponse (repris du carnet). */
 export const FORMES_DE_REPONSE =
   "La réponse peut être ce que tu as demandé, un mal écarté, ou une récompense gardée pour l’au-delà (Ahmad, n° 11133).";
+
+/** Communauté : invoquer pour son frère en son absence (repris du prototype). */
+export const POUR_SON_FRERE = {
+  texte: "« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne dise : et pour toi de même. »",
+  source: "Muslim (n° 2733)",
+};

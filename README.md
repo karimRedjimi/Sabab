@@ -23,5 +23,5 @@ npm run build      # version de production
 
 ## État
 
-Phase 1 sans comptes : les données restent sur l’appareil (stockage local), avec export,
+Sans configuration Supabase, les données restent sur l’appareil. Avec Supabase (voir `supabase/README.md`) :
 import et effacement dans « Plus › Mes données ». Comptes et synchronisation : Supabase, à venir.

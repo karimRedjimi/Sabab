@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Communaute } from "@/components/views/Plus";
+import { Communaute } from "@/components/views/Communaute";
 
 export const metadata: Metadata = { title: "Communauté · Programme du rizq" };
 
