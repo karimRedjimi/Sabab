@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Programme du rizq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Newsreader:ital,opsz,wght@0,6..72,400..650;1,6..72,400..500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ECF0E8; --surface:#F8FAF5; --ink:#13302A; --muted:#586C63; --line:#D2DACF;
+  --accent:#1E5D4D; --accent-ink:#F8FAF5; --brass:#9C7128; --soft:#E0EBE2; --brass-soft:#F2EADB;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1916; --surface:#15231F; --ink:#E6EDE5; --muted:#97AAA1; --line:#263731;
+    --accent:#62B79C; --accent-ink:#0E1916; --brass:#D5AB5E; --soft:#1B312A; --brass-soft:#2A2618;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1916; --surface:#15231F; --ink:#E6EDE5; --muted:#97AAA1; --line:#263731;
+  --accent:#62B79C; --accent-ink:#0E1916; --brass:#D5AB5E; --soft:#1B312A; --brass-soft:#2A2618;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Newsreader",Georgia,"Times New Roman",serif;font-size:17px;line-height:1.55;font-optical-sizing:auto}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:8px}
+.app{max-width:640px;margin:0 auto;padding:20px 18px 120px}
+a{color:var(--accent)}
+
+/* En-tête du jour */
+.dayhead{display:grid;grid-template-columns:1fr auto;gap:12px 18px;align-items:center;padding:8px 0 18px}
+.dayhead h1{font-size:2.6rem;line-height:1.05;font-weight:500;letter-spacing:-.015em;margin:0}
+.dayhead .date{color:var(--muted);margin:4px 0 0;font-size:1rem}
+.dayhead .theme{margin:10px 0 0;font-style:italic;color:var(--brass);font-size:1.2rem;line-height:1.3}
+.bigstar{width:112px;height:112px;position:relative}
+.bigstar svg{width:100%;height:100%;display:block}
+.bigstar .pct{position:absolute;inset:0;display:grid;place-items:center;font-weight:600;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.bigstar .pct.on{color:var(--accent-ink)}
+.star-outline{fill:none;stroke:var(--accent);stroke-width:1.6}
+.star-base{fill:var(--soft)}
+.star-fill{fill:var(--accent);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.datenav{grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.navbtn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;display:inline-flex;align-items:center;gap:6px;font-size:.95rem;text-decoration:none;color:var(--ink)}
+.navbtn:disabled{opacity:.4;cursor:default}
+.navbtn svg{width:16px;height:16px}
+.navbtn.strong{border-color:var(--accent);color:var(--accent)}
+.navbtn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.datenav .today{margin-left:auto}
+
+/* Horaires */
+.prayers{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 10px 10px;margin:0 0 18px}
+.prow{display:grid;grid-template-columns:repeat(6,1fr);text-align:center;gap:2px}
+.prow div{padding:4px 0;border-radius:10px}
+.prow b{display:block;font-variant-numeric:tabular-nums;font-weight:600;font-size:1.02rem}
+.prow span{font-size:.78rem;color:var(--muted)}
+.prow .next{background:var(--soft)}
+.prow .next span{color:var(--accent)}
+.windows{margin:8px 6px 0;font-size:.92rem;color:var(--muted);display:grid;gap:2px}
+.windows .now{color:var(--accent);font-weight:600}
+.windows .fri{color:var(--brass)}
+.setup{background:var(--brass-soft);border-radius:16px;padding:14px 16px;margin:0 0 18px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.setup p{margin:0;font-size:.98rem}
+
+.display{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 22px;font-size:.92rem;color:var(--muted)}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 12px;font-size:.92rem;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+
+/* Sections */
+.sec{margin:0 0 30px}
+.sechead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:14px}
+.sechead h2{font-size:1.3rem;font-weight:600;margin:0}
+.sechead .count{color:var(--muted);font-size:.95rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.secintro{color:var(--muted);margin:-6px 0 14px;font-size:.98rem}
+.page h1{font-size:2.2rem;font-weight:500;letter-spacing:-.012em;margin:6px 0 8px;line-height:1.1}
+.lead{font-size:1.06rem;margin:0 0 24px;max-width:62ch;color:var(--muted)}
+
+/* Cartes */
+.item{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;margin-bottom:12px;transition:border-color .25s, box-shadow .25s}
+.item.theme-item{box-shadow:inset 3px 0 0 var(--brass)}
+.item.done{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.item.objective{background:var(--brass-soft);border-color:transparent}
+.item.objective.done{border-color:var(--accent)}
+.itemhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.itemhead h3{margin:0;font-size:1.15rem;font-weight:600;line-height:1.3}
+.moment{margin:2px 0 0;color:var(--muted);font-size:.93rem}
+.badge{flex:none;font-size:.78rem;border-radius:999px;padding:2px 9px;border:1px solid;white-space:nowrap;margin-top:2px}
+.g-coran{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.g-sahih{border-color:var(--accent);color:var(--accent)}
+.g-hasan{border-color:var(--brass);color:var(--brass)}
+.g-opt{border-color:var(--line);color:var(--muted)}
+.ar{font-family:"Amiri","Noto Naskh Arabic","Traditional Arabic","Geeza Pro",serif;font-size:1.75rem;line-height:2.1;text-align:right;margin:12px 0 6px;color:var(--ink)}
+.ph{margin:6px 0;font-style:italic}
+.fr{margin:6px 0;color:var(--muted)}
+.desc{margin:10px 0 4px;color:var(--muted)}
+.src{margin:8px 0 0;font-size:.88rem;color:var(--muted)}
+.src b{font-weight:600;color:var(--ink)}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--accent);font-size:.92rem;list-style:none;display:inline-flex;align-items:center;gap:6px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"";width:7px;height:7px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);transition:transform .2s}
+details[open] summary::before{transform:rotate(45deg)}
+details p{margin:8px 0 0;font-size:.98rem}
+
+.slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tog{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:8px 16px 8px 10px;font-size:.98rem}
+.tog .box{width:22px;height:22px;border-radius:50%;border:1.6px solid var(--muted);display:grid;place-items:center;flex:none}
+.tog .box svg{width:13px;height:13px;opacity:0}
+.tog[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tog[aria-pressed="true"] .box{border-color:var(--accent-ink);background:var(--accent-ink)}
+.tog[aria-pressed="true"] .box svg{opacity:1;stroke:var(--accent)}
+.counter{flex:1 1 220px;display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:stretch}
+.tap{position:relative;overflow:hidden;border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:10px 14px;text-align:left;min-height:68px;display:flex;flex-direction:column;justify-content:center;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.tap .bar{position:absolute;inset:auto 0 0 0;height:4px;background:var(--line)}
+.tap .bar i{display:block;height:100%;background:var(--accent);transition:width .2s}
+.tap .num{font-size:1.6rem;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.tap .num small{font-size:.95rem;font-weight:400;color:var(--muted)}
+.tap .lbl{font-size:.88rem;color:var(--muted);margin-top:4px}
+.tap.full{border-color:var(--accent);background:var(--soft)}
+.tap:active{transform:scale(.985)}
+.mini{border:1px solid var(--line);background:transparent;border-radius:12px;padding:0 12px;color:var(--muted);font-size:.9rem;min-width:44px}
+
+/* Formulaires */
+.field{display:block;margin:0 0 14px}
+.field > span{display:block;font-size:.93rem;color:var(--muted);margin-bottom:5px}
+.input,.select,.area{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:10px 12px;font-size:1rem}
+.area{min-height:100px;resize:vertical}
+.item .input{background:var(--bg)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.status{color:var(--muted);font-size:.88rem;margin:8px 0 0}
+
+/* Semaine / suivi */
+.weeknav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px}
+.weeknav h3{font-size:1.15rem;font-weight:600;margin:0}
+.weeknav p{margin:0;color:var(--muted);font-size:.9rem}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:50%;width:42px;height:42px;display:grid;place-items:center;flex:none}
+.iconbtn svg{width:18px;height:18px}
+.iconbtn:disabled{opacity:.35;cursor:default}
+.dayrow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:9px 12px;margin-bottom:8px}
+.dayrow.is-today{border-color:var(--brass)}
+.dayrow:disabled{opacity:.55;cursor:default}
+.dayrow svg{width:44px;height:44px;display:block}
+.dayrow .dn{font-weight:600}
+.dayrow .dt{color:var(--muted);font-size:.9rem;font-style:italic}
+.dayrow .dp{font-variant-numeric:tabular-nums;font-weight:600}
+.stats{display:flex;gap:10px;margin:0 0 18px}
+.stat{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.stat b{display:block;font-size:1.7rem;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:.88rem;line-height:1.3;display:block}
+.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:8px 0 6px}
+.heat .hd{font-size:.8rem;color:var(--muted);text-align:center}
+.cell{aspect-ratio:1;border-radius:8px;background:var(--soft);border:0;padding:0;font-size:.72rem;color:var(--muted);display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.cell.l1{background:color-mix(in srgb,var(--accent) 25%,var(--surface))}
+.cell.l2{background:color-mix(in srgb,var(--accent) 50%,var(--surface))}
+.cell.l3{background:color-mix(in srgb,var(--accent) 75%,var(--surface));color:var(--accent-ink)}
+.cell.l4{background:var(--accent);color:var(--accent-ink)}
+.cell.out{background:transparent;border:1px dashed var(--line)}
+.cell.now{outline:2px solid var(--brass);outline-offset:1px}
+.legend{display:flex;align-items:center;gap:5px;font-size:.82rem;color:var(--muted);justify-content:flex-end}
+.legend .cell{width:14px;height:14px;border-radius:4px;aspect-ratio:auto}
+.neg{list-style:none;padding:0;margin:0}
+.neg li{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.neg .np{font-variant-numeric:tabular-nums;color:var(--muted)}
+.neg .nb{grid-column:1/-1;height:6px;border-radius:3px;background:var(--soft);overflow:hidden}
+.neg .nb i{display:block;height:100%;background:var(--brass)}
+.empty{color:var(--muted);font-style:italic}
+
+/* Apprendre */
+.learnbar{height:8px;border-radius:4px;background:var(--soft);overflow:hidden;margin:8px 0 4px}
+.learnbar i{display:block;height:100%;background:var(--accent)}
+.lrow{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.lrow .lt{font-weight:500}
+.lrow .ls{font-size:.88rem;color:var(--muted)}
+.lv{display:flex;gap:4px;margin-top:4px}
+.lv i{width:16px;height:5px;border-radius:3px;background:var(--line)}
+.lv i.on{background:var(--accent)}
+.study{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.study .step{color:var(--muted);font-size:.9rem;margin:0 0 6px}
+.study h2{margin:0 0 4px;font-size:1.35rem;font-weight:600}
+.cue{background:var(--brass-soft);border-radius:12px;padding:10px 12px;margin:12px 0}
+.mask{display:inline-block;height:.9em;vertical-align:-.05em;border-radius:4px;background:color-mix(in srgb,var(--accent) 22%,var(--surface))}
+.ar .mask{height:.7em}
+.studyactions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.studyactions button{flex:1 1 140px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font-size:1rem}
+.studyactions .ok{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+/* Carnet */
+.dua{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px}
+.dua.answered{background:var(--soft);border-color:transparent}
+.dua p{margin:0}
+.dua .dt{font-size:.88rem;color:var(--muted);margin-top:6px}
+.dua .how{margin-top:8px;font-style:italic}
+.dua .acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.link{background:none;border:0;padding:4px 0;color:var(--accent);font-size:.93rem;text-decoration:underline;text-underline-offset:3px}
+.link.danger{color:var(--muted)}
+
+/* Parcours / plus */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.card h3{margin:0 0 4px;font-size:1.12rem}
+.card p{margin:0 0 10px;color:var(--muted);font-size:.98rem}
+.card.active{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.acc{background:var(--brass-soft);border-radius:16px;padding:16px 18px;margin-bottom:12px}
+.acc h3{margin:0 0 4px;font-size:1.08rem}
+.acc p{margin:0;font-size:.98rem}
+.acc .src{margin-top:6px}
+.menu{list-style:none;margin:0;padding:0}
+.menu a{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.menu a span{color:var(--muted);font-size:.92rem}
+
+/* Binôme */
+.member{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.member .mn{font-weight:600}
+.member .ms{font-size:.9rem;color:var(--muted)}
+.member .ms.ok{color:var(--accent)}
+.dots{display:flex;gap:5px}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--accent)}
+.enc{display:flex;flex-wrap:wrap;gap:6px;grid-column:1/-1}
+.code{font-size:2rem;letter-spacing:.18em;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* Communauté */
+.seg{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;margin:0 0 22px}
+.seg a{flex:1;text-align:center;padding:8px 6px;border-radius:999px;text-decoration:none;color:var(--muted);font-size:.93rem}
+.seg a[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.pulse{background:var(--accent);color:var(--accent-ink);border-radius:18px;padding:18px;margin:0 0 18px}
+.pulse b{font-size:2.2rem;line-height:1;font-weight:600;font-variant-numeric:tabular-nums;display:block}
+.pulse p{margin:6px 0 0}
+.pulse .sub{opacity:.85;font-size:.93rem}
+.banner{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:0 0 18px}
+.banner b{color:var(--accent)}
+.banner span{display:block;font-size:.9rem;color:var(--muted);margin-top:2px}
+.challenge{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.challenge h3{margin:0;font-size:1.08rem}
+.challenge .big{font-variant-numeric:tabular-nums;font-weight:600;font-size:1.3rem}
+.challenge .learnbar{height:10px;border-radius:5px}
+.challenge p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+.feed{list-style:none;padding:0;margin:0}
+.feed li{padding:11px 0 11px 18px;border-bottom:1px solid var(--line);position:relative}
+.feed li::before{content:"";position:absolute;left:2px;top:20px;width:7px;height:7px;transform:rotate(45deg);background:var(--brass)}
+.groups{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.group{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.group.mine{border-color:var(--accent)}
+.group h4{margin:0 0 4px;font-size:.98rem;line-height:1.25}
+.group p{margin:0;font-size:.86rem;color:var(--muted)}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.post.mine{border-color:var(--brass)}
+.post .meta{display:flex;justify-content:space-between;gap:10px;font-size:.86rem;color:var(--muted);margin-bottom:6px}
+.post .cat{color:var(--brass);font-weight:600}
+.post p{margin:0 0 6px}
+.post .lab{font-size:.86rem;color:var(--muted);display:block;margin-top:8px}
+.post .acts{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.pray{border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:7px 14px;font-size:.95rem}
+.pray[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.kind{display:inline-block;font-size:.8rem;border-radius:999px;padding:2px 9px;background:var(--soft);color:var(--accent);margin-bottom:6px}
+.warn{background:var(--brass-soft);border-radius:12px;padding:10px 12px;font-size:.9rem;margin:0 0 14px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+
+/* Accueil et accompagnement */
+.tabs[hidden]{display:none}
+.ob{min-height:calc(100vh - 60px);display:flex;flex-direction:column;justify-content:center;padding:10px 0 40px}
+.ob .stepper{display:flex;gap:6px;margin:0 0 26px}
+.ob .stepper i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.ob .stepper i.on{background:var(--accent)}
+.ob h1{font-size:2.3rem;font-weight:500;letter-spacing:-.015em;line-height:1.1;margin:0 0 12px}
+.ob .lead{margin-bottom:22px}
+.ob .star{width:84px;height:84px;margin:0 0 22px}
+.choices{display:grid;gap:8px;margin:0 0 18px}
+.choice{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:13px 16px;font-size:1.02rem}
+.choice small{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.choice[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--soft)}
+.obnav{display:flex;gap:10px;align-items:center;margin-top:8px}
+.obnav .navbtn.primary{padding:12px 22px;font-size:1.02rem}
+.recap{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:6px 16px;margin:0 0 18px}
+.recap p{margin:0;padding:10px 0;border-bottom:1px solid var(--line)}
+.recap p:last-child{border-bottom:0}
+.recap b{font-weight:600}
+.coach{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:0 0 18px}
+.coach.warm{background:var(--brass-soft);border-color:transparent}
+.coach.light{background:var(--soft);border-color:transparent}
+.coach p{margin:0 0 8px}
+.coach .src{margin:0 0 10px}
+.coach .row{margin-top:4px}
+.quiet{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 18px;color:var(--muted);font-size:.95rem}
+
+/* Journée par moments */
+.nextstep{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:var(--bg);border-radius:16px;padding:12px 14px 12px 16px;margin:0 0 18px}
+.nextstep p{margin:0;font-size:.98rem;line-height:1.35}
+.nextstep p span{display:block;opacity:.75;font-size:.9rem}
+.nextstep button{flex:none;border:0;background:var(--bg);color:var(--ink);border-radius:999px;padding:8px 14px;font-size:.93rem}
+.nextstep.done{background:var(--accent);color:var(--accent-ink)}
+.msec{margin:0 0 14px}
+.mhead{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:8px 0 8px;text-align:left}
+.mhead h2{margin:0;font-size:1.3rem;font-weight:600;flex:1}
+.mhead h2 small{display:block;font-size:.88rem;font-weight:400;color:var(--muted)}
+.mhead .count{color:var(--muted);font-size:.95rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mhead .chev{width:10px;height:10px;border-right:1.8px solid var(--muted);border-bottom:1.8px solid var(--muted);transform:rotate(45deg);margin:0 4px 4px 0;transition:transform .2s}
+.msec.closed .chev{transform:rotate(-45deg);margin-bottom:0}
+.nowtag{display:inline-block;margin-left:8px;font-size:.75rem;font-weight:600;vertical-align:middle;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:1px 8px}
+.mbody{padding-top:12px}
+.msec.closed .mbody{display:none}
+.msec.alldone .mhead h2{color:var(--accent)}
+.tag{display:inline-block;font-size:.76rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 8px;margin:4px 6px 0 0}
+.tag.t-theme{color:var(--brass);border-color:var(--brass)}
+.tag.t-parc{color:var(--accent);border-color:var(--accent)}
+.txtbtn{background:none;border:0;padding:6px 0 0;color:var(--accent);font-size:.92rem;text-decoration:underline;text-underline-offset:3px}
+.item.compact .slots{margin-top:10px}
+
+/* Bilan */
+.bnav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 16px}
+.bnav h3{margin:0;font-size:1.1rem;text-align:center}
+.wkstars{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin:0 0 18px}
+.wkstars svg{width:100%;max-width:44px;height:auto;display:block;margin:0 auto}
+.wkstars span{font-size:.78rem;color:var(--muted)}
+.blist{list-style:none;padding:0;margin:0}
+.blist li{padding:9px 0;border-bottom:1px solid var(--line)}
+.blist li small{display:block;color:var(--muted);font-size:.86rem}
+.delta{font-size:.93rem;opacity:.9;margin-top:6px}
+
+/* Barre du bas */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs nav{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr)}
+.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 1px 10px;color:var(--muted);text-decoration:none;font-size:.72rem;white-space:nowrap}
+.tabs a svg{width:22px;height:22px}
+.tabs a[aria-current="page"]{color:var(--accent);font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:.95rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:30;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:420px){
+  .dayhead h1{font-size:2.15rem}
+  .bigstar{width:92px;height:92px}
+  .ar{font-size:1.55rem}
+  .prow b{font-size:.92rem}
+  .prow span{font-size:.7rem}
+  .stats{flex-wrap:wrap}
+  .stat{flex:1 1 40%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="app" id="view" aria-live="polite"></main>
+<div class="tabs"><nav aria-label="Navigation">
+  <a href="#jour" data-v="jour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5.6" y="5.6" width="12.8" height="12.8"/><rect x="5.6" y="5.6" width="12.8" height="12.8" transform="rotate(45 12 12)"/></svg><span id="tab-jour">Jour</span></a>
+  <a href="#apprendre" data-v="apprendre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5.5c2.8-1 5.5-1 8 .8 2.5-1.8 5.2-1.8 8-.8V19c-2.8-1-5.5-1-8 .8-2.5-1.8-5.2-1.8-8-.8z"/><path d="M12 6.3v13.5"/></svg><span>Apprendre</span></a>
+  <a href="#communaute" data-v="communaute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="9" r="3"/><circle cx="16.5" cy="9.5" r="2.5"/><path d="M2.8 19c.6-3 2.7-4.6 5.2-4.6s4.6 1.6 5.2 4.6M13.8 15.2c.8-.6 1.7-.9 2.7-.9 2.2 0 3.9 1.4 4.4 4.2"/></svg><span>Communauté</span></a>
+  <a href="#carnet" data-v="carnet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3.5h10.5A1.5 1.5 0 0 1 18 5v15.5H7.5A1.5 1.5 0 0 1 6 19z"/><path d="M6 17.5h12M9.5 8h5M9.5 11h5"/></svg><span>Carnet</span></a>
+  <a href="#suivi" data-v="suivi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg><span>Suivi</span></a>
+  <a href="#plus" data-v="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/></svg><span>Plus</span></a>
+</nav></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* =========================================================
+   CONTENU
+   ========================================================= */
+const GRADES = {coran:{label:"Coran",cls:"g-coran"}, sahih:{label:"Sahîh",cls:"g-sahih"}, hasan:{label:"Hasan",cls:"g-hasan"}};
+
+const ITEMS = {
+  fajr:{kind:"dua",title:"Invocation après le Fajr",moment:"Après la prière du Fajr",when:"fajr",
+    ar:"اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا",
+    ph:"Allâhumma innî as’aluka ʿilman nâfiʿan, wa rizqan tayyiban, wa ʿamalan mutaqabbalan.",
+    fr:"Ô Allah, je Te demande une science utile, une subsistance pure et des œuvres acceptées.",
+    grade:"sahih",src:"Ibn Mâjah (n° 925), authentifié par Al-Albânî",
+    note:"Le Prophète ﷺ la disait après avoir terminé la prière du Fajr. Elle place le rizq « pur » au cœur de la journée, dès son ouverture."},
+  sayyid:{kind:"dua",title:"Sayyid al-istighfâr",moment:"Matin et soir",
+    ar:"اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+    ph:"Allâhumma anta rabbî, lâ ilâha illâ ant, khalaqtanî wa ana ʿabduk, wa ana ʿalâ ʿahdika wa waʿdika mastataʿt, aʿûdhu bika min sharri mâ sanaʿt, abû’u laka bi niʿmatika ʿalayy, wa abû’u bi dhanbî faghfir lî, fa innahu lâ yaghfirudh-dhunûba illâ ant.",
+    fr:"Ô Allah, Tu es mon Seigneur, il n’y a de divinité que Toi. Tu m’as créé et je suis Ton serviteur. Je respecte Ton pacte et Ta promesse autant que je le peux. Je cherche refuge auprès de Toi contre le mal que j’ai commis. Je reconnais Tes bienfaits envers moi et je reconnais mon péché : pardonne-moi, car nul ne pardonne les péchés en dehors de Toi.",
+    grade:"sahih",src:"Al-Bukhârî (n° 6306)",
+    note:"Le « maître des demandes de pardon ». Celui qui la dit le jour avec certitude et meurt avant le soir fait partie des gens du Paradis, et de même s’il la dit le soir et meurt avant le matin.",
+    slots:[{l:"Matin",t:1},{l:"Soir",t:1}]},
+  istighfar:{kind:"dua",title:"Istighfâr",moment:"Tout au long de la journée",
+    ar:"أَسْتَغْفِرُ اللَّهَ",ph:"Astaghfirullâh.",fr:"Je demande pardon à Allah.",
+    grade:"coran",src:"Coran, Nûh 71:10-12 ; Muslim (n° 2702)",
+    note:"« Implorez le pardon de votre Seigneur, Il pardonne tant ; Il vous enverra du ciel une pluie abondante, vous accordera biens et enfants, et vous donnera jardins et rivières. » Le Prophète ﷺ demandait lui-même pardon cent fois par jour.",
+    slots:[{l:"Objectif du jour",t:100}]},
+  hasbi:{kind:"dua",title:"Hasbiyallâh",moment:"7 fois le matin, 7 fois le soir",
+    ar:"حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+    ph:"Hasbiyallâhu lâ ilâha illâ huwa, ʿalayhi tawakkaltu wa huwa rabbul-ʿarshil-ʿazîm.",
+    fr:"Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le Seigneur du Trône immense.",
+    grade:"coran",src:"Coran, At-Tawba 9:129 ; le nombre de 7 vient d’Abû Dâwûd (n° 5081)",
+    note:"Le verset est coranique. La pratique des 7 répétitions est rapportée d’Abû ad-Dardâ’ (un Compagnon) ; son authenticité est discutée par les savants. Tu peux la garder comme habitude, sans t’attacher à une promesse précise.",
+    slots:[{l:"Matin",t:7},{l:"Soir",t:7}]},
+  hayy:{kind:"dua",title:"Yâ Hayyu yâ Qayyûm",moment:"Matin et soir",
+    ar:"يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+    ph:"Yâ Hayyu yâ Qayyûm, bi rahmatika astaghîth, aslih lî sha’nî kullah, wa lâ takilnî ilâ nafsî tarfata ʿayn.",
+    fr:"Ô Vivant, ô Celui qui subsiste par Lui-même, c’est par Ta miséricorde que je demande secours : arrange toutes mes affaires, et ne me confie pas à moi-même, ne serait-ce que le temps d’un clin d’œil.",
+    grade:"hasan",src:"An-Nasâ’î (As-Sunan al-Kubrâ) et Al-Hâkim, jugé hasan par Al-Albânî",
+    note:"Le Prophète ﷺ l’a enseignée à sa fille Fâtima pour le matin et le soir. Elle demande qu’Allah arrange « toutes » tes affaires : travail, projets, famille.",
+    slots:[{l:"Matin",t:1},{l:"Soir",t:1}]},
+
+  musa:{kind:"dua",title:"L’invocation de Moïse",moment:"Autant que possible dans la journée",
+    ar:"رَبِّ إِنِّي لِمَا أَنْزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ",
+    ph:"Rabbi innî limâ anzalta ilayya min khayrin faqîr.",
+    fr:"Seigneur, j’ai grand besoin du bien que Tu feras descendre vers moi.",
+    grade:"coran",src:"Coran, Al-Qasas 28:24",
+    note:"Moïse la prononce seul, exilé et épuisé, après avoir aidé deux femmes à abreuver leur troupeau. Juste après, Allah lui accorde un travail, un foyer et la sécurité (28:25-28)."},
+  jeuneLun:{kind:"action",title:"Jeûner le lundi",optional:true,
+    desc:"Sunna recommandée, facultative. Elle ne compte pas dans ton pourcentage.",
+    grade:"sahih",src:"Muslim (n° 1162) ; At-Tirmidhî (n° 747)",
+    note:"Le Prophète ﷺ jeûnait le lundi et le jeudi, et expliquait que les œuvres sont présentées à Allah ces jours-là, et qu’il aimait que les siennes le soient pendant qu’il jeûnait."},
+  dette:{kind:"dua",title:"Invocation contre les dettes",moment:"Après les prières, ou au moins une fois",
+    ar:"اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ",
+    ph:"Allâhumma-kfinî bi halâlika ʿan harâmik, wa aghninî bi fadlika ʿamman siwâk.",
+    fr:"Ô Allah, suffis-moi par Ton licite pour que je me passe de Ton illicite, et enrichis-moi par Ta grâce pour que je n’aie besoin de personne d’autre que Toi.",
+    grade:"hasan",src:"At-Tirmidhî (n° 3563)",
+    note:"ʿAlî l’a enseignée à un homme accablé par une dette, en lui disant que même avec une dette grande comme une montagne, Allah l’en acquitterait."},
+  detteAct:{kind:"action",title:"Régler ou planifier une dette",
+    desc:"Même petite : un remboursement, un échéancier, un appel pour régulariser. L’invocation accompagne l’effort, elle ne le remplace pas."},
+  hamm:{kind:"dua",title:"Refuge contre le souci et la paresse",moment:"Matin et soir",
+    ar:"اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ، وَغَلَبَةِ الرِّجَالِ",
+    ph:"Allâhumma innî aʿûdhu bika minal-hammi wal-hazan, wal-ʿajzi wal-kasal, wal-bukhli wal-jubn, wa dalaʿid-dayni wa ghalabatir-rijâl.",
+    fr:"Ô Allah, je cherche refuge auprès de Toi contre le souci et la tristesse, l’incapacité et la paresse, l’avarice et la lâcheté, le poids des dettes et la domination des hommes.",
+    grade:"sahih",src:"Al-Bukhârî (n° 6369)",
+    note:"Anas rapporte que le Prophète ﷺ la disait très souvent. Elle vise exactement ce qui bloque l’abondance : l’angoisse, la procrastination et l’endettement.",
+    slots:[{l:"Matin",t:1},{l:"Soir",t:1}]},
+  hammAct:{kind:"action",title:"Avancer sur la tâche que tu repousses",
+    desc:"Celle que tu reportes depuis le plus longtemps. Même trente minutes suffisent pour casser le blocage."},
+  sabr:{kind:"dua",title:"Invocation de la patience",moment:"Dans la journée",
+    ar:"رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا وَتَوَفَّنَا مُسْلِمِينَ",
+    ph:"Rabbanâ afrigh ʿalaynâ sabran wa tawaffanâ muslimîn.",
+    fr:"Seigneur, déverse sur nous l’endurance et fais-nous mourir entièrement soumis à Toi.",
+    grade:"coran",src:"Coran, Al-Aʿrâf 7:126",
+    note:"C’est l’invocation des magiciens de Pharaon devenus croyants, au moment où ils étaient menacés. Elle demande une patience qui se « déverse » en abondance."},
+  jeuneJeu:{kind:"action",title:"Jeûner le jeudi",optional:true,
+    desc:"Sunna recommandée, facultative. Elle ne compte pas dans ton pourcentage.",
+    grade:"sahih",src:"At-Tirmidhî (n° 747)",note:"Les œuvres sont présentées à Allah le lundi et le jeudi."},
+  bilan:{kind:"action",title:"Faire le bilan de la semaine",
+    desc:"Qu’est-ce qui a avancé, qu’est-ce qui a bloqué ? Écris-le dans la note du jour, en bas de page."},
+  salawat:{kind:"dua",title:"Prière sur le Prophète ﷺ",moment:"En abondance toute la journée",
+    ar:"اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ",
+    ph:"Allâhumma salli ʿalâ Muhammadin wa ʿalâ âli Muhammad.",
+    fr:"Ô Allah, prie sur Muhammad et sur la famille de Muhammad.",
+    grade:"sahih",src:"Abû Dâwûd (n° 1047) ; At-Tirmidhî (n° 2457, hasan)",
+    note:"Le Prophète ﷺ a demandé de multiplier les prières sur lui le vendredi. Ubayy ibn Kaʿb voulait leur consacrer toute son invocation ; il lui fut répondu : alors tes soucis te seront épargnés et tes péchés pardonnés. L’objectif de 100 est un repère, pas un nombre fixé par le hadith.",
+    slots:[{l:"Objectif conseillé",t:100}]},
+  kahf:{kind:"action",title:"Lire la sourate Al-Kahf",desc:"Entre le coucher du soleil du jeudi et celui du vendredi.",
+    grade:"sahih",src:"Al-Hâkim et Al-Bayhaqî, authentifié par Al-Albânî",
+    note:"Celui qui la lit le vendredi est éclairé d’une lumière jusqu’au vendredi suivant."},
+  heure:{kind:"action",title:"Invoquer avant le Maghreb",when:"lastHour",
+    desc:"Garde la dernière heure avant le Maghreb pour tes demandes personnelles : rizq, projets, famille.",
+    grade:"sahih",src:"Abû Dâwûd (n° 1048)",
+    note:"Il y a le vendredi une heure où aucun musulman ne demande quelque chose à Allah sans qu’Il le lui accorde ; le hadith indique de la chercher à la dernière heure après le ʿAsr."},
+  sadaqa:{kind:"action",title:"Donner une aumône",desc:"Le montant importe peu : la régularité compte plus que la taille.",
+    grade:"coran",src:"Coran, Saba’ 34:39",note:"« Tout ce que vous dépensez, Il le remplace, et Il est le meilleur des pourvoyeurs. »"},
+  anas:{kind:"dua",title:"La barakah dans ce qu’on a",moment:"Dans la journée",
+    ar:"اللَّهُمَّ أَكْثِرْ مَالِي وَوَلَدِي، وَبَارِكْ لِي فِيمَا أَعْطَيْتَنِي",
+    ph:"Allâhumma akthir mâlî wa waladî, wa bârik lî fîmâ aʿtaytanî.",
+    fr:"Ô Allah, augmente mes biens et ma descendance, et bénis-moi dans ce que Tu m’as donné.",
+    grade:"sahih",src:"Al-Bukhârî (n° 6334) ; Muslim (n° 2481)",
+    note:"Le Prophète ﷺ l’a faite pour Anas, à la demande de sa mère ; elle est ici adaptée à la première personne. Anas raconta plus tard que ses biens et sa descendance étaient devenus très nombreux."},
+  rahim:{kind:"action",title:"Appeler ou visiter un proche",desc:"Un parent, un frère, une tante, quelqu’un avec qui le lien s’est distendu.",
+    grade:"sahih",src:"Al-Bukhârî (n° 5986)",note:"Que celui qui aime voir sa subsistance élargie et sa vie prolongée entretienne les liens de parenté."},
+  atina:{kind:"dua",title:"Le bien des deux mondes",moment:"Dans la journée et dans la prosternation",
+    ar:"رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+    ph:"Rabbanâ âtinâ fid-dunyâ hasanah, wa fil-âkhirati hasanah, wa qinâ ʿadhâban-nâr.",
+    fr:"Seigneur, accorde-nous une belle part ici-bas, une belle part dans l’au-delà, et protège-nous du châtiment du Feu.",
+    grade:"coran",src:"Coran, Al-Baqara 2:201 ; Al-Bukhârî (n° 6389)",note:"Anas rapporte que c’était l’invocation la plus fréquente du Prophète ﷺ."},
+  yunus:{kind:"dua",title:"L’invocation de Yûnus",moment:"Dans la journée",
+    ar:"لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+    ph:"Lâ ilâha illâ anta, subhânaka, innî kuntu minaz-zâlimîn.",
+    fr:"Il n’y a de divinité que Toi, gloire à Toi ! J’ai été parmi les injustes.",
+    grade:"coran",src:"Coran, Al-Anbiyâ’ 21:87 ; At-Tirmidhî (n° 3505)",
+    note:"Yûnus l’a prononcée dans le ventre de la baleine. Aucun musulman ne l’invoque pour quelque chose sans qu’Allah lui réponde."},
+  plan:{kind:"action",title:"Planifier la semaine à venir",desc:"Trois priorités concrètes, pas plus. Le tawakkul commence par un plan."},
+
+  /* Invocations des parcours */
+  fadl:{kind:"dua",title:"Demander de la grâce d’Allah",moment:"En sortant de la mosquée, et dans la journée",
+    ar:"اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ",ph:"Allâhumma innî as’aluka min fadlik.",
+    fr:"Ô Allah, je Te demande de Ta grâce.",grade:"sahih",src:"Muslim (n° 713)",
+    note:"Le Prophète ﷺ enseignait de la dire en sortant de la mosquée : on y entre en demandant la miséricorde, on en sort en demandant la grâce, c’est-à-dire les biens de ce monde."},
+  faqr:{kind:"dua",title:"Refuge contre la pauvreté",moment:"Matin et soir",
+    ar:"اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ",ph:"Allâhumma innî aʿûdhu bika minal-kufri wal-faqr.",
+    fr:"Ô Allah, je cherche refuge auprès de Toi contre la mécréance et la pauvreté.",grade:"hasan",
+    src:"Abû Dâwûd (n° 5090) ; An-Nasâ’î (n° 1347)",
+    note:"Le Prophète ﷺ la disait le matin et le soir, et après la prière. Associer la pauvreté à la mécréance montre combien la détresse matérielle peut fragiliser la foi.",
+    slots:[{l:"Matin",t:1},{l:"Soir",t:1}]},
+  azwaj:{kind:"dua",title:"Pour un foyer qui réjouit le cœur",moment:"Dans la journée et dans la prosternation",
+    ar:"رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
+    ph:"Rabbanâ hab lanâ min azwâjinâ wa dhurriyyâtinâ qurrata aʿyun, wajʿalnâ lil-muttaqîna imâmâ.",
+    fr:"Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de nous un modèle pour les pieux.",
+    grade:"coran",src:"Coran, Al-Furqân 25:74",note:"Allah la cite parmi les invocations des « serviteurs du Tout Miséricordieux ». Elle demande non seulement un foyer, mais un foyer qui apaise."},
+  zidni:{kind:"dua",title:"Accroître sa science",moment:"Avant chaque séance de travail",
+    ar:"رَبِّ زِدْنِي عِلْمًا",ph:"Rabbi zidnî ʿilmâ.",fr:"Seigneur, accroît ma science.",
+    grade:"coran",src:"Coran, Tâ-Hâ 20:114",note:"C’est la seule chose dont Allah a ordonné à Son Prophète ﷺ de demander davantage."},
+  sharh:{kind:"dua",title:"L’invocation avant l’épreuve orale",moment:"Avant un examen, un entretien, une prise de parole",
+    ar:"رَبِّ اشْرَحْ لِي صَدْرِي، وَيَسِّرْ لِي أَمْرِي، وَاحْلُلْ عُقْدَةً مِنْ لِسَانِي، يَفْقَهُوا قَوْلِي",
+    ph:"Rabbi-shrah lî sadrî, wa yassir lî amrî, wahlul ʿuqdatan min lisânî, yafqahû qawlî.",
+    fr:"Seigneur, ouvre-moi ma poitrine, facilite-moi ma tâche, et dénoue le nœud de ma langue, afin qu’ils comprennent mes paroles.",
+    grade:"coran",src:"Coran, Tâ-Hâ 20:25-28",note:"Moïse la prononce au moment d’être envoyé parler à Pharaon. Elle convient à toute situation où il faut convaincre."},
+  infaani:{kind:"dua",title:"Une science qui profite",moment:"Après l’étude",
+    ar:"اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي، وَعَلِّمْنِي مَا يَنْفَعُنِي، وَزِدْنِي عِلْمًا",
+    ph:"Allâhumma-nfaʿnî bimâ ʿallamtanî, wa ʿallimnî mâ yanfaʿunî, wa zidnî ʿilmâ.",
+    fr:"Ô Allah, fais-moi profiter de ce que Tu m’as appris, apprends-moi ce qui me sera utile, et accroît ma science.",
+    grade:"hasan",src:"At-Tirmidhî (n° 3599) ; Ibn Mâjah (n° 251)",note:"Le savoir demandé ici n’est pas une accumulation : c’est celui qui transforme la vie."},
+  ujurni:{kind:"dua",title:"L’invocation dans l’épreuve",moment:"Quand l’épreuve se fait sentir",
+    ar:"إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ، اللَّهُمَّ أْجُرْنِي فِي مُصِيبَتِي وَأَخْلِفْ لِي خَيْرًا مِنْهَا",
+    ph:"Innâ lillâhi wa innâ ilayhi râjiʿûn, Allâhumma’jurnî fî musîbatî wa akhlif lî khayran minhâ.",
+    fr:"Nous appartenons à Allah et c’est vers Lui que nous retournons. Ô Allah, récompense-moi dans mon épreuve et donne-moi en échange quelque chose de meilleur.",
+    grade:"sahih",src:"Muslim (n° 918)",
+    note:"Umm Salama la prononça à la mort de son mari Abû Salama, en se demandant qui pourrait être meilleur que lui. Allah lui donna ensuite pour époux le Prophète ﷺ."},
+  mayyit:{kind:"dua",title:"Pour la personne disparue",moment:"Chaque jour, en pensant à elle",
+    ar:"اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ، وَعَافِهِ وَاعْفُ عَنْهُ",
+    ph:"Allâhumma-ghfir lahu warhamhu, wa ʿâfihi waʿfu ʿanhu.",
+    fr:"Ô Allah, pardonne-lui, fais-lui miséricorde, préserve-le et efface ses fautes.",
+    grade:"sahih",src:"Muslim (n° 963)",
+    note:"C’est le début de l’invocation de la prière funéraire. Pour une femme : اللَّهُمَّ اغْفِرْ لَهَا وَارْحَمْهَا، وَعَافِهَا وَاعْفُ عَنْهَا (Allâhumma-ghfir lahâ warhamhâ, wa ʿâfihâ waʿfu ʿanhâ)."}
+};
+
+const SOCLE = ["fajr","sayyid","istighfar","hasbi","hayy"];
+["detteAct","hammAct","bilan","plan"].forEach(id=> ITEMS[id].task = true);
+const MOMENT_OF = {fajr:"matin", heure:"soir"};
+const DAYS = [
+  {name:"Dimanche",theme:"Le bien des deux mondes",items:["atina","yunus","plan"]},
+  {name:"Lundi",theme:"Ouvrir les portes du rizq",items:["musa","jeuneLun"]},
+  {name:"Mardi",theme:"Se libérer des dettes",items:["dette","detteAct"]},
+  {name:"Mercredi",theme:"Chasser l’angoisse et la paresse",items:["hamm","hammAct"]},
+  {name:"Jeudi",theme:"La patience et la constance",items:["sabr","jeuneJeu","bilan"]},
+  {name:"Vendredi",theme:"Le jour le plus fort de la semaine",items:["salawat","kahf","heure","sadaqa"]},
+  {name:"Samedi",theme:"La barakah dans ce qu’on a",items:["anas","rahim"]}
+];
+
+const PARCOURS = {
+  rizq:{title:"Ouvrir les portes du rizq",intro:"Pour une recherche d’emploi, un lancement d’activité ou des revenus à faire grandir.",duas:["fadl","musa","anas"],
+    actions:["Écris en une phrase ce que tu demandes à Allah, et pourquoi.","Envoie une candidature, une offre ou une relance que tu repoussais.","Recense tes sources de revenu et note celle qui a le plus de potentiel.","Contacte une personne de ton réseau qui peut t’ouvrir une porte.","Vérifie qu’aucun de tes revenus n’est douteux sur le plan du halal.","Donne une aumône, même petite.","Apprends une compétence pendant 30 minutes.","Remercie Allah par écrit pour trois choses que tu as déjà.","Améliore un détail concret de ton offre, de ton CV ou de ton produit.","Fais une demande que tu n’osais pas faire."]},
+  dettes:{title:"Sortir des dettes",intro:"Pour voir clair, rembourser pas à pas et retrouver la sérénité.",duas:["dette","hamm","faqr"],
+    actions:["Liste toutes tes dettes : montant, créancier, échéance.","Choisis la dette à rembourser en premier.","Identifie une dépense à supprimer ce mois-ci.","Appelle un créancier pour proposer un échéancier.","Rembourse une somme, même symbolique.","Vérifie tes abonnements et résilie l’inutile.","Mets de côté une petite somme pour l’imprévu.","Note une source de revenu complémentaire possible.","Évite tout nouvel achat à crédit aujourd’hui.","Fais le point : qu’est-ce qui a baissé depuis le début du parcours ?"]},
+  mariage:{title:"Le mariage",intro:"Pour celui ou celle qui cherche un conjoint pieux et un foyer apaisé.",duas:["azwaj","musa"],
+    actions:["Écris les trois qualités essentielles que tu recherches.","Écris ce que toi, tu apportes à un foyer.","Parle de ton projet à une personne de confiance de ta famille.","Travaille une qualité qui te manque encore.","Lis sur les droits et devoirs des époux.","Prie deux unités de prière et confie ton projet à Allah.","Demande à un proche s’il connaît une personne sérieuse.","Fais une invocation pour ton futur conjoint, où qu’il soit.","Revois tes critères : sont-ils ceux de la religion ou de l’image ?","Rends service à un couple marié de ton entourage."]},
+  etudes:{title:"Études et examens",intro:"Pour réviser avec régularité et aborder les épreuves avec calme.",duas:["zidni","sharh","infaani"],
+    actions:["Fais le planning de révision jusqu’à l’examen.","Révise 45 minutes sans téléphone.","Explique à voix haute une notion difficile.","Fais un sujet d’annale en conditions réelles.","Corrige tes erreurs d’hier.","Dors suffisamment cette nuit.","Aide un camarade sur une notion que tu maîtrises.","Fais une fiche de synthèse d’un chapitre.","Remercie un enseignant ou quelqu’un qui t’a aidé.","Fais le point sur ce qui reste à revoir."]},
+  epreuve:{title:"Traverser une épreuve",intro:"Pour un moment difficile : perte d’emploi, maladie d’un proche, échec.",duas:["ujurni","sabr","yunus"],
+    actions:["Écris ce qui te pèse, sans te juger.","Parle à une personne de confiance.","Sors marcher vingt minutes.","Note une chose qui va bien malgré tout.","Fais une action concrète, même petite, sur le problème.","Lis le récit de Yûnus dans le Coran.","Accorde-toi une vraie pause aujourd’hui.","Aide quelqu’un d’autre : ça allège le cœur.","Demande de l’aide professionnelle si le poids devient trop lourd.","Écris comment tu étais il y a quelques jours, et comment tu es aujourd’hui."]},
+  deuil:{title:"Le deuil",intro:"Pour accompagner la perte d’un proche et continuer à lui faire du bien.",duas:["ujurni","mayyit"],
+    actions:["Écris un souvenir heureux de la personne.","Donne une aumône en son nom.","Lis une sourate en pensant à elle.","Appelle un proche qui partage ton chagrin.","Règle une affaire qu’elle laissait en suspens, si tu le peux.","Rends visite à sa tombe si c’est possible.","Prends soin de toi : repas, sommeil, marche.","Pense à une œuvre durable en son nom : un puits, un Coran, un savoir transmis.","Accepte de pleurer : le Prophète ﷺ a pleuré son fils Ibrâhîm.","Écris ce qu’elle t’a transmis et que tu veux garder."]}
+};
+const PARCOURS_DAYS = 40;
+const OBJ_CATS = {emploi:{l:"Emploi ou revenus",p:"rizq"},activite:{l:"Lancer ou développer une activité",p:"rizq"},dette:{l:"Rembourser une dette",p:"dettes"},mariage:{l:"Se marier",p:"mariage"},etudes:{l:"Réussir des études ou un examen",p:"etudes"},epreuve:{l:"Traverser une épreuve",p:"epreuve"},autre:{l:"Autre objectif",p:"rizq"}};
+
+const CITIES = [
+  ["Avignon",43.9493,4.8055],["Marseille",43.2965,5.3698],["Paris",48.8566,2.3522],["Lyon",45.764,4.8357],["Toulouse",43.6047,1.4442],["Nice",43.7102,7.262],["Montpellier",43.6108,3.8767],["Bordeaux",44.8378,-0.5792],["Lille",50.6292,3.0573],["Strasbourg",48.5734,7.7521],["Nantes",47.2184,-1.5536],["Grenoble",45.1885,5.7245],["Saint-Étienne",45.4397,4.3872],["Nîmes",43.8367,4.3601],["Toulon",43.1242,5.928],["Bruxelles",50.8503,4.3517],["Genève",46.2044,6.1432]
+];
+const METHODS = {uoif:{l:"UOIF (12°)",f:12,i:12},isna:{l:"15°",f:15,i:15},mwl:{l:"Ligue islamique mondiale (18° et 17°)",f:18,i:17}};
+const ENCOURAGEMENTS = ["Qu’Allah te facilite","Qu’Allah accepte de toi","Tiens bon, bârakallâhu fîk","Je fais une du’â pour toi"];
+
+const MONTHS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const HELD = 0.8;
+const INTERVALS = [0,1,2,4,7,15,30];
+const MASTER = 5;
+
+/* =========================================================
+   ÉTAT ET SAUVEGARDE
+   ========================================================= */
+const LS_KEY = "rizq-tracker-v1";
+const DEFAULT = () => ({v:2, updated:0, start:null, show:{ar:true,ph:true,fr:true}, days:{}, objective:null, parcours:null, carnet:[], learn:{}, prayer:null, binome:null, anonId:null, pseudo:"", myReq:[], myTest:[], prayed:{}, hamd:{}, onboarded:false, level:null, rampStart:null, rampDone:null});
+let S = DEFAULT();
+let sel = today();
+let weekRef = monday(today());
+let view = "jour";
+const openSet = new Set();
+let store = {mode:"local", ref:null, db:null, user:null, uid:null};
+
+function lsGet(){ try{ const r = localStorage.getItem(LS_KEY); return r ? JSON.parse(r) : null; }catch(e){ return null; } }
+function lsSet(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+function merge(x){
+  if(!x || typeof x !== "object") return;
+  const d = DEFAULT();
+  S = Object.assign(d, x);
+  S.show = Object.assign({ar:true,ph:true,fr:true}, x.show||{});
+  S.days = x.days || {}; S.carnet = Array.isArray(x.carnet) ? x.carnet : []; S.learn = x.learn || {};
+  if(!x.learn){ SOCLE.forEach(id=> S.learn[id] = {lvl:0, next:keyOf(today())}); }
+  S.myReq = Array.isArray(x.myReq) ? x.myReq : []; S.myTest = Array.isArray(x.myTest) ? x.myTest : [];
+  S.prayed = x.prayed || {}; S.hamd = x.hamd || {};
+  S.v = 2;
+}
+let saveTimer = null;
+function save(){
+  S.updated = Date.now();
+  lsSet();
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ pushRemote(); pushBinome(); pushTally(); }, 700);
+}
+let pushing = false, pushAgain = false;
+async function pushRemote(){
+  if(store.mode !== "account" || !store.ref) return;
+  if(pushing){ pushAgain = true; return; }
+  pushing = true;
+  try{ await store.ref.set(JSON.parse(JSON.stringify(S))); }
+  catch(e){
+    if(e && e.code === "unavailable"){ setTimeout(pushRemote, 1500 + Math.random()*1500); }
+    else if(e && e.code === "quota_exceeded"){ toast("Espace de sauvegarde plein : supprime d’anciennes entrées du carnet"); }
+    else { store.mode = "local"; updateStatus(); }
+  }
+  pushing = false;
+  if(pushAgain){ pushAgain = false; pushRemote(); }
+}
+
+/* =========================================================
+   DATES
+   ========================================================= */
+function pad(n){ return String(n).padStart(2,"0"); }
+function keyOf(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+function fromKey(k){ const [y,m,d] = k.split("-").map(Number); return new Date(y,m-1,d); }
+function addDays(d,n){ const x = new Date(d); x.setDate(x.getDate()+n); return x; }
+function today(){ const t = new Date(); t.setHours(0,0,0,0); return t; }
+function sameDay(a,b){ return keyOf(a) === keyOf(b); }
+function monday(d){ return addDays(d, -((d.getDay()+6)%7)); }
+function diffDays(a,b){ return Math.round((a - b)/86400000); }
+function fmtDate(d){ return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
+function fmtShort(d){ return `${d.getDate()} ${MONTHS[d.getMonth()]}`; }
+function esc(s){ return String(s??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* =========================================================
+   HORAIRES DE PRIÈRE (algorithme astronomique)
+   ========================================================= */
+const rad = d=>d*Math.PI/180, deg = r=>r*180/Math.PI;
+const dsin = d=>Math.sin(rad(d)), dcos = d=>Math.cos(rad(d)), dtan = d=>Math.tan(rad(d));
+const darcsin = x=>deg(Math.asin(x)), darccos = x=>deg(Math.acos(x)), darctan2 = (y,x)=>deg(Math.atan2(y,x)), darccot = x=>deg(Math.atan(1/x));
+const fix = (a,b)=>{ a = a - b*Math.floor(a/b); return a<0 ? a+b : a; };
+function julian(y,m,d){ if(m<=2){ y--; m+=12; } const A = Math.floor(y/100), B = 2-A+Math.floor(A/4); return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5; }
+function sunPos(jd){
+  const D = jd-2451545, g = fix(357.529+0.98560028*D,360), q = fix(280.459+0.98564736*D,360);
+  const L = fix(q+1.915*dsin(g)+0.020*dsin(2*g),360), e = 23.439-0.00000036*D;
+  const RA = darctan2(dcos(e)*dsin(L), dcos(L))/15;
+  return {decl: darcsin(dsin(e)*dsin(L)), eqt: q/15 - fix(RA,24)};
+}
+const ptCache = {};
+function prayerTimes(date){
+  const P = S.prayer; if(!P) return null;
+  const ck = keyOf(date)+P.lat+P.lng+P.method;
+  if(ptCache[ck]) return ptCache[ck];
+  const m = METHODS[P.method] || METHODS.uoif, lat = P.lat, lng = P.lng;
+  const jd = julian(date.getFullYear(), date.getMonth()+1, date.getDate()) - lng/(15*24);
+  const tz = -new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12).getTimezoneOffset()/60;
+  const mid = t => fix(12 - sunPos(jd+t).eqt, 24);
+  const angT = (a,t,ccw) => { const {decl} = sunPos(jd+t); const x = (-dsin(a)-dsin(decl)*dsin(lat))/(dcos(decl)*dcos(lat)); if(x<-1||x>1) return NaN; const T = darccos(x)/15; return mid(t)+(ccw?-T:T); };
+  const asrT = (f,t) => { const {decl} = sunPos(jd+t); return angT(-darccot(f+dtan(Math.abs(lat-decl))), t, false); };
+  let t = {fajr:5,sunrise:6,dhuhr:12,asr:13,sunset:18,isha:18};
+  for(let i=0;i<2;i++){
+    const n = {
+      fajr:angT(m.f,t.fajr/24,true), sunrise:angT(0.833,t.sunrise/24,true), dhuhr:mid(t.dhuhr/24),
+      asr:asrT(1,t.asr/24), sunset:angT(0.833,t.sunset/24,false), isha:angT(m.i,t.isha/24,false)
+    };
+    for(const k in n) if(!isNaN(n[k])) t[k] = n[k]; else if(i===1) t[k] = NaN;
+  }
+  const night = 24 - (t.sunset - t.sunrise);
+  const pf = m.f/60*night, pi = m.i/60*night;
+  if(isNaN(t.fajr) || t.sunrise - t.fajr > pf) t.fajr = t.sunrise - pf;
+  if(isNaN(t.isha) || t.isha - t.sunset > pi) t.isha = t.sunset + pi;
+  const adj = tz - lng/15;
+  const out = {};
+  for(const k in t) out[k] = t[k] + adj;
+  out.dhuhr += 2/60;
+  out.maghrib = out.sunset;
+  return ptCache[ck] = out;
+}
+function hm(h){ if(h==null || isNaN(h)) return "--:--"; let mins = Math.round(h*60); mins = ((mins%1440)+1440)%1440; return `${pad(Math.floor(mins/60))}:${pad(mins%60)}`; }
+
+/* =========================================================
+   MODÈLE D’UNE JOURNÉE
+   ========================================================= */
+function parcoursDay(d){
+  if(!S.parcours || !PARCOURS[S.parcours.id]) return 0;
+  const n = diffDays(d, fromKey(S.parcours.start)) + 1;
+  return (n>=1 && n<=PARCOURS_DAYS) ? n : 0;
+}
+function hasObjective(d){ return !!(S.objective && keyOf(d) >= S.objective.since); }
+const MINIMUM = ["fajr","sayyid","hayy"];
+const RAMP1 = ["fajr","sayyid","istighfar"];
+function rampWeek(d){
+  if(!S.rampStart) return 0;
+  const k = keyOf(d);
+  if(k < S.rampStart || (S.rampDone && k >= S.rampDone)) return 0;
+  const n = diffDays(d, fromKey(S.rampStart));
+  return n < 7 ? 1 : n < 14 ? 2 : 0;
+}
+function isLight(d){ const r = rec(keyOf(d)); return !!(r && r.light); }
+function structure(d){
+  const n = parcoursDay(d);
+  if(isLight(d)) return {socle:MINIMUM.slice(), theme:[], parc:[], obj:false, pday:n, light:true, ramp:0};
+  const ramp = rampWeek(d);
+  const socle = ramp === 1 ? RAMP1.slice() : SOCLE.slice();
+  const theme = ramp ? [] : DAYS[d.getDay()].items.slice();
+  const seen = new Set([...socle, ...theme]);
+  let parc = [];
+  if(n){
+    const du = PARCOURS[S.parcours.id].duas;
+    for(let i=0;i<du.length;i++){ const id = du[(n-1+i) % du.length]; if(!seen.has(id)){ parc.push(id); break; } }
+    parc.push("pact");
+  }
+  return {socle, theme, parc, obj: hasObjective(d), pday:n, light:false, ramp};
+}
+function isOptional(id, s){ const it = ITEMS[id]; return !!(it && (it.optional || (it.task && s.parc.includes("pact")))); }
+function countable(d){
+  const s = structure(d);
+  const ids = [...s.socle, ...s.theme, ...s.parc].filter(id=>!isOptional(id,s));
+  if(s.obj) ids.unshift("obj");
+  return ids;
+}
+function getItem(id, d){
+  if(id === "obj") return {kind:"objective", title:"Mon objectif"};
+  if(id === "pact"){
+    const p = PARCOURS[S.parcours.id], n = parcoursDay(d) || 1;
+    return {kind:"action", task:true, title:"Le geste du parcours", moment:`${p.title}, jour ${n} sur ${PARCOURS_DAYS}`, desc:p.actions[(n-1) % p.actions.length]};
+  }
+  return ITEMS[id];
+}
+function slotsOf(id){ const it = ITEMS[id]; return (it && it.slots) || [{l:"Fait",t:1}]; }
+function rec(dk){ return S.days[dk]; }
+function ensure(dk){
+  if(!S.days[dk]) S.days[dk] = {c:{}, note:""};
+  if(!S.start || dk < S.start) S.start = dk;
+  return S.days[dk];
+}
+function val(dk,k){ const r = rec(dk); return r && r.c && r.c[k] ? r.c[k] : 0; }
+function itemPct(dk,id){
+  const sl = slotsOf(id);
+  return sl.reduce((a,s,i)=> a + Math.min(val(dk,`${id}:${i}`)/s.t,1), 0) / sl.length;
+}
+function dayPct(d){
+  const dk = keyOf(d);
+  if(!rec(dk)) return 0;
+  const ids = countable(d);
+  return ids.reduce((a,id)=>a+itemPct(dk,id),0)/ids.length;
+}
+function countDone(dk, ids){ return ids.filter(id=>itemPct(dk,id)>=1).length; }
+function streaks(){
+  const t = today();
+  let cur = 0, d = new Date(t);
+  if(dayPct(d) < HELD) d = addDays(d,-1);
+  while(dayPct(d) >= HELD){ cur++; d = addDays(d,-1); }
+  let best = 0, run = 0;
+  if(S.start) for(let x = fromKey(S.start); x <= t; x = addDays(x,1)){ if(dayPct(x) >= HELD){ run++; best = Math.max(best,run); } else run = 0; }
+  return {cur, best:Math.max(best,cur)};
+}
+
+/* =========================================================
+   ÉLÉMENTS VISUELS
+   ========================================================= */
+let starUid = 0;
+function starPoints(cx,cy,R){
+  const r = R*Math.cos(Math.PI/4)/Math.cos(Math.PI/8), pts = [];
+  for(let i=0;i<16;i++){ const a = -Math.PI/2 + i*Math.PI/8, k = i%2===0 ? R : r; pts.push(`${(cx+k*Math.cos(a)).toFixed(2)},${(cy+k*Math.sin(a)).toFixed(2)}`); }
+  return pts.join(" ");
+}
+function starSVG(pct){
+  const id = "st"+(++starUid), pts = starPoints(50,50,46);
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><clipPath id="${id}"><polygon points="${pts}"/></clipPath></defs>
+    <polygon class="star-base" points="${pts}"/>
+    <g clip-path="url(#${id})"><rect class="star-fill" x="0" y="0" width="100" height="100" style="transform:translate(0px,${(100*(1-pct)).toFixed(1)}px)"/></g>
+    <polygon class="star-outline" points="${pts}"/></svg>`;
+}
+const ICON = {
+  left:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>`,
+  right:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>`,
+  check:`<svg viewBox="0 0 16 16" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg>`
+};
+function displayChips(){
+  return `<div class="display" role="group" aria-label="Textes affichés">Afficher
+    <button class="chip" data-act="show" data-f="ar" aria-pressed="${S.show.ar}">Arabe</button>
+    <button class="chip" data-act="show" data-f="ph" aria-pressed="${S.show.ph}">Phonétique</button>
+    <button class="chip" data-act="show" data-f="fr" aria-pressed="${S.show.fr}">Français</button></div>`;
+}
+
+/* =========================================================
+   CARTES
+   ========================================================= */
+function texts(it){
+  let h = "";
+  if(it.ar && S.show.ar) h += `<p class="ar" lang="ar" dir="rtl">${it.ar}</p>`;
+  if(it.ph && S.show.ph) h += `<p class="ph">${it.ph}</p>`;
+  if(it.fr && S.show.fr) h += `<p class="fr">${it.fr}</p>`;
+  if(it.desc) h += `<p class="desc">${it.desc}</p>`;
+  return h;
+}
+function badge(it){
+  if(it.optional) return `<span class="badge g-opt">Facultatif</span>`;
+  if(!it.grade) return "";
+  const g = GRADES[it.grade]; return `<span class="badge ${g.cls}">${g.label}</span>`;
+}
+function momentOf(it, d){
+  let m = it.moment || "";
+  const pt = prayerTimes(d);
+  if(pt && it.when === "fajr") m += ` (${hm(pt.fajr)})`;
+  if(pt && it.when === "lastHour") m = `De ${hm(pt.maghrib-1)} à ${hm(pt.maghrib)}`;
+  return m;
+}
+function slotsHTML(id, dk, only){
+  return slotsOf(id).map((s,i)=>{
+    if(only && !only.includes(i)) return "";
+    const k = `${id}:${i}`, v = val(dk,k);
+    if(s.t === 1) return `<button class="tog" data-act="toggle" data-k="${k}" aria-pressed="${v>=1}"><span class="box">${ICON.check}</span>${s.l}</button>`;
+    const full = v >= s.t, w = Math.min(v/s.t,1)*100;
+    return `<div class="counter">
+      <button class="tap ${full?"full":""}" data-act="inc" data-k="${k}" aria-label="${s.l} : ${v} sur ${s.t}. Toucher pour compter">
+        <span class="num">${v} <small>/ ${s.t}</small></span><span class="lbl">${s.l}${full?" atteint":""}</span>
+        <span class="bar"><i style="width:${w}%"></i></span></button>
+      <button class="mini" data-act="dec" data-k="${k}" aria-label="Retirer un">−1</button>
+      <button class="mini" data-act="reset" data-k="${k}" aria-label="Remettre ${s.l} à zéro">0</button></div>`;
+  }).join("");
+}
+function objectiveCard(d){
+  const dk = keyOf(d), r = rec(dk), o = S.objective;
+  const done = itemPct(dk,"obj") >= 1;
+  return `<article class="item objective ${done?"done":""}" id="card-obj">
+    <div class="itemhead"><div><h3>${esc(o.title)}</h3><p class="moment">${OBJ_CATS[o.cat]?.l || "Mon objectif"}</p></div></div>
+    <label class="field" style="margin:12px 0 0"><span>Mon action concrète pour aujourd’hui</span>
+      <input class="input" id="objact" maxlength="160" placeholder="Par exemple : envoyer deux candidatures" value="${esc(r?.objAct||"")}"></label>
+    <div class="slots"><button class="tog" data-act="toggle" data-k="obj:0" aria-pressed="${val(dk,"obj:0")>=1}"><span class="box">${ICON.check}</span>Action faite</button></div>
+  </article>`;
+}
+function cardHTML(id, d, opts={}){
+  if(id === "obj") return objectiveCard(d);
+  const it = getItem(id, d), dk = d ? keyOf(d) : "";
+  const done = !opts.readonly && itemPct(dk,id) >= 1;
+  const cls = ["item"]; if(opts.theme) cls.push("theme-item"); if(done) cls.push("done");
+  const sumLabel = it.kind === "action" ? "Pourquoi ce geste" : "Pourquoi cette invocation";
+  const m = d ? momentOf(it,d) : (it.moment||"");
+  return `<article class="${cls.join(" ")}" id="card-${id}" data-theme="${opts.theme?1:0}">
+    <div class="itemhead"><div><h3>${it.title}</h3>${m?`<p class="moment">${m}</p>`:""}</div>${badge(it)}</div>
+    ${texts(it)}
+    ${it.src?`<p class="src"><b>Source :</b> ${it.src}</p>`:""}
+    ${it.note?`<details data-id="${id}"${openSet.has(id)?" open":""}><summary>${sumLabel}</summary><p>${it.note}</p></details>`:""}
+    ${opts.readonly?"":`<div class="slots">${slotsHTML(id,dk)}</div>`}
+  </article>`;
+}
+
+
+/* =========================================================
+   LA JOURNÉE PAR MOMENTS
+   ========================================================= */
+const textState = {};
+const momentOpen = {};
+const MOMENT_LABEL = {matin:"Le matin", jour:"Dans la journée", soir:"Le soir", actions:"Mes actions"};
+function plan(d){
+  const s = structure(d), out = {s, sections:{matin:[],jour:[],soir:[]}, actions:[]};
+  const origin = {}; s.socle.forEach(i=>origin[i]="socle"); s.theme.forEach(i=>origin[i]="theme"); s.parc.forEach(i=>origin[i]="parc");
+  if(s.obj) out.actions.push({id:"obj", origin:"obj", m:"actions", sl:[0], opt:false});
+  const tasks = [];
+  for(const id of [...s.socle, ...s.theme, ...s.parc]){
+    const it = getItem(id,d), opt = isOptional(id,s);
+    if(it.task){ tasks.push({id, origin:origin[id], m:"actions", sl:[0], opt}); continue; }
+    const sl = slotsOf(id);
+    if(sl.length === 2 && sl[0].l === "Matin" && sl[1].l === "Soir"){
+      out.sections.matin.push({id, origin:origin[id], m:"matin", sl:[0], opt});
+      out.sections.soir.push({id, origin:origin[id], m:"soir", sl:[1], opt});
+    } else {
+      out.sections[MOMENT_OF[id]||"jour"].push({id, origin:origin[id], m:MOMENT_OF[id]||"jour", sl:sl.map((_,i)=>i), opt});
+    }
+  }
+  tasks.sort((a,b)=> (a.id==="pact"?-1:0) - (b.id==="pact"?-1:0));
+  out.actions.push(...tasks);
+  return out;
+}
+function entryPct(dk, e){ const sl = slotsOf(e.id); return e.sl.reduce((a,i)=>a+Math.min(val(dk,`${e.id}:${i}`)/sl[i].t,1),0)/e.sl.length; }
+function currentMoment(d){
+  if(!sameDay(d,today())) return null;
+  const now = new Date(), h = now.getHours()+now.getMinutes()/60, pt = prayerTimes(d);
+  if(pt) return h < pt.dhuhr ? "matin" : h >= pt.asr ? "soir" : "jour";
+  return h < 12 ? "matin" : h < 16 ? "jour" : "soir";
+}
+function momentSub(m, d){
+  const pt = prayerTimes(d);
+  if(m === "matin") return pt ? `Après le Fajr, ${hm(pt.fajr)}` : "Après la prière du Fajr";
+  if(m === "soir") return pt ? `De ${hm(pt.asr)} au Maghreb, ${hm(pt.maghrib)}` : "Après le ʿAsr";
+  if(m === "actions") return "L’effort qui accompagne l’invocation";
+  return "Quand tu veux, au fil de la journée";
+}
+function isSecOpen(m, d, cur){
+  const k = keyOf(d)+m;
+  if(k in momentOpen) return momentOpen[k];
+  if(m === "actions") return true;
+  return cur ? m === cur : true;
+}
+function secCount(list, dk){ const req = list.filter(e=>!e.opt); return {done:req.filter(e=>entryPct(dk,e)>=1).length, total:req.length}; }
+function momentSection(m, list, d, cur){
+  const dk = keyOf(d), c = secCount(list, dk), open = isSecOpen(m, d, cur);
+  const cls = ["msec"]; if(!open) cls.push("closed"); if(cur===m) cls.push("now"); if(c.total && c.done===c.total) cls.push("alldone");
+  return `<section class="${cls.join(" ")}" id="sec-${m}">
+    <button class="mhead" data-act="msec" data-m="${m}" aria-expanded="${open}"><h2>${MOMENT_LABEL[m]}${cur===m?`<span class="nowtag">Maintenant</span>`:""}<small>${momentSub(m,d)}</small></h2><span class="count" id="cnt-${m}">${c.done} sur ${c.total}</span><span class="chev" aria-hidden="true"></span></button>
+    <div class="mbody">${list.map(e=>entryCard(e,d)).join("")}</div></section>`;
+}
+function textOpen(id, it){
+  if(id in textState) return textState[id];
+  if(it.kind !== "dua") return false;
+  return (S.learn[id]?.lvl || 0) < 3;
+}
+const ORIGIN_TAG = {theme:t=>`<span class="tag t-theme">Thème du ${t}</span>`, parc:()=>`<span class="tag t-parc">Parcours</span>`};
+function entryCard(e, d){
+  if(e.id === "obj") return objectiveCard(d);
+  const it = getItem(e.id, d), dk = keyOf(d);
+  const done = entryPct(dk, e) >= 1;
+  const hasText = it.ar || it.ph || it.fr || it.note || it.src;
+  const open = hasText && textOpen(e.id, it);
+  const cls = ["item","compact"]; if(e.origin==="theme"||e.origin==="parc") cls.push("theme-item"); if(done) cls.push("done");
+  const tags = (ORIGIN_TAG[e.origin] ? ORIGIN_TAG[e.origin](DAYS[d.getDay()].name.toLowerCase()) : "") + (e.opt ? `<span class="tag">Facultatif aujourd’hui</span>` : "");
+  const sub = e.id === "pact" ? it.moment : (e.m === "jour" || e.m === "actions") ? momentOf(it,d) : (e.id==="fajr" ? momentOf(it,d) : "");
+  const sumLabel = it.kind === "action" ? "Pourquoi ce geste" : "Pourquoi cette invocation";
+  return `<article class="${cls.join(" ")}" id="card-${e.id}-${e.m}" data-id="${e.id}" data-m="${e.m}" data-origin="${e.origin}" data-sl="${e.sl.join(",")}" data-opt="${e.opt?1:0}">
+    <div class="itemhead"><div><h3>${it.title}</h3>${sub?`<p class="moment">${sub}</p>`:""}${tags?`<div>${tags}</div>`:""}</div>${badge(it)}</div>
+    ${it.desc?`<p class="desc">${it.desc}</p>`:""}
+    ${open ? `${texts({...it, desc:null})}
+      ${it.src?`<p class="src"><b>Source :</b> ${it.src}</p>`:""}
+      ${it.note?`<details data-id="${e.id}"${openSet.has(e.id)?" open":""}><summary>${sumLabel}</summary><p>${it.note}</p></details>`:""}` : ""}
+    ${hasText?`<button class="txtbtn" data-act="txt" data-id="${e.id}" aria-expanded="${open}">${open?"Masquer le texte":(it.kind==="dua"?"Lire l’invocation":"Voir la source")}</button>`:""}
+    <div class="slots">${slotsHTML(e.id, dk, e.sl)}</div>
+  </article>`;
+}
+function entryFromEl(el){ return {id:el.dataset.id, m:el.dataset.m, origin:el.dataset.origin, sl:el.dataset.sl.split(",").map(Number), opt:el.dataset.opt==="1"}; }
+function nextStepHTML(d, P){
+  if(!sameDay(d,today())) return `<span id="nextstep"></span>`;
+  const dk = keyOf(d), cur = currentMoment(d) || "matin";
+  const order = [cur, ...["matin","jour","soir","actions"].filter(m=>m!==cur)];
+  const all = {...P.sections, actions:P.actions};
+  let remaining = 0, next = null;
+  for(const m of order) for(const e of all[m]){ if(e.opt) continue; if(entryPct(dk,e) < 1){ remaining++; if(!next) next = e; } }
+  if(!remaining) return `<div class="nextstep done" id="nextstep"><p>Journée complète, qu’Allah l’accepte.</p></div>`;
+  const it = getItem(next.id, d), pt = prayerTimes(d), now = new Date(), h = now.getHours()+now.getMinutes()/60;
+  let hint = MOMENT_LABEL[next.m].toLowerCase();
+  if(next.m === "soir" && pt && h < pt.asr) hint = `le soir, à partir de ${hm(pt.asr)}`;
+  const title = next.id === "obj" ? "l’action de ton objectif" : it.title;
+  return `<div class="nextstep" id="nextstep"><p>Il te reste ${remaining} chose${remaining>1?"s":""} à faire.<span>Prochaine : ${title}, ${hint}</span></p>
+    <button data-act="gonext" data-card="${next.id==="obj"?"card-obj":`card-${next.id}-${next.m}`}" data-m="${next.m}">Y aller</button></div>`;
+}
+function refreshJourAfter(btn, id){
+  const d = sel, dk = keyOf(d);
+  if(id === "obj"){
+    const el = document.getElementById("card-obj");
+    if(el){ const done = itemPct(dk,"obj") >= 1; el.classList.toggle("done", done); el.querySelector('[data-k="obj:0"]').setAttribute("aria-pressed", done); }
+  } else {
+    const art = btn.closest("article.item");
+    if(art && art.dataset.id){
+      const a = document.activeElement;
+      const fs = a && a.dataset && a.dataset.k ? `[data-act="${a.dataset.act}"][data-k="${a.dataset.k}"]` : null;
+      art.outerHTML = entryCard(entryFromEl(art), d);
+      if(fs){ const n = document.querySelector(fs); if(n) n.focus({preventScroll:true}); }
+    }
+  }
+  updateJourHeader();
+}
+function updateJourHeader(){
+  const d = sel, dk = keyOf(d), pct = dayPct(d), bs = document.getElementById("bigstar");
+  if(bs){
+    bs.querySelector(".star-fill").style.transform = `translate(0px,${(100*(1-pct)).toFixed(1)}px)`;
+    const p = bs.querySelector(".pct"); p.textContent = `${Math.round(pct*100)} %`; p.classList.toggle("on", pct>=.55);
+    bs.setAttribute("aria-label", `Progression du jour : ${Math.round(pct*100)} %`);
+  }
+  const P = plan(d), all = {...P.sections, actions:P.actions};
+  for(const m in all){
+    const el = document.getElementById("cnt-"+m), sec = document.getElementById("sec-"+m);
+    if(!el) continue;
+    const c = secCount(all[m], dk); el.textContent = `${c.done} sur ${c.total}`;
+    if(sec) sec.classList.toggle("alldone", c.total>0 && c.done===c.total);
+  }
+  const ns = document.getElementById("nextstep"); if(ns) ns.outerHTML = nextStepHTML(d, P);
+}
+
+/* =========================================================
+   VUE : JOUR
+   ========================================================= */
+function prayerStrip(d){
+  const pt = prayerTimes(d);
+  if(!pt) return `<div class="setup"><p>Choisis ta ville pour caler le programme sur tes horaires de prière.</p><a class="navbtn strong" href="#priere">Choisir ma ville</a></div>`;
+  const isToday = sameDay(d,today());
+  const now = new Date(), h = now.getHours()+now.getMinutes()/60;
+  const list = [["Fajr",pt.fajr],["Lever",pt.sunrise],["Dhuhr",pt.dhuhr],["ʿAsr",pt.asr],["Maghreb",pt.maghrib],["ʿIchâ",pt.isha]];
+  let nextIdx = -1;
+  if(isToday){ nextIdx = list.findIndex(([n,t],i)=> i!==1 && t > h); }
+  const morning = isToday && h >= pt.fajr && h < pt.dhuhr;
+  const evening = isToday && h >= pt.asr && h < pt.maghrib;
+  const lastHour = isToday && d.getDay()===5 && h >= pt.maghrib-1 && h < pt.maghrib;
+  return `<div class="prayers" aria-label="Horaires de prière, ${esc(S.prayer.city)}">
+    <div class="prow">${list.map(([n,t],i)=>`<div class="${i===nextIdx?"next":""}"><b>${hm(t)}</b><span>${n}</span></div>`).join("")}</div>
+    <div class="windows">
+      <span class="${morning?"now":""}">${morning?"Maintenant : ":""}adhkâr du matin, après le Fajr</span>
+      <span class="${evening?"now":""}">${evening?"Maintenant : ":""}adhkâr du soir, de ${hm(pt.asr)} à ${hm(pt.maghrib)}</span>
+      ${d.getDay()===5?`<span class="${lastHour?"now":"fri"}">${lastHour?"Maintenant : ":""}dernière heure du vendredi, de ${hm(pt.maghrib-1)} à ${hm(pt.maghrib)}</span>`:""}
+    </div></div>`;
+}
+function renderJour(){
+  const d = sel, dk = keyOf(d), t = today(), isToday = sameDay(d,t);
+  const pct = dayPct(d), day = DAYS[d.getDay()];
+  const P = plan(d), s = P.s, cur = currentMoment(d);
+  let html = `
+  <header class="dayhead">
+    <div><h1>${day.name}</h1><p class="date">${isToday?"Aujourd’hui, ":""}${fmtDate(d)}</p><p class="theme">${s.light?"Minimum du jour":s.ramp?`Démarrage en douceur, semaine ${s.ramp}`:day.theme}</p></div>
+    <div class="bigstar" id="bigstar" role="img" aria-label="Progression du jour : ${Math.round(pct*100)} %">${starSVG(pct)}<span class="pct ${pct>=.55?"on":""}">${Math.round(pct*100)} %</span></div>
+    <div class="datenav">
+      <button class="navbtn" data-act="prev">${ICON.left}Veille</button>
+      <button class="navbtn" data-act="next" ${isToday?"disabled":""}>Lendemain${ICON.right}</button>
+      ${isToday?"":`<button class="navbtn strong today" data-act="today">Revenir à aujourd’hui</button>`}
+    </div>
+  </header>
+  ${nextStepHTML(d,P)}
+  ${prayerStrip(d)}
+  ${isToday?bilanBanner():""}
+  ${isToday?commuBanner():""}
+  ${coachCard(d, s)}
+  ${!s.obj && isToday && !s.light?`<div class="setup"><p>Fixe un objectif concret : l’application relie chaque jour tes invocations à une action.</p><a class="navbtn strong" href="#objectif">Fixer mon objectif</a></div>`:""}
+  ${displayChips()}`;
+  for(const m of ["matin","jour","soir"]){
+    const list = P.sections[m];
+    if(!list.length) continue;
+    html += momentSection(m, list, d, cur);
+  }
+  if(P.actions.length) html += momentSection("actions", P.actions, d, cur);
+  html += `<section class="sec" style="margin-top:22px"><div class="sechead"><h2>Note du jour</h2></div>
+    <label class="secintro" for="note" style="display:block">Ton intention, une du’â personnelle, ce qui a bloqué ou avancé.</label>
+    <textarea id="note" class="area" placeholder="Écris ici…"></textarea>
+    <p class="status" id="status"></p></section>`;
+  return html;
+}
+function afterJour(){
+  const ta = document.getElementById("note"), r = rec(keyOf(sel));
+  ta.value = r ? (r.note||"") : "";
+  ta.addEventListener("input", ()=>{ ensure(keyOf(sel)).note = ta.value; save(); });
+  const oa = document.getElementById("objact");
+  if(oa) oa.addEventListener("input", ()=>{ ensure(keyOf(sel)).objAct = oa.value; save(); });
+  updateStatus();
+}
+/* =========================================================
+   VUE : APPRENDRE (révision espacée)
+   ========================================================= */
+let study = null; // {queue:[ids], i, revealed}
+const DUA_IDS = Object.keys(ITEMS).filter(id=>ITEMS[id].kind==="dua");
+function dueIds(){ const tk = keyOf(today()); return Object.keys(S.learn).filter(id=>ITEMS[id] && S.learn[id].next <= tk); }
+function maskText(text, lvl, isAr){
+  if(lvl === 0) return esc(text);
+  const words = text.split(" ");
+  return words.map((w,i)=>{
+    const hide = lvl >= 3 ? true : lvl === 2 ? i%3 !== 0 : i%3 === 1;
+    if(!hide) return esc(w);
+    const len = Math.max(2, w.replace(/[\u064B-\u0652،,.;:!?’]/g,"").length);
+    return `<span class="mask" style="width:${(len*(isAr?.42:.5)).toFixed(1)}em" aria-label="mot masqué"></span>`;
+  }).join(" ");
+}
+function renderApprendre(){
+  if(study) return renderStudy();
+  const due = dueIds();
+  const socleMastered = SOCLE.filter(id=>(S.learn[id]?.lvl||0) >= MASTER).length;
+  const totalMastered = Object.keys(S.learn).filter(id=>S.learn[id].lvl >= MASTER).length;
+  const rows = DUA_IDS.map(id=>{
+    const it = ITEMS[id], L = S.learn[id];
+    const lvl = L ? L.lvl : -1;
+    const status = !L ? "Pas encore dans tes révisions" : lvl >= MASTER ? "Sue par cœur" : L.next <= keyOf(today()) ? "À réviser aujourd’hui" : `Prochaine révision le ${fmtShort(fromKey(L.next))}`;
+    return `<div class="lrow"><div><div class="lt">${it.title}</div><div class="ls">${status}</div>
+      ${L?`<div class="lv" aria-label="Niveau ${Math.min(lvl,MASTER)} sur ${MASTER}">${Array.from({length:MASTER},(_,i)=>`<i class="${i<lvl?"on":""}"></i>`).join("")}</div>`:""}</div>
+      ${L?`<button class="link danger" data-act="unlearn" data-id="${id}">Retirer</button>`:`<button class="navbtn" data-act="learn" data-id="${id}">Ajouter</button>`}</div>`;
+  }).join("");
+  return `<div class="page"><h1>Apprendre par cœur</h1>
+    <p class="lead">Chaque invocation revient au bon moment : un peu plus masquée à chaque révision réussie, jusqu’à ce que tu la récites seul. Objectif : le socle par cœur en 30 jours.</p></div>
+    <div class="stats">
+      <div class="stat"><b>${socleMastered} / ${SOCLE.length}</b><span>du socle sues par cœur</span><div class="learnbar"><i style="width:${socleMastered/SOCLE.length*100}%"></i></div></div>
+      <div class="stat"><b>${totalMastered}</b><span>invocations sues au total</span></div>
+    </div>
+    ${due.length?`<button class="navbtn primary" data-act="study" style="width:100%;justify-content:center;padding:14px;font-size:1.05rem;margin-bottom:26px">Réviser ${due.length} invocation${due.length>1?"s":""} maintenant</button>`
+      :`<p class="empty" style="margin:0 0 26px">Rien à réviser aujourd’hui. Reviens demain, ou ajoute une invocation ci-dessous.</p>`}
+    <section class="sec"><div class="sechead"><h2>Toutes les invocations</h2><span class="count">${Object.keys(S.learn).length} en révision</span></div>${rows}</section>`;
+}
+function renderStudy(){
+  const id = study.queue[study.i], it = ITEMS[id], L = S.learn[id] || {lvl:0};
+  const lvl = study.revealed ? 0 : Math.min(L.lvl, 3);
+  const first = L.lvl === 0;
+  const instr = first ? "Découverte : lis-la trois fois à voix haute en suivant le texte." :
+    L.lvl >= 3 ? "Récite-la de mémoire, puis révèle le texte pour vérifier." : "Récite-la en complétant les mots masqués, puis vérifie.";
+  return `<div class="study">
+    <p class="step">${study.i+1} sur ${study.queue.length}</p>
+    <h2>${it.title}</h2>
+    <p class="secintro" style="margin:2px 0 0">${instr}</p>
+    <div class="cue">${it.fr}</div>
+    ${it.ar?`<p class="ar" lang="ar" dir="rtl">${maskText(it.ar,lvl,true)}</p>`:""}
+    ${it.ph?`<p class="ph">${maskText(it.ph,lvl,false)}</p>`:""}
+    <div class="studyactions">
+      ${first ? `<button class="ok" data-act="grade" data-g="1">C’est lu, je continue</button>`
+        : study.revealed ? `<button data-act="grade" data-g="0">À revoir</button><button class="ok" data-act="grade" data-g="1">Je l’ai sue</button>`
+        : `<button class="ok" data-act="reveal">Révéler le texte</button>`}
+    </div>
+    <p style="margin:16px 0 0"><button class="link" data-act="endstudy">Arrêter la révision</button></p>
+  </div>`;
+}
+function gradeCard(ok){
+  const id = study.queue[study.i], L = S.learn[id] || (S.learn[id] = {lvl:0,next:keyOf(today())});
+  if(ok){ L.lvl = Math.min(L.lvl+1, INTERVALS.length-1); L.next = keyOf(addDays(today(), INTERVALS[L.lvl])); if(L.lvl===MASTER){ if(!L.mastered) L.mastered = keyOf(today()); toast(`${ITEMS[id].title} : sue par cœur, mâ shâ’ Allâh`); } }
+  else { L.lvl = Math.max(L.lvl-1, 1); L.next = keyOf(addDays(today(),1)); }
+  save();
+  study.i++; study.revealed = false;
+  if(study.i >= study.queue.length){ study = null; toast("Révision terminée"); }
+  render(); window.scrollTo(0,0);
+}
+
+/* =========================================================
+   VUE : CARNET DES INVOCATIONS EXAUCÉES
+   ========================================================= */
+let carnetEdit = null, carnetDel = null;
+function renderCarnet(){
+  const pend = S.carnet.filter(x=>x.status!=="ok").sort((a,b)=>b.date.localeCompare(a.date));
+  const done = S.carnet.filter(x=>x.status==="ok").sort((a,b)=>(b.answered||"").localeCompare(a.answered||""));
+  const item = x => {
+    const editing = carnetEdit === x.id, del = carnetDel === x.id;
+    return `<div class="dua ${x.status==="ok"?"answered":""}">
+      <p>${esc(x.text)}</p>
+      <p class="dt">Demandée le ${fmtDate(fromKey(x.date))}${x.status==="ok"&&x.answered?`, exaucée le ${fmtDate(fromKey(x.answered))} (${Math.max(0,diffDays(fromKey(x.answered),fromKey(x.date)))} jours plus tard)`:""}</p>
+      ${x.how?`<p class="how">${esc(x.how)}</p>`:""}
+      ${editing?`<label class="field" style="margin:10px 0 0"><span>Comment Allah te l’a-t-Il accordée ?</span><textarea class="area" id="how-${x.id}" style="min-height:70px"></textarea></label>
+        <div class="acts"><button class="navbtn primary" data-act="answer" data-id="${x.id}">Enregistrer</button><button class="link" data-act="cancelans">Annuler</button></div>`
+      :`<div class="acts">
+        ${x.status!=="ok"?`<button class="navbtn strong" data-act="markans" data-id="${x.id}">Elle a été exaucée</button>`:`${x.shared?`<span class="dt" style="margin:0">Partagée sur le mur</span>`:`<button class="navbtn strong" data-act="sharecarnet" data-id="${x.id}">Partager anonymement</button>`}<button class="link" data-act="unans" data-id="${x.id}">Remettre en attente</button>`}
+        ${del?`<button class="link" data-act="delok" data-id="${x.id}">Confirmer la suppression</button>`:`<button class="link danger" data-act="del" data-id="${x.id}">Supprimer</button>`}
+      </div>`}
+    </div>`;
+  };
+  return `<div class="page"><h1>Carnet des invocations</h1>
+    <p class="lead">Note ce que tu demandes à Allah. Le jour où une invocation est exaucée, marque-la et écris comment. Avec le temps, ce carnet devient la preuve de ce qui t’a été donné.</p></div>
+    <div class="stats"><div class="stat"><b>${done.length}</b><span>invocation${done.length>1?"s":""} exaucée${done.length>1?"s":""}</span></div><div class="stat"><b>${pend.length}</b><span>en attente</span></div></div>
+    <section class="sec"><label class="field"><span>Nouvelle invocation</span><textarea class="area" id="newdua" maxlength="600" placeholder="Ô Allah, accorde-moi…"></textarea></label>
+      <button class="navbtn primary" data-act="adddua">Ajouter au carnet</button></section>
+    <section class="sec"><div class="sechead"><h2>En attente</h2><span class="count">${pend.length}</span></div>
+      ${pend.length?pend.map(item).join(""):`<p class="empty">Aucune invocation en attente.</p>`}</section>
+    <section class="sec"><div class="sechead"><h2>Exaucées</h2><span class="count">${done.length}</span></div>
+      ${done.length?done.map(item).join(""):`<p class="empty">Quand une invocation sera exaucée, elle apparaîtra ici avec son histoire.</p>`}</section>
+    <p class="secintro">« Votre Seigneur a dit : invoquez-Moi, Je vous répondrai. » (Coran, Ghâfir 40:60). La réponse peut être ce que tu as demandé, un mal écarté, ou une récompense gardée pour l’au-delà (Ahmad, n° 11133).</p>`;
+}
+
+/* =========================================================
+   VUE : SUIVI
+   ========================================================= */
+function renderSuivi(){
+  const t = today(), {cur,best} = streaks();
+  const m0 = new Date(t.getFullYear(), t.getMonth(), 1);
+  let heldMonth = 0; for(let x = new Date(m0); x <= t; x = addDays(x,1)) if(dayPct(x)>=HELD) heldMonth++;
+  const start = weekRef, end = addDays(start,6), isCurrent = sameDay(start, monday(t));
+  let rows = "";
+  for(let i=0;i<7;i++){
+    const d = addDays(start,i), future = d > t, p = future ? 0 : dayPct(d), day = DAYS[d.getDay()];
+    rows += `<button class="dayrow ${sameDay(d,t)?"is-today":""}" data-act="goto" data-d="${keyOf(d)}" ${future?"disabled":""}>
+      ${starSVG(p)}<span><span class="dn">${day.name} ${d.getDate()}</span><br><span class="dt">${day.theme}</span></span><span class="dp">${future?"":Math.round(p*100)+" %"}</span></button>`;
+  }
+  const startHeat = addDays(monday(t), -28);
+  let cells = ["L","M","M","J","V","S","D"].map(h=>`<span class="hd">${h}</span>`).join("");
+  for(let i=0;i<35;i++){
+    const d = addDays(startHeat,i), dk = keyOf(d);
+    if(d > t || !S.start || dk < S.start){ cells += `<span class="cell out" aria-hidden="true"></span>`; continue; }
+    const p = dayPct(d), l = p>=1?4 : p>=.8?3 : p>=.5?2 : p>0?1 : 0;
+    cells += `<button class="cell l${l} ${sameDay(d,t)?"now":""}" data-act="goto" data-d="${dk}" aria-label="${DAYS[d.getDay()].name} ${fmtShort(d)} : ${Math.round(p*100)} %">${d.getDate()}</button>`;
+  }
+  const acc = {};
+  if(S.start) for(let i=0;i<14;i++){
+    const d = addDays(t,-i), dk = keyOf(d);
+    if(dk < S.start) break;
+    if(i===0 && dayPct(d) < 1) continue;
+    for(const id of countable(d)){ const k = id==="pact" ? "pact" : id; acc[k] = acc[k]||{s:0,n:0}; acc[k].s += itemPct(dk,id); acc[k].n++; }
+  }
+  const title = id => id==="obj" ? "Action de mon objectif" : id==="pact" ? "Geste du parcours" : ITEMS[id].title;
+  const neg = Object.entries(acc).map(([id,a])=>({id,p:a.s/a.n,n:a.n})).sort((a,b)=>a.p-b.p).slice(0,5);
+  const answered = S.carnet.filter(x=>x.status==="ok").length;
+  return `<div class="page"><h1>Ton suivi</h1></div>
+  <div class="stats">
+    <div class="stat"><b>${cur}</b><span>jour${cur>1?"s":""} tenu${cur>1?"s":""} d’affilée</span></div>
+    <div class="stat"><b>${best}</b><span>meilleure série</span></div>
+    <div class="stat"><b>${heldMonth}</b><span>jours tenus en ${MONTHS[t.getMonth()]}</span></div>
+  </div>
+  <div class="row" style="margin:0 0 18px"><button class="navbtn primary" data-act="bkind" data-k="semaine" onclick="location.hash='#bilan'">Bilan de la semaine</button><button class="navbtn strong" data-act="bkind" data-k="mois" onclick="location.hash='#bilan'">Bilan du mois</button></div>
+  <p class="secintro" style="margin:0 0 22px">Un jour est « tenu » quand tu atteins 80 % de son programme. Les jeûnes facultatifs ne comptent pas. ${answered?`Ton carnet compte ${answered} invocation${answered>1?"s":""} exaucée${answered>1?"s":""}.`:""}</p>
+  <section class="sec"><div class="sechead"><h2>Mon binôme</h2></div>${binomeSummary()}</section>
+  <section class="sec">
+    <div class="weeknav"><button class="iconbtn" data-act="wprev" aria-label="Semaine précédente">${ICON.left}</button>
+      <div style="text-align:center"><h3>${isCurrent?"Cette semaine":"Semaine du "+fmtShort(start)}</h3><p>Du ${fmtShort(start)} au ${fmtShort(end)}</p></div>
+      <button class="iconbtn" data-act="wnext" aria-label="Semaine suivante" ${isCurrent?"disabled":""}>${ICON.right}</button></div>
+    ${rows}</section>
+  <section class="sec"><div class="sechead"><h2>Les cinq dernières semaines</h2></div>
+    <div class="heat">${cells}</div>
+    <div class="legend">Moins <span class="cell l0"></span><span class="cell l1"></span><span class="cell l2"></span><span class="cell l3"></span><span class="cell l4"></span> Plus</div></section>
+  <section class="sec"><div class="sechead"><h2>À renforcer</h2><span class="count">14 derniers jours</span></div>
+    <p class="secintro">Ce que tu fais le moins souvent, du plus négligé au moins négligé.</p>
+    ${neg.length?`<ul class="neg">${neg.map(x=>`<li><span>${title(x.id)}</span><span class="np">${Math.round(x.p*100)} % sur ${x.n} jour${x.n>1?"s":""}</span><span class="nb"><i style="width:${Math.max(x.p*100,2)}%"></i></span></li>`).join("")}</ul>`
+      :`<p class="empty">Les données apparaîtront dès que tu auras terminé une première journée.</p>`}</section>`;
+}
+
+/* =========================================================
+   VUE : BINÔME
+   ========================================================= */
+let B = {members:[], received:[], unsubM:null, unsubR:null, code:null, names:{}, encFor:null, state:"idle"};
+function heldMap(){
+  const t = today(), m = {};
+  for(let i=0;i<30;i++){ const d = addDays(t,-i); if(dayPct(d) >= HELD) m[keyOf(d)] = 1; }
+  return m;
+}
+let lastBin = "";
+async function pushBinome(){
+  if(store.mode !== "account" || !store.db || !store.uid) return;
+  const code = S.binome?.code || "";
+  const body = {code, days: code ? heldMap() : {}};
+  const sig = JSON.stringify(body);
+  if(sig === lastBin) return;
+  try{ await store.db.doc(`binome/${store.uid}`).set({...body, updated:Date.now()}); lastBin = sig; }catch(e){}
+}
+function binomeSubscribe(){
+  const code = S.binome?.code || null;
+  if(!store.db || !store.uid) return;
+  if(B.code === code && (B.unsubM || !code)) return;
+  if(B.unsubM){ B.unsubM(); B.unsubM = null; }
+  if(B.unsubR){ B.unsubR(); B.unsubR = null; }
+  B.code = code; B.members = []; B.received = [];
+  if(!code) return;
+  B.state = "loading";
+  const timer = setTimeout(()=>{ if(B.state==="loading"){ B.state = "slow"; rerenderIf(["binome","suivi"]); } }, 10000);
+  B.unsubM = store.db.collection("binome").where("code","==",code).onSnapshot(async snap=>{
+    clearTimeout(timer); B.state = "ok";
+    B.members = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    await resolveNames(B.members.map(m=>m.id));
+    rerenderIf(["binome","suivi"]);
+  }, ()=>{ clearTimeout(timer); B.state = "error"; rerenderIf(["binome","suivi"]); });
+  B.unsubR = store.db.collection("encouragements").where("to","==",store.uid).orderBy("at","desc").limit(20).onSnapshot(async snap=>{
+    B.received = snap.docs.map(d=>d.data()).filter(x=>x.code===code);
+    await resolveNames(B.received.map(x=>x.from));
+    rerenderIf(["binome"]);
+  }, ()=>{});
+}
+async function resolveNames(ids){
+  if(!store.user || !ids.length) return;
+  try{ const ps = await store.user.profiles(ids); for(const id of ids){ if(ps && ps[id]) B.names[id] = ps[id].name || ""; } }catch(e){}
+}
+function nameOf(id){ return id === store.uid ? "Toi" : (B.names[id] || "Un membre du cercle"); }
+function memberRow(m){
+  const t = today(), heldToday = m.days && m.days[keyOf(t)];
+  const dots = Array.from({length:7},(_,i)=>{ const d = addDays(t,i-6); return `<i class="${m.days && m.days[keyOf(d)]?"on":""}" title="${fmtShort(d)}"></i>`; }).join("");
+  const me = m.id === store.uid;
+  return `<div class="member"><div><div class="mn"></div><div class="ms ${heldToday?"ok":""}">${heldToday?"A tenu sa journée aujourd’hui":"Journée pas encore tenue"}</div></div>
+    <div class="dots" aria-label="7 derniers jours">${dots}</div>
+    ${me?"":B.encFor===m.id?`<div class="enc">${ENCOURAGEMENTS.map((e,i)=>`<button class="chip" data-act="sendenc" data-to="${m.id}" data-i="${i}">${e}</button>`).join("")}</div>`
+      :`<div class="enc"><button class="link" data-act="encfor" data-to="${m.id}">Envoyer un encouragement</button></div>`}
+  </div>`;
+}
+function fillNames(root){
+  root.querySelectorAll(".member").forEach((el,i)=>{ const m = B.sorted[i]; if(m) el.querySelector(".mn").textContent = nameOf(m.id); });
+  root.querySelectorAll("[data-from]").forEach(el=> el.textContent = nameOf(el.dataset.from));
+}
+function binomeSummary(){
+  if(store.mode !== "account") return `<p class="empty">Le binôme est disponible quand tu es connecté à ton compte.</p>`;
+  if(!S.binome?.code) return `<p class="secintro" style="margin:0 0 10px">Avance avec un proche : chacun voit seulement si l’autre a tenu sa journée, rien de plus.</p><a class="navbtn strong" href="#binome">Créer ou rejoindre un cercle</a>`;
+  const others = B.members.filter(m=>m.id!==store.uid);
+  const held = others.filter(m=>m.days && m.days[keyOf(today())]).length;
+  return `<p class="secintro" style="margin:0 0 10px">${others.length?`${held} sur ${others.length} membre${others.length>1?"s":""} de ton cercle ${held>1?"ont":"a"} tenu sa journée aujourd’hui.`:"Personne n’a encore rejoint ton cercle."}</p><a class="navbtn strong" href="#binome">Voir mon cercle</a>`;
+}
+function renderBinome(){
+  let h = `<div class="page"><h1>Mon binôme</h1>
+    <p class="lead">Avancer à deux aide à tenir. Dans ton cercle, chacun voit uniquement si les autres ont tenu leur journée : jamais leurs invocations, leurs notes, leur objectif ni leur carnet. Pas de classement, pas de score public, pour préserver la sincérité de l’intention.</p></div>`;
+  if(store.mode !== "account") return h + `<p class="empty">Le binôme a besoin que tu sois connecté à ton compte. Ta progression reste enregistrée sur cet appareil en attendant.</p>`;
+  if(!S.binome?.code){
+    return h + `<section class="sec"><div class="sechead"><h2>Créer un cercle</h2></div>
+      <p class="secintro">Tu obtiens un code à transmettre à ton binôme, à ton conjoint ou à un ami.</p>
+      <button class="navbtn primary" data-act="mkcircle">Créer mon cercle</button></section>
+      <section class="sec"><div class="sechead"><h2>Rejoindre un cercle</h2></div>
+      <label class="field"><span>Code reçu</span><input class="input" id="joincode" maxlength="6" autocapitalize="characters" placeholder="Par exemple : K7M2QX" style="letter-spacing:.15em;text-transform:uppercase"></label>
+      <button class="navbtn strong" data-act="joincircle">Rejoindre</button></section>`;
+  }
+  B.sorted = [...B.members].sort((a,b)=> (a.id===store.uid?-1:b.id===store.uid?1:0));
+  const recv = B.received.filter(x=> diffDays(today(), new Date(new Date(x.at).setHours(0,0,0,0))) <= 7);
+  h += `<section class="sec"><div class="sechead"><h2>Le code de ton cercle</h2></div>
+    <p class="code">${esc(S.binome.code)}</p>
+    <p class="secintro" style="margin:4px 0 0">Transmets-le à la personne avec qui tu veux avancer. Elle doit avoir accès à cette application.</p></section>
+  <section class="sec"><div class="sechead"><h2>Membres</h2><span class="count">7 derniers jours</span></div>
+    ${B.state==="loading"?`<p class="empty">Chargement du cercle…</p>`:B.state==="slow"?`<p class="empty">Le cercle ne répond pas encore. Vérifie ta connexion.</p>`:B.state==="error"?`<p class="empty">Impossible de lire le cercle pour le moment.</p>`:""}
+    ${B.sorted.map(memberRow).join("")}</section>
+  <section class="sec"><div class="sechead"><h2>Encouragements reçus</h2></div>
+    ${recv.length?recv.map(x=>`<div class="dua"><p>${esc(ENCOURAGEMENTS[x.i]||"")}</p><p class="dt"><span data-from="${esc(x.from)}"></span>, le ${fmtShort(new Date(x.at))}</p></div>`).join(""):`<p class="empty">Aucun encouragement cette semaine.</p>`}</section>
+  <p><button class="link danger" data-act="leavecircle">Quitter ce cercle</button></p>`;
+  return h;
+}
+
+/* =========================================================
+   VUE : PLUS, OBJECTIF, PARCOURS, PRIÈRE, PROGRAMME
+   ========================================================= */
+function renderPlus(){
+  const p = S.parcours && PARCOURS[S.parcours.id];
+  const pd = parcoursDay(today());
+  return `<div class="page"><h1>Plus</h1></div>
+  <ul class="menu">
+    <li><a href="#objectif">Mon objectif <span>${S.objective?esc(S.objective.title):"Pas encore fixé"}</span></a></li>
+    <li><a href="#parcours">Parcours de 40 jours <span>${p&&pd?`${p.title}, jour ${pd}`:"Aucun en cours"}</span></a></li>
+    <li><a href="#binome">Mon binôme <span>${S.binome?.code?"Cercle actif":"Aucun cercle"}</span></a></li>
+    <li><a href="#bilan">Mon bilan <span>Semaine et mois</span></a></li>
+    <li><a href="#rythme">Mon rythme <span>${rampWeek(today())?`Démarrage, semaine ${rampWeek(today())}`:"Programme complet"}</span></a></li>
+    <li><a href="#priere">Horaires de prière <span>${S.prayer?esc(S.prayer.city):"Ville à choisir"}</span></a></li>
+    <li><a href="#programme">Le programme complet <span>Textes et sources</span></a></li>
+    <li><a href="#confidentialite">Confidentialité <span>Ce que l’application garde</span></a></li>
+  </ul>`;
+}
+function renderObjectif(){
+  const o = S.objective;
+  const sug = o && OBJ_CATS[o.cat] ? PARCOURS[OBJ_CATS[o.cat].p] : null;
+  return `<div class="page"><h1>Mon objectif</h1>
+    <p class="lead">L’invocation et l’effort vont ensemble. Fixe un objectif concret : chaque jour, l’application te demandera une action pour l’atteindre, et elle comptera dans ta progression.</p></div>
+  <section class="sec">
+    <label class="field"><span>Ce que je veux atteindre</span><input class="input" id="otitle" maxlength="100" placeholder="Par exemple : signer trois nouveaux clients" value="${esc(o?.title||"")}"></label>
+    <label class="field"><span>Domaine</span><select class="select" id="ocat">${Object.entries(OBJ_CATS).map(([k,v])=>`<option value="${k}" ${o?.cat===k?"selected":""}>${v.l}</option>`).join("")}</select></label>
+    <label class="field"><span>Pourquoi c’est important pour moi</span><textarea class="area" id="owhy" maxlength="400" placeholder="Ton intention, pour Allah et pour les tiens">${esc(o?.why||"")}</textarea></label>
+    <div class="row"><button class="navbtn primary" data-act="saveobj">${o?"Mettre à jour":"Fixer mon objectif"}</button>${o?`<button class="link danger" data-act="delobj">Retirer l’objectif</button>`:""}</div>
+  </section>
+  ${o&&sug&&(!S.parcours||S.parcours.id!==OBJ_CATS[o.cat].p)?`<div class="setup"><p>Le parcours « ${sug.title} » accompagne bien cet objectif.</p><a class="navbtn strong" href="#parcours">Voir le parcours</a></div>`:""}`;
+}
+function renderParcours(){
+  const cur = S.parcours, pd = parcoursDay(today());
+  return `<div class="page"><h1>Parcours de 40 jours</h1>
+    <p class="lead">Un parcours ajoute à ton programme quotidien des invocations ciblées et un geste concret différent chaque jour. Un seul parcours à la fois.</p></div>
+  ${Object.entries(PARCOURS).map(([id,p])=>{
+    const active = cur && cur.id === id && pd;
+    const finished = cur && cur.id === id && !pd && diffDays(today(), fromKey(cur.start)) >= PARCOURS_DAYS;
+    return `<div class="card ${active?"active":""}"><h3>${p.title}</h3><p>${p.intro}</p>
+      <p style="font-size:.9rem">Invocations : ${p.duas.map(d=>ITEMS[d].title).join(", ")}</p>
+      ${active?`<div class="learnbar"><i style="width:${pd/PARCOURS_DAYS*100}%"></i></div><p style="font-size:.9rem;margin:4px 0 10px">Jour ${pd} sur ${PARCOURS_DAYS}</p><button class="link danger" data-act="stopparc">Arrêter ce parcours</button>`
+        :`${finished?`<p style="font-size:.9rem;color:var(--accent)">Parcours terminé, qu’Allah l’accepte.</p>`:""}<button class="navbtn strong" data-act="startparc" data-id="${id}">${cur&&pd?"Remplacer par ce parcours":"Commencer aujourd’hui"}</button>`}
+    </div>`;}).join("")}`;
+}
+function renderPriere(){
+  const P = S.prayer, pt = P ? prayerTimes(today()) : null;
+  const custom = P && !CITIES.some(c=>c[0]===P.city);
+  return `<div class="page"><h1>Horaires de prière</h1>
+    <p class="lead">Les horaires servent à caler les rappels du programme : après le Fajr, adhkâr du matin et du soir, dernière heure du vendredi. Ils sont calculés sur ton appareil ; vérifie-les avec ta mosquée et ajuste la méthode si besoin.</p></div>
+  <section class="sec">
+    <label class="field"><span>Ville</span><select class="select" id="pcity"><option value="">Choisir…</option>${CITIES.map(c=>`<option ${P&&P.city===c[0]?"selected":""}>${c[0]}</option>`).join("")}${custom?`<option selected>${esc(P.city)}</option>`:""}</select></label>
+    <p style="margin:-4px 0 14px"><button class="link" data-act="geoloc">Utiliser ma position</button></p>
+    <label class="field"><span>Méthode de calcul</span><select class="select" id="pmethod">${Object.entries(METHODS).map(([k,m])=>`<option value="${k}" ${(P?.method||"uoif")===k?"selected":""}>${m.l}</option>`).join("")}</select></label>
+  </section>
+  ${pt?`<section class="sec"><div class="sechead"><h2>Aujourd’hui à ${esc(P.city)}</h2></div>${prayerStrip(today())}</section>`:""}`;
+}
+function renderConfid(){
+  return `<div class="page"><h1>Confidentialité</h1>
+  <p class="lead">Aucune publicité. Aucune donnée revendue. Ce que tu écris ici t’appartient.</p></div>
+  <section class="sec"><p>Ta progression, tes notes, ton objectif et ton carnet d’invocations sont enregistrés dans un espace privé lié à ton compte : personne d’autre n’y a accès.</p>
+  <p>Si tu rejoins un cercle, ses membres voient seulement deux choses : ton nom et les jours où tu as tenu ta journée, sur les 30 derniers jours. Jamais le détail de ce que tu as fait.</p>
+  <p>Dans la communauté, tu apparais sous un identifiant anonyme qui n’est pas relié à ton nom. Les autres voient seulement des chiffres collectifs : combien de membres ont tenu leur journée, combien dans chaque cercle. Tes demandes de du’â et tes témoignages sont publiés sans ton nom, avec le prénom ou le pseudonyme que tu choisis, ou « Un membre ».</p>
+  <p>Les horaires de prière sont calculés sur ton appareil à partir de ta ville. Ta position, si tu l’utilises, ne sert qu’à ce calcul et n’est pas envoyée.</p></section>`;
+}
+function renderProgramme(){
+  const order = [1,2,3,4,5,6,0];
+  return `<div class="page"><h1>Le programme</h1>
+    <p class="lead">Un socle fixe chaque jour, et un thème différent pour chaque jour de la semaine. Toutes les invocations viennent du Coran ou de hadiths authentiques ; quand une pratique est discutée, c’est indiqué.</p></div>
+  ${displayChips()}
+  <section class="sec"><div class="sechead"><h2>Comment lire les sources</h2></div>
+    <p><b>Coran</b> : le texte vient directement d’un verset. <b>Sahîh</b> : hadith authentique, la plus haute catégorie. <b>Hasan</b> : hadith bon, accepté comme preuve. Les hadiths faibles ne figurent pas dans le programme ; quand une pratique repose sur une chaîne discutée, la note de la carte le signale.</p></section>
+  <section class="sec"><div class="sechead"><h2>Chaque jour</h2></div>${SOCLE.map(id=>cardHTML(id,null,{readonly:true})).join("")}</section>
+  ${order.map(i=>`<section class="sec"><div class="sechead"><h2>${DAYS[i].name}</h2><span class="count">${DAYS[i].theme}</span></div>
+    ${DAYS[i].items.map(id=>cardHTML(id,null,{readonly:true,theme:true})).join("")}</section>`).join("")}
+  <section class="sec"><div class="sechead"><h2>Ce qui donne sa force au programme</h2></div>
+    <div class="acc"><h3>La taqwa</h3><p>« Quiconque craint Allah, Il lui donne une issue et le pourvoit d’où il ne s’y attend pas. »</p><p class="src"><b>Source :</b> Coran, At-Talâq 65:2-3</p></div>
+    <div class="acc"><h3>Un revenu halal</h3><p>Le Prophète ﷺ a évoqué l’homme qui lève les mains au ciel en invoquant, alors que sa nourriture et ses vêtements viennent de l’illicite : comment serait-il exaucé ?</p><p class="src"><b>Source :</b> Muslim (n° 1015)</p></div>
+    <div class="acc"><h3>Le tawakkul avec l’effort</h3><p>Si vous placiez votre confiance en Allah comme il se doit, Il vous nourrirait comme les oiseaux : ils partent le ventre vide et reviennent rassasiés. Les oiseaux partent : la confiance n’empêche pas d’agir.</p><p class="src"><b>Source :</b> At-Tirmidhî (n° 2344)</p></div>
+    <div class="acc"><h3>Les moments où l’invocation est exaucée</h3><p>Le dernier tiers de la nuit, entre l’appel à la prière et l’iqâma, et pendant la prosternation.</p><p class="src"><b>Sources :</b> Al-Bukhârî (n° 1145) ; Abû Dâwûd (n° 521) ; Muslim (n° 482)</p></div></section>
+  <section class="sec"><div class="sechead"><h2>Une précision</h2></div>
+    <p>On entend souvent que lire la sourate Al-Wâqiʿa chaque soir éloigne la pauvreté. Le hadith qui l’affirme est jugé faible par les savants du hadith. Tu peux la lire comme lecture du Coran, sans compter sur cette promesse précise. Pour toute question de détail, un imam ou un savant de confiance reste la meilleure référence.</p></section>`;
+}
+
+
+/* =========================================================
+   COMMUNAUTÉ
+   ========================================================= */
+const REQ_CATS = {emploi:"Emploi et revenus", activite:"Activité et projets", dette:"Dettes", mariage:"Mariage", famille:"Famille et enfants", etudes:"Études", sante:"Santé", epreuve:"Épreuve", autre:"Autre"};
+const KINDS = {exact:"Ce que j’avais demandé", better:"Autre chose, de meilleur", protect:"Un mal a été écarté", peace:"Pas encore, mais j’ai trouvé la paix"};
+const DELAYS = {w:"Moins d’une semaine", m:"Quelques semaines", mo:"Quelques mois", y:"Plus d’un an"};
+const GROUP_NAMES = {general:"Programme de la semaine", rizq:"Portes du rizq", dettes:"Sortir des dettes", mariage:"Mariage", etudes:"Études et examens", epreuve:"Traverser une épreuve", deuil:"Le deuil"};
+const MILESTONES = [7,14,21,30,40,60,90,100,150,200,365];
+let C = {tallies:[], requests:[], testis:[], state:"idle", agg:null, subs:false, owner:false, filter:"all", confirmDel:null};
+let T = null; // brouillon de témoignage
+
+function myGroup(){
+  if(S.parcours && parcoursDay(today())) return S.parcours.id;
+  if(S.objective && OBJ_CATS[S.objective.cat]) return OBJ_CATS[S.objective.cat].p;
+  return "general";
+}
+function weekKeys(){ const m = monday(today()); return {ist:`ist-${keyOf(m)}`, sal:`sal-${keyOf(addDays(m,4))}`, mon:m, fri:addDays(m,4)}; }
+function prune(map, days){ const lim = keyOf(addDays(today(),-days)); for(const k in map) if(map[k] < lim) delete map[k]; }
+function buildTally(){
+  const t = today(), days = {}, socle = {};
+  for(let i=0;i<7;i++){ const d = addDays(t,-i), k = keyOf(d); if(dayPct(d) >= HELD) days[k] = 1; if(rec(k) && SOCLE.every(id=>itemPct(k,id)>=1)) socle[k] = 1; }
+  const w = weekKeys();
+  let ist = 0; for(let i=0;i<7;i++) ist += val(keyOf(addDays(w.mon,i)),"istighfar:0");
+  prune(S.prayed, 60); prune(S.hamd, 365);
+  return {group:myGroup(), days, socle, streak:streaks().cur, pday:parcoursDay(t), prayed:{...S.prayed}, hamd:{...S.hamd}, ch:{[w.ist]:ist, [w.sal]:val(keyOf(w.fri),"salawat:0")}};
+}
+let lastTally = "", tallyBusy = false, tallyAgain = false;
+async function pushTally(){
+  if(store.mode !== "account" || !store.db || !S.anonId) return;
+  if(tallyBusy){ tallyAgain = true; return; }
+  const body = buildTally(), sig = JSON.stringify(body);
+  if(sig === lastTally) return;
+  tallyBusy = true;
+  try{ await store.db.doc(`tallies/${S.anonId}`).set({...body, updated:Date.now()}); lastTally = sig; }catch(e){}
+  tallyBusy = false;
+  if(tallyAgain){ tallyAgain = false; pushTally(); }
+}
+function aggregate(){
+  const now = Date.now(), tk = keyOf(today()), w = weekKeys();
+  const a = {active:0, held:0, socle:0, groups:{}, prayed:{}, hamd:{}, ist:0, sal:0, mine:null};
+  for(const t of C.tallies){
+    if(t.id === S.anonId) a.mine = t;
+    for(const k in (t.prayed||{})) a.prayed[k] = (a.prayed[k]||0)+1;
+    for(const k in (t.hamd||{})) a.hamd[k] = (a.hamd[k]||0)+1;
+    a.ist += (t.ch && t.ch[w.ist]) || 0; a.sal += (t.ch && t.ch[w.sal]) || 0;
+    if(now - (t.updated||0) > 14*864e5) continue;
+    a.active++;
+    const held = t.days && t.days[tk];
+    if(held) a.held++;
+    if(t.socle && t.socle[tk]) a.socle++;
+    const g = GROUP_NAMES[t.group] ? t.group : "general";
+    a.groups[g] = a.groups[g] || {m:0,h:0}; a.groups[g].m++; if(held) a.groups[g].h++;
+  }
+  C.agg = a;
+}
+/* Mes propres actions comptent tout de suite, même avant la synchronisation */
+function liveCount(mapName, id){
+  const a = C.agg || {prayed:{},hamd:{},mine:null};
+  const remoteMine = a.mine && a.mine[mapName] && a.mine[mapName][id] ? 1 : 0;
+  return (a[mapName][id]||0) - remoteMine + (S[mapName][id] ? 1 : 0);
+}
+function liveTotals(){
+  const a = C.agg || {ist:0,sal:0,mine:null}, w = weekKeys(), mineCh = (a.mine && a.mine.ch) || {};
+  let ist = 0; for(let i=0;i<7;i++) ist += val(keyOf(addDays(w.mon,i)),"istighfar:0");
+  const sal = val(keyOf(w.fri),"salawat:0");
+  return {ist: a.ist - (mineCh[w.ist]||0) + ist, sal: a.sal - (mineCh[w.sal]||0) + sal, myIst:ist, mySal:sal};
+}
+function commuSubscribe(){
+  if(C.subs || store.mode !== "account" || !store.db) return;
+  C.subs = true; C.state = "loading";
+  const timer = setTimeout(()=>{ if(C.state==="loading"){ C.state = "slow"; refreshCommu(); } }, 10000);
+  const done = ()=>{ clearTimeout(timer); if(C.state!=="error") C.state = "ok"; };
+  store.db.collection("tallies").onSnapshot(snap=>{ done(); C.tallies = snap.docs.map(d=>({id:d.id, ...d.data()})); aggregate(); refreshCommu(); }, ()=>{ C.state = "error"; refreshCommu(); });
+  store.db.collection("requests").orderBy("at","desc").limit(100).onSnapshot(snap=>{ done(); C.requests = snap.docs.map(d=>({id:d.id, ...d.data()})); refreshCommu(); }, ()=>{});
+  store.db.collection("testimonies").orderBy("at","desc").limit(100).onSnapshot(snap=>{ done(); C.testis = snap.docs.map(d=>({id:d.id, ...d.data()})); refreshCommu(); }, ()=>{});
+}
+function refreshCommu(){
+  if(view === "jour"){ const el = document.getElementById("commu-banner"); if(el) el.outerHTML = commuBanner(); return; }
+  rerenderIf(["communaute","demandes","exaucees"]);
+}
+function ago(ts){
+  const m = Math.floor((Date.now()-ts)/60000);
+  if(m < 1) return "à l’instant"; if(m < 60) return `il y a ${m} min`;
+  const h = Math.floor(m/60); if(h < 24) return `il y a ${h} h`;
+  const d = new Date(ts); return sameDay(d, addDays(today(),-1)) ? "hier" : `le ${fmtShort(d)}`;
+}
+function niceGoal(n, min){ const v = Math.max(min, n); const p = Math.pow(10, Math.floor(Math.log10(v))); return Math.ceil(v/p)*p; }
+const nf = n => n.toLocaleString("fr-FR");
+function commuBanner(){
+  if(store.mode !== "account" || !C.agg) return `<span id="commu-banner"></span>`;
+  const a = C.agg, tt = liveTotals();
+  const today0 = keyOf(today()), reqToday = C.requests.filter(r=>keyOf(new Date(r.at))===today0).length;
+  return `<a class="banner" id="commu-banner" href="#communaute"><b>${nf(a.held)} membre${a.held>1?"s":""}</b> ${a.held>1?"ont tenu leur":"a tenu sa"} journée aujourd’hui.
+    <span>Défi de la semaine : ${nf(tt.ist)} istighfâr ensemble${reqToday?`. ${reqToday} nouvelle${reqToday>1?"s":""} demande${reqToday>1?"s":""} de du’â aujourd’hui`:""}.</span></a>`;
+}
+function segNav(){
+  const it = [["communaute","Le fil"],["demandes","Demandes"],["exaucees","Exaucées"]];
+  return `<nav class="seg" aria-label="Communauté">${it.map(([h,l])=>`<a href="#${h}" ${view===h?'aria-current="page"':""}>${l}</a>`).join("")}</nav>`;
+}
+function commuGate(){
+  if(store.mode !== "account") return `<p class="empty">La communauté a besoin que tu sois connecté à ton compte.</p>`;
+  if(C.state === "loading" && !C.agg) return `<p class="empty">Chargement de la communauté…</p>`;
+  if(C.state === "slow" && !C.agg) return `<p class="empty">La communauté ne répond pas encore. Vérifie ta connexion.</p>`;
+  if(C.state === "error") return `<p class="empty">Impossible de charger la communauté pour le moment.</p>`;
+  return "";
+}
+function renderCommu(){
+  const head = `<div class="page"><h1>Communauté</h1><p class="lead">Avancer ensemble, sans se montrer. Ici, personne n’a de nom ni de classement : seulement des chiffres collectifs, des demandes de du’â et des témoignages anonymes.</p></div>${segNav()}`;
+  const gate = commuGate(); if(gate) return head + gate;
+  const a = C.agg || {active:0,held:0,socle:0,groups:{}}, tt = liveTotals(), tk = keyOf(today());
+  const istGoal = niceGoal(a.active*500, 10000), salGoal = niceGoal(a.active*100, 1000);
+  const w = weekKeys(), isFri = today().getDay() === 5, friPast = today() > w.fri;
+  // fil
+  const feed = [];
+  feed.push(`${nf(a.socle)} membre${a.socle>1?"s ont":" a"} terminé le socle quotidien aujourd’hui.`);
+  for(const t of C.tallies){
+    if(t.id === S.anonId || !(t.days && t.days[tk])) continue;
+    const gn = GROUP_NAMES[t.group] || GROUP_NAMES.general;
+    if(t.pday === PARCOURS_DAYS) feed.push(`Un membre du cercle « ${gn} » a terminé son parcours de 40 jours aujourd’hui.`);
+    else if(MILESTONES.includes(t.streak)) feed.push(`Un membre du cercle « ${gn} » a tenu ${t.streak} jours d’affilée.`);
+  }
+  const reqToday = C.requests.filter(r=>keyOf(new Date(r.at))===tk && !r.answered).length;
+  if(reqToday) feed.push(`${reqToday} nouvelle${reqToday>1?"s":""} demande${reqToday>1?"s":""} de du’â aujourd’hui. <a href="#demandes">Invoquer pour eux</a>`);
+  const lastT = C.testis[0];
+  if(lastT) feed.push(`Nouveau témoignage, ${ago(lastT.at)} : « ${esc(lastT.asked)} ». <a href="#exaucees">Lire</a>`);
+  const mine = myGroup();
+  const groups = Object.keys(GROUP_NAMES).map(g=>{
+    const x = a.groups[g] || {m:0,h:0};
+    return `<div class="group ${g===mine?"mine":""}"><h4>${GROUP_NAMES[g]}</h4><p>${x.m} membre${x.m>1?"s":""}${x.m>1?`, ${Math.round(x.h/x.m*100)} % ont tenu aujourd’hui`:x.m===1?(x.h?", a tenu aujourd’hui":", pas encore tenu aujourd’hui"):""}</p>${g===mine?`<p style="color:var(--accent)">Ton cercle</p>`:""}</div>`;
+  }).join("");
+  return head + `
+  <div class="pulse"><b>${nf(a.held)}</b><p>membre${a.held>1?"s ont tenu leur":" a tenu sa"} journée aujourd’hui, sur ${nf(a.active)} membre${a.active>1?"s":""} actif${a.active>1?"s":""}.</p>
+    <p class="sub">Toi y compris, si tu atteins 80 % de ton programme.</p></div>
+  <section class="sec"><div class="sechead"><h2>Défis collectifs</h2></div>
+    <div class="challenge"><h3>Istighfâr de la semaine</h3>
+      <p><span class="big">${nf(tt.ist)}</span> sur ${nf(istGoal)}</p>
+      <div class="learnbar"><i style="width:${Math.min(tt.ist/istGoal*100,100)}%"></i></div>
+      <p>Ta contribution : ${nf(tt.myIst)}. Ton compteur d’istighfâr s’ajoute automatiquement.</p></div>
+    <div class="challenge"><h3>Salawat du vendredi ${fmtShort(w.fri)}</h3>
+      <p><span class="big">${nf(tt.sal)}</span> sur ${nf(salGoal)}</p>
+      <div class="learnbar"><i style="width:${Math.min(tt.sal/salGoal*100,100)}%"></i></div>
+      <p>${isFri?`C’est aujourd’hui. Ta contribution : ${nf(tt.mySal)}.`:friPast?`Défi terminé. Ta contribution : ${nf(tt.mySal)}.`:"Le défi s’ouvre vendredi. Ton compteur de salawat s’ajoutera automatiquement."}</p></div>
+  </section>
+  <section class="sec"><div class="sechead"><h2>Le fil du jour</h2></div><ul class="feed">${feed.map(f=>`<li>${f}</li>`).join("")}</ul></section>
+  <section class="sec"><div class="sechead"><h2>Les cercles</h2></div>
+    <p class="secintro">Ton cercle dépend de ton parcours en cours ou de ton objectif.</p>
+    <div class="groups">${groups}</div></section>`;
+}
+function delBtn(col, x){
+  const mine = (col==="requests" ? S.myReq : S.myTest).includes(x.id);
+  if(!mine && !C.owner) return "";
+  return C.confirmDel === x.id ? `<button class="link" data-act="delpost" data-col="${col}" data-id="${x.id}">Confirmer la suppression</button>`
+    : `<button class="link danger" data-act="delpost" data-col="${col}" data-id="${x.id}">Supprimer${!mine?" (administrateur)":""}</button>`;
+}
+function renderDemandes(){
+  const head = `<div class="page"><h1>Communauté</h1></div>${segNav()}`;
+  const gate = commuGate(); if(gate) return head + gate;
+  const mine = C.requests.filter(r=>S.myReq.includes(r.id));
+  const others = C.requests.filter(r=>!S.myReq.includes(r.id) && !r.answered);
+  const card = r => {
+    const n = liveCount("prayed", r.id), me = S.myReq.includes(r.id), done = !!S.prayed[r.id];
+    return `<div class="post ${me?"mine":""}"><div class="meta"><span class="cat">${REQ_CATS[r.cat]||"Autre"}</span><span>${esc(r.pseudo||"Un membre")}, ${ago(r.at)}</span></div>
+      <p>${esc(r.text)}</p>
+      <div class="acts">
+        ${me ? `<span><b>${n}</b> du’â pour toi</span>${r.answered?`<span class="kind">Exaucée, al-hamdulillâh</span>`:`<button class="navbtn strong" data-act="reqanswered" data-id="${r.id}">Elle a été exaucée</button>`}`
+          : `<button class="pray" data-act="pray" data-id="${r.id}" aria-pressed="${done}">${done?"Tu as invoqué pour cette personne":"J’ai fait une du’â"}</button><span style="color:var(--muted);font-size:.9rem">${n} du’â</span>`}
+        ${delBtn("requests", r)}
+      </div></div>`;
+  };
+  return head + `
+  <div class="acc" style="margin-bottom:22px"><p>« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne dise : et pour toi de même. »</p><p class="src"><b>Source :</b> Muslim (n° 2733)</p></div>
+  <section class="sec"><div class="sechead"><h2>Demander des du’â</h2></div>
+    <p class="warn">Ta demande est publiée sans ton nom. N’y mets ni nom de famille, ni ville, ni détail qui permettrait de te reconnaître.</p>
+    <label class="field"><span>Domaine</span><select class="select" id="reqcat">${Object.entries(REQ_CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label>
+    <label class="field"><span>Ton besoin</span><textarea class="area" id="reqtext" maxlength="300" placeholder="Par exemple : je cherche un emploi depuis huit mois, faites une du’â pour moi"></textarea></label>
+    <label class="field"><span>Prénom ou pseudonyme (facultatif)</span><input class="input" id="reqpseudo" maxlength="30" value="${esc(S.pseudo)}" placeholder="Un membre"></label>
+    <button class="navbtn primary" data-act="postreq">Publier ma demande</button></section>
+  ${mine.length?`<section class="sec"><div class="sechead"><h2>Mes demandes</h2></div>${mine.map(card).join("")}</section>`:""}
+  <section class="sec"><div class="sechead"><h2>Ils ont besoin de tes du’â</h2><span class="count">${others.length}</span></div>
+    ${others.length?others.map(card).join(""):`<p class="empty">Aucune demande pour le moment.</p>`}</section>`;
+}
+function renderExaucees(){
+  const head = `<div class="page"><h1>Communauté</h1></div>${segNav()}`;
+  const gate = commuGate(); if(gate) return head + gate;
+  const list = C.testis.filter(t=> C.filter==="all" || t.kind===C.filter);
+  const card = t => {
+    const n = liveCount("hamd", t.id), me = S.myTest.includes(t.id);
+    return `<div class="post ${me?"mine":""}"><div class="meta"><span class="cat">${REQ_CATS[t.cat]||"Autre"}</span><span>${esc(t.pseudo||"Un membre")}, ${ago(t.at)}</span></div>
+      <span class="kind">${KINDS[t.kind]||KINDS.exact}</span>
+      <span class="lab">Ce qui a été demandé</span><p>${esc(t.asked)}</p>
+      <span class="lab">Comment c’est arrivé${t.delay&&DELAYS[t.delay]?`, ${DELAYS[t.delay].toLowerCase()} plus tard`:""}</span><p>${esc(t.how)}</p>
+      ${t.effort?`<span class="lab">L’effort fourni en parallèle</span><p>${esc(t.effort)}</p>`:""}
+      <div class="acts"><button class="pray" data-act="hamd" data-id="${t.id}" aria-pressed="${!!S.hamd[t.id]}">Al-hamdulillâh</button><span style="color:var(--muted);font-size:.9rem">${n}</span>${delBtn("testimonies", t)}</div></div>`;
+  };
+  return head + `
+  <div class="acc" style="margin-bottom:18px"><p>Allah répond toujours, mais pas toujours comme on l’imagine : en donnant ce qui a été demandé, en écartant un mal équivalent, ou en gardant la récompense pour l’au-delà.</p><p class="src"><b>Source :</b> Ahmad (n° 11133)</p></div>
+  <a class="navbtn primary" href="#temoigner" style="margin-bottom:20px">Partager une du’â exaucée</a>
+  <div class="filters"><button class="chip" data-act="filter" data-f="all" aria-pressed="${C.filter==="all"}">Toutes</button>${Object.entries(KINDS).map(([k,v])=>`<button class="chip" data-act="filter" data-f="${k}" aria-pressed="${C.filter===k}">${v}</button>`).join("")}</div>
+  ${list.length?list.map(card).join(""):`<p class="empty">${C.testis.length?"Aucun témoignage dans cette catégorie.":"Aucun témoignage pour le moment. Le premier pourrait être le tien."}</p>`}`;
+}
+function renderTemoigner(){
+  const head = `<div class="page"><h1>Partager une du’â exaucée</h1><p class="lead">Ton témoignage peut redonner espoir à quelqu’un qui attend encore. Il est publié sans ton nom.</p></div>`;
+  if(store.mode !== "account") return head + `<p class="empty">La communauté a besoin que tu sois connecté à ton compte.</p>`;
+  const t = T || {cat:"autre", kind:"exact", asked:"", how:"", effort:"", delay:""};
+  const opt = (obj, cur) => Object.entries(obj).map(([k,v])=>`<option value="${k}" ${cur===k?"selected":""}>${v}</option>`).join("");
+  return head + `
+  <p class="warn">N’y mets ni nom de famille, ni ville, ni montant, ni détail qui permettrait de reconnaître quelqu’un.</p>
+  <label class="field"><span>Domaine</span><select class="select" id="tcat">${opt(REQ_CATS,t.cat)}</select></label>
+  <label class="field"><span>Ce que tu as demandé</span><textarea class="area" id="tasked" maxlength="200" style="min-height:70px">${esc(t.asked)}</textarea></label>
+  <label class="field"><span>La réponse d’Allah</span><select class="select" id="tkind">${opt(KINDS,t.kind)}</select></label>
+  <label class="field"><span>Comment c’est arrivé</span><textarea class="area" id="thow" maxlength="600">${esc(t.how)}</textarea></label>
+  <label class="field"><span>L’effort fourni en parallèle (facultatif)</span><textarea class="area" id="teffort" maxlength="300" style="min-height:70px" placeholder="Par exemple : j’ai continué à postuler chaque semaine">${esc(t.effort)}</textarea></label>
+  <label class="field"><span>Au bout de combien de temps</span><select class="select" id="tdelay"><option value="">Je préfère ne pas préciser</option>${opt(DELAYS,t.delay)}</select></label>
+  <label class="field"><span>Prénom ou pseudonyme (facultatif)</span><input class="input" id="tpseudo" maxlength="30" value="${esc(S.pseudo)}" placeholder="Un membre"></label>
+  <div class="row"><button class="navbtn primary" data-act="posttest">Publier mon témoignage</button><a class="link" href="#exaucees">Annuler</a></div>`;
+}
+
+
+/* =========================================================
+   ACCOMPAGNEMENT : démarrage en douceur, minimum du jour
+   ========================================================= */
+const REGULAR = `<p class="src"><b>Source :</b> Al-Bukhârî (n° 6464) ; Muslim (n° 783)</p>`;
+function coachCard(d, s){
+  const t = today(), isToday = sameDay(d,t), y = addDays(t,-1), yk = keyOf(y);
+  if(s.light) return `<div class="coach light"><p><b>Minimum du jour activé.</b> Trois invocations courtes suffisent aujourd’hui pour tenir ta journée. Les œuvres les plus aimées d’Allah sont les plus régulières, même si elles sont peu nombreuses.</p>${REGULAR}
+    <div class="row"><button class="navbtn" data-act="light" data-on="0">Revenir au programme complet</button></div></div>`;
+  if(isToday && S.start && S.start <= yk && dayPct(y) < HELD && dayPct(d) < HELD){
+    return `<div class="coach warm"><p><b>Hier n’a pas été tenu, et ce n’est pas grave.</b> Personne ne tient tous les jours. Ce qui compte, c’est de reprendre : les œuvres les plus aimées d’Allah sont les plus régulières, même si elles sont peu nombreuses.</p>${REGULAR}
+      <div class="row"><button class="navbtn strong" data-act="light" data-on="1">Reprendre avec le minimum du jour</button></div></div>`;
+  }
+  if(s.ramp){
+    const left = s.ramp === 1 ? "La semaine prochaine, tu passeras au socle complet de cinq invocations." : "La semaine prochaine, le thème du jour s’ajoutera à ton programme.";
+    return `<div class="coach"><p><b>Démarrage en douceur, semaine ${s.ramp} sur 2.</b> ${s.ramp===1?"Trois invocations pour installer l’habitude.":"Le socle complet, sans le thème du jour."} ${left}</p>
+      <div class="row"><button class="link" data-act="rampdone">Passer dès maintenant au programme complet</button></div></div>`;
+  }
+  return `<div class="quiet"><span>Journée chargée ?</span><button class="navbtn" data-act="light" data-on="1">Minimum du jour</button></div>`;
+}
+
+/* =========================================================
+   ACCUEIL EN TROIS QUESTIONS
+   ========================================================= */
+const LEVELS = {
+  none:{l:"Je ne lis pas l’arabe",d:"Tu suivras la phonétique et la traduction.",show:{ar:true,ph:true,fr:true}},
+  read:{l:"Je lis l’arabe sans bien le comprendre",d:"Le texte arabe et la traduction, sans phonétique.",show:{ar:true,ph:false,fr:true}},
+  fluent:{l:"Je lis et je comprends l’arabe",d:"Le texte arabe seul. Tu pourras réafficher le reste à tout moment.",show:{ar:true,ph:false,fr:false}}
+};
+let OB = {step:0, cat:null, title:"", level:null, ramp:true};
+let forceOb = false;
+function needsOnboarding(){ return !S.onboarded && !S.start; }
+function renderBienvenue(){
+  const st = OB.step;
+  const stepper = st > 0 && st < 4 ? `<div class="stepper" aria-label="Question ${st} sur 3">${[1,2,3].map(i=>`<i class="${i<=st?"on":""}"></i>`).join("")}</div>` : "";
+  let h = "";
+  if(st === 0){
+    h = `<div class="star">${starSVG(0)}</div>
+      <h1>Ton programme d’invocations, au quotidien</h1>
+      <p class="lead">Des invocations authentiques, sourcées, reliées à un objectif concret. Trois questions pour l’adapter à toi, et c’est parti.</p>
+      <div class="obnav"><button class="navbtn primary" data-act="obnext">Commencer</button></div>`;
+  } else if(st === 1){
+    const P = S.prayer;
+    h = `${stepper}<h1>Où vis-tu ?</h1>
+      <p class="lead">Pour caler ton programme sur tes horaires de prière : l’invocation après le Fajr, les adhkâr du matin et du soir.</p>
+      <label class="field"><span>Ville</span><select class="select" id="obcity"><option value="">Choisir…</option>${CITIES.map(c=>`<option ${P&&P.city===c[0]?"selected":""}>${c[0]}</option>`).join("")}${P&&!CITIES.some(c=>c[0]===P.city)?`<option selected>${esc(P.city)}</option>`:""}</select></label>
+      <p style="margin:-4px 0 18px"><button class="link" data-act="geoloc">Utiliser ma position</button></p>
+      ${P?`<p class="secintro" style="margin:0 0 14px">Fajr aujourd’hui à ${hm(prayerTimes(today()).fajr)}.</p>`:""}
+      <div class="obnav"><button class="navbtn primary" data-act="obnext">${P?"Continuer":"Passer cette étape"}</button></div>`;
+  } else if(st === 2){
+    h = `${stepper}<h1>Qu’est-ce que tu cherches à atteindre ?</h1>
+      <p class="lead">Chaque jour, l’application te demandera une action concrète pour ton objectif, à côté de tes invocations.</p>
+      <div class="choices">${Object.entries(OBJ_CATS).map(([k,v])=>`<button class="choice" data-act="obcat" data-k="${k}" aria-pressed="${OB.cat===k}">${v.l}</button>`).join("")}</div>
+      ${OB.cat?`<label class="field"><span>En une phrase (facultatif)</span><input class="input" id="obtitle" maxlength="100" value="${esc(OB.title)}" placeholder="Par exemple : trouver un CDI avant l’été"></label>`:""}
+      <div class="obnav"><button class="navbtn primary" data-act="obnext">${OB.cat?"Continuer":"Je verrai plus tard"}</button><button class="link" data-act="obback">Retour</button></div>`;
+  } else if(st === 3){
+    h = `${stepper}<h1>Ton rapport à l’arabe</h1>
+      <p class="lead">Pour afficher les textes de la façon qui t’aide le plus.</p>
+      <div class="choices">${Object.entries(LEVELS).map(([k,v])=>`<button class="choice" data-act="oblevel" data-k="${k}" aria-pressed="${OB.level===k}">${v.l}<small>${v.d}</small></button>`).join("")}</div>
+      <div class="obnav"><button class="navbtn primary" data-act="obnext" ${OB.level?"":"disabled"}>Continuer</button><button class="link" data-act="obback">Retour</button></div>`;
+  } else {
+    const cat = OB.cat ? OBJ_CATS[OB.cat] : null;
+    h = `<h1>Ton programme est prêt</h1>
+      <div class="recap">
+        <p><b>Objectif :</b> ${cat?esc(OB.title||cat.l):"à fixer plus tard"}</p>
+        <p><b>Horaires :</b> ${S.prayer?esc(S.prayer.city):"à choisir plus tard"}</p>
+        <p><b>Textes :</b> ${LEVELS[OB.level||"none"].l.toLowerCase()}</p>
+      </div>
+      <div class="sechead"><h2>Ton rythme</h2></div>
+      <div class="choices">
+        <button class="choice" data-act="obramp" data-v="1" aria-pressed="${OB.ramp}">Démarrage en douceur (recommandé)<small>Semaine 1 : trois invocations. Semaine 2 : le socle complet. Ensuite : le programme entier avec le thème du jour.</small></button>
+        <button class="choice" data-act="obramp" data-v="0" aria-pressed="${!OB.ramp}">Programme complet dès aujourd’hui<small>Le socle de cinq invocations et le thème du jour.</small></button>
+      </div>
+      <p class="secintro">Les jours chargés, le « minimum du jour » te permet de tenir avec trois invocations courtes.</p>
+      <div class="obnav"><button class="navbtn primary" data-act="obfinish">Commencer mon programme</button><button class="link" data-act="obback">Retour</button></div>`;
+  }
+  return `<div class="ob">${h}</div>`;
+}
+function renderRythme(){
+  const ramp = rampWeek(today());
+  return `<div class="page"><h1>Mon rythme</h1>
+    <p class="lead">Adapte le programme à ton niveau et à tes journées.</p></div>
+  <section class="sec"><div class="sechead"><h2>Démarrage</h2></div>
+    <p>${ramp?`Tu es en démarrage en douceur, semaine ${ramp} sur 2.`:"Tu suis le programme complet."}</p>
+    <div class="row">${ramp?`<button class="navbtn strong" data-act="rampdone">Passer au programme complet</button>`:`<button class="navbtn" data-act="ramprestart">Recommencer en douceur</button>`}</div></section>
+  <section class="sec"><div class="sechead"><h2>Mon rapport à l’arabe</h2></div>
+    <div class="choices">${Object.entries(LEVELS).map(([k,v])=>`<button class="choice" data-act="setlevel" data-k="${k}" aria-pressed="${S.level===k}">${v.l}<small>${v.d}</small></button>`).join("")}</div></section>
+  <section class="sec"><div class="sechead"><h2>Minimum du jour</h2></div>
+    <p>Les jours chargés, active-le depuis la page du jour : trois invocations courtes (après le Fajr, Sayyid al-istighfâr, Yâ Hayyu yâ Qayyûm) suffisent pour tenir ta journée.</p></section>
+  <p><button class="link" data-act="redoob">Refaire l’accueil</button></p>`;
+}
+
+
+/* =========================================================
+   BILAN DE LA SEMAINE ET DU MOIS
+   ========================================================= */
+let BL = {kind:"semaine", ref:monday(today())};
+function periodRange(kind, ref){
+  if(kind === "semaine") return [ref, addDays(ref,6)];
+  return [ref, new Date(ref.getFullYear(), ref.getMonth()+1, 0)];
+}
+function periodStats(a, b){
+  const t = today(), st = {n:0, held:0, sum:0, ist:0, sal:0, obj:0, objN:0, objActs:[], light:0, items:{}, notes:[], days:[]};
+  for(let d = new Date(a); d <= b; d = addDays(d,1)){
+    const k = keyOf(d);
+    if(d > t || !S.start || k < S.start){ st.days.push({d, p:null}); continue; }
+    const p = dayPct(d); st.days.push({d, p});
+    st.n++; st.sum += p; if(p >= HELD) st.held++;
+    st.ist += val(k,"istighfar:0"); st.sal += val(k,"salawat:0");
+    const r = rec(k);
+    if(r && r.light) st.light++;
+    if(hasObjective(d) && !isLight(d)){ st.objN++; if(val(k,"obj:0") >= 1){ st.obj++; if(r && r.objAct) st.objActs.push({d, text:r.objAct}); } }
+    if(r && r.note && r.note.trim()) st.notes.push({d, text:r.note.trim()});
+    for(const id of countable(d)){ if(id==="obj") continue; const kk = id; st.items[kk] = st.items[kk] || {s:0,n:0}; st.items[kk].s += itemPct(k,id); st.items[kk].n++; }
+  }
+  st.avg = st.n ? st.sum/st.n : 0;
+  const ak = keyOf(a), bk = keyOf(b);
+  st.answered = S.carnet.filter(x=>x.status==="ok" && x.answered && x.answered >= ak && x.answered <= bk);
+  st.added = S.carnet.filter(x=>x.date >= ak && x.date <= bk).length;
+  st.mastered = Object.keys(S.learn).filter(id=>ITEMS[id] && S.learn[id].mastered && S.learn[id].mastered >= ak && S.learn[id].mastered <= bk);
+  return st;
+}
+function bilanBanner(){
+  const t = today();
+  if(!S.start || S.start >= keyOf(t)) return "";
+  if(t.getDate() === 1) return `<button class="banner" style="width:100%;text-align:left" data-act="openbilan" data-p="lastmonth"><b>Ton bilan de ${MONTHS[addDays(t,-1).getMonth()]} est prêt.</b><span>Prends une minute pour regarder ton mois.</span></button>`;
+  if(t.getDay() === 1) return `<button class="banner" style="width:100%;text-align:left" data-act="openbilan" data-p="lastweek"><b>Ton bilan de la semaine est prêt.</b><span>Prends une minute pour regarder ta semaine.</span></button>`;
+  return "";
+}
+const itemTitle = id => id==="pact" ? "Le geste du parcours" : (ITEMS[id] ? ITEMS[id].title : id);
+function renderBilan(){
+  const [a,b] = periodRange(BL.kind, BL.ref), t = today();
+  const isWeek = BL.kind === "semaine";
+  const st = periodStats(a,b);
+  const prevRef = isWeek ? addDays(BL.ref,-7) : new Date(BL.ref.getFullYear(), BL.ref.getMonth()-1, 1);
+  const [pa,pb] = periodRange(BL.kind, prevRef), prev = periodStats(pa,pb);
+  const isCurrent = a <= t && t <= b;
+  const title = isWeek ? (isCurrent ? "Cette semaine" : `Semaine du ${fmtShort(a)}`) : `${MONTHS[a.getMonth()][0].toUpperCase()+MONTHS[a.getMonth()].slice(1)} ${a.getFullYear()}`;
+  let h = `<div class="page"><h1>Mon bilan</h1></div>
+  <nav class="seg" aria-label="Période"><a href="#bilan" data-act="bkind" data-k="semaine" ${isWeek?'aria-current="page"':""}>Semaine</a><a href="#bilan" data-act="bkind" data-k="mois" ${!isWeek?'aria-current="page"':""}>Mois</a></nav>
+  <div class="bnav"><button class="iconbtn" data-act="bprev" aria-label="Période précédente">${ICON.left}</button>
+    <div><h3>${title}</h3><p class="secintro" style="margin:0;text-align:center">Du ${fmtShort(a)} au ${fmtShort(b)}</p></div>
+    <button class="iconbtn" data-act="bnext" aria-label="Période suivante" ${isCurrent||b>t?"disabled":""}>${ICON.right}</button></div>`;
+  if(!st.n) return h + `<p class="empty">Aucune journée enregistrée sur cette période.</p>`;
+  let delta = "";
+  if(prev.n){ const dp = Math.round((st.avg - prev.avg)*100); delta = dp > 0 ? `${dp} points de plus que ${isWeek?"la semaine":"le mois"} précédent${isWeek?"e":""}.` : dp < 0 ? `${-dp} points de moins que ${isWeek?"la semaine":"le mois"} précédent${isWeek?"e":""}. Ce n’est pas grave : l’important est de continuer.` : `Aussi régulier que ${isWeek?"la semaine":"le mois"} précédent${isWeek?"e":""}.`; }
+  h += `<div class="pulse"><b>${st.held} / ${st.n}</b><p>jour${st.held>1?"s":""} tenu${st.held>1?"s":""}${isCurrent?" jusqu’ici":""}, avec une moyenne de ${Math.round(st.avg*100)} %.</p>${delta?`<p class="delta">${delta}</p>`:""}</div>`;
+  if(isWeek){
+    h += `<div class="wkstars">${st.days.map(x=>`<div>${starSVG(x.p||0)}<span>${DAYS[x.d.getDay()].name.slice(0,3)}</span></div>`).join("")}</div>`;
+  } else {
+    const lead = (a.getDay()+6)%7;
+    let cells = ["L","M","M","J","V","S","D"].map(x=>`<span class="hd">${x}</span>`).join("") + Array.from({length:lead},()=>`<span></span>`).join("");
+    for(const x of st.days){
+      if(x.p == null){ cells += `<span class="cell out" aria-hidden="true">${x.d.getDate()}</span>`; continue; }
+      const l = x.p>=1?4 : x.p>=.8?3 : x.p>=.5?2 : x.p>0?1 : 0;
+      cells += `<button class="cell l${l}" data-act="goto" data-d="${keyOf(x.d)}" aria-label="${fmtShort(x.d)} : ${Math.round(x.p*100)} %">${x.d.getDate()}</button>`;
+    }
+    h += `<div class="heat" style="margin-bottom:18px">${cells}</div>`;
+  }
+  h += `<div class="stats"><div class="stat"><b>${nf(st.ist)}</b><span>istighfâr</span></div>${st.sal?`<div class="stat"><b>${nf(st.sal)}</b><span>salawat</span></div>`:""}${st.objN?`<div class="stat"><b>${st.obj} / ${st.objN}</b><span>actions pour ton objectif</span></div>`:""}</div>`;
+  const items = Object.entries(st.items).filter(([,v])=>v.n>=2).map(([id,v])=>({id, p:v.s/v.n, n:v.n}));
+  const best = items.filter(x=>x.p>=.8).sort((x,y)=>y.p-x.p).slice(0,3);
+  const weak = items.filter(x=>x.p<.6).sort((x,y)=>x.p-y.p).slice(0,3);
+  if(best.length) h += `<section class="sec"><div class="sechead"><h2>Ce qui a bien marché</h2></div><ul class="blist">${best.map(x=>`<li>${itemTitle(x.id)}<small>${Math.round(x.p*100)} % des jours</small></li>`).join("")}</ul></section>`;
+  if(weak.length) h += `<section class="sec"><div class="sechead"><h2>À renforcer</h2></div><ul class="blist">${weak.map(x=>`<li>${itemTitle(x.id)}<small>${Math.round(x.p*100)} % des jours</small></li>`).join("")}</ul>
+    <p class="secintro" style="margin-top:10px">${st.light?`Tu as utilisé le minimum du jour ${st.light} fois : c’est fait pour ça. `:""}Si une invocation te pèse, commence par l’apprendre dans l’onglet Apprendre : on fait plus facilement ce qu’on connaît par cœur.</p></section>`;
+  if(st.objActs.length) h += `<section class="sec"><div class="sechead"><h2>Mon objectif</h2><span class="count">${esc(S.objective?.title||"")}</span></div><ul class="blist">${st.objActs.slice(-10).reverse().map(x=>`<li>${esc(x.text)}<small>${DAYS[x.d.getDay()].name} ${fmtShort(x.d)}</small></li>`).join("")}</ul></section>`;
+  if(st.answered.length || st.added) h += `<section class="sec"><div class="sechead"><h2>Mon carnet</h2></div>
+    ${st.answered.length?`<ul class="blist">${st.answered.map(x=>`<li>${esc(x.text)}<small>Exaucée le ${fmtShort(fromKey(x.answered))}</small></li>`).join("")}</ul>`:""}
+    ${st.added?`<p class="secintro" style="margin-top:10px">${st.added} nouvelle${st.added>1?"s":""} invocation${st.added>1?"s":""} notée${st.added>1?"s":""} dans ton carnet.</p>`:""}</section>`;
+  if(st.mastered.length) h += `<section class="sec"><div class="sechead"><h2>Appris par cœur</h2></div><ul class="blist">${st.mastered.map(id=>`<li>${ITEMS[id].title}</li>`).join("")}</ul></section>`;
+  if(st.notes.length) h += `<section class="sec"><div class="sechead"><h2>Mes notes</h2></div><ul class="blist">${st.notes.slice(-10).reverse().map(x=>`<li>${esc(x.text.length>220?x.text.slice(0,220)+"…":x.text)}<small>${DAYS[x.d.getDay()].name} ${fmtShort(x.d)}</small></li>`).join("")}</ul></section>`;
+  h += `<div class="acc"><p>« Les œuvres les plus aimées d’Allah sont les plus régulières, même si elles sont peu nombreuses. »</p><p class="src"><b>Source :</b> Al-Bukhârî (n° 6464) ; Muslim (n° 783)</p></div>`;
+  return h;
+}
+
+/* =========================================================
+   ROUTAGE
+   ========================================================= */
+const VIEWS = {bilan:renderBilan, bienvenue:renderBienvenue, rythme:renderRythme, communaute:renderCommu, demandes:renderDemandes, exaucees:renderExaucees, temoigner:renderTemoigner, jour:renderJour, apprendre:renderApprendre, carnet:renderCarnet, suivi:renderSuivi, plus:renderPlus, binome:renderBinome, objectif:renderObjectif, parcours:renderParcours, priere:renderPriere, programme:renderProgramme, confidentialite:renderConfid};
+const TAB_OF = {bilan:"suivi", rythme:"plus", demandes:"communaute", exaucees:"communaute", temoigner:"communaute", binome:"plus", objectif:"plus", parcours:"plus", priere:"plus", programme:"plus", confidentialite:"plus"};
+function render(){
+  starUid = 0;
+  const v = document.getElementById("view");
+  v.innerHTML = VIEWS[view]();
+  if(view === "jour") afterJour();
+  if(view === "binome"){ binomeSubscribe(); fillNames(v); }
+  if(view === "suivi") binomeSubscribe();
+  document.querySelector(".tabs").hidden = view === "bienvenue";
+  const tab = TAB_OF[view] || view;
+  document.querySelectorAll(".tabs a").forEach(a=> a.dataset.v===tab ? a.setAttribute("aria-current","page") : a.removeAttribute("aria-current"));
+}
+function rerenderIf(list){
+  if(!list.includes(view)) return;
+  const v = document.getElementById("view"), keep = {}, act = document.activeElement;
+  v.querySelectorAll("input[id],textarea[id],select[id]").forEach(el=> keep[el.id] = el.value);
+  const fid = act && act.id && v.contains(act) ? act.id : null;
+  const sel0 = fid && act.selectionStart != null ? [act.selectionStart, act.selectionEnd] : null;
+  const y = window.scrollY; render(); window.scrollTo(0,y);
+  for(const id in keep){ const el = document.getElementById(id); if(el && el.value !== keep[id]) el.value = keep[id]; }
+  if(fid){ const el = document.getElementById(fid); if(el){ el.focus({preventScroll:true}); if(sel0) try{ el.setSelectionRange(sel0[0], sel0[1]); }catch(e){} } }
+}
+function route(){
+  const h = location.hash.replace("#","");
+  let nv = VIEWS[h] ? h : "jour";
+  if(needsOnboarding()) nv = "bienvenue";
+  else if(nv === "bienvenue" && !forceOb) nv = "jour";
+  if(nv === "suivi" && view !== "suivi") weekRef = monday(sel);
+  if(nv !== "apprendre") study = null;
+  view = nv; render(); window.scrollTo(0,0);
+}
+window.addEventListener("hashchange", route);
+
+/* =========================================================
+   INTERACTIONS
+   ========================================================= */
+let toastT;
+function toast(msg){ const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("show"), 2200); }
+function buzz(p){ try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} }
+function uid8(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function newCode(){ const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let s = ""; for(let i=0;i<6;i++) s += A[Math.floor(Math.random()*A.length)]; return s; }
+
+document.addEventListener("toggle", e=>{ const d = e.target; if(d.tagName==="DETAILS" && d.dataset.id){ d.open ? openSet.add(d.dataset.id) : openSet.delete(d.dataset.id); } }, true);
+
+document.getElementById("view").addEventListener("change", e=>{
+  if(e.target.id === "obcity"){
+    const c = CITIES.find(x=>x[0]===e.target.value);
+    if(c){ S.prayer = {city:c[0], lat:c[1], lng:c[2], method:S.prayer?.method||"uoif"}; lsSet(); render(); }
+    return;
+  }
+  if(e.target.id === "pcity"){
+    const c = CITIES.find(x=>x[0]===e.target.value);
+    if(c){ S.prayer = {city:c[0], lat:c[1], lng:c[2], method:S.prayer?.method||"uoif"}; save(); render(); }
+  }
+  if(e.target.id === "pmethod" && S.prayer){ S.prayer.method = e.target.value; save(); render(); }
+});
+
+document.getElementById("view").addEventListener("click", async e=>{
+  const b = e.target.closest("[data-act]"); if(!b) return;
+  const act = b.dataset.act;
+  switch(act){
+    case "prev": sel = addDays(sel,-1); render(); return;
+    case "next": if(!sameDay(sel,today())){ sel = addDays(sel,1); render(); } return;
+    case "today": sel = today(); render(); return;
+    case "wprev": weekRef = addDays(weekRef,-7); render(); return;
+    case "wnext": weekRef = addDays(weekRef,7); render(); return;
+    case "goto": sel = fromKey(b.dataset.d); location.hash = "#jour"; if(view==="jour") render(); return;
+    case "show": {
+      const f = b.dataset.f, others = Object.keys(S.show).filter(k=>k!==f && S.show[k]);
+      if(S.show[f] && !others.length){ toast("Garde au moins un texte affiché"); return; }
+      S.show[f] = !S.show[f]; save(); render(); return;
+    }
+    /* Apprendre */
+    case "learn": S.learn[b.dataset.id] = {lvl:0, next:keyOf(today())}; save(); render(); toast("Ajoutée à tes révisions"); return;
+    case "unlearn": delete S.learn[b.dataset.id]; save(); render(); return;
+    case "study": study = {queue:dueIds(), i:0, revealed:false}; render(); window.scrollTo(0,0); return;
+    case "reveal": study.revealed = true; render(); return;
+    case "grade": gradeCard(b.dataset.g === "1"); return;
+    case "endstudy": study = null; render(); return;
+    /* Carnet */
+    case "adddua": {
+      const ta = document.getElementById("newdua"), txt = ta.value.trim();
+      if(!txt){ toast("Écris d’abord ton invocation"); ta.focus(); return; }
+      S.carnet.push({id:uid8(), text:txt, date:keyOf(today()), status:"wait"}); save(); render(); toast("Ajoutée au carnet"); return;
+    }
+    case "markans": { carnetEdit = b.dataset.id; carnetDel = null; render(); const ta2 = document.getElementById("how-"+b.dataset.id); if(ta2) ta2.focus(); return; }
+    case "cancelans": carnetEdit = null; render(); return;
+    case "obnext": {
+      const ti = document.getElementById("obtitle"); if(ti) OB.title = ti.value.trim();
+      OB.step++; render(); window.scrollTo(0,0); return;
+    }
+    case "obback": { const ti = document.getElementById("obtitle"); if(ti) OB.title = ti.value.trim(); OB.step = Math.max(0, OB.step-1); render(); return; }
+    case "obcat": { const ti = document.getElementById("obtitle"); if(ti) OB.title = ti.value.trim(); OB.cat = OB.cat === b.dataset.k ? null : b.dataset.k; render(); return; }
+    case "oblevel": OB.level = b.dataset.k; render(); return;
+    case "obramp": OB.ramp = b.dataset.v === "1"; render(); return;
+    case "obfinish": {
+      const tk = keyOf(today());
+      S.onboarded = true;
+      if(OB.cat) S.objective = {title:OB.title || OBJ_CATS[OB.cat].l, cat:OB.cat, why:"", since: S.objective?.since || tk};
+      if(OB.level){ S.level = OB.level; S.show = {...LEVELS[OB.level].show}; }
+      if(OB.ramp){ S.rampStart = tk; S.rampDone = null; } else if(rampWeek(today())) S.rampDone = tk;
+      ensure(tk);
+      forceOb = false; save();
+      sel = today(); location.hash = "#jour"; if(view !== "jour") route(); else route();
+      toast("Bismillâh, ton programme commence");
+      return;
+    }
+    case "redoob": OB = {step:0, cat:S.objective?.cat||null, title:S.objective?.title||"", level:S.level, ramp:!!rampWeek(today())}; forceOb = true; location.hash = "#bienvenue"; return;
+    case "light": {
+      const on = b.dataset.on === "1", r = ensure(keyOf(sel));
+      if(on) r.light = true; else delete r.light;
+      save(); render();
+      toast(on ? "Minimum du jour activé" : "Programme complet rétabli"); return;
+    }
+    case "rampdone": S.rampDone = keyOf(today()); save(); render(); toast("Programme complet activé"); return;
+    case "ramprestart": S.rampStart = keyOf(today()); S.rampDone = null; save(); render(); toast("Démarrage en douceur relancé"); return;
+    case "setlevel": S.level = b.dataset.k; S.show = {...LEVELS[b.dataset.k].show}; save(); render(); return;
+    case "msec": {
+      const m = b.dataset.m, sec = document.getElementById("sec-"+m), open = !sec.classList.contains("closed") ? false : true;
+      momentOpen[keyOf(sel)+m] = open; sec.classList.toggle("closed", !open); b.setAttribute("aria-expanded", open); return;
+    }
+    case "txt": {
+      const id = b.dataset.id, art = b.closest("article.item"), it = getItem(id, sel);
+      textState[id] = !textOpen(id, it);
+      document.querySelectorAll(`article.item[data-id="${id}"]`).forEach(el=> el.outerHTML = entryCard(entryFromEl(el), sel));
+      const again = document.querySelector(`#${art.id} [data-act="txt"]`); if(again) again.focus({preventScroll:true});
+      return;
+    }
+    case "gonext": {
+      const m = b.dataset.m, sec = document.getElementById("sec-"+m);
+      if(sec && sec.classList.contains("closed")){ momentOpen[keyOf(sel)+m] = true; sec.classList.remove("closed"); sec.querySelector(".mhead").setAttribute("aria-expanded", true); }
+      const card = document.getElementById(b.dataset.card);
+      if(card){ card.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"center"}); const f = card.querySelector("[data-k]"); if(f) setTimeout(()=>f.focus({preventScroll:true}), 350); }
+      return;
+    }
+    case "bkind": BL.kind = b.dataset.k; BL.ref = BL.kind === "semaine" ? monday(today()) : new Date(today().getFullYear(), today().getMonth(), 1); render(); return;
+    case "bprev": BL.ref = BL.kind === "semaine" ? addDays(BL.ref,-7) : new Date(BL.ref.getFullYear(), BL.ref.getMonth()-1, 1); render(); return;
+    case "bnext": BL.ref = BL.kind === "semaine" ? addDays(BL.ref,7) : new Date(BL.ref.getFullYear(), BL.ref.getMonth()+1, 1); render(); return;
+    case "openbilan": {
+      if(b.dataset.p === "lastweek"){ BL.kind = "semaine"; BL.ref = addDays(monday(today()),-7); }
+      else { BL.kind = "mois"; BL.ref = new Date(today().getFullYear(), today().getMonth()-1, 1); }
+      location.hash = "#bilan"; return;
+    }
+    case "sharecarnet": {
+      const x = S.carnet.find(c=>c.id===b.dataset.id); if(!x) return;
+      T = {cat:"autre", asked:x.text, how:x.how||"", effort:"", delay:"", kind:"exact", carnetId:x.id};
+      location.hash = "#temoigner"; return;
+    }
+    case "pray": {
+      const id = b.dataset.id;
+      if(S.prayed[id]) return;
+      S.prayed[id] = keyOf(today()); save(); buzz(15);
+      toast("Qu’Allah l’exauce, et pour toi de même");
+      rerenderIf(["demandes","communaute"]); return;
+    }
+    case "hamd": {
+      const id = b.dataset.id;
+      if(S.hamd[id]) delete S.hamd[id]; else S.hamd[id] = keyOf(today());
+      save(); rerenderIf(["exaucees","communaute"]); return;
+    }
+    case "postreq": {
+      const txt = document.getElementById("reqtext").value.trim(), cat = document.getElementById("reqcat").value;
+      const pseudo = document.getElementById("reqpseudo").value.trim().slice(0,30);
+      if(txt.length < 10){ toast("Décris ton besoin en une ou deux phrases"); return; }
+      S.pseudo = pseudo;
+      try{
+        const ref = await store.db.collection("requests").add({cat, text:txt.slice(0,300), pseudo, at:Date.now(), answered:false});
+        S.myReq.push(ref.id); save();
+        document.getElementById("reqtext").value = "";
+        toast("Demande publiée. La communauté va invoquer pour toi");
+      }catch(err){ toast(err && err.code==="quota_exceeded" ? "Espace plein, la demande n’a pas été publiée" : "La publication a échoué, réessaie"); }
+      return;
+    }
+    case "reqanswered": {
+      const r = C.requests.find(x=>x.id===b.dataset.id); if(!r) return;
+      try{ await store.db.doc(`requests/${r.id}`).update({answered:true, answeredAt:Date.now()}); }catch(err){}
+      T = {cat:r.cat, asked:r.text, how:"", effort:"", delay:"", kind:"exact"};
+      location.hash = "#temoigner"; return;
+    }
+    case "delpost": {
+      const col = b.dataset.col, id = b.dataset.id;
+      if(C.confirmDel !== id){ C.confirmDel = id; rerenderIf([view]); return; }
+      try{ await store.db.doc(`${col}/${id}`).delete(); toast("Publication supprimée"); }catch(err){ toast("La suppression a échoué"); }
+      S.myReq = S.myReq.filter(x=>x!==id); S.myTest = S.myTest.filter(x=>x!==id); C.confirmDel = null; save(); return;
+    }
+    case "filter": C.filter = b.dataset.f; render(); return;
+    case "posttest": {
+      const g = id => (document.getElementById(id)?.value||"").trim();
+      const t = {cat:g("tcat"), kind:g("tkind"), asked:g("tasked").slice(0,200), how:g("thow").slice(0,600), effort:g("teffort").slice(0,300), delay:g("tdelay"), pseudo:g("tpseudo").slice(0,30)};
+      if(t.asked.length < 5 || t.how.length < 10){ toast("Indique ce que tu as demandé et comment c’est arrivé"); return; }
+      S.pseudo = t.pseudo;
+      try{
+        const ref = await store.db.collection("testimonies").add({...t, at:Date.now()});
+        S.myTest.push(ref.id);
+        if(T && T.carnetId){ const x = S.carnet.find(c=>c.id===T.carnetId); if(x) x.shared = true; }
+        T = null; save(); toast("Témoignage publié, al-hamdulillâh"); location.hash = "#exaucees";
+      }catch(err){ toast(err && err.code==="quota_exceeded" ? "Espace plein, le témoignage n’a pas été publié" : "La publication a échoué, réessaie"); }
+      return;
+    }
+    case "answer": {
+      const x = S.carnet.find(c=>c.id===b.dataset.id); if(!x) return;
+      x.status = "ok"; x.answered = keyOf(today()); x.how = (document.getElementById("how-"+x.id)?.value||"").trim();
+      carnetEdit = null; save(); render(); toast("Al-hamdu lillâh"); buzz([30,60,30]); return;
+    }
+    case "unans": { const x = S.carnet.find(c=>c.id===b.dataset.id); if(x){ x.status = "wait"; delete x.answered; } save(); render(); return; }
+    case "del": carnetDel = b.dataset.id; render(); return;
+    case "delok": S.carnet = S.carnet.filter(c=>c.id!==b.dataset.id); carnetDel = null; save(); render(); toast("Supprimée du carnet"); return;
+    /* Objectif */
+    case "saveobj": {
+      const title = document.getElementById("otitle").value.trim();
+      if(!title){ toast("Écris ton objectif en une phrase"); return; }
+      const since = S.objective?.since || keyOf(today());
+      S.objective = {title, cat:document.getElementById("ocat").value, why:document.getElementById("owhy").value.trim(), since};
+      save(); render(); toast("Objectif enregistré"); return;
+    }
+    case "delobj": S.objective = null; save(); render(); return;
+    /* Parcours */
+    case "startparc": S.parcours = {id:b.dataset.id, start:keyOf(today())}; save(); toast(`Parcours commencé : jour 1 sur ${PARCOURS_DAYS}`); location.hash = "#jour"; return;
+    case "stopparc": S.parcours = null; save(); render(); return;
+    /* Prière */
+    case "geoloc": {
+      if(!navigator.geolocation){ toast("Position indisponible : choisis ta ville dans la liste"); return; }
+      navigator.geolocation.getCurrentPosition(pos=>{
+        S.prayer = {city:"Ma position", lat:+pos.coords.latitude.toFixed(4), lng:+pos.coords.longitude.toFixed(4), method:S.prayer?.method||"uoif"}; if(view==="bienvenue") lsSet(); else save(); render();
+      }, ()=> toast("Position refusée : choisis ta ville dans la liste"), {timeout:10000});
+      return;
+    }
+    /* Binôme */
+    case "mkcircle": S.binome = {code:newCode()}; save(); B.code = undefined; render(); pushBinome(); return;
+    case "joincircle": {
+      const c = (document.getElementById("joincode").value||"").trim().toUpperCase();
+      if(!/^[A-Z0-9]{6}$/.test(c)){ toast("Le code compte 6 caractères"); return; }
+      S.binome = {code:c}; save(); B.code = undefined; render(); pushBinome(); toast("Cercle rejoint"); return;
+    }
+    case "leavecircle": S.binome = null; save(); B.code = undefined; binomeSubscribe(); render(); pushBinome(); return;
+    case "encfor": B.encFor = b.dataset.to; render(); return;
+    case "sendenc": {
+      try{ await store.db.collection("encouragements").add({code:S.binome.code, to:b.dataset.to, from:store.uid, i:+b.dataset.i, at:Date.now()}); toast("Encouragement envoyé"); }
+      catch(err){ toast(err && err.code==="quota_exceeded" ? "Le cercle a atteint sa limite de messages" : "L’envoi a échoué, réessaie"); }
+      B.encFor = null; render(); return;
+    }
+  }
+  /* Cocher et compter */
+  const k = b.dataset.k; if(!k) return;
+  const [id, si] = k.split(":");
+  const target = slotsOf(id)[+si].t, dk = keyOf(sel), before = dayPct(sel);
+  const r = ensure(dk); r.c = r.c || {};
+  const v = r.c[k] || 0;
+  if(act === "toggle"){ r.c[k] = v >= 1 ? 0 : 1; buzz(12); }
+  else if(act === "inc"){ r.c[k] = v + 1; buzz(8); if(r.c[k] === target){ buzz([20,40,20]); toast(`${slotsOf(id)[+si].l} : ${target} atteint`); } }
+  else if(act === "dec"){ r.c[k] = Math.max(0, v-1); }
+  else if(act === "reset"){ if(v===0) return; r.c[k] = 0; toast("Compteur remis à zéro"); }
+  if(!r.c[k]) delete r.c[k];
+  save(); refreshJourAfter(b, id);
+  const after = dayPct(sel);
+  if(after >= 1 && before < 1){ toast("Journée complète, qu’Allah l’accepte"); buzz([30,60,30,60,30]); }
+  else if(after >= HELD && before < HELD) toast("Journée tenue");
+});
+
+/* =========================================================
+   DÉMARRAGE ET SYNCHRONISATION
+   ========================================================= */
+function updateStatus(){
+  const s = document.getElementById("status"); if(!s) return;
+  s.textContent = store.mode === "account" ? "Ta progression est enregistrée sur ton compte et te suit sur tous tes appareils." : "Ta progression est enregistrée sur cet appareil.";
+}
+function withTimeout(p, ms){ return Promise.race([p, new Promise(r=>setTimeout(()=>r(null), ms))]); }
+async function init(){
+  merge(lsGet());
+  if(!Object.keys(S.learn).length && !lsGet()) SOCLE.forEach(id=> S.learn[id] = {lvl:0, next:keyOf(today())});
+  route();
+  try{
+    if(!window.claude || typeof window.claude.use !== "function") return;
+    const [db, user] = await Promise.all([withTimeout(window.claude.use("db"),10000), withTimeout(window.claude.use("user"),10000)]);
+    if(!db || !user) return;
+    const uid = await user.id(); if(!uid) return;
+    const ref = db.doc(`data/users/${uid}/tracker`);
+    const snap = await withTimeout(ref.get(), 10000); if(!snap) return;
+    store = {mode:"account", ref, db, user, uid};
+    const remote = snap.exists ? snap.data() : null;
+    if(remote && (remote.updated||0) > (S.updated||0)){ merge(remote); lsSet(); }
+    else if(S.updated) pushRemote();
+    if(!S.anonId){ S.anonId = "m" + Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4); save(); }
+    try{ C.owner = await user.isOwner(); }catch(e){}
+    commuSubscribe();
+    pushTally();
+    pushBinome();
+    if(view === "bienvenue" && !needsOnboarding() && !forceOb) route();
+    else { const y = window.scrollY; render(); window.scrollTo(0,y); }
+  }catch(e){ store.mode = "local"; updateStatus(); }
+}
+let lastToday = keyOf(today());
+setInterval(()=>{
+  const k = keyOf(today());
+  if(k !== lastToday){ if(keyOf(sel) === lastToday) sel = today(); lastToday = k; render(); pushBinome(); }
+  else if(view === "jour" && S.prayer && sameDay(sel,today())){ const ps = document.querySelector(".prayers"); if(ps) ps.outerHTML = prayerStrip(sel); }
+}, 60000);
+init();
+</script>
+</body>
+</html>
