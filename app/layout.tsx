@@ -3,6 +3,7 @@ import { Amiri, DM_Sans, Newsreader } from "next/font/google";
 import { StoreProvider } from "@/components/Store";
 import { AppShell } from "@/components/AppShell";
 import { ServiceWorker } from "@/components/ServiceWorker";
+import { THEME_BOOT } from "@/lib/theme";
 import "./globals.css";
 
 // Polices hébergées avec l’application : aucune requête vers un service tiers.
@@ -31,7 +32,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${dmsans.variable} ${newsreader.variable} ${amiri.variable}`}>
+    <html lang="fr" className={`${dmsans.variable} ${newsreader.variable} ${amiri.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+      </head>
       <body>
         <StoreProvider>
           <AppShell>{children}</AppShell>

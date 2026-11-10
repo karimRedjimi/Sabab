@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getTheme, setTheme, type Theme } from "@/lib/theme";
 import { DAYS, ITEMS, OBJ_CATS, PARCOURS, PARCOURS_DAYS, SOCLE } from "@/content/programme";
 import { LEVELS, METHODS } from "@/content/reglages";
 import { FORCE_DU_PROGRAMME, LIRE_LES_SOURCES, PRECISION_WAQIA, PROGRAMME_INTRO } from "@/content/textes";
@@ -31,8 +32,27 @@ export function Plus() {
   return (
     <>
       <div className="page"><h1>Plus</h1></div>
+      <Apparence />
       <ul className="menu">{rows.map(([href, l, sub]) => <li key={href}><Link href={href}>{l} <span>{sub}</span></Link></li>)}</ul>
     </>
+  );
+}
+
+function Apparence() {
+  const [t, setT] = useState<Theme>("auto");
+  useEffect(() => setT(getTheme()), []);
+  const opts: [Theme, string][] = [["auto", "Automatique"], ["light", "Jour"], ["dark", "Nuit"]];
+  return (
+    <section className="sec">
+      <div className="sechead"><h2>Apparence</h2></div>
+      <div className="seg" role="radiogroup" aria-label="Apparence">
+        {opts.map(([k, l]) => (
+          <a key={k} href="#" role="radio" aria-checked={t === k} aria-current={t === k ? "page" : undefined}
+            onClick={(e) => { e.preventDefault(); setTheme(k); setT(k); }}>{l}</a>
+        ))}
+      </div>
+      {t === "auto" && <p className="secintro" style={{ margin: "-8px 4px 0" }}>Suit le réglage de ton téléphone.</p>}
+    </section>
   );
 }
 
