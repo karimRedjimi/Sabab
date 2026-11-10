@@ -144,7 +144,7 @@ export function nextStep(S: State, d: Date, P: Plan, now = new Date()) {
   const all: Record<Moment, Entry[]> = { ...P.sections, actions: P.actions };
   let remaining = 0, next: Entry | null = null;
   for (const m of order) for (const e of all[m]) { if (e.opt) continue; if (entryPct(S, dk, e) < 1) { remaining++; if (!next) next = e; } }
-  if (!next) return { remaining: 0 as const };
+  if (!next) return { remaining: 0 as const, next: null };
   const it = getItem(S, next.id, d), pt = prayerTimes(d, S.prayer), h = now.getHours() + now.getMinutes() / 60;
   let hint = MOMENT_LABEL[next.m].toLowerCase();
   if (next.m === "soir" && pt && h < pt.asr) hint = `le soir, à partir de ${hm(pt.asr)}`;
