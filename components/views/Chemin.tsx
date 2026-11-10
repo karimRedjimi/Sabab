@@ -10,11 +10,14 @@ import { dayPct, parcoursDay, val } from "@/lib/program";
 import { uid8 } from "@/lib/state";
 import { objectiveName, parcoursFinished, parcoursServesObjective } from "@/lib/objective";
 import { useStore } from "../Store";
+import { useRouter } from "next/navigation";
+import { Patience } from "../Moments";
 
 interface Ev { key: string; date: Date; label: string; title: string; text?: string; quote?: string; kind?: "big" | "now" }
 
 export function Chemin() {
-  const { S, update, toast } = useStore();
+  const { S, update, toast, setUi } = useStore();
+  const router = useRouter();
   const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState("");
   if (!S.objective) {
@@ -46,6 +49,7 @@ export function Chemin() {
         title: n === 7 ? "Une semaine de constance" : n === 21 ? "Trois semaines sur ton chemin" : "Ton parcours est accompli",
         quote: n === 7 ? `« ${REGULARITE.texte} » ${REGULARITE.source}` : undefined });
   }
+  for (const [k, g] of Object.entries(S.gratitude || {})) if (g.trim() && k >= startKey) evs.push({ key: "g" + k, date: fromKey(k), label: "Al-hamdulillâh", title: g.trim() });
   for (const st of S.steps || []) if (st.date >= startKey) evs.push({ key: st.id, date: fromKey(st.date), label: "Avancée", title: st.text, kind: "big" });
   for (const c of S.carnet) if (c.obj && c.status === "ok" && c.answered) evs.push({ key: c.id + "a", date: fromKey(c.answered), label: "Exaucée, al-hamdu lillâh", title: c.text, text: c.how, kind: "big" });
   evs.sort((a, b) => b.date.getTime() - a.date.getTime() || (b.kind === "big" ? 1 : 0) - (a.kind === "big" ? 1 : 0));
@@ -72,6 +76,7 @@ export function Chemin() {
         <div className="stat"><b>{gestures}</b><span>geste{gestures > 1 ? "s" : ""} fait{gestures > 1 ? "s" : ""}</span></div>
         <div className="stat"><b>{steps}</b><span>avancée{steps > 1 ? "s" : ""} notée{steps > 1 ? "s" : ""}</span></div>
       </div>
+      <Patience onPatience={(e) => { setUi(() => ({ lecture: { queue: [e], i: 0, label: "Patience" } })); router.push("/"); }} />
       {adding ? (
         <section className="sec">
           <label className="field"><span>Une porte qui s’ouvre, un signe, un pas en avant</span>

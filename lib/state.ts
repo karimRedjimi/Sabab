@@ -29,6 +29,10 @@ export interface State {
   lastIntention?: string;
   /** Avancées notées pour l’objectif (Mon chemin). */
   steps?: { id: string; date: string; text: string }[];
+  /** Al-hamdulillâh du jour : une chose pour laquelle on remercie Allah. */
+  gratitude?: Record<string, string>;
+  /** Dernier jour où le message de patience a été vu. */
+  patienceSeen?: string;
   // Phase 2 (communauté, binôme) : conservés pour compatibilité avec le prototype.
   binome: unknown;
   anonId: string | null;

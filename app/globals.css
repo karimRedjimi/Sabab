@@ -478,3 +478,19 @@ button,a,summary,select{-webkit-tap-highlight-color:transparent;touch-action:man
 .ev b{font-weight:600;display:block;margin-top:1px}
 .ev p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
 .ms{background:var(--brass-soft);border-radius:14px;padding:10px 12px;margin-top:6px;font-size:.9rem}
+/* Moments favorables, gratitude, patience */
+.favrow{display:flex;align-items:center;gap:14px;padding:12px 16px;border-top:1px solid var(--line)}
+.favrow:first-child{border-top:0}
+.favdot{width:10px;height:10px;transform:rotate(45deg);background:var(--brass);flex:none;margin:0 9px;border-radius:2px}
+.favrow.now .favdot{background:var(--accent)}
+.favrow .rt b{font-size:.98rem}
+.favnow{font-size:.78rem;font-weight:700;color:var(--accent);background:var(--soft);border-radius:6px;padding:2px 8px}
+.grat{background:var(--brass-soft);border-radius:var(--radius);padding:14px 16px;margin:18px 0 0}
+.grat label{display:block;margin-bottom:8px}
+.grat label b{display:block;font-family:var(--font-newsreader),serif;font-weight:400;font-size:1.2rem;color:var(--brass)}
+.grat label span{font-size:.9rem;color:var(--muted)}
+.grat .input{background:var(--surface)}
+.grat.compact{margin:0;text-align:left}
+.pat span{margin-top:4px}
+.banner.warm{flex-direction:column;align-items:flex-start;gap:8px}
+.banner.warm .act{padding:2px 0}

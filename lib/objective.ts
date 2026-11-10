@@ -62,3 +62,17 @@ export function parcoursFinished(S: State, d: Date) {
   const [y, m, j] = S.parcours.start.split("-").map(Number);
   return diffDays(d, new Date(y, m - 1, j)) >= 40;
 }
+
+/** Afficher un mot de patience : objectif ancien, aucune avancée récente, pas vu depuis une semaine. */
+export function needsPatience(S: State, d: Date) {
+  if (!S.objective) return false;
+  const k = (x: Date) => `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
+  const since = S.objective.since, dk = k(d);
+  const [y, m, j] = since.split("-").map(Number);
+  if (diffDays(d, new Date(y, m - 1, j)) < 21) return false;
+  const limit = k(new Date(d.getFullYear(), d.getMonth(), d.getDate() - 21));
+  if ((S.steps || []).some((s) => s.date >= limit)) return false;
+  if (S.carnet.some((c) => c.obj && c.status === "ok")) return false;
+  if (S.patienceSeen) { const [a, b, c] = S.patienceSeen.split("-").map(Number); if (diffDays(d, new Date(a, b - 1, c)) < 7) return false; }
+  return dk >= since;
+}

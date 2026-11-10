@@ -16,8 +16,9 @@ import { useCount } from "../Cards";
 import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
+import { FavorableMoments, Gratitude, Patience } from "../Moments";
 import { Star } from "../Star";
-import { objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
+import { needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { fromKey } from "@/lib/dates";
 
 
@@ -277,7 +278,7 @@ function Coach({ s }: { s: Structure }) {
         <button className="act" onClick={() => light(false)}>Programme complet</button>
       </div>
     );
-  if (isToday && S.start && S.start <= keyOf(y) && dayPct(S, y) < HELD && dayPct(S, d) < HELD)
+  if (isToday && !(showObjective(S) && needsPatience(S, t)) && S.start && S.start <= keyOf(y) && dayPct(S, y) < HELD && dayPct(S, d) < HELD)
     return (
       <div className="banner warm">
         <div>
@@ -367,6 +368,7 @@ export function Jour() {
       <Prayers d={d} />
       {isToday && <BilanBanner />}
       <Coach s={s} />
+      {isToday && <FavorableMoments />}
       {!s.obj && isToday && !s.light && (
         <Link className="banner" href="/objectif">
           <div><b>Fixe un objectif concret</b><span>Chaque jour, une action pour l’atteindre.</span></div>
@@ -380,6 +382,7 @@ export function Jour() {
           <button onClick={() => { update((x) => { ensureDay(x, dk).light = true; }); toast("Minimum du jour activé"); }}>Passer au minimum</button>
         </div>
       )}
+      <Gratitude />
       <Note />
     </>
   );
@@ -388,6 +391,7 @@ export function Jour() {
 /** La page Jour organisée autour du besoin de la personne. */
 function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment | null; topRef: React.RefObject<HTMLDivElement | null>; doneCount: number; total: number }) {
   const { S, ui, setUi, update, toast } = useStore();
+  const start = useStartLecture();
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today()), day = DAYS[d.getDay()], s = P.s;
   const isNeed = (e: Entry) => e.origin === "parc" || e.id === "obj";
   const all: Record<Moment, Entry[]> = { ...P.sections, actions: P.actions };
@@ -411,9 +415,11 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
         </button>
       )}
       <NeedCard need={need} />
+      {isToday && <Patience onPatience={(e) => start([e], "Patience")} />}
       <Prayers d={d} />
       {isToday && <BilanBanner />}
       <Coach s={s} />
+      {isToday && <FavorableMoments />}
       <section className="sec">
         <div className="sechead"><h2>Ton socle quotidien</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
         <div className="list">{socle.map(([m, l]) => <SocleRow key={m} m={m} list={l} cur={cur} />)}</div>
@@ -424,6 +430,7 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
           <button onClick={() => { update((x) => { ensureDay(x, dk).light = true; }); toast("Minimum du jour activé"); }}>Passer au minimum</button>
         </div>
       )}
+      <Gratitude />
       <Note />
     </>
   );

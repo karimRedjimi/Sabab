@@ -7,6 +7,7 @@ import { ensureDay } from "@/lib/state";
 import { dayPct, entryPct, getItem, momentOf, slotsOf, val, MOMENT_LABEL, type Entry } from "@/lib/program";
 import { useCount } from "../Cards";
 import { Star } from "../Star";
+import { Gratitude } from "../Moments";
 import { actionExample, objectiveIdea, objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { useStore } from "../Store";
 
@@ -141,6 +142,7 @@ export function Lecture() {
           <div className="star"><Star pct={allDone ? 1 : 0.5} /></div>
           <h2 className="display" style={{ fontSize: "1.8rem" }}>{dayDone ? "Journée complète" : allDone ? `${L.label} : c’est fait` : "Tu y reviendras"}</h2>
           <p className="lead" style={{ margin: 0 }}>{allDone ? "Qu’Allah l’accepte." : "Ce qui reste t’attend dans ta journée."}</p>
+          {allDone && !S.gratitude?.[keyOf(new Date())] && <div style={{ width: "100%", marginTop: 14 }}><Gratitude compact /></div>}
           <button className="bigbtn" style={{ marginTop: 18 }} onClick={close}>Revenir à ma journée</button>
         </div>
       ) : (

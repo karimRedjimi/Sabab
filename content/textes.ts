@@ -34,3 +34,14 @@ export const PRECISION_WAQIA =
 /** Page « Carnet » : rappel en bas de page. */
 export const CARNET_RAPPEL =
   "« Votre Seigneur a dit : invoquez-Moi, Je vous répondrai. » (Coran, Ghâfir 40:60). La réponse peut être ce que tu as demandé, un mal écarté, ou une récompense gardée pour l’au-delà (Ahmad, n° 11133).";
+
+/** Les moments où l’invocation est exaucée, avec leur source (repris de « Ce qui donne sa force au programme »). */
+export const MOMENTS_FAVORABLES = {
+  nuit: { label: "Le dernier tiers de la nuit", source: "Al-Bukhârî (n° 1145)" },
+  appel: { label: "entre l’appel à la prière et l’iqâma", source: "Abû Dâwûd (n° 521)" },
+  sujud: { label: "pendant la prosternation", source: "Muslim (n° 482)" },
+};
+
+/** Quand la réponse tarde : les formes que prend la réponse (repris du carnet). */
+export const FORMES_DE_REPONSE =
+  "La réponse peut être ce que tu as demandé, un mal écarté, ou une récompense gardée pour l’au-delà (Ahmad, n° 11133).";
