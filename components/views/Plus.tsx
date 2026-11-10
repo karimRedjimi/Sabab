@@ -108,7 +108,7 @@ export function Parcours() {
         return (
           <div key={id} className={`card ${active ? "active" : ""}`}>
             <h3>{p.title}</h3><p>{p.intro}</p>
-            <p style={{ fontSize: ".82rem" }}>{p.duas.map((d) => ITEMS[d].title).join(" · ")}</p>
+            <p style={{ fontSize: ".9rem" }}>{p.duas.map((d) => ITEMS[d].title).join(" · ")}</p>
             {active ? (
               <>
                 <div className="learnbar"><i style={{ width: `${(pd / PARCOURS_DAYS) * 100}%` }} /></div>
