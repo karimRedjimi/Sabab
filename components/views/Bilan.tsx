@@ -100,7 +100,7 @@ export function Bilan() {
             {st.pact > 0 && <div className="stat"><b>{st.pact}</b><span>{s(st.pact, "geste concret", "gestes concrets")}</span></div>}
           </div>
           {st.objActs.length > 0 && <ul className="blist">{st.objActs.slice(-10).reverse().map((x) => <li key={keyOf(x.d)}>{x.text}<small>{DAYS[x.d.getDay()].name} {fmtShort(x.d)}</small></li>)}</ul>}
-          <p className="secintro" style={{ marginTop: 10 }}>Une avancée, une porte qui s’ouvre ? <Link href="/carnet">Note-la dans ton carnet.</Link></p>
+          <p className="secintro" style={{ marginTop: 10 }}>Une avancée, une porte qui s’ouvre ? <Link href="/chemin">Note-la dans ton chemin.</Link></p>
         </section>
       )}
       {(st.answered.length > 0 || st.added > 0) && (

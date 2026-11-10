@@ -1,6 +1,6 @@
 "use client";
 // Lecture guidée : une étape à la fois, en plein écran.
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GRADES } from "@/content/programme";
 import { keyOf } from "@/lib/dates";
 import { ensureDay } from "@/lib/state";
@@ -102,9 +102,28 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
   );
 }
 
+/** Le moment d’intention : quelques secondes avant d’invoquer pour son objectif. */
+function Intention({ onDone }: { onDone: () => void }) {
+  const { S } = useStore();
+  useEffect(() => { const t = setTimeout(onDone, 3200); return () => clearTimeout(t); }, [onDone]);
+  return (
+    <button className="intent" onClick={onDone} aria-label="Continuer vers les invocations">
+      <span className="istar"><Star pct={1} /></span>
+      <span className="eyebrow">Avant d’invoquer</span>
+      <span className="ih">Tu demandes à Allah :<br /><em>{S.objective?.title}</em></span>
+      {S.objective?.why && <span className="iq">« {S.objective.why} »</span>}
+      <span className="ihint">Prends une respiration…</span>
+      <span className="ibar"><i /></span>
+    </button>
+  );
+}
+
 export function Lecture() {
-  const { S, ui, setUi } = useStore();
+  const { S, ui, setUi, update } = useStore();
   const L = ui.lecture!;
+  const today0 = keyOf(new Date());
+  const endIntention = useCallback(() => update((s) => { s.lastIntention = today0; }), [update, today0]);
+  if (L.intention && S.objective && S.lastIntention !== today0 && L.i === 0) return <Intention onDone={endIntention} />;
   const close = () => { setUi(() => ({ lecture: null })); window.scrollTo(0, 0); };
   const next = () => { setUi((u) => (u.lecture ? { lecture: { ...u.lecture, i: u.lecture.i + 1 } } : {})); window.scrollTo(0, 0); };
   const finished = L.i >= L.queue.length;

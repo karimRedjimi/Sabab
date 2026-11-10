@@ -20,7 +20,7 @@ export interface UI {
   /** Sections de moment ouvertes ou fermées, par jour et moment */
   momentOpen: Record<string, boolean>;
   /** Lecture guidée en cours : la file des étapes et la position. */
-  lecture: { queue: Entry[]; i: number; label: string } | null;
+  lecture: { queue: Entry[]; i: number; label: string; intention?: boolean } | null;
 }
 
 interface Ctx {

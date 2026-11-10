@@ -37,3 +37,28 @@ const EXAMPLE: Record<string, string> = {
   autre: "faire une petite étape concrète",
 };
 export const actionExample = (S: State) => `Par exemple : ${(S.objective && EXAMPLE[S.objective.cat]) || EXAMPLE.autre}`;
+
+/** Exemple de formulation de l’objectif, selon le domaine. */
+const TITLE_EXAMPLE: Record<string, string> = {
+  emploi: "trouver un CDI avant l’été", activite: "lancer mon activité cette année", dette: "rembourser mon crédit d’ici un an",
+  mariage: "me marier cette année", etudes: "réussir mon examen de juin", epreuve: "retrouver la sérénité", autre: "ce que je demande à Allah",
+};
+export const titleExample = (cat: string | null) => `Par exemple : ${TITLE_EXAMPLE[cat || "autre"] || TITLE_EXAMPLE.autre}`;
+
+/** Où en est la personne : ajuste le rythme de départ. */
+export type Stage = "start" | "lead" | "heavy";
+export const STAGES: Record<Stage, { l: string; d: string; ramp: boolean }> = {
+  start: { l: "Je commence tout juste", d: "Poser les bases, avec régularité", ramp: true },
+  lead: { l: "J’avance déjà", d: "Continuer avec sérénité et discernement", ramp: false },
+  heavy: { l: "Ça me pèse beaucoup", d: "On commence en douceur, sans pression", ramp: true },
+};
+
+/** Le nom court de l’objectif, dans les mots de la personne. */
+export const objectiveName = (S: State) => S.objective?.title || (S.objective && OBJ_CATS[S.objective.cat]?.l) || "";
+
+/** Le parcours de l’objectif est-il arrivé au bout des 40 jours ? */
+export function parcoursFinished(S: State, d: Date) {
+  if (!parcoursServesObjective(S) || !S.parcours) return false;
+  const [y, m, j] = S.parcours.start.split("-").map(Number);
+  return diffDays(d, new Date(y, m - 1, j)) >= 40;
+}

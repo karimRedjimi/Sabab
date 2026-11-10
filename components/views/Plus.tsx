@@ -19,6 +19,7 @@ export function Plus() {
   const pd = parcoursDay(S, today()), rw = rampWeek(S, today());
   const rows: [string, string, string][] = [
     ["/objectif", "Mon objectif", S.objective ? S.objective.title : "Pas encore fixé"],
+    ...(S.objective ? [["/chemin", "Mon chemin", "Ce que tu as parcouru"] as [string, string, string]] : []),
     ["/parcours", "Parcours de 40 jours", p && pd ? `${p.title}, jour ${pd}` : "Aucun en cours"],
     ["/communaute", "Communauté", "Bientôt"],
     ["/binome", "Mon binôme", "Bientôt"],

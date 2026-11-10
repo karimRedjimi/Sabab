@@ -5,6 +5,8 @@ import { MASTER } from "@/content/reglages";
 import { fmtShort, fromKey, keyOf, today } from "@/lib/dates";
 import { DUA_IDS, dueIds, grade, maskText } from "@/lib/learn";
 import { useStore } from "../Store";
+import { PARCOURS } from "@/content/programme";
+import { objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
 
 function Masked({ text, lvl, isAr }: { text: string; lvl: number; isAr: boolean }) {
   const parts = maskText(text, lvl, isAr);
@@ -73,6 +75,19 @@ export function Apprendre() {
         <div className="stat"><b>{socleMastered} / {SOCLE.length}</b><span>du socle sues par cœur</span><div className="learnbar"><i style={{ width: `${(socleMastered / SOCLE.length) * 100}%` }} /></div></div>
         <div className="stat"><b>{totalMastered}</b><span>invocations sues au total</span></div>
       </div>
+      {(() => {
+        if (!S.parcours || !parcoursServesObjective(S) || !showObjective(S)) return null;
+        const id = PARCOURS[S.parcours.id].duas.find((x) => (S.learn[x]?.lvl || 0) < MASTER);
+        if (!id) return null;
+        const inLearn = !!S.learn[id];
+        return (
+          <div className="banner warm">
+            <div><b>{objectiveTag(S)}</b><span>Apprends par cœur « {ITEMS[id].title} »</span></div>
+            {inLearn ? <span className="act" style={{ color: "var(--muted)" }}>En révision</span>
+              : <button className="act" onClick={() => { update((s) => { s.learn[id] = { lvl: 0, next: keyOf(today()) }; }); toast("Ajoutée à tes révisions"); }}>Ajouter</button>}
+          </div>
+        );
+      })()}
       {due.length ? (
         <button className="navbtn primary" style={{ width: "100%", justifyContent: "center", padding: 14, fontSize: "1.05rem", marginBottom: 26 }}
           onClick={() => { setStudy({ queue: due, i: 0, revealed: false }); window.scrollTo(0, 0); }}>

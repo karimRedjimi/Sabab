@@ -6,6 +6,7 @@ import { useStore } from "./Store";
 import { needsOnboarding } from "@/lib/state";
 
 const TAB_OF: Record<string, string> = {
+  "/chemin": "/",
   "/bilan": "/suivi", "/rythme": "/plus", "/binome": "/plus", "/objectif": "/plus", "/parcours": "/plus",
   "/priere": "/plus", "/programme": "/plus", "/confidentialite": "/plus", "/donnees": "/plus", "/communaute": "/plus",
 };

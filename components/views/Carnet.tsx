@@ -11,7 +11,7 @@ export function Carnet() {
   const [edit, setEdit] = useState<string | null>(null);
   const [how, setHow] = useState("");
   const [del, setDel] = useState<string | null>(null);
-  const pend = S.carnet.filter((x) => x.status !== "ok").sort((a, b) => b.date.localeCompare(a.date));
+  const pend = S.carnet.filter((x) => x.status !== "ok").sort((a, b) => (b.obj ? 1 : 0) - (a.obj ? 1 : 0) || b.date.localeCompare(a.date));
   const done = S.carnet.filter((x) => x.status === "ok").sort((a, b) => (b.answered || "").localeCompare(a.answered || ""));
 
   const add = () => {
@@ -24,6 +24,7 @@ export function Carnet() {
 
   const item = (x: CarnetEntry) => (
     <div className={`dua ${x.status === "ok" ? "answered" : ""}`} key={x.id}>
+      {x.obj && <p style={{ margin: "0 0 4px" }}><span className="tag t-parc">Ton objectif</span></p>}
       <p>{x.text}</p>
       <p className="dt">
         Demandée le {fmtDate(fromKey(x.date))}

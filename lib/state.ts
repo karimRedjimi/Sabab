@@ -3,8 +3,8 @@ import { keyOf, today } from "./dates";
 
 export interface Prayer { city: string; lat: number; lng: number; method: string }
 export interface DayRec { c: Record<string, number>; note: string; objAct?: string; light?: boolean }
-export interface Objective { title: string; cat: string; why: string; since: string }
-export interface CarnetEntry { id: string; text: string; date: string; status: "wait" | "ok"; answered?: string; how?: string; shared?: boolean }
+export interface Objective { title: string; cat: string; why: string; since: string; stage?: "start" | "lead" | "heavy" }
+export interface CarnetEntry { id: string; text: string; date: string; status: "wait" | "ok"; answered?: string; how?: string; shared?: boolean; obj?: boolean }
 export interface LearnRec { lvl: number; next: string; mastered?: string }
 export type Show = { ar: boolean; ph: boolean; fr: boolean };
 
@@ -25,6 +25,10 @@ export interface State {
   rampDone: string | null;
   /** Afficher le lien avec l’objectif sur la page Jour. */
   showObjective?: boolean;
+  /** Jour où le moment d’intention a été montré. */
+  lastIntention?: string;
+  /** Avancées notées pour l’objectif (Mon chemin). */
+  steps?: { id: string; date: string; text: string }[];
   // Phase 2 (communauté, binôme) : conservés pour compatibilité avec le prototype.
   binome: unknown;
   anonId: string | null;

@@ -1,7 +1,7 @@
 // Service worker : l’application reste utilisable hors ligne.
 // Pages : réseau d’abord, copie en cache en secours. Fichiers statiques : cache d’abord.
-const CACHE = "rizq-v1";
-const PAGES = ["/", "/apprendre", "/communaute", "/carnet", "/suivi", "/plus", "/bilan", "/objectif", "/parcours", "/priere", "/programme", "/rythme", "/confidentialite", "/bienvenue", "/binome", "/donnees"];
+const CACHE = "rizq-v2";
+const PAGES = ["/", "/apprendre", "/communaute", "/carnet", "/suivi", "/plus", "/bilan", "/objectif", "/parcours", "/priere", "/programme", "/rythme", "/confidentialite", "/bienvenue", "/binome", "/donnees", "/chemin"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PAGES)).catch(() => {}));

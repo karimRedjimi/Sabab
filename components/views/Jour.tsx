@@ -17,7 +17,8 @@ import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
 import { Star } from "../Star";
-import { objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
+import { objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
+import { fromKey } from "@/lib/dates";
 
 
 function Ring({ done, total }: { done: number; total: number }) {
@@ -63,7 +64,85 @@ function ObjectiveLine() {
 
 function useStartLecture() {
   const { setUi } = useStore();
-  return (queue: Entry[], label: string) => { setUi(() => ({ lecture: { queue, i: 0, label } })); window.scrollTo(0, 0); };
+  return (queue: Entry[], label: string, intention = false) => { setUi(() => ({ lecture: { queue, i: 0, label, intention } })); window.scrollTo(0, 0); };
+}
+
+/** La carte du besoin : ce qu’on fait aujourd’hui pour son objectif. */
+function NeedCard({ need }: { need: Entry[] }) {
+  const { S, ui, update, toast } = useStore();
+  const start = useStartLecture();
+  const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today());
+  const serves = parcoursServesObjective(S), pd = serves ? parcoursDay(S, d) : 0, finished = parcoursFinished(S, d);
+  let held = 0;
+  if (serves && S.parcours) for (let x = fromKey(S.parcours.start); x <= d; x = addDays(x, 1)) if (dayPct(S, x) >= HELD) held++;
+  const todo = need.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
+  const started = todo.length < need.filter((e) => !e.opt).length;
+  const sub = finished ? `${PARCOURS_DAYS} jours accomplis` : pd ? `Jour ${pd} sur ${PARCOURS_DAYS}${held ? ` · ${held} jour${held > 1 ? "s" : ""} tenu${held > 1 ? "s" : ""}` : ""}` : "Ton action du jour";
+  const pct = finished ? 1 : pd ? pd / PARCOURS_DAYS : 0;
+  return (
+    <div className="need">
+      <Link className="needhead" href="/chemin" aria-label="Voir mon chemin">
+        <span className="needstar"><Star pct={pct} /></span>
+        <span>
+          <span className="k">Ton objectif</span>
+          <span className="nt">{objectiveName(S)}</span>
+          <span className="ns">{sub}</span>
+        </span>
+        <span className="chev" aria-hidden="true" />
+      </Link>
+      {finished && (
+        <div className="needfin">
+          <p>Tes {PARCOURS_DAYS} jours sont accomplis, qu’Allah les accepte.</p>
+          <div className="row">
+            <button className="go" onClick={() => { update((s) => { if (s.parcours) s.parcours = { ...s.parcours, start: keyOf(today()) }; }); toast("Nouveau parcours de 40 jours, bismillâh"); }}>Recommencer 40 jours</button>
+            <Link className="needlink" href="/chemin">Voir mon chemin</Link>
+          </div>
+        </div>
+      )}
+      {need.length > 0 && <div className="list">{need.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention />)}</div>}
+      {!serves && !finished && <Link className="needlink" href="/parcours">Commencer le parcours de {PARCOURS_DAYS} jours</Link>}
+      {isToday && need.length > 0 && (todo.length ? (
+        <button className="go" onClick={() => start(todo, "Ton objectif", true)}>{started ? "Continuer" : "Commencer"} <IconRight /></button>
+      ) : <p className="needdone">Fait pour aujourd’hui, qu’Allah l’accepte.</p>)}
+    </div>
+  );
+}
+
+/** Le socle quotidien, résumé en une ligne par moment. */
+function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | null }) {
+  const { S, ui, setUi, now } = useStore();
+  const start = useStartLecture();
+  const d = ui.sel, dk = keyOf(d), c = secCount(S, list, dk);
+  const k = dk + "sum" + m, open = !!ui.momentOpen[k];
+  const allDone = c.total > 0 && c.done === c.total;
+  const todo = list.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
+  const pt = prayerTimes(d, S.prayer), h = now.getHours() + now.getMinutes() / 60;
+  const kinds = new Set(list.map((e) => getItem(S, e.id, d).kind));
+  const noun = (n: number) => kinds.has("action") && !kinds.has("dua") ? (n > 1 ? "gestes" : "geste") : n > 1 ? "invocations" : "invocation";
+  const order: Moment[] = ["matin", "jour", "soir", "actions"];
+  let sub = `${c.total} ${noun(c.total)}`;
+  if (!c.total) sub = `${list.length} ${noun(list.length)} facultatif${list.length > 1 ? "s" : ""}`;
+  else if (allDone) sub += " · fait";
+  else if (cur === m) {
+    const first = todo[0], it = first && getItem(S, first.id, d), slot = first && slotsOf(first.id)[first.sl[0]];
+    sub = first && slot && slot.t > 1 ? `${it!.title} ${val(S, dk, `${first.id}:${first.sl[0]}`)}/${slot.t} · maintenant` : `${c.done} sur ${c.total} · maintenant`;
+  } else if (m === "soir" && pt && sameDay(d, today()) && h < pt.asr) sub += ` · dès ${hm(pt.asr)}`;
+  else if (cur && m !== "actions" && order.indexOf(m) < order.indexOf(cur)) sub = `${c.done ? `${c.done} sur ${c.total}` : sub} · à rattraper`;
+  else if (c.done) sub = `${c.done} sur ${c.total}`;
+  const label = m === "actions" ? "Autres gestes" : MOMENT_LABEL[m];
+  return (
+    <>
+      <div className={`rowi sum ${allDone ? "done" : ""}`}>
+        <span className={`ckv ${allDone ? "on" : ""}`} aria-hidden="true" />
+        <button className="rbody" onClick={() => start(todo.length ? todo : list.filter((e) => !e.opt), label)} aria-label={`${label} : ${sub}. Ouvrir la lecture guidée`}>
+          <span className="rt"><b>{label}{cur === m && !allDone && <span className="nowdot" aria-hidden="true" />}</b><small>{sub}</small></span>
+        </button>
+        <button className={`expand ${open ? "on" : ""}`} aria-expanded={open} aria-label={open ? `Replier ${label}` : `Voir le détail de ${label}`}
+          onClick={() => setUi((u) => ({ momentOpen: { ...u.momentOpen, [k]: !open } }))}><span className="chev" /></button>
+      </div>
+      {open && <div className="subl">{list.map((e) => <Row key={`${e.id}-${e.m}`} e={e} />)}</div>}
+    </>
+  );
 }
 
 /** La grande carte qui guide : ce qu’il reste à faire maintenant. */
@@ -125,7 +204,7 @@ function Prayers({ d }: { d: Date }) {
   );
 }
 
-function Row({ e }: { e: Entry }) {
+function Row({ e, intention = false }: { e: Entry; intention?: boolean }) {
   const { S, ui } = useStore();
   const count = useCount();
   const start = useStartLecture();
@@ -133,9 +212,9 @@ function Row({ e }: { e: Entry }) {
   const si = e.sl[0], slot = slotsOf(e.id)[si], k = `${e.id}:${si}`, v = val(S, dk, k);
   const done = entryPct(S, dk, e) >= 1;
   const isObj = e.id === "obj";
-  const title = isObj ? S.objective?.title || "Mon objectif" : e.id === "pact" ? it.desc || it.title : it.title;
+  const title = isObj ? (intention ? "Ton action du jour" : S.objective?.title || "Mon objectif") : e.id === "pact" ? it.desc || it.title : it.title;
   let sub: string;
-  if (isObj) sub = S.days[dk]?.objAct?.trim() || "Ton action concrète du jour";
+  if (isObj) sub = S.days[dk]?.objAct?.trim() || (intention ? "À choisir, une idée t’attend" : "Ton action concrète du jour");
   else if (e.id === "pact") sub = `Geste du jour · ${parcoursDay(S, d)} sur ${PARCOURS_DAYS}`;
   else if (slot.t > 1) sub = slot.l === "Matin" || slot.l === "Soir" ? `${slot.t} fois` : slot.l;
   else if (e.id === "fajr" || e.m === "jour" || e.m === "actions") sub = momentOf(S, it, d) || (it.kind === "action" ? "Le geste du jour" : "Une fois");
@@ -145,7 +224,7 @@ function Row({ e }: { e: Entry }) {
   return (
     <div className={`rowi ${done ? "done" : ""}`} id={`card-${e.id}-${e.m}`}>
       {slot.t === 1 && <button className="ck" aria-pressed={done} aria-label={`${title} : ${done ? "fait" : "à faire"}`} onClick={() => count("toggle", k)} data-k={k} />}
-      <button className="rbody" onClick={() => start([e], MOMENT_LABEL[e.m])} aria-label={`Ouvrir ${title}`}>
+      <button className="rbody" onClick={() => start([e], intention ? "Ton objectif" : MOMENT_LABEL[e.m], intention && e.origin === "parc")} aria-label={`Ouvrir ${title}`}>
         <span className="rt">
           <b>{title}</b>
           <small>{tag}{e.opt && <span className="tag t-opt">Facultatif</span>}{sub}</small>
@@ -263,6 +342,7 @@ export function Jour() {
   const ids = countable(S, d);
   const doneCount = ids.filter((id) => itemPct(S, dk, id) >= 1).length;
   const title = s.light ? "Minimum du jour" : s.ramp ? "Démarrage en douceur" : day.theme;
+  if (S.objective && showObjective(S) && !s.light) return <JourBesoin P={P} cur={cur} topRef={topRef} doneCount={doneCount} total={ids.length} />;
   return (
     <>
       <MiniBar watch={topRef} title={title} done={doneCount} total={ids.length} />
@@ -296,6 +376,50 @@ export function Jour() {
       {(["matin", "jour", "soir"] as const).map((m) => P.sections[m].length ? <Section key={m} m={m} list={P.sections[m]} cur={cur} /> : null)}
       {P.actions.length > 0 && <Section m="actions" list={P.actions} cur={cur} />}
       {!s.light && !s.ramp && (
+        <div className="foot"><span>Journée chargée ?</span>
+          <button onClick={() => { update((x) => { ensureDay(x, dk).light = true; }); toast("Minimum du jour activé"); }}>Passer au minimum</button>
+        </div>
+      )}
+      <Note />
+    </>
+  );
+}
+
+/** La page Jour organisée autour du besoin de la personne. */
+function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment | null; topRef: React.RefObject<HTMLDivElement | null>; doneCount: number; total: number }) {
+  const { S, ui, setUi, update, toast } = useStore();
+  const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today()), day = DAYS[d.getDay()], s = P.s;
+  const isNeed = (e: Entry) => e.origin === "parc" || e.id === "obj";
+  const all: Record<Moment, Entry[]> = { ...P.sections, actions: P.actions };
+  const need = (["actions", "matin", "jour", "soir"] as Moment[]).flatMap((m) => all[m].filter(isNeed));
+  need.sort((a, b) => (a.id === "obj" ? 1 : 0) - (b.id === "obj" ? 1 : 0) || (a.id === "pact" ? 1 : 0) - (b.id === "pact" ? 1 : 0));
+  const socle = (["matin", "jour", "soir", "actions"] as Moment[]).map((m) => [m, all[m].filter((e) => !isNeed(e))] as const).filter(([, l]) => l.length);
+  const sc = secCount(S, socle.flatMap(([, l]) => l), dk);
+  const theme = day.theme.charAt(0).toLowerCase() + day.theme.slice(1);
+  return (
+    <>
+      <MiniBar watch={topRef} title={objectiveName(S)} done={doneCount} total={total} />
+      <div className="datebar" ref={topRef} style={{ marginBottom: 12 }}>
+        <button aria-label="Jour précédent" onClick={() => setUi((u) => ({ sel: addDays(u.sel, -1) }))}><IconLeft /></button>
+        <p className="eyebrow">{isToday ? "Aujourd’hui · " : ""}{day.name} {fmtShort(d)}</p>
+        <button aria-label="Jour suivant" disabled={isToday} onClick={() => setUi((u) => ({ sel: addDays(u.sel, 1) }))}><IconRight /></button>
+      </div>
+      {!isToday && (
+        <button className="banner soft" onClick={() => setUi(() => ({ sel: today() }))}>
+          <div><b>Tu consultes une journée passée</b><span>Tu peux encore cocher ce que tu avais fait.</span></div>
+          <span className="act">Aujourd’hui</span>
+        </button>
+      )}
+      <NeedCard need={need} />
+      <Prayers d={d} />
+      {isToday && <BilanBanner />}
+      <Coach s={s} />
+      <section className="sec">
+        <div className="sechead"><h2>Ton socle quotidien</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
+        <div className="list">{socle.map(([m, l]) => <SocleRow key={m} m={m} list={l} cur={cur} />)}</div>
+      </section>
+      <p className="themeline">Thème du {day.name.toLowerCase()} : {theme}</p>
+      {!s.ramp && (
         <div className="foot"><span>Journée chargée ?</span>
           <button onClick={() => { update((x) => { ensureDay(x, dk).light = true; }); toast("Minimum du jour activé"); }}>Passer au minimum</button>
         </div>
