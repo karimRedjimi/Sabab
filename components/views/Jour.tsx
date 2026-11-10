@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DAYS, PARCOURS_DAYS } from "@/content/programme";
 import { HELD, MONTHS } from "@/content/reglages";
 import { REGULARITE } from "@/content/textes";
@@ -16,6 +16,7 @@ import { useCount } from "../Cards";
 import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
+import { Star } from "../Star";
 
 
 function Ring({ done, total }: { done: number; total: number }) {
@@ -31,6 +32,22 @@ function Ring({ done, total }: { done: number; total: number }) {
   );
 }
 
+/** Barre compacte qui apparaît en haut quand le titre sort de l’écran. */
+function MiniBar({ watch, title, done, total }: { watch: React.RefObject<HTMLDivElement | null>; title: string; done: number; total: number }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const el = watch.current; if (!el) return;
+    const io = new IntersectionObserver(([e]) => setShow(!e.isIntersecting), { rootMargin: "-10px 0px 0px 0px" });
+    io.observe(el); return () => io.disconnect();
+  }, [watch]);
+  return (
+    <div className={`minibar ${show ? "on" : ""}`} aria-hidden={!show}>
+      <div><b>{title}</b><span>{done} sur {total}</span></div>
+      <i style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
+    </div>
+  );
+}
+
 function useStartLecture() {
   const { setUi } = useStore();
   return (queue: Entry[], label: string) => { setUi(() => ({ lecture: { queue, i: 0, label } })); window.scrollTo(0, 0); };
@@ -42,7 +59,7 @@ function Hero({ P }: { P: Plan }) {
   const start = useStartLecture();
   const d = ui.sel, dk = keyOf(d);
   const ns = nextStep(S, d, P, now);
-  if (!ns.next) return <div className="hero done"><h2>Journée complète, qu’Allah l’accepte.</h2></div>;
+  if (!ns.next) return <div className="hero done"><div className="star"><Star pct={1} /></div><div><h2>Journée complète</h2><p>Qu’Allah l’accepte.</p></div></div>;
   const m = ns.next.m;
   const all: Record<Moment, Entry[]> = { ...P.sections, actions: P.actions };
   const list = all[m].filter((e) => !e.opt);
@@ -116,10 +133,10 @@ function Row({ e }: { e: Entry }) {
       {slot.t === 1 && <button className="ck" aria-pressed={done} aria-label={`${title} : ${done ? "fait" : "à faire"}`} onClick={() => count("toggle", k)} data-k={k} />}
       <button className="rbody" onClick={() => start([e], MOMENT_LABEL[e.m])} aria-label={`Ouvrir ${title}`}>
         <span className="rt">
-          <b>{title}{tag}{e.opt && <span className="tag t-opt">Facultatif</span>}</b>
-          <small>{sub}</small>
+          <b>{title}</b>
+          <small>{tag}{e.opt && <span className="tag t-opt">Facultatif</span>}{sub}</small>
         </span>
-        {slot.t > 1 && <span className="cnt"><span className="bar"><i style={{ width: `${Math.min(v / slot.t, 1) * 100}%` }} /></span><b>{v}/{slot.t}</b></span>}
+        {slot.t > 1 && <span className="cnt"><span className="bar"><i style={{ width: `${Math.min(v / slot.t, 1) * 100}%` }} /></span><b><span className="bump" key={v}>{v}</span>/{slot.t}</b></span>}
         {slot.t === 1 && <span className="chev" aria-hidden="true" />}
       </button>
       {slot.t > 1 && (
@@ -224,6 +241,7 @@ function Note() {
 
 export function Jour() {
   const { S, ui, setUi, update, toast, now } = useStore();
+  const topRef = useRef<HTMLDivElement>(null);
   if (ui.lecture) return <Lecture />;
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today());
   const day = DAYS[d.getDay()];
@@ -233,7 +251,8 @@ export function Jour() {
   const title = s.light ? "Minimum du jour" : s.ramp ? "Démarrage en douceur" : day.theme;
   return (
     <>
-      <div className="top">
+      <MiniBar watch={topRef} title={title} done={doneCount} total={ids.length} />
+      <div className="top" ref={topRef}>
         <div>
           <div className="datebar">
             <button aria-label="Jour précédent" onClick={() => setUi((u) => ({ sel: addDays(u.sel, -1) }))}><IconLeft /></button>

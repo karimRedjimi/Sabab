@@ -37,7 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <>
       <main className="app" id="view">
-        {hydrated && !redirect ? children : <div className="boot" aria-busy="true" />}
+        {hydrated && !redirect ? <div className="view" key={path}>{children}</div> : <div className="boot" aria-busy="true" />}
       </main>
       <div className="tabs" hidden={isWelcome || !hydrated || onb || (!!ui.lecture && path === "/")}>
         <nav aria-label="Navigation">

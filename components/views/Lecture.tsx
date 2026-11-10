@@ -70,7 +70,7 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
         {slot.t > 1 ? (
           <>
             <button className={`tapper ${v >= slot.t ? "full" : ""}`} onClick={() => count("inc", k)} aria-label={`${slot.l} : ${v} sur ${slot.t}. Toucher pour compter`}>
-              <b>{v} <small>/ {slot.t}</small></b>
+              <b><span className="bump" key={v}>{v}</span> <small>/ {slot.t}</small></b>
               <span>{v >= slot.t ? "Objectif atteint" : "Touche pour compter"}</span>
               <span className="bar"><i style={{ width: `${Math.min(v / slot.t, 1) * 100}%` }} /></span>
             </button>
@@ -112,7 +112,7 @@ export function Lecture() {
         {L.queue.length > 1 && <div className="steps" role="img" aria-label={`Étape ${Math.min(L.i + 1, L.queue.length)} sur ${L.queue.length}`}>{L.queue.map((_, i) => <i key={i} className={i <= L.i ? "on" : ""} />)}</div>}
       </div>
       {finished ? (
-        <div className="fin">
+        <div className="fin lstep">
           <div className="star"><Star pct={allDone ? 1 : 0.5} /></div>
           <h2 className="display" style={{ fontSize: "1.8rem" }}>{dayDone ? "Journée complète" : allDone ? `${L.label} : c’est fait` : "Tu y reviendras"}</h2>
           <p className="lead" style={{ margin: 0 }}>{allDone ? "Qu’Allah l’accepte." : "Ce qui reste t’attend dans ta journée."}</p>
@@ -120,7 +120,7 @@ export function Lecture() {
         </div>
       ) : (
         <>
-          <Step e={L.queue[L.i]} onNext={L.queue.length > 1 ? next : close} kicker={L.queue.length > 1 ? `${L.label} · ${L.i + 1} sur ${L.queue.length}` : null} />
+          <div className="lstep" key={L.i}><Step e={L.queue[L.i]} onNext={L.queue.length > 1 ? next : close} kicker={L.queue.length > 1 ? `${L.label} · ${L.i + 1} sur ${L.queue.length}` : null} /></div>
         </>
       )}
     </div>
