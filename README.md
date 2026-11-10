@@ -23,5 +23,6 @@ npm run build      # version de production
 
 ## État
 
-Sans configuration Supabase, les données restent sur l’appareil. Avec Supabase (voir `supabase/README.md`) :
-import et effacement dans « Plus › Mes données ». Comptes et synchronisation : Supabase, à venir.
+Sans configuration Supabase, les données restent sur l’appareil, avec export, import et effacement
+dans « Plus › Mes données ». Avec Supabase (voir `supabase/README.md`) : comptes par code e-mail,
+synchronisation entre appareils, communauté anonyme avec modération.
