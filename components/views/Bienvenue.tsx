@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { OBJ_CATS } from "@/content/programme";
+import { OBJ_CATS, PARCOURS, PARCOURS_DAYS } from "@/content/programme";
 import { LEVELS } from "@/content/reglages";
 import { keyOf, today } from "@/lib/dates";
 import { prayerTimes, hm } from "@/lib/prayer";
@@ -16,8 +16,8 @@ export function Bienvenue() {
   const router = useRouter();
   // Refaire l’accueil : on repart des choix déjà faits.
   const [OB, setOB] = useState(() => S.onboarded
-    ? { step: 0, cat: S.objective?.cat || null, title: S.objective?.title || "", level: S.level, ramp: !!rampWeek(S, today()) }
-    : { step: 0, cat: null as string | null, title: "", level: null as string | null, ramp: true });
+    ? { step: 0, cat: S.objective?.cat || null, title: S.objective?.title || "", level: S.level, ramp: !!rampWeek(S, today()), parc: true }
+    : { step: 0, cat: null as string | null, title: "", level: null as string | null, ramp: true, parc: true });
   const set = (p: Partial<typeof OB>) => setOB((o) => ({ ...o, ...p }));
   const next = () => { set({ step: OB.step + 1 }); window.scrollTo(0, 0); };
   const back = () => set({ step: Math.max(0, OB.step - 1) });
@@ -30,6 +30,8 @@ export function Bienvenue() {
       s.onboarded = true;
       if (OB.cat) s.objective = { title: OB.title || OBJ_CATS[OB.cat].l, cat: OB.cat, why: "", since: s.objective?.since || tk };
       if (OB.level) { s.level = OB.level; s.show = { ...LEVELS[OB.level].show }; }
+      const pid = OB.cat ? OBJ_CATS[OB.cat].p : null;
+      if (OB.parc && pid && PARCOURS[pid] && s.parcours?.id !== pid) s.parcours = { id: pid, start: tk };
       if (OB.ramp) { s.rampStart = tk; s.rampDone = null; } else if (rampWeek(s, today())) s.rampDone = tk;
       ensureDay(s, tk);
     });
@@ -112,6 +114,17 @@ export function Bienvenue() {
           <p><b>Horaires :</b> {P ? P.city : "à choisir plus tard"}</p>
           <p><b>Textes :</b> {LEVELS[OB.level || "none"].l.toLowerCase()}</p>
         </div>
+        {cat && PARCOURS[cat.p] && (
+          <>
+            <div className="sechead"><h2>Pour ton objectif</h2></div>
+            <div className="choices">
+              <button className="choice parc" aria-pressed={OB.parc} onClick={() => set({ parc: !OB.parc })}>
+                {OB.parc ? "✓ " : ""}Parcours « {PARCOURS[cat.p].title} », {PARCOURS_DAYS} jours
+                <small>Chaque jour, une invocation ciblée et un geste concret pour avancer. Tu peux l’arrêter à tout moment.</small>
+              </button>
+            </div>
+          </>
+        )}
         <div className="sechead"><h2>Ton rythme</h2></div>
         <div className="choices">
           <button className="choice" aria-pressed={OB.ramp} onClick={() => set({ ramp: true })}>Démarrage en douceur (recommandé)<small>Semaine 1 : trois invocations. Semaine 2 : le socle complet. Ensuite : le programme entier avec le thème du jour.</small></button>

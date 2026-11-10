@@ -87,6 +87,15 @@ export function Objectif() {
           {o && <button className="link danger" onClick={() => { update((s) => { s.objective = null; }); setTitle(""); setWhy(""); }}>Retirer l’objectif</button>}
         </div>
       </section>
+      {o && (
+        <section className="sec">
+          <div className="sechead"><h2>Discrétion</h2></div>
+          <button className="choice" aria-pressed={S.showObjective !== false} onClick={() => update((s) => { s.showObjective = s.showObjective === false; })}>
+            Afficher mon objectif sur la page Jour
+            <small>{S.showObjective !== false ? "Une ligne sous le titre du jour et les invocations du parcours marquées pour ton objectif." : "Ton objectif n’apparaît plus sur la page Jour, seulement ici et dans « Mes actions »."}</small>
+          </button>
+        </section>
+      )}
       {o && sug && (!S.parcours || S.parcours.id !== OBJ_CATS[o.cat].p) && (
         <div className="setup"><p>Le parcours « {sug.title} » accompagne bien cet objectif.</p><Link className="navbtn strong" href="/parcours">Voir le parcours</Link></div>
       )}

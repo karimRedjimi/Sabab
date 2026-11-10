@@ -17,6 +17,7 @@ import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
 import { Star } from "../Star";
+import { objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
 
 
 function Ring({ done, total }: { done: number; total: number }) {
@@ -45,6 +46,18 @@ function MiniBar({ watch, title, done, total }: { watch: React.RefObject<HTMLDiv
       <div><b>{title}</b><span>{done} sur {total}</span></div>
       <i style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
     </div>
+  );
+}
+
+/** Une ligne fine sous le titre : l’objectif et l’avancée du parcours. */
+function ObjectiveLine() {
+  const { S, ui } = useStore();
+  if (!S.objective || !showObjective(S)) return null;
+  const pd = parcoursServesObjective(S) ? parcoursDay(S, ui.sel) : 0;
+  return (
+    <Link className="objline" href="/objectif">
+      <span>{objectiveTag(S)}</span>{pd ? <> · jour {pd} sur {PARCOURS_DAYS}</> : null}
+    </Link>
   );
 }
 
@@ -120,14 +133,15 @@ function Row({ e }: { e: Entry }) {
   const si = e.sl[0], slot = slotsOf(e.id)[si], k = `${e.id}:${si}`, v = val(S, dk, k);
   const done = entryPct(S, dk, e) >= 1;
   const isObj = e.id === "obj";
-  const title = isObj ? S.objective?.title || "Mon objectif" : it.title;
+  const title = isObj ? S.objective?.title || "Mon objectif" : e.id === "pact" ? it.desc || it.title : it.title;
   let sub: string;
   if (isObj) sub = S.days[dk]?.objAct?.trim() || "Ton action concrète du jour";
-  else if (e.id === "pact") sub = `Jour ${parcoursDay(S, d)} sur ${PARCOURS_DAYS}`;
+  else if (e.id === "pact") sub = `Geste du jour · ${parcoursDay(S, d)} sur ${PARCOURS_DAYS}`;
   else if (slot.t > 1) sub = slot.l === "Matin" || slot.l === "Soir" ? `${slot.t} fois` : slot.l;
   else if (e.id === "fajr" || e.m === "jour" || e.m === "actions") sub = momentOf(S, it, d) || (it.kind === "action" ? "Le geste du jour" : "Une fois");
   else sub = "Une fois";
-  const tag = e.origin === "theme" ? <span className="tag">Thème du jour</span> : e.origin === "parc" ? <span className="tag t-parc">Parcours</span> : null;
+  const forObj = e.origin === "parc" && parcoursServesObjective(S) && showObjective(S);
+  const tag = e.origin === "theme" ? <span className="tag">Thème du jour</span> : e.origin === "parc" ? <span className="tag t-parc">{forObj ? objectiveTag(S) : "Parcours"}</span> : null;
   return (
     <div className={`rowi ${done ? "done" : ""}`} id={`card-${e.id}-${e.m}`}>
       {slot.t === 1 && <button className="ck" aria-pressed={done} aria-label={`${title} : ${done ? "fait" : "à faire"}`} onClick={() => count("toggle", k)} data-k={k} />}
@@ -260,6 +274,7 @@ export function Jour() {
             <button aria-label="Jour suivant" disabled={isToday} onClick={() => setUi((u) => ({ sel: addDays(u.sel, 1) }))}><IconRight /></button>
           </div>
           <h1 className="display">{title}</h1>
+          <ObjectiveLine />
         </div>
         <Ring done={doneCount} total={ids.length} />
       </div>

@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DAYS, ITEMS } from "@/content/programme";
 import { MONTHS } from "@/content/reglages";
@@ -79,7 +80,6 @@ export function Bilan() {
       <div className="stats">
         <div className="stat"><b>{nf(st.ist)}</b><span>istighfâr</span></div>
         {st.sal ? <div className="stat"><b>{nf(st.sal)}</b><span>salawat</span></div> : null}
-        {st.objN ? <div className="stat"><b>{st.obj} / {st.objN}</b><span>actions pour ton objectif</span></div> : null}
       </div>
       {best.length > 0 && (
         <section className="sec"><div className="sechead"><h2>Ce qui a bien marché</h2></div>
@@ -92,9 +92,16 @@ export function Bilan() {
             {st.light ? `Tu as utilisé le minimum du jour ${st.light} fois : c’est fait pour ça. ` : ""}Si une invocation te pèse, commence par l’apprendre dans l’onglet Apprendre : on fait plus facilement ce qu’on connaît par cœur.
           </p></section>
       )}
-      {st.objActs.length > 0 && (
-        <section className="sec"><div className="sechead"><h2>Mon objectif</h2><span className="count">{S.objective?.title || ""}</span></div>
-          <ul className="blist">{st.objActs.slice(-10).reverse().map((x) => <li key={keyOf(x.d)}>{x.text}<small>{DAYS[x.d.getDay()].name} {fmtShort(x.d)}</small></li>)}</ul></section>
+      {S.objective && (st.objN > 0 || st.parc > 0 || st.pact > 0) && (
+        <section className="sec"><div className="sechead"><h2>Pour ton objectif</h2><span className="count">{S.objective.title}</span></div>
+          <div className="stats">
+            {st.objN > 0 && <div className="stat"><b>{st.obj} / {st.objN}</b><span>{s(st.obj, "action faite", "actions faites")}</span></div>}
+            {st.parc > 0 && <div className="stat"><b>{st.parc}</b><span>{s(st.parc, "invocation du parcours", "invocations du parcours")}</span></div>}
+            {st.pact > 0 && <div className="stat"><b>{st.pact}</b><span>{s(st.pact, "geste concret", "gestes concrets")}</span></div>}
+          </div>
+          {st.objActs.length > 0 && <ul className="blist">{st.objActs.slice(-10).reverse().map((x) => <li key={keyOf(x.d)}>{x.text}<small>{DAYS[x.d.getDay()].name} {fmtShort(x.d)}</small></li>)}</ul>}
+          <p className="secintro" style={{ marginTop: 10 }}>Une avancée, une porte qui s’ouvre ? <Link href="/carnet">Note-la dans ton carnet.</Link></p>
+        </section>
       )}
       {(st.answered.length > 0 || st.added > 0) && (
         <section className="sec"><div className="sechead"><h2>Mon carnet</h2></div>

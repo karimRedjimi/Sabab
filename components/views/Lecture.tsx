@@ -7,6 +7,7 @@ import { ensureDay } from "@/lib/state";
 import { dayPct, entryPct, getItem, momentOf, slotsOf, val, MOMENT_LABEL, type Entry } from "@/lib/program";
 import { useCount } from "../Cards";
 import { Star } from "../Star";
+import { actionExample, objectiveIdea, objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { useStore } from "../Store";
 
 function ShowChips() {
@@ -34,12 +35,14 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
   const hasText = !!(it.ar || it.ph || it.fr);
   const g = it.grade ? GRADES[it.grade] : null;
   const sub = isObj ? null : momentOf(S, it, d);
+  const idea = isObj ? objectiveIdea(S, d) : null;
 
   return (
     <>
       <p className="eyebrow">{kicker || (isObj ? "Mon objectif" : MOMENT_LABEL[e.m])}</p>
       <h2>{isObj ? S.objective?.title : it.title}</h2>
       {!isObj && (e.id === "pact" ? it.moment : sub) && <p className="lsub">{e.id === "pact" ? it.moment : sub}</p>}
+      {e.origin === "parc" && S.objective && parcoursServesObjective(S) && showObjective(S) && <p className="lfor">{objectiveTag(S)} : {S.objective.title}</p>}
       {(g || it.optional || e.opt) && (
         <div>
           {g ? <span className={`pill ${it.grade === "hasan" ? "hasan" : ""}`}>{g.label} {it.src && <span>{it.src}</span>}</span>
@@ -50,8 +53,11 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
         {isObj ? (
           <label className="field" style={{ margin: 0 }}>
             <span>Mon action concrète pour aujourd’hui</span>
-            <input className="input" maxLength={160} placeholder="Par exemple : envoyer deux candidatures" value={S.days[dk]?.objAct || ""}
+            <input className="input" maxLength={160} placeholder={actionExample(S)} value={S.days[dk]?.objAct || ""}
               onChange={(ev) => { const t = ev.target.value; update((s) => { ensureDay(s, dk).objAct = t; }); }} />
+            {idea && !S.days[dk]?.objAct?.trim() && (
+              <button className="idea" onClick={() => update((s) => { ensureDay(s, dk).objAct = idea; })}><span>Une idée</span>{idea}</button>
+            )}
           </label>
         ) : (
           <>

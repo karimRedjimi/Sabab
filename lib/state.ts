@@ -23,6 +23,8 @@ export interface State {
   level: string | null;
   rampStart: string | null;
   rampDone: string | null;
+  /** Afficher le lien avec l’objectif sur la page Jour. */
+  showObjective?: boolean;
   // Phase 2 (communauté, binôme) : conservés pour compatibilité avec le prototype.
   binome: unknown;
   anonId: string | null;
