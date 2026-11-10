@@ -23,18 +23,15 @@ export function PrayerStrip({ d }: { d: Date }) {
   const evening = isToday && h >= pt.asr && h < pt.maghrib;
   const lastHour = isToday && d.getDay() === 5 && h >= pt.maghrib - 1 && h < pt.maghrib;
   return (
-    <div className="prayers" aria-label={`Horaires de prière, ${S.prayer.city}`}>
-      <div className="prow">
-        {list.map(([n, t], i) => <div key={n} className={i === nextIdx ? "next" : ""}><b>{hm(t)}</b><span>{n}</span></div>)}
+    <>
+      <div className="pr" aria-label={`Horaires de prière, ${S.prayer.city}`}>
+        {list.map(([n, t], i) => <div key={n} className={i === nextIdx ? "n" : ""}><b>{hm(t)}</b><span>{n}</span></div>)}
       </div>
-      <div className="windows">
-        <span className={morning ? "now" : ""}>{morning ? "Maintenant : " : ""}adhkâr du matin, après le Fajr</span>
-        <span className={evening ? "now" : ""}>{evening ? "Maintenant : " : ""}adhkâr du soir, de {hm(pt.asr)} à {hm(pt.maghrib)}</span>
-        {d.getDay() === 5 && (
-          <span className={lastHour ? "now" : "fri"}>{lastHour ? "Maintenant : " : ""}dernière heure du vendredi, de {hm(pt.maghrib - 1)} à {hm(pt.maghrib)}</span>
-        )}
-      </div>
-    </div>
+      <p className="secintro" style={{ margin: "8px 4px 0" }}>
+        {morning ? "Maintenant : adhkâr du matin" : evening ? "Maintenant : adhkâr du soir" : `Adhkâr du soir de ${hm(pt.asr)} à ${hm(pt.maghrib)}`}
+        {d.getDay() === 5 && <><br /><span style={{ color: "var(--brass)" }}>{lastHour ? "Maintenant : " : ""}dernière heure du vendredi, de {hm(pt.maghrib - 1)} à {hm(pt.maghrib)}</span></>}
+      </p>
+    </>
   );
 }
 

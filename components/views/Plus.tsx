@@ -19,7 +19,8 @@ export function Plus() {
   const rows: [string, string, string][] = [
     ["/objectif", "Mon objectif", S.objective ? S.objective.title : "Pas encore fixé"],
     ["/parcours", "Parcours de 40 jours", p && pd ? `${p.title}, jour ${pd}` : "Aucun en cours"],
-    ["/binome", "Mon binôme", "Aucun cercle"],
+    ["/communaute", "Communauté", "Bientôt"],
+    ["/binome", "Mon binôme", "Bientôt"],
     ["/bilan", "Mon bilan", "Semaine et mois"],
     ["/rythme", "Mon rythme", rw ? `Démarrage, semaine ${rw}` : "Programme complet"],
     ["/priere", "Horaires de prière", S.prayer ? S.prayer.city : "Ville à choisir"],
@@ -51,7 +52,7 @@ export function Objectif() {
   return (
     <>
       <div className="page"><h1>Mon objectif</h1>
-        <p className="lead">L’invocation et l’effort vont ensemble. Fixe un objectif concret : chaque jour, l’application te demandera une action pour l’atteindre, et elle comptera dans ta progression.</p></div>
+        <p className="lead">L’invocation et l’effort vont ensemble : chaque jour, une action concrète pour ton objectif.</p></div>
       <section className="sec">
         <label className="field"><span>Ce que je veux atteindre</span>
           <input className="input" id="otitle" maxLength={100} placeholder="Par exemple : signer trois nouveaux clients" value={title} onChange={(e) => setTitle(e.target.value)} /></label>
@@ -80,14 +81,14 @@ export function Parcours() {
   return (
     <>
       <div className="page"><h1>Parcours de 40 jours</h1>
-        <p className="lead">Un parcours ajoute à ton programme quotidien des invocations ciblées et un geste concret différent chaque jour. Un seul parcours à la fois.</p></div>
+        <p className="lead">Des invocations ciblées et un geste concret chaque jour, pendant 40 jours. Un parcours à la fois.</p></div>
       {Object.entries(PARCOURS).map(([id, p]) => {
         const active = cur && cur.id === id && pd;
         const finished = cur && cur.id === id && !pd && diffDays(today(), fromKey(cur.start)) >= PARCOURS_DAYS;
         return (
           <div key={id} className={`card ${active ? "active" : ""}`}>
             <h3>{p.title}</h3><p>{p.intro}</p>
-            <p style={{ fontSize: ".9rem" }}>Invocations : {p.duas.map((d) => ITEMS[d].title).join(", ")}</p>
+            <p style={{ fontSize: ".82rem" }}>{p.duas.map((d) => ITEMS[d].title).join(" · ")}</p>
             {active ? (
               <>
                 <div className="learnbar"><i style={{ width: `${(pd / PARCOURS_DAYS) * 100}%` }} /></div>
@@ -116,7 +117,7 @@ export function Priere() {
   return (
     <>
       <div className="page"><h1>Horaires de prière</h1>
-        <p className="lead">Les horaires servent à caler les rappels du programme : après le Fajr, adhkâr du matin et du soir, dernière heure du vendredi. Ils sont calculés sur ton appareil ; vérifie-les avec ta mosquée et ajuste la méthode si besoin.</p></div>
+        <p className="lead">Calculés sur ton appareil pour caler ton programme. Vérifie-les avec ta mosquée et ajuste la méthode si besoin.</p></div>
       <section className="sec">
         <CityPicker id="pcity" />
         <label className="field"><span>Méthode de calcul</span>
@@ -176,9 +177,9 @@ export function Rythme() {
   const ramp = rampWeek(S, today());
   return (
     <>
-      <div className="page"><h1>Mon rythme</h1><p className="lead">Adapte le programme à ton niveau et à tes journées.</p></div>
+      <div className="page"><h1>Mon rythme</h1><p className="lead">Adapte le programme à ton niveau.</p></div>
       <section className="sec"><div className="sechead"><h2>Démarrage</h2></div>
-        <p>{ramp ? `Tu es en démarrage en douceur, semaine ${ramp} sur 2.` : "Tu suis le programme complet."}</p>
+        <p className="secintro">{ramp ? `Démarrage en douceur, semaine ${ramp} sur 2.` : "Tu suis le programme complet."}</p>
         <div className="row">
           {ramp
             ? <button className="navbtn strong" onClick={() => { update((s) => { s.rampDone = keyOf(today()); }); toast("Programme complet activé"); }}>Passer au programme complet</button>
@@ -191,7 +192,7 @@ export function Rythme() {
           ))}
         </div></section>
       <section className="sec"><div className="sechead"><h2>Minimum du jour</h2></div>
-        <p>Les jours chargés, active-le depuis la page du jour : trois invocations courtes (après le Fajr, Sayyid al-istighfâr, Yâ Hayyu yâ Qayyûm) suffisent pour tenir ta journée.</p></section>
+        <p className="secintro">Les jours chargés, active-le depuis la page Jour : trois invocations courtes suffisent pour tenir ta journée.</p></section>
       <p><button className="link" onClick={() => { setUi(() => ({ forceOb: true })); router.push("/bienvenue"); }}>Refaire l’accueil</button></p>
     </>
   );
@@ -202,7 +203,7 @@ export function Communaute() {
     <>
       <div className="page"><h1>Communauté</h1>
         <p className="lead">Avancer ensemble, sans se montrer. Ici, personne n’a de nom ni de classement : seulement des chiffres collectifs, des demandes de du’â et des témoignages anonymes.</p></div>
-      <p className="empty">La communauté a besoin que tu sois connecté à ton compte.</p>
+      <p className="empty">La communauté ouvrira avec les comptes : elle a besoin que tu sois connecté.</p>
     </>
   );
 }

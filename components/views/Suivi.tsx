@@ -63,13 +63,9 @@ export function Suivi() {
         <button className="navbtn strong" onClick={() => openBilan("mois")}>Bilan du mois</button>
       </div>
       <p className="secintro" style={{ margin: "0 0 22px" }}>
-        Un jour est « tenu » quand tu atteins 80 % de son programme. Les jeûnes facultatifs ne comptent pas.{" "}
+        Un jour est « tenu » à partir de 80 % de son programme.{" "}
         {answered ? `Ton carnet compte ${answered} invocation${answered > 1 ? "s" : ""} exaucée${answered > 1 ? "s" : ""}.` : ""}
       </p>
-      <section className="sec">
-        <div className="sechead"><h2>Mon binôme</h2></div>
-        <p className="empty">Le binôme est disponible quand tu es connecté à ton compte.</p>
-      </section>
       <section className="sec">
         <div className="weeknav">
           <button className="iconbtn" aria-label="Semaine précédente" onClick={() => setUi((u) => ({ weekRef: addDays(u.weekRef, -7) }))}><IconLeft /></button>
@@ -79,7 +75,7 @@ export function Suivi() {
           </div>
           <button className="iconbtn" aria-label="Semaine suivante" disabled={isCurrent} onClick={() => setUi((u) => ({ weekRef: addDays(u.weekRef, 7) }))}><IconRight /></button>
         </div>
-        {Array.from({ length: 7 }, (_, i) => {
+        <div className="list">{Array.from({ length: 7 }, (_, i) => {
           const d = addDays(start, i), future = d > t, p = future ? 0 : dayPct(S, d), day = DAYS[d.getDay()];
           return (
             <button key={i} className={`dayrow ${sameDay(d, t) ? "is-today" : ""}`} disabled={future} onClick={() => goto(d)}>
@@ -88,7 +84,7 @@ export function Suivi() {
               <span className="dp">{future ? "" : Math.round(p * 100) + " %"}</span>
             </button>
           );
-        })}
+        })}</div>
       </section>
       <section className="sec">
         <div className="sechead"><h2>Les cinq dernières semaines</h2></div>

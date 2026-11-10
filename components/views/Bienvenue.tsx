@@ -48,7 +48,7 @@ export function Bienvenue() {
       <>
         <div className="star"><Star pct={0} /></div>
         <h1>Ton programme d’invocations, au quotidien</h1>
-        <p className="lead">Des invocations authentiques, sourcées, reliées à un objectif concret. Trois questions pour l’adapter à toi, et c’est parti.</p>
+        <p className="lead">Des invocations authentiques et sourcées, reliées à un objectif concret. Trois questions, et c’est parti.</p>
         <div className="obnav"><button className="navbtn primary" onClick={next}>Commencer</button></div>
       </>
     );
@@ -58,7 +58,7 @@ export function Bienvenue() {
       <>
         {stepper}
         <h1>Où vis-tu ?</h1>
-        <p className="lead">Pour caler ton programme sur tes horaires de prière : l’invocation après le Fajr, les adhkâr du matin et du soir.</p>
+        <p className="lead">Pour caler ton programme sur tes horaires de prière.</p>
         <CityPicker id="obcity" />
         {pt && <p className="secintro" style={{ margin: "0 0 14px" }}>Fajr aujourd’hui à {hm(pt.fajr)}.</p>}
         <div className="obnav"><button className="navbtn primary" onClick={next}>{P ? "Continuer" : "Passer cette étape"}</button></div>
@@ -69,7 +69,7 @@ export function Bienvenue() {
       <>
         {stepper}
         <h1>Qu’est-ce que tu cherches à atteindre ?</h1>
-        <p className="lead">Chaque jour, l’application te demandera une action concrète pour ton objectif, à côté de tes invocations.</p>
+        <p className="lead">Chaque jour, une action concrète pour l’atteindre, à côté de tes invocations.</p>
         <div className="choices">
           {Object.entries(OBJ_CATS).map(([k, v]) => (
             <button key={k} className="choice" aria-pressed={OB.cat === k} onClick={() => set({ cat: OB.cat === k ? null : k })}>{v.l}</button>

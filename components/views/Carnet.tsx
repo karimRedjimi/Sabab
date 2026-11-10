@@ -63,7 +63,7 @@ export function Carnet() {
     <>
       <div className="page">
         <h1>Carnet des invocations</h1>
-        <p className="lead">Note ce que tu demandes à Allah. Le jour où une invocation est exaucée, marque-la et écris comment. Avec le temps, ce carnet devient la preuve de ce qui t’a été donné.</p>
+        <p className="lead">Note ce que tu demandes à Allah. Le jour où c’est exaucé, raconte comment.</p>
       </div>
       <div className="stats">
         <div className="stat"><b>{done.length}</b><span>invocation{done.length > 1 ? "s" : ""} exaucée{done.length > 1 ? "s" : ""}</span></div>

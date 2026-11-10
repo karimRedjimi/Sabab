@@ -38,7 +38,7 @@ export function Donnees() {
   return (
     <>
       <div className="page"><h1>Mes données</h1>
-        <p className="lead">Tout ce que tu enregistres t’appartient. Tu peux le récupérer dans un fichier, le reprendre sur un autre appareil, ou tout effacer.</p></div>
+        <p className="lead">Tout ce que tu enregistres t’appartient.</p></div>
       <section className="sec"><div className="sechead"><h2>Exporter</h2></div>
         <p className="secintro">Un fichier lisible (JSON) avec ta progression ({days} jour{days > 1 ? "s" : ""}), tes notes, ton objectif, ton carnet et tes révisions.</p>
         <button className="navbtn primary" onClick={exportJson}>Télécharger mes données</button></section>

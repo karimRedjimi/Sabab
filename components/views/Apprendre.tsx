@@ -67,7 +67,7 @@ export function Apprendre() {
     <>
       <div className="page">
         <h1>Apprendre par cœur</h1>
-        <p className="lead">Chaque invocation revient au bon moment : un peu plus masquée à chaque révision réussie, jusqu’à ce que tu la récites seul. Objectif : le socle par cœur en 30 jours.</p>
+        <p className="lead">Chaque invocation revient au bon moment, un peu plus masquée à chaque révision. Objectif : le socle en 30 jours.</p>
       </div>
       <div className="stats">
         <div className="stat"><b>{socleMastered} / {SOCLE.length}</b><span>du socle sues par cœur</span><div className="learnbar"><i style={{ width: `${(socleMastered / SOCLE.length) * 100}%` }} /></div></div>
@@ -81,7 +81,7 @@ export function Apprendre() {
       ) : <p className="empty" style={{ margin: "0 0 26px" }}>Rien à réviser aujourd’hui. Reviens demain, ou ajoute une invocation ci-dessous.</p>}
       <section className="sec">
         <div className="sechead"><h2>Toutes les invocations</h2><span className="count">{Object.keys(S.learn).length} en révision</span></div>
-        {DUA_IDS.map((id) => {
+        <div className="list">{DUA_IDS.map((id) => {
           const it = ITEMS[id], L = S.learn[id], lvl = L ? L.lvl : -1;
           const status = !L ? "Pas encore dans tes révisions" : lvl >= MASTER ? "Sue par cœur" : L.next <= tk ? "À réviser aujourd’hui" : `Prochaine révision le ${fmtShort(fromKey(L.next))}`;
           return (
@@ -95,7 +95,7 @@ export function Apprendre() {
                 : <button className="navbtn" onClick={() => { update((s) => { s.learn[id] = { lvl: 0, next: keyOf(today()) }; }); toast("Ajoutée à tes révisions"); }}>Ajouter</button>}
             </div>
           );
-        })}
+        })}</div>
       </section>
     </>
   );

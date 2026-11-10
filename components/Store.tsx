@@ -5,6 +5,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { merge, type State } from "@/lib/state";
 import { keyOf, monday, today } from "@/lib/dates";
 import type { Kind } from "@/lib/bilan";
+import type { Entry } from "@/lib/program";
 import { saveLocal, loadLocal } from "@/lib/storage";
 
 export interface UI {
@@ -18,6 +19,8 @@ export interface UI {
   textState: Record<string, boolean>;
   /** Sections de moment ouvertes ou fermées, par jour et moment */
   momentOpen: Record<string, boolean>;
+  /** Lecture guidée en cours : la file des étapes et la position. */
+  lecture: { queue: Entry[]; i: number; label: string } | null;
 }
 
 interface Ctx {
@@ -41,7 +44,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [ui, setUiState] = useState<UI>(() => ({
     sel: today(), weekRef: monday(today()), bilan: { kind: "semaine", ref: monday(today()) },
-    forceOb: false, openSet: {}, textState: {}, momentOpen: {},
+    forceOb: false, openSet: {}, textState: {}, momentOpen: {}, lecture: null,
   }));
   const [now, setNow] = useState(() => new Date());
   const [toastMsg, setToastMsg] = useState<string | null>(null);

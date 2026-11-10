@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Amiri, Newsreader } from "next/font/google";
+import { Amiri, DM_Sans, Newsreader } from "next/font/google";
 import { StoreProvider } from "@/components/Store";
 import { AppShell } from "@/components/AppShell";
 import { ServiceWorker } from "@/components/ServiceWorker";
 import "./globals.css";
 
 // Polices hébergées avec l’application : aucune requête vers un service tiers.
-const newsreader = Newsreader({ subsets: ["latin", "latin-ext"], style: ["normal", "italic"], axes: ["opsz"], variable: "--font-newsreader", display: "swap" });
+const dmsans = DM_Sans({ subsets: ["latin", "latin-ext"], style: ["normal", "italic"], axes: ["opsz"], variable: "--font-dmsans", display: "swap" });
+const newsreader = Newsreader({ subsets: ["latin", "latin-ext"], weight: ["400"], variable: "--font-newsreader", display: "swap" });
 const amiri = Amiri({ subsets: ["arabic"], weight: ["400", "700"], variable: "--font-amiri", display: "swap" });
 
 export const metadata: Metadata = {
@@ -23,14 +24,14 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ECF0E8" },
-    { media: "(prefers-color-scheme: dark)", color: "#0E1916" },
+    { media: "(prefers-color-scheme: light)", color: "#F6F2F4" },
+    { media: "(prefers-color-scheme: dark)", color: "#150C12" },
   ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${newsreader.variable} ${amiri.variable}`}>
+    <html lang="fr" className={`${dmsans.variable} ${newsreader.variable} ${amiri.variable}`}>
       <body>
         <StoreProvider>
           <AppShell>{children}</AppShell>
