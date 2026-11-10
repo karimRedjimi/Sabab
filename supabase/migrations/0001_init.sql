@@ -221,6 +221,14 @@ begin
   delete from auth.users where id = auth.uid();
 end $$;
 
+-- Protection supplémentaire : RLS activée aussi sur les tables privées (sans règle, donc fermées ;
+-- les fonctions ci-dessus, propriétaires des tables, y accèdent quand même).
+alter table private.anon_ids enable row level security;
+alter table private.moderators enable row level security;
+alter table private.requests enable row level security;
+alter table private.prayers enable row level security;
+alter table private.reports enable row level security;
+
 -- ---------------------------------------------------------------------
 -- 6. Droits : seules les fonctions ci-dessus sont accessibles, et seulement connecté
 -- ---------------------------------------------------------------------
