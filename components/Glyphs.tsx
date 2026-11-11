@@ -42,10 +42,13 @@ const P: Record<string, ReactNode> = {
 
 export type GlyphName = keyof typeof P;
 
+/** Recentrage des dessins qui ne sont pas exactement au milieu de leur cadre (mesuré sur leur contour). */
+const SHIFT: Record<string, [number, number]> = { dawn: [0, -0.5], cloud: [0.25, 0.75], moon: [-0.9, 0.54] };
+
 export function Glyph({ name, className }: { name: string; className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {P[name]}
+      {SHIFT[name] ? <g transform={`translate(${SHIFT[name][0]} ${SHIFT[name][1]})`}>{P[name]}</g> : P[name]}
     </svg>
   );
 }

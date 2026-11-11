@@ -1237,3 +1237,5 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 .prow5 .gtile{border-radius:13px}
 .prow5 .gtile svg{width:24px;height:24px}
 .prow5 > button{padding:8px 0 6px}
+.gtile svg{display:block}
+.prow5 .tw .gtile{display:grid;place-items:center}
