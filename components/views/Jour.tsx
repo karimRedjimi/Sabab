@@ -123,21 +123,13 @@ function useStartLecture() {
   return (queue: Entry[], label: string, intention = false) => { if (queue.length) setUi(() => ({ lecture: { queue, i: 0, label, intention, scrollY: window.scrollY } })); };
 }
 
-/** La carte du besoin : ce qu’on fait aujourd’hui pour son objectif. */
-function NeedCard({ need }: { need: Entry[] }) {
+/** Le rappel de l’objectif : court, avec un seul bouton pour avancer dans la journée. */
+function NeedCard({ onGo, started, allDone }: { onGo: (() => void) | null; started: boolean; allDone: boolean }) {
   const { S, ui, update, toast } = useStore();
-  const start = useStartLecture();
-  const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today());
+  const d = ui.sel, isToday = sameDay(d, today());
   const serves = parcoursServesObjective(S), pd = serves ? parcoursDay(S, d) : 0, finished = parcoursFinished(S, d);
-  const merged = !!mergedGesture(S, d);
-  // Quand le geste du parcours et l’action ne font qu’un, une seule ligne « Agir ».
-  const shown = merged ? need.filter((e) => e.id !== "pact") : need;
-  const invoke = shown.filter((e) => e.id !== "obj" && e.id !== "pact");
-  const act = shown.filter((e) => e.id === "obj" || e.id === "pact");
-  const todo = shown.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
-  const started = todo.length < shown.filter((e) => !e.opt).length;
   return (
-    <div className="need">
+    <div className="need slim">
       <Link className="needhead" href="/chemin" aria-label="Voir mon chemin">
         <span className="nh">
           <span className="k">Ton objectif</span>
@@ -160,27 +152,14 @@ function NeedCard({ need }: { need: Entry[] }) {
           </div>
         </div>
       )}
-      {invoke.length > 0 && (
-        <div className="nblock">
-          <p className="nbt"><Glyph name="book" />Invoquer</p>
-          <div className="list">{invoke.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention />)}</div>
-        </div>
-      )}
-      {act.length > 0 && (
-        <div className="nblock">
-          <p className="nbt"><Glyph name="target" />Agir</p>
-          <div className="list agir">{act.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention />)}</div>
-        </div>
-      )}
       {!serves && !finished && <Link className="needlink" href="/parcours">Commencer le parcours de {PARCOURS_DAYS} jours</Link>}
-      {isToday && shown.length > 0 && (todo.length ? (
-        <button className="go" onClick={() => start(todo, "Ton objectif", true)}>{started ? "Continuer" : "Commencer"} <IconRight /></button>
-      ) : <p className="needdone">Fait pour aujourd’hui, qu’Allah l’accepte.</p>)}
+      {isToday && (onGo
+        ? <button className="go" onClick={onGo}>{started ? "Continuer" : "Commencer ma journée"}</button>
+        : allDone ? <p className="needdone">Journée accomplie, qu’Allah l’accepte.</p> : null)}
     </div>
   );
 }
 
-/** Le socle quotidien, résumé en une ligne par moment. */
 function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | null }) {
   const { S, ui, setUi, now } = useStore();
   const start = useStartLecture();
@@ -327,7 +306,7 @@ function Prayers({ d }: { d: Date }) {
   );
 }
 
-function Row({ e, intention = false }: { e: Entry; intention?: boolean }) {
+function Row({ e, intention = false, tile }: { e: Entry; intention?: boolean; tile?: string }) {
   const { S, ui } = useStore();
   const count = useCount();
   const start = useStartLecture();
@@ -345,17 +324,26 @@ function Row({ e, intention = false }: { e: Entry; intention?: boolean }) {
   else sub = "Une fois";
   const forObj = e.origin === "parc" && parcoursServesObjective(S) && showObjective(S);
   const tag = e.origin === "theme" ? <span className="tag">Thème du jour</span> : e.origin === "parc" ? <span className="tag t-parc">{forObj ? objectiveTag(S) : "Parcours"}</span> : null;
+  const ck = slot.t === 1 ? <button className="ck" aria-pressed={done} aria-label={`${title} : ${done ? "fait" : "à faire"}`} onClick={() => count("toggle", k)} data-k={k} /> : null;
   return (
-    <div className={`rowi ${done ? "done" : ""}`} id={`card-${e.id}-${e.m}`}>
-      {slot.t === 1 && <button className="ck" aria-pressed={done} aria-label={`${title} : ${done ? "fait" : "à faire"}`} onClick={() => count("toggle", k)} data-k={k} />}
+    <div className={`rowi ${tile ? "sum tiled" : ""} ${done ? "done" : ""}`} id={`card-${e.id}-${e.m}`}>
+      {tile ? <Tile k={tile} /> : ck}
       <button className="rbody" onClick={() => start([e], intention ? "Ton objectif" : MOMENT_LABEL[e.m], intention && e.origin === "parc")} aria-label={`Ouvrir ${title}`}>
-        <span className="rt">
-          <b>{title}</b>
-          <small>{tag}{e.opt && <span className="tag t-opt">Facultatif</span>}{sub}</small>
-        </span>
+        {tile ? (
+          <span className="rt">
+            <b>{e.origin === "parc" && e.id !== "pact" ? (parcoursServesObjective(S) ? objectiveTag(S) : "Ton parcours") : "Ton geste du jour"}</b>
+            <small>{isObj && !own && !gesture ? "À choisir, une idée t’attend" : title}</small>
+          </span>
+        ) : (
+          <span className="rt">
+            <b>{title}</b>
+            <small>{tag}{e.opt && <span className="tag t-opt">Facultatif</span>}{sub}</small>
+          </span>
+        )}
         {slot.t > 1 && <span className="cnt"><span className="bar"><i style={{ width: `${Math.min(v / slot.t, 1) * 100}%` }} /></span><b><span className="bump" key={v}>{v}</span>/{slot.t}</b></span>}
-        {slot.t === 1 && <span className="chev" aria-hidden="true" />}
+        {slot.t === 1 && !tile && <span className="chev" aria-hidden="true" />}
       </button>
+      {tile && ck}
       {slot.t > 1 && (
         <button className={`plus ${v >= slot.t ? "full" : ""}`} onClick={() => count("inc", k)} aria-label={`${title} : ${v} sur ${slot.t}. Ajouter un`} data-k={k}>
           {v >= slot.t ? "✓" : "+"}
@@ -559,16 +547,21 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
   };
   const socle = order.map((m) => [m, all[m].filter((e) => !isNeed(e))] as const).filter(([, l]) => l.length)
     .sort((a, b) => rank(a[0], a[1]) - rank(b[0], b[1]) || order.indexOf(a[0]) - order.indexOf(b[0]));
-  const sc = secCount(S, socle.flatMap(([, l]) => l), dk);
-  const needTodo = need.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
-  const q = !isToday ? null : needTodo.length ? { todo: needTodo, label: "Ton objectif", intention: true } : nextQueue(S, d, P, now, isNeed);
+  // Quand le geste du parcours et l’action ne font qu’un, une seule ligne.
+  const shown = mergedGesture(S, d) ? need.filter((e) => e.id !== "pact") : need;
+  const invoke = shown.filter((e) => e.id !== "obj" && e.id !== "pact"), act = shown.filter((e) => e.id === "obj" || e.id === "pact");
+  const sc = secCount(S, [...shown, ...socle.flatMap(([, l]) => l)], dk);
+  const needTodo = invoke.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
+  const actTodo = act.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
+  const q = !isToday ? null : needTodo.length ? { todo: needTodo, label: "Ton objectif", intention: true } : nextQueue(S, d, P, now, isNeed) || (actTodo.length ? { todo: actTodo, label: "Ton objectif", intention: true } : null);
+  const go = q ? () => start(q.todo, q.label, "intention" in q) : null;
   return (
     <>
-      <MiniBar watch={topRef} title={objectiveName(S)} done={doneCount} total={total} onGo={q ? () => start(q.todo, q.label, "intention" in q) : null} />
+      <MiniBar watch={topRef} title={objectiveName(S)} done={sc.done} total={sc.total} onGo={go} />
       <DateBar refEl={topRef} />
       {!isToday && <PastBanner />}
       <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
-      <NeedCard need={need} />
+      <NeedCard onGo={go} started={sc.done > 0} allDone={sc.total > 0 && sc.done === sc.total} />
       <Coach s={s} only="light" />
       {isToday && (
         <div className="notices">
@@ -580,8 +573,13 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
         </div>
       )}
       <section className="sec">
-        <div className="sechead"><h2>Ton socle quotidien</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
-        <div className="list">{socle.map(([m, l]) => <SocleRow key={m} m={m} list={[...l]} cur={cur} />)}<CoranRow /></div>
+        <div className="sechead"><h2>Ta journée</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
+        <div className="list">
+          {invoke.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention tile="objectif" />)}
+          {socle.map(([m, l]) => <SocleRow key={m} m={m} list={[...l]} cur={cur} />)}
+          <CoranRow />
+          {act.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention tile="geste" />)}
+        </div>
       </section>
       <Foot s={s} />
       <Journal />
