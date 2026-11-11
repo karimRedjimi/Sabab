@@ -1124,3 +1124,9 @@ button,a,summary,.tabs,.rowi,.favrow,.jrow{-webkit-user-select:none;user-select:
 .fav.inl .favsum .chev{width:7px;height:7px;flex:none;margin-right:4px}
 .fav.inl .favmore .favrow{padding:9px 2px;gap:10px}
 .fav.inl .favsrc{padding:10px 2px 8px}
+
+/* ── Rappel du Coran dans la lecture guidée ── */
+.qlist{gap:0}
+.qpass{padding:0 0 16px}
+.qpass + .qpass{border-top:1px solid var(--line);padding-top:16px}
+.qlist .qsrc{margin:0}

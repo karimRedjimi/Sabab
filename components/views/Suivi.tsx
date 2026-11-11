@@ -1,5 +1,5 @@
 "use client";
-import { coranStats } from "@/lib/coran";
+import { coranStats, suggestNextLevel } from "@/lib/coran";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DAYS, ITEMS } from "@/content/programme";
@@ -16,14 +16,14 @@ import Link from "next/link";
 export const heatLevel = (p: number) => (p >= 1 ? 4 : p >= 0.8 ? 3 : p >= 0.5 ? 2 : p > 0 ? 1 : 0);
 
 export function Suivi() {
-  const { S, ui, setUi } = useStore();
+  const { S, ui, setUi, update } = useStore();
   const router = useRouter();
   const t = today(), { cur, best } = streaks(S);
   // Comme le prototype : en arrivant sur le suivi, on affiche la semaine du jour sélectionné.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { setUi((u) => ({ weekRef: monday(u.sel) })); }, []);
   const goto = (d: Date) => { setUi(() => ({ sel: d })); router.push("/"); };
-  const coran = coranStats(S, t);
+  const coran = coranStats(S, t), coran30 = coranStats(S, t, 30), nextLevel = suggestNextLevel(S, t);
   const m0 = new Date(t.getFullYear(), t.getMonth(), 1);
   let heldMonth = 0;
   for (let x = new Date(m0); x <= t; x = addDays(x, 1)) if (dayPct(S, x) >= HELD) heldMonth++;
@@ -92,11 +92,24 @@ export function Suivi() {
         <p className="secintro" style={{ margin: "10px 6px 0" }}>Un jour est « tenu » à partir de 80 % de son programme.</p>
       </section>
       <section className="sec">
+        <div className="sechead"><h2>Rappel du Coran</h2><span className="count">matin et soir</span></div>
+        <div className="stats">
+          <div className="stat"><b>{coran.read}</b><span>jour{coran.read > 1 ? "s" : ""} lu{coran.read > 1 ? "s" : ""} sur 7</span></div>
+          <div className="stat"><b>{coran30.verses}</b><span>verset{coran30.verses > 1 ? "s" : ""} lu{coran30.verses > 1 ? "s" : ""} en 30 jours</span></div>
+          <div className="stat"><b>{Math.round(coran30.seconds / 60)}</b><span>minute{coran30.seconds >= 120 ? "s" : ""} de lecture en 30 jours</span></div>
+        </div>
+        {nextLevel && (
+          <div className="banner" style={{ marginTop: 10 }}>
+            <div><b>Sept jours de suite</b><span>Passer à environ {nextLevel} versets par jour ?</span></div>
+            <button className="act" onClick={() => update((x) => { x.coranLevel = nextLevel; })}>Augmenter</button>
+          </div>
+        )}
+      </section>
+      <section className="sec">
         <div className="sechead"><h2>Bilans</h2></div>
         <ul className="menu">
           <li><button className="menubtn" onClick={() => openBilan("semaine")}><Glyph name="chart" className="mi" /><span className="mt"><b>Bilan de la semaine</b></span><i className="chev" aria-hidden="true" /></button></li>
           <li><button className="menubtn" onClick={() => openBilan("mois")}><Glyph name="cal" className="mi" /><span className="mt"><b>Bilan du mois</b></span><i className="chev" aria-hidden="true" /></button></li>
-          <li><Link href="/coran"><Glyph name="book" className="mi" /><span className="mt"><b>Rappel du Coran</b></span><span className="mv">{coran.read} jour{coran.read > 1 ? "s" : ""} sur 7</span><i className="chev" aria-hidden="true" /></Link></li>
           {answered > 0 && <li><Link href="/carnet"><Glyph name="heart" className="mi" /><span className="mt"><b>Carnet</b></span><span className="mv">{answered} exaucée{answered > 1 ? "s" : ""}</span><i className="chev" aria-hidden="true" /></Link></li>}
         </ul>
       </section>

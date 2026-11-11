@@ -254,7 +254,7 @@ export function Rythme() {
           ))}
         </div></section>
       <section className="sec"><div className="sechead"><h2>Rappel du Coran</h2></div>
-        <p className="secintro">Quelques versets chaque jour dans ton socle, choisis le plus souvent selon ton objectif.</p>
+        <p className="secintro">Quelques versets à lire le matin et le soir, choisis le plus souvent selon ton objectif.</p>
         <div className="choices">
           {CORAN_LEVELS.map((l) => (
             <button key={l.n} className="choice" aria-pressed={coranLevel(S) === l.n} onClick={() => update((s) => { s.coranLevel = l.n; })}>{l.l}<small>{l.d}</small></button>

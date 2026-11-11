@@ -1,4 +1,5 @@
 "use client";
+import { noteLecture, rappelsDuMoment, versesIn } from "@/lib/coran";
 import { GRADES, DAYS, ITEMS } from "@/content/programme";
 import { HELD } from "@/content/reglages";
 import { keyOf } from "@/lib/dates";
@@ -46,6 +47,21 @@ export function Source({ it }: { it: ViewItem }) {
 
 type Act = "toggle" | "inc" | "dec" | "reset" | "set";
 /** Cocher et compter, avec les messages du prototype. */
+/** Coche (ou décoche) le rappel du Coran d’un moment, et tient le compte des versets lus pour le suivi. */
+export function useCoranMark() {
+  const { update, ui } = useStore();
+  return (e: Entry, done: boolean, seconds = 0) => {
+    const dk = keyOf(ui.sel), k = `${e.id}:0`;
+    buzz(12);
+    update((s) => {
+      const r = ensureDay(s, dk); r.c = r.c || {};
+      if (!!r.c[k] === done) return;
+      if (done) r.c[k] = 1; else delete r.c[k];
+      noteLecture(s, dk, versesIn(rappelsDuMoment(s, ui.sel, e.m === "soir" ? "soir" : "matin")), seconds, done);
+    });
+  };
+}
+
 export function useCount() {
   const { S, update, ui, toast } = useStore();
   return (act: Act, k: string) => {

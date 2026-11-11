@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { EXTRAITS } from "@/content/coran-extraits";
 import { VERSETS_GENERAL, VERSETS_THEME } from "@/content/versets";
 import { OBJ_CATS } from "@/content/programme";
-import { coranStats, rappelsDuJour, refLabel, suggestNextLevel, versesIn } from "@/lib/coran";
+import { coranStats, noteLecture, rappelsDuJour, rappelsDuMoment, refLabel, suggestNextLevel, versesIn } from "@/lib/coran";
 import { addDays, keyOf } from "@/lib/dates";
 import { merge } from "@/lib/state";
 
@@ -77,5 +77,25 @@ describe("rappels du jour", () => {
     expect(suggestNextLevel(s, d0)).toBe(5);
     s.coranLevel = 10;
     expect(suggestNextLevel(s, d0)).toBeNull();
+  });
+  it("matin et soir se partagent les passages ; avec un seul verset, on le relit le soir", () => {
+    const one = S("mariage");
+    expect(rappelsDuMoment(one, d0, "soir")[0].ref).toBe(rappelsDuMoment(one, d0, "matin")[0].ref);
+    for (const level of [5, 10] as const) for (let i = 0; i < 30; i++) {
+      const s = S("etudes", level), d = addDays(d0, i);
+      const am = rappelsDuMoment(s, d, "matin"), pm = rappelsDuMoment(s, d, "soir");
+      const all = rappelsDuJour(s, d).map((r) => r.ref);
+      expect(all.length === 1 ? am.map((r) => r.ref) : [...am, ...pm].map((r) => r.ref)).toEqual(all);
+      expect(am.length).toBeGreaterThan(0); expect(pm.length).toBeGreaterThan(0);
+    }
+  });
+  it("le compte des versets lus suit ce qu’on coche et décoche", () => {
+    const s = S("mariage");
+    noteLecture(s, "2026-11-11", 3, 40); noteLecture(s, "2026-11-11", 2, 20);
+    expect(s.coran!["2026-11-11"]).toEqual({ n: 5, t: 60 });
+    noteLecture(s, "2026-11-11", 2, 0, false);
+    expect(s.coran!["2026-11-11"].n).toBe(3);
+    noteLecture(s, "2026-11-11", 3, 0, false);
+    expect(s.coran!["2026-11-11"]).toBeUndefined();
   });
 });

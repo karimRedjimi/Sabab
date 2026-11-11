@@ -7,7 +7,7 @@ import { HELD } from "@/content/reglages";
 import { REGULARITE } from "@/content/textes";
 import { addDays, fmtDate, fmtShort, fromKey, keyOf, today } from "@/lib/dates";
 import { dayPct, parcoursDay, val } from "@/lib/program";
-import { uid8 } from "@/lib/state";
+import { ensureDay, uid8 } from "@/lib/state";
 import { objectiveName, parcoursFinished, parcoursServesObjective } from "@/lib/objective";
 import { useStore } from "../Store";
 import { useRouter } from "next/navigation";
@@ -94,6 +94,7 @@ export function Chemin() {
             <b>{e.title}</b>
             {e.text && <p>{e.text}</p>}
             {e.quote && <div className="ms">{e.quote}</div>}
+            {e.kind === "now" && <button className="navbtn strong" style={{ marginTop: 10 }} onClick={() => { update((x) => { const r = ensureDay(x, tk); r.c = r.c || {}; r.c["pact:0"] = 1; r.c["obj:0"] = 1; }); toast("Geste fait, qu’Allah l’accepte"); }}>C’est fait</button>}
           </li>
         ))}
       </ol>

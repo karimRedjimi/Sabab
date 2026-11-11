@@ -10,13 +10,12 @@ import { ensureDay } from "@/lib/state";
 import { prayerTimes, hm } from "@/lib/prayer";
 import {
   countable, currentMoment, parcoursDay, dayPct, entryPct, getItem, itemPct, momentOf, nextStep, plan, secCount, slotsOf, val,
-  MOMENT_LABEL, type Entry, type Moment, type Plan, type Structure,
-} from "@/lib/program";
-import { useCount } from "../Cards";
+  MOMENT_LABEL, type Entry, type Moment, type Plan, type Structure, CORAN_AM, CORAN_PM } from "@/lib/program";
+import { useCount, useCoranMark } from "../Cards";
 import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
-import { coranDone, rappelsDuJour, versesIn } from "@/lib/coran";
+import { rappelsDuMoment, versesIn } from "@/lib/coran";
 import { FavorableMoments, Journal, Patience, SameNeed } from "../Moments";
 import { usePrayerSheet } from "../Salat";
 import { SALAT, dayExempt, fajrForgotten, salatOf, type SalatKey } from "@/lib/salat";
@@ -197,23 +196,20 @@ function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | nu
   );
 }
 
-/** Le rappel du Coran du jour : quelques versets, hors pourcentage des invocations. */
-function CoranRow() {
-  const { S, ui } = useStore();
-  const t = today();
-  if (ui.sel > t) return null;
-  const dk = keyOf(ui.sel), done = coranDone(S, dk), list = rappelsDuJour(S, ui.sel), n = versesIn(list);
-  const themed = list.some((r) => r.themed);
-  const sub = `${n} verset${n > 1 ? "s" : ""}${done ? " · lu" : themed ? ` · ${list.find((r) => r.themed)!.tag.toLowerCase()}` : ""}`;
-  return (
-    <div className={`rowi sum ${done ? "done" : ""}`}>
-      <Tile k="coran" />
-      <Link className="rbody" href="/coran" aria-label={`Rappel du Coran : ${sub}. Ouvrir la lecture`}>
-        <span className="rt"><b>Rappel du Coran</b><small>{sub}</small></span>
-        {done ? <span className="okdot" aria-label="lu" /> : <span className="chev" aria-hidden="true" />}
-      </Link>
-    </div>
-  );
+/** Ajoute le rappel du Coran à ce qu’il y a à faire le matin et le soir (sauf les jours de minimum). */
+function withCoran(P: Plan): Plan {
+  if (P.s.light) return P;
+  const e = (id: string, m: "matin" | "soir"): Entry => ({ id, origin: "socle", m, sl: [0], opt: false });
+  return { ...P, sections: { ...P.sections, matin: [...P.sections.matin, e(CORAN_AM, "matin")], soir: [...P.sections.soir, e(CORAN_PM, "soir")] } };
+}
+
+/** La file de « Continuer » : on reprend la journée dans l’ordre, là où elle s’est arrêtée. */
+function dayQueue(S: Parameters<typeof plan>[0], dk: string, P: Plan) {
+  for (const m of ["matin", "jour", "soir"] as const) {
+    const todo = P.sections[m].filter((e) => !e.opt && e.id !== "obj" && e.id !== "pact" && entryPct(S, dk, e) < 1);
+    if (todo.length) return { todo, label: MOMENT_LABEL[m], intention: todo[0].origin === "parc" };
+  }
+  return null;
 }
 
 /** La grande carte qui guide : ce qu’il reste à faire maintenant. */
@@ -314,18 +310,21 @@ function Row({ e, intention = false, tile }: { e: Entry; intention?: boolean; ti
   const d = ui.sel, dk = keyOf(d), it = getItem(S, e.id, d);
   const si = e.sl[0], slot = slotsOf(e.id)[si], k = `${e.id}:${si}`, v = val(S, dk, k);
   const done = entryPct(S, dk, e) >= 1;
+  const isCoran = e.id === CORAN_AM || e.id === CORAN_PM;
+  const markCoran = useCoranMark();
   const isObj = e.id === "obj";
   const gesture = isObj ? mergedGesture(S, d) : null, own = S.days[dk]?.objAct?.trim() || "";
   const title = isObj ? (intention ? own || gesture || "Ton action du jour" : S.objective?.title || "Mon objectif") : e.id === "pact" ? it.desc || it.title : it.title;
   let sub: string;
-  if (isObj) sub = intention ? (own ? "Ton action du jour" : gesture ? "Proposé par ton parcours · tu peux le remplacer" : "À choisir, une idée t’attend") : own || "Ton action concrète du jour";
+  if (isCoran) { const n = versesIn(rappelsDuMoment(S, d, e.m === "soir" ? "soir" : "matin")); sub = `${n} verset${n > 1 ? "s" : ""}`; }
+  else if (isObj) sub = intention ? (own ? "Ton action du jour" : gesture ? "Proposé par ton parcours · tu peux le remplacer" : "À choisir, une idée t’attend") : own || "Ton action concrète du jour";
   else if (e.id === "pact") sub = `Geste du jour · ${parcoursDay(S, d)} sur ${PARCOURS_DAYS}`;
   else if (slot.t > 1) sub = slot.l === "Matin" || slot.l === "Soir" ? `${slot.t} fois` : slot.l;
   else if (e.id === "fajr" || e.m === "jour" || e.m === "actions") sub = momentOf(S, it, d) || (it.kind === "action" ? "Le geste du jour" : "Une fois");
   else sub = "Une fois";
   const forObj = e.origin === "parc" && parcoursServesObjective(S) && showObjective(S);
   const tag = e.origin === "theme" ? <span className="tag">Thème du jour</span> : e.origin === "parc" ? <span className="tag t-parc">{forObj ? objectiveTag(S) : "Parcours"}</span> : null;
-  const ck = slot.t === 1 ? <button className="ck" aria-pressed={done} aria-label={`${title} : ${done ? "fait" : "à faire"}`} onClick={() => count("toggle", k)} data-k={k} /> : null;
+  const ck = slot.t === 1 ? <button className="ck" aria-pressed={done} aria-label={`${title} : ${done ? "fait" : "à faire"}`} onClick={() => (isCoran ? markCoran(e, !done) : count("toggle", k))} data-k={k} /> : null;
   return (
     <div className={`rowi ${tile ? "sum tiled" : ""} ${done ? "done" : ""}`} id={`card-${e.id}-${e.m}`}>
       {tile ? <Tile k={tile} /> : ck}
@@ -485,13 +484,13 @@ export function Jour() {
   if (ui.lecture) return <Lecture />;
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today());
   const day = DAYS[d.getDay()];
-  const P = plan(S, d), s = P.s, cur = currentMoment(S, d, now);
+  const P = withCoran(plan(S, d)), s = P.s, cur = currentMoment(S, d, now);
   // « Agir » réunit le geste et l’action : on ne le compte qu’une fois à l’affichage.
   const ids = countable(S, d).filter((id) => !(id === "pact" && mergedGesture(S, d)));
   const doneCount = ids.filter((id) => itemPct(S, dk, id) >= 1).length;
   const needMode = !!S.objective && showObjective(S) && !s.light;
   const anim = ui.dir > 0 ? "day-next" : ui.dir < 0 ? "day-prev" : "";
-  if (needMode) return <div className={`day ${anim}`} key={dk} {...swipe.handlers}><JourBesoin P={P} cur={cur} topRef={topRef} doneCount={doneCount} total={ids.length} /></div>;
+  if (needMode) return <div className={`day ${anim}`} key={dk} {...swipe.handlers}><JourBesoin P={P} cur={cur} topRef={topRef} /></div>;
   const title = s.light ? "Minimum du jour" : s.ramp ? "Démarrage en douceur" : day.theme;
   const q = isToday ? nextQueue(S, d, P, now) : null;
   return (
@@ -523,7 +522,6 @@ export function Jour() {
       )}
       {(["matin", "jour", "soir"] as const).map((m) => P.sections[m].length ? <Section key={m} m={m} list={P.sections[m]} cur={cur} /> : null)}
       {P.actions.length > 0 && <Section m="actions" list={P.actions} cur={cur} />}
-      <section className="sec"><div className="sechead"><h2>Coran</h2></div><div className="list"><CoranRow /></div></section>
       <Foot s={s} />
       <Journal />
     </div>
@@ -531,31 +529,25 @@ export function Jour() {
 }
 
 /** La page Jour organisée autour du besoin de la personne. */
-function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment | null; topRef: React.RefObject<HTMLDivElement | null>; doneCount: number; total: number }) {
-  const { S, ui, now } = useStore();
+function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: React.RefObject<HTMLDivElement | null> }) {
+  const { S, ui } = useStore();
   const start = useStartLecture();
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today()), s = P.s;
-  const isNeed = (e: Entry) => e.origin === "parc" || e.id === "obj";
-  const all: Record<Moment, Entry[]> = { ...P.sections, actions: P.actions };
-  const need = (["actions", "matin", "jour", "soir"] as Moment[]).flatMap((m) => all[m].filter(isNeed));
-  need.sort((a, b) => (a.id === "obj" ? 1 : 0) - (b.id === "obj" ? 1 : 0) || (a.id === "pact" ? 1 : 0) - (b.id === "pact" ? 1 : 0));
-  const order: Moment[] = ["matin", "jour", "soir", "actions"];
+  // L’invocation de l’objectif est mise en avant en première ligne ; le reste suit par moment.
+  const isNeed = (e: Entry) => e.origin === "parc" && e.id !== "pact";
+  const order = ["matin", "jour", "soir"] as const;
+  const invoke = order.flatMap((m) => P.sections[m].filter(isNeed));
   const rank = (m: Moment, l: readonly Entry[]) => {
     const c = secCount(S, [...l], dk), done = c.total > 0 && c.done === c.total;
     if (done) return 3;
     if (m === cur) return 0;
-    return cur && m !== "actions" && order.indexOf(m) < order.indexOf(cur) ? 1 : 2;
+    return cur && order.indexOf(m as "matin") < order.indexOf(cur as "matin") ? 1 : 2;
   };
-  const socle = order.map((m) => [m, all[m].filter((e) => !isNeed(e))] as const).filter(([, l]) => l.length)
+  const socle = order.map((m) => [m, P.sections[m].filter((e) => !isNeed(e) && e.id !== "obj" && e.id !== "pact")] as const).filter(([, l]) => l.length)
     .sort((a, b) => rank(a[0], a[1]) - rank(b[0], b[1]) || order.indexOf(a[0]) - order.indexOf(b[0]));
-  // Quand le geste du parcours et l’action ne font qu’un, une seule ligne.
-  const shown = mergedGesture(S, d) ? need.filter((e) => e.id !== "pact") : need;
-  const invoke = shown.filter((e) => e.id !== "obj" && e.id !== "pact"), act = shown.filter((e) => e.id === "obj" || e.id === "pact");
-  const sc = secCount(S, [...shown, ...socle.flatMap(([, l]) => l)], dk);
-  const needTodo = invoke.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
-  const actTodo = act.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
-  const q = !isToday ? null : needTodo.length ? { todo: needTodo, label: "Ton objectif", intention: true } : nextQueue(S, d, P, now, isNeed) || (actTodo.length ? { todo: actTodo, label: "Ton objectif", intention: true } : null);
-  const go = q ? () => start(q.todo, q.label, "intention" in q) : null;
+  const sc = secCount(S, [...invoke, ...socle.flatMap(([, l]) => l)], dk);
+  const q = isToday ? dayQueue(S, dk, P) : null;
+  const go = q ? () => start(q.todo, q.label, q.intention) : null;
   return (
     <>
       <MiniBar watch={topRef} title={objectiveName(S)} done={sc.done} total={sc.total} onGo={go} />
@@ -578,8 +570,6 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
         <div className="list">
           {invoke.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention tile="objectif" />)}
           {socle.map(([m, l]) => <SocleRow key={m} m={m} list={[...l]} cur={cur} />)}
-          <CoranRow />
-          {act.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention tile="geste" />)}
         </div>
       </section>
       <Foot s={s} />

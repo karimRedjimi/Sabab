@@ -6,6 +6,8 @@ import { keyOf, fromKey, addDays, today, diffDays, sameDay } from "./dates";
 import { prayerTimes, hm } from "./prayer";
 import type { State } from "./state";
 
+/** Le rappel du Coran, lu le matin et le soir : suivi à part, hors pourcentage des invocations. */
+export const CORAN_AM = "coranM", CORAN_PM = "coranS";
 export type Moment = "matin" | "jour" | "soir" | "actions";
 export const MOMENT_LABEL: Record<Moment, string> = { matin: "Le matin", jour: "Dans la journée", soir: "Le soir", actions: "Mes actions" };
 
@@ -49,11 +51,12 @@ export function isOptional(id: string, s: Structure) {
 export function countable(S: State, d: Date) {
   const s = structure(S, d);
   const ids = [...s.socle, ...s.theme, ...s.parc].filter((id) => !isOptional(id, s));
-  if (s.obj) ids.unshift("obj");
+  // L’action du jour ne compte plus dans le pourcentage : elle se note dans « Mon chemin » (choix du porteur du projet).
   return ids;
 }
 export function getItem(S: State, id: string, d: Date | null): ViewItem {
   if (id === "obj") return { kind: "objective", title: "Mon objectif" };
+  if (id === CORAN_AM || id === CORAN_PM) return { kind: "objective", title: "Rappel du Coran" };
   if (id === "pact" && S.parcours) {
     const p = PARCOURS[S.parcours.id], n = (d && parcoursDay(S, d)) || 1;
     return { kind: "action", task: true, title: "Le geste du parcours", moment: `${p.title}, jour ${n} sur ${PARCOURS_DAYS}`, desc: p.actions[(n - 1) % p.actions.length] };

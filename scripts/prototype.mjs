@@ -28,7 +28,12 @@ export function loadPrototypeLogic() {
   const lines = script.split("\n");
   const from = (re) => lines.findIndex((l) => re.test(l));
   const content = lines.slice(from(/^const GRADES/), from(/ÉTAT ET SAUVEGARDE/) - 1).join("\n");
-  const logic = lines.slice(from(/^function pad/), from(/ÉLÉMENTS VISUELS/) - 1).join("\n");
+  // Un seul écart voulu avec le prototype : l’action du jour ne compte plus dans le pourcentage de la journée
+  // (décision du porteur du projet, elle se note dans « Mon chemin »). Tout le reste est comparé tel quel.
+  const OBJ_LINE = '  if(s.obj) ids.unshift("obj");';
+  const raw = lines.slice(from(/^function pad/), from(/ÉLÉMENTS VISUELS/) - 1).join("\n");
+  if (!raw.includes(OBJ_LINE)) throw new Error("Ligne de l’action du jour introuvable dans le prototype");
+  const logic = raw.replace(OBJ_LINE, "");
   const learn = lines.slice(from(/^function maskText/), from(/^function renderApprendre/)).join("\n");
   const code = `${content}\nlet S = null;\n${logic}\n${learn}\n;({setS:x=>{S=x;for(const k in ptCache) delete ptCache[k];}, prayerTimes, structure, countable, dayPct, streaks, itemPct, rampWeek, parcoursDay})`;
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);

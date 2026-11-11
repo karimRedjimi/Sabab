@@ -39,6 +39,26 @@ export function rappelsDuJour(S: State, d: Date): Rappel[] {
   return out;
 }
 
+/**
+ * Ce qu’on lit le matin et ce qu’on lit le soir : la moitié des passages à chaque fois.
+ * Avec un seul verset par jour, le soir on relit celui du matin.
+ */
+export function rappelsDuMoment(S: State, d: Date, m: "matin" | "soir"): Rappel[] {
+  const all = rappelsDuJour(S, d);
+  if (all.length < 2) return all;
+  const half = Math.ceil(all.length / 2);
+  return m === "matin" ? all.slice(0, half) : all.slice(half);
+}
+
+/** Note (ou retire) la lecture d’un moment : versets lus et temps passé, pour le suivi. */
+export function noteLecture(S: State, dk: string, verses: number, seconds: number, done = true) {
+  const cur = S.coran?.[dk] || { n: 0, t: 0 };
+  const n = Math.max(0, cur.n + (done ? verses : -verses));
+  S.coran = { ...(S.coran || {}) };
+  if (n <= 0) delete S.coran[dk];
+  else S.coran[dk] = { n, t: Math.min(3600, (cur.t || 0) + (done ? seconds : 0)) };
+}
+
 export const versesIn = (l: { verses: unknown[] }[]) => l.reduce((n, r) => n + r.verses.length, 0);
 
 /** « Al-Baqarah, verset 152 » ou « Al-Baqarah, versets 155 à 157 ». */

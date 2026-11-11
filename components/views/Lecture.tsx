@@ -5,8 +5,10 @@ import { IconLeft } from "../Icons";
 import { GRADES } from "@/content/programme";
 import { keyOf } from "@/lib/dates";
 import { ensureDay } from "@/lib/state";
-import { dayPct, entryPct, getItem, momentOf, slotsOf, val, MOMENT_LABEL, type Entry } from "@/lib/program";
-import { useCount } from "../Cards";
+import { dayPct, entryPct, getItem, momentOf, slotsOf, val, CORAN_AM, CORAN_PM, MOMENT_LABEL, type Entry } from "@/lib/program";
+import { rappelsDuMoment, refLabel } from "@/lib/coran";
+import { VERSETS_SOURCE } from "@/content/versets";
+import { useCoranMark, useCount } from "../Cards";
 import { Star } from "../Star";
 import { Gratitude } from "../Moments";
 import { actionExample, mergedGesture, objectiveIdea, objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
@@ -24,7 +26,58 @@ function ShowChips() {
   return <div className="show" role="group" aria-label="Textes affichés">{chip("ar", "Arabe")}{chip("ph", "Phonétique")}{chip("fr", "Français")}</div>;
 }
 
-function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: string | null }) {
+/** Le rappel du Coran dans la lecture guidée : les versets du moment, puis « J’ai lu ». */
+function CoranStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: string | null }) {
+  const { S, ui } = useStore();
+  const mark = useCoranMark();
+  const began = useRef(0);
+  useEffect(() => { began.current = Date.now(); }, [e.id]);
+  const d = ui.sel, dk = keyOf(d), m = e.m === "soir" ? "soir" : "matin";
+  const list = rappelsDuMoment(S, d, m), done = entryPct(S, dk, e) >= 1;
+  const again = m === "soir" && rappelsDuMoment(S, d, "matin")[0]?.ref === list[0]?.ref;
+  const showAr = S.show.ar, showFr = S.show.fr || !S.show.ar;
+  return (
+    <>
+      <p className="eyebrow">{kicker || MOMENT_LABEL[e.m]}</p>
+      <h2>Rappel du Coran</h2>
+      {again && <p className="lsub">Le verset de ce matin, à relire ce soir</p>}
+      <div className="ltxt qlist">
+        {list.map((r) => (
+          <article className="qpass" key={r.ref}>
+            <span className={`qtag ${r.themed ? "th" : ""}`}>{r.tag}</span>
+            {r.verses.map((v) => (
+              <div className="qv" key={v.n}>
+                {showAr && <p className="ar qar" lang="ar" dir="rtl">{v.ar}</p>}
+                {showFr && <p className="qfr">{r.verses.length > 1 && <sup>{v.n}</sup>}{v.fr}</p>}
+              </div>
+            ))}
+            <p className="qref">{refLabel(r)}</p>
+          </article>
+        ))}
+        <p className="qsrc">{VERSETS_SOURCE.traduction}. {VERSETS_SOURCE.arabe}.</p>
+      </div>
+      <div className="lact">
+        {done ? (
+          <>
+            <button className="bigbtn" onClick={onNext}>Continuer</button>
+            <button className="later" onClick={() => mark(e, false)}>Marquer comme non lu</button>
+          </>
+        ) : (
+          <>
+            <button className="bigbtn" onClick={() => { mark(e, true, Math.min(1800, Math.max(1, Math.round((Date.now() - began.current) / 1000)))); onNext(); }}>J’ai lu</button>
+            <button className="later" onClick={onNext}>Plus tard</button>
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
+function Step(props: { e: Entry; onNext: () => void; kicker: string | null }) {
+  return props.e.id === CORAN_AM || props.e.id === CORAN_PM ? <CoranStep {...props} /> : <ItemStep {...props} />;
+}
+
+function ItemStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: string | null }) {
   const { S, ui, update } = useStore();
   const count = useCount();
   const [why, setWhy] = useState(false);
