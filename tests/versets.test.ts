@@ -10,6 +10,7 @@ import { merge } from "@/lib/state";
 
 const require = createRequire(import.meta.url);
 const quran = JSON.parse(readFileSync(require.resolve("quran-json/dist/quran_fr.json"), "utf8"));
+const translit = JSON.parse(readFileSync(require.resolve("quran-json/dist/quran_transliteration.json"), "utf8"));
 const refs = [...new Set([...Object.values(VERSETS_THEME).flat(), ...VERSETS_GENERAL])];
 
 describe("fidélité des versets", () => {
@@ -26,6 +27,7 @@ describe("fidélité des versets", () => {
         const src = ch.verses.find((x: { id: number }) => x.id === v.n);
         expect(v.ar).toBe(src.text);
         expect(v.fr).toBe(src.translation);
+        expect(v.ph).toBe(translit[e.s - 1].verses.find((x: { id: number }) => x.id === v.n).transliteration);
       }
     }
   });

@@ -1198,3 +1198,28 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 .reclist .rt b{white-space:nowrap}
 .inl{border:0;background:none;padding:0;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:2px;min-height:28px}
 .tabs a span{overflow:visible;text-overflow:clip}
+
+/* ── Communauté épurée : le micro reste avec le verset ── */
+.rsrc.end{margin:14px 0 0;font-size:.84rem;text-align:center}
+.wform{background:var(--surface);border-radius:20px;padding:16px}
+.fine{margin:10px 0 0;font-size:.82rem;color:var(--muted);line-height:1.45}
+.fine a{color:var(--accent);font-weight:600}
+.vday .showbar{margin:10px 0 2px}
+.vday .ph{margin:8px 0 0}
+.recbar{position:sticky;bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;align-items:center;gap:12px;margin:16px -6px 0;padding:8px 12px 8px 8px;border-radius:99px;background:var(--fill);box-shadow:0 6px 18px color-mix(in srgb,var(--ink) 10%,transparent);text-align:left}
+.recbar.live{background:color-mix(in srgb,#C2413B 12%,var(--surface))}
+.recbar .rt{flex:1;min-width:0;display:flex;flex-direction:column}
+.recbar .rt b{font-size:.98rem}
+.recbar .rt small{color:var(--muted);font-size:.84rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recbar .mic{width:52px;height:52px;margin:0;flex:none}
+.recbar .mic svg{width:24px;height:24px}
+.recbar .mic .sq{width:18px;height:18px;border-radius:5px}
+.recbar .rectime{font-size:1.2rem;margin:0}
+.recbar .link{min-height:44px;padding:0 6px}
+.pbtn.ghost{background:var(--surface);color:var(--accent)}
+.sharebox{margin-top:14px}
+.sharebox .consent{margin:0 0 12px}
+.recbar{bottom:auto;top:calc(8px + env(safe-area-inset-top,0px));margin:12px -6px 4px}
+.vday .showbar{margin:14px 0 0}
+.recbar{position:static;box-shadow:none}
+.vday{scroll-margin-top:calc(12px + env(safe-area-inset-top,0px))}

@@ -28,4 +28,5 @@ export const VERSETS_GENERAL: string[] = [
 export const VERSETS_SOURCE = {
   arabe: "Texte uthmani : Encyclopédie du Noble Coran (quranenc.com)",
   traduction: "Traduction : Muhammad Hamidullah",
+  phonetique: "Phonétique : translittération de tanzil.net",
 };

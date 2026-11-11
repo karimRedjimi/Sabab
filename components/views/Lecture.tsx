@@ -35,7 +35,7 @@ function CoranStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker
   const d = ui.sel, dk = keyOf(d), m = e.m === "soir" ? "soir" : "matin";
   const list = rappelsDuMoment(S, d, m), done = entryPct(S, dk, e) >= 1;
   const again = m === "soir" && rappelsDuMoment(S, d, "matin")[0]?.ref === list[0]?.ref;
-  const showAr = S.show.ar, showFr = S.show.fr || !S.show.ar;
+  const showAr = S.show.ar, showFr = S.show.fr;
   return (
     <>
       <p className="eyebrow">{kicker || MOMENT_LABEL[e.m]}</p>
@@ -48,15 +48,17 @@ function CoranStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker
             {r.verses.map((v) => (
               <div className="qv" key={v.n}>
                 {showAr && <p className="ar qar" lang="ar" dir="rtl">{v.ar}</p>}
+                {S.show.ph && <p className="ph">{v.ph}</p>}
                 {showFr && <p className="qfr">{r.verses.length > 1 && <sup>{v.n}</sup>}{v.fr}</p>}
               </div>
             ))}
             <p className="qref">{refLabel(r)}</p>
           </article>
         ))}
-        <p className="qsrc">{VERSETS_SOURCE.traduction}. {VERSETS_SOURCE.arabe}.</p>
+        <p className="qsrc">{VERSETS_SOURCE.traduction}. {VERSETS_SOURCE.arabe}.{S.show.ph ? ` ${VERSETS_SOURCE.phonetique}.` : ""}</p>
       </div>
       <div className="lact">
+        <ShowChips />
         {done ? (
           <>
             <button className="bigbtn" onClick={onNext}>Continuer</button>

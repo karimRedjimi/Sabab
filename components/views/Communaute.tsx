@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AUDIO_RECITATEUR } from "@/content/versets-audio";
 import { refLabel } from "@/lib/coran";
 import { fmtDate, keyOf, today } from "@/lib/dates";
 import { uid8 } from "@/lib/state";
@@ -12,6 +11,7 @@ import { POUR_SON_FRERE } from "@/content/textes";
 import { supabase, errMsg, REQ_CAT_OF, type RecitationView, type RequestView } from "@/lib/supabase";
 import { useAccount } from "../Account";
 import { buzz, useStore } from "../Store";
+import { DisplayChips } from "../Cards";
 import { Brand } from "../Glyphs";
 
 function ago(iso: string) {
@@ -34,7 +34,7 @@ function Post({ r, onChange }: { r: RequestView; onChange: () => void }) {
       <div className="acts">
         {r.mine ? (
           <>
-            {r.status === "pending" && <span className="kind wait">En relecture</span>}
+            {r.status === "pending" && <span className="kind wait">Masquée après des signalements</span>}
             {r.status === "rejected" && <span className="kind wait">Non publiée</span>}
             {r.status === "approved" && <span className="cnt2"><b>{n}</b> du’â pour toi</span>}
             {r.answered ? <span className="kind">Exaucée, al-hamdulillâh</span>
@@ -65,32 +65,27 @@ function NewRequest({ onDone }: { onDone: () => void }) {
   const [open, setOpen] = useState(false);
   const [cat, setCat] = useState((S.objective && REQ_CAT_OF[S.objective.cat]) || "autre");
   const [text, setText] = useState("");
-  const [pseudo, setPseudo] = useState(S.pseudo || "");
   const [busy, setBusy] = useState(false);
   if (!open) return <button className="navbtn strong" onClick={() => setOpen(true)}>+ Déposer un souhait</button>;
   return (
-    <section className="sec">
-      <div className="sechead"><h2>Demander des du’â</h2></div>
-      <p className="warn">Ta demande est publiée sans ton nom. N’y mets ni nom de famille, ni ville, ni détail qui permettrait de te reconnaître.</p>
+    <div className="wform">
+      <label className="field"><span>Ton souhait, sans ton nom</span>
+        <textarea className="area" autoFocus maxLength={300} value={text} onChange={(e) => setText(e.target.value)} placeholder="Par exemple : je cherche un emploi depuis huit mois, invoquez pour moi" /></label>
       <label className="field"><span>Domaine</span>
         <select className="select" value={cat} onChange={(e) => setCat(e.target.value)}>{Object.entries(REQ_CATS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label>
-      <label className="field"><span>Ton besoin</span>
-        <textarea className="area" maxLength={300} value={text} onChange={(e) => setText(e.target.value)} placeholder="Par exemple : je cherche un emploi depuis huit mois, faites une du’â pour moi" /></label>
-      <label className="field"><span>Prénom ou pseudonyme (facultatif)</span>
-        <input className="input" maxLength={30} value={pseudo} onChange={(e) => setPseudo(e.target.value)} placeholder="Un membre" /></label>
       <div className="row">
         <button className="navbtn primary" disabled={busy} onClick={async () => {
           if (text.trim().length < 10) { toast("Décris ton besoin en une ou deux phrases"); return; }
           setBusy(true);
-          const { error } = await supabase!.rpc("post_request", { p_cat: cat, p_text: text.trim(), p_pseudo: pseudo.trim() });
+          const { error } = await supabase!.rpc("post_request", { p_cat: cat, p_text: text.trim(), p_pseudo: "" });
           setBusy(false);
           if (error) { toast(errMsg(error)); return; }
-          setText(""); setOpen(false); toast("Merci, ta demande sera publiée après relecture"); onDone();
-        }}>Envoyer ma demande</button>
+          setText(""); setOpen(false); toast("Ton souhait est publié"); onDone();
+        }}>Publier</button>
         <button className="link" onClick={() => setOpen(false)}>Annuler</button>
       </div>
-      <p className="secintro" style={{ marginTop: 10 }}>Chaque demande est relue avant d’être publiée.</p>
-    </section>
+      <p className="fine">Ni nom, ni ville, ni contact. Les messages vulgaires sont refusés automatiquement.</p>
+    </div>
   );
 }
 
@@ -166,11 +161,10 @@ function Ritual({ cat, onChange }: { cat: string | null; onChange: () => void })
   return (
     <section className="ritual">
       <p className="k">Une minute pour les autres</p>
-      <h2>{full ? "Tes du’â du jour sont faites" : `Invoque pour ${DUA_GOAL} personnes aujourd’hui`}</h2>
+      <h2>{full ? "Tes du’â du jour sont faites" : `Invoque pour ${DUA_GOAL} personnes`}</h2>
       <div className="rdots big" role="img" aria-label={`${Math.min(done, DUA_GOAL)} du’â sur ${DUA_GOAL} aujourd’hui`}>{Array.from({ length: DUA_GOAL }, (_, k) => <i key={k} className={k < done ? "past" : ""} />)}</div>
-      <p className="rsrc">{POUR_SON_FRERE.texte} <span>{POUR_SON_FRERE.source}</span></p>
       <button className="bigbtn" disabled={busy} onClick={open}>{full ? "Invoquer pour d’autres" : done ? "Continuer" : "Commencer"}</button>
-      {full && <p className="rnote">{done} du’â aujourd’hui · et pour toi de même</p>}
+      <p className="rsrc end">{POUR_SON_FRERE.texte} <span>{POUR_SON_FRERE.source}</span></p>
     </section>
   );
 }
@@ -199,15 +193,15 @@ function DuaTab() {
       <>
         <section className="ritual">
           <p className="k">Une minute pour les autres</p>
-          <h2>Invoque pour {DUA_GOAL} personnes chaque jour</h2>
+          <h2>Invoque pour {DUA_GOAL} personnes</h2>
           <div className="rdots big" aria-hidden="true">{Array.from({ length: DUA_GOAL }, (_, k) => <i key={k} />)}</div>
-          <p className="rsrc">{POUR_SON_FRERE.texte} <span>{POUR_SON_FRERE.source}</span></p>
           {acc.status === "off"
-            ? <p className="rnote">La communauté ouvre bientôt. Chacun pourra déposer un souhait, sans son nom, et les autres invoqueront pour lui.</p>
+            ? <p className="rnote">La communauté ouvre bientôt.</p>
             : <Link className="bigbtn" href="/compte">Me connecter pour commencer</Link>}
+          <p className="rsrc end">{POUR_SON_FRERE.texte} <span>{POUR_SON_FRERE.source}</span></p>
         </section>
         <ul className="how">
-          <li><b>Tu déposes ton souhait</b><span>Sans ton nom. Il est relu avant d’être publié.</span></li>
+          <li><b>Tu déposes ton souhait</b><span>Sans ton nom.</span></li>
           <li><b>Tu invoques pour {DUA_GOAL} personnes</b><span>Une demande à la fois, une minute en tout.</span></li>
           <li><b>D’autres invoquent pour toi</b><span>Tu vois combien, jamais qui.</span></li>
         </ul>
@@ -221,7 +215,6 @@ function DuaTab() {
       <Ritual cat={cat} onChange={load} />
       <section className="sec">
         <div className="sechead"><h2>Ton souhait</h2>{received > 0 && <span className="count">{received} du’â pour toi</span>}</div>
-        {live.length === 0 && <p className="secintro">Dépose ton souhait, sans ton nom : la communauté invoquera pour toi.</p>}
         {mine.map((r) => <Post key={r.id} r={r} onChange={load} />)}
         <NewRequest onDone={load} />
       </section>
@@ -270,6 +263,7 @@ function VersetTab() {
   const player = usePlayer();
   const [list, setList] = useState<RecitationView[] | null>(null);
   const [consent, setConsent] = useState(false);
+  const [consentNow, setConsentNow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [confirm, setConfirm] = useState<string | null>(null);
   useEffect(() => { try { setConsent(localStorage.getItem(VOICE_KEY) === "1"); } catch { /* */ } }, []);
@@ -297,7 +291,7 @@ function VersetTab() {
       const { error: e2 } = await supabase.rpc("post_recitation", { p_day: dk, p_ref: v.ref, p_path: path, p_seconds: rec.take.seconds, p_voice_consent: true });
       if (e2) { await supabase.storage.from("recitations").remove([path]); throw e2; }
       try { localStorage.setItem(VOICE_KEY, "1"); } catch { /* */ }
-      player.stop(); rec.reset(); toast("Merci, ta récitation sera publiée après écoute"); load();
+      setConsent(true); player.stop(); rec.reset(); toast("Ta récitation est publiée"); load();
     } catch (e) { toast(errMsg(e)); }
     setBusy(false);
   };
@@ -307,81 +301,71 @@ function VersetTab() {
     if (data) await supabase!.storage.from("recitations").remove([data as string]);
     setConfirm(null); toast("Récitation supprimée"); load();
   };
-  const showAr = S.show.ar, showFr = S.show.fr || !S.show.ar;
   const canShare = acc.status === "in" && !mine;
+  const one = v.verses[0];
+  const card = useRef<HTMLElement>(null);
 
   return (
     <>
-      <article className="vday">
+      <article className="vday" ref={card}>
         <div className="vhead"><p className="k">Un jour, un verset</p><span>{fmtDate(d)}</span></div>
-        <p className="ar qar" lang="ar" dir="rtl">{v.verses[0].ar}</p>
-        {showFr && <p className="qfr">{v.verses[0].fr}</p>}
-        {!showAr && null}
-        <p className="qref">{refLabel(v)}</p>
-        {v.audio ? (
-          <button className={`listen ${player.playing === "ref" ? "on" : ""}`} onClick={() => player.play("ref", v.audio!)}>
-            <span className="pbtn"><PlayIcon on={player.playing === "ref"} /></span>
-            <span><b>{player.playing === "ref" ? "Pause" : "Écouter le récitateur"}</b>{AUDIO_RECITATEUR.nom && <small>{AUDIO_RECITATEUR.nom}</small>}</span>
-          </button>
-        ) : <p className="vnote">L’audio du récitateur arrive bientôt. En attendant, récite avec le texte.</p>}
-      </article>
-
-      <section className="sec">
-        <div className="sechead"><h2>À ton tour</h2></div>
-        <div className="recbox">
+        {/* La barre du micro est au-dessus du verset : on le lit en dessous pendant qu’on récite. */}
+        <div className={`recbar ${rec.state === "recording" ? "live" : ""}`}>
           {mine ? (
             <>
-              <div className="recrow">
-                <button className="pbtn" aria-label={player.playing === mine.id ? "Pause" : "Écouter ma récitation"} onClick={() => player.play(mine.id, signed(mine.path))}><PlayIcon on={player.playing === mine.id} /></button>
-                <span className="rt"><b>Ta récitation du jour</b><small>{mmss(mine.seconds)} · {mine.status === "pending" ? "en cours d’écoute avant publication" : mine.status === "rejected" ? "non publiée" : mine.cheers ? `${mine.cheers} encouragement${mine.cheers > 1 ? "s" : ""}` : "publiée"}</small></span>
-              </div>
+              <button className="pbtn" aria-label={player.playing === mine.id ? "Pause" : "Écouter ma récitation"} onClick={() => player.play(mine.id, signed(mine.path))}><PlayIcon on={player.playing === mine.id} /></button>
+              <span className="rt"><b>Ta récitation</b><small>{mmss(mine.seconds)} · {mine.status !== "approved" ? "masquée" : mine.cheers ? `${mine.cheers} encouragement${mine.cheers > 1 ? "s" : ""}` : "publiée"}</small></span>
               {confirm === mine.id
-                ? <div className="row"><button className="link danger" onClick={() => remove(mine)}>Confirmer la suppression</button><button className="link" onClick={() => setConfirm(null)}>Annuler</button></div>
-                : <button className="link danger" onClick={() => setConfirm(mine.id)}>Supprimer</button>}
+                ? <button className="link danger" onClick={() => remove(mine)}>Confirmer</button>
+                : <button className="link" onClick={() => setConfirm(mine.id)}>Supprimer</button>}
             </>
           ) : rec.state === "recording" ? (
             <>
               <button className="mic live" onClick={rec.stop} aria-label="Arrêter l’enregistrement"><span className="sq" /></button>
-              <p className="rectime" aria-live="off">{mmss(rec.seconds)} <small>/ {mmss(MAX_SECONDS)}</small></p>
-              <p className="rechint">Récite le verset, puis touche pour arrêter.</p>
+              <span className="rt"><b className="rectime">{mmss(rec.seconds)}</b><small>Touche pour arrêter · {mmss(MAX_SECONDS)} au plus</small></span>
             </>
           ) : rec.state === "done" && rec.take ? (
             <>
-              <div className="recrow">
-                <button className="pbtn" aria-label={player.playing === "take" ? "Pause" : "Écouter mon enregistrement"} onClick={() => player.play("take", rec.take!.url)}><PlayIcon on={player.playing === "take"} /></button>
-                <span className="rt"><b>Ton enregistrement</b><small>{mmss(rec.take.seconds)} · il reste sur ton téléphone</small></span>
-                <button className="link" onClick={() => { player.stop(); rec.reset(); }}>Recommencer</button>
-              </div>
-              {v.audio && <button className="link" onClick={() => player.play("ref", v.audio!)}>Réécouter le récitateur pour comparer</button>}
-              {canShare ? (
-                <>
-                  <label className="consent" style={{ margin: "12px 0" }}>
-                    <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-                    <span>J’accepte que ma voix soit entendue par les membres, sans mon nom. Des personnes qui me connaissent pourraient la reconnaître.</span>
-                  </label>
-                  <button className="bigbtn" disabled={!consent || busy} onClick={share}>{busy ? "Envoi…" : "Partager avec la communauté"}</button>
-                  <p className="rechint">Chaque récitation est écoutée avant d’être publiée. Tu peux la supprimer à tout moment.</p>
-                </>
-              ) : acc.status === "out" ? <p className="rechint">Pour la partager, <Link href="/compte">connecte-toi à ton compte</Link>.</p>
-                : acc.status === "off" ? <p className="rechint">Le partage avec la communauté ouvrira bientôt. En attendant, entraîne-toi : écoute-toi et recommence.</p> : null}
+              <button className="pbtn" aria-label={player.playing === "take" ? "Pause" : "Écouter mon enregistrement"} onClick={() => player.play("take", rec.take!.url)}><PlayIcon on={player.playing === "take"} /></button>
+              <span className="rt"><b>Ton enregistrement</b><small>{mmss(rec.take.seconds)} · sur ton téléphone</small></span>
+              <button className="link" onClick={() => { player.stop(); rec.reset(); }}>Refaire</button>
             </>
           ) : (
             <>
-              <button className="mic" onClick={rec.start} disabled={rec.state === "asking"} aria-label="Enregistrer ma récitation">
+              <button className="mic" onClick={() => { card.current?.scrollIntoView({ block: "start", behavior: "smooth" }); rec.start(); }} disabled={rec.state === "asking"} aria-label="Enregistrer ma récitation">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3" /><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5" /></svg>
               </button>
-              <p className="rechint"><b>Enregistre ta récitation</b><br />{v.audio ? "Écoute le récitateur, puis essaie de réciter comme lui." : "Lis le verset à voix haute, écoute-toi, recommence."} Une minute au plus.</p>
-              {rec.error === "denied" && <p className="warn">Le micro n’est pas autorisé. Autorise-le dans les réglages de ton navigateur, puis réessaie.</p>}
-              {rec.error === "unsupported" && <p className="warn">Ce navigateur ne permet pas d’enregistrer. Essaie avec Safari ou Chrome à jour.</p>}
+              <span className="rt"><b>À ton tour</b><small>Récite le verset, puis écoute-toi</small></span>
+              {v.audio && <button className="pbtn ghost" aria-label={player.playing === "ref" ? "Pause" : "Écouter le récitateur"} onClick={() => player.play("ref", v.audio!)}><PlayIcon on={player.playing === "ref"} /></button>}
             </>
           )}
         </div>
-      </section>
+        {S.show.ar && <p className="ar qar" lang="ar" dir="rtl">{one.ar}</p>}
+        {S.show.ph && <p className="ph">{one.ph}</p>}
+        {S.show.fr && <p className="qfr">{one.fr}</p>}
+        <p className="qref">{refLabel(v)}</p>
+        <DisplayChips />
+
+        {rec.error === "denied" && <p className="warn" style={{ marginTop: 10 }}>Le micro n’est pas autorisé. Autorise-le dans les réglages de ton navigateur, puis réessaie.</p>}
+        {rec.error === "unsupported" && <p className="warn" style={{ marginTop: 10 }}>Ce navigateur ne permet pas d’enregistrer. Essaie avec Safari ou Chrome à jour.</p>}
+        {rec.state === "done" && rec.take && !mine && (canShare ? (
+          <div className="sharebox">
+            {!consent && (
+              <label className="consent">
+                <input type="checkbox" checked={consentNow} onChange={(e) => setConsentNow(e.target.checked)} />
+                <span>J’accepte que ma voix soit entendue par les membres, sans mon nom. Des personnes qui me connaissent pourraient la reconnaître.</span>
+              </label>
+            )}
+            <button className="bigbtn" disabled={!(consent || consentNow) || busy} onClick={share}>{busy ? "Envoi…" : "Partager avec la communauté"}</button>
+          </div>
+        ) : acc.status === "out" ? <p className="fine">Pour la partager, <Link href="/compte">connecte-toi</Link>.</p>
+          : acc.status === "off" ? <p className="fine">Le partage ouvrira avec la communauté.</p> : null)}
+      </article>
 
       <section className="sec">
         <div className="sechead"><h2>La communauté récite</h2>{others.length > 0 && <span className="count">{others.length}</span>}</div>
-        {acc.status === "off" ? <p className="empty">Bientôt, tu entendras ici les récitations des autres membres, sans leur nom.</p>
-          : acc.status !== "in" ? <p className="empty">Connecte-toi pour écouter les récitations des membres.</p>
+        {acc.status === "off" ? <p className="empty">Bientôt, les récitations des membres, sans leur nom.</p>
+          : acc.status !== "in" ? <p className="empty">Connecte-toi pour écouter les membres.</p>
           : list === null ? <p className="empty">Chargement…</p>
           : !others.length ? <p className="empty">Personne n’a encore récité aujourd’hui. Sois le premier.</p>
           : (
@@ -390,7 +374,7 @@ function VersetTab() {
                 <li key={r.id}>
                   <button className="pbtn" aria-label={player.playing === r.id ? "Pause" : `Écouter la récitation ${k + 1}`} onClick={() => player.play(r.id, signed(r.path))}><PlayIcon on={player.playing === r.id} /></button>
                   <span className="rt"><b>Un membre</b><small>{mmss(r.seconds)} · {ago(r.created_at)} · {confirm === r.id
-                    ? <button className="inl" onClick={async () => { await supabase!.rpc("report_recitation", { p_id: r.id }); setConfirm(null); toast("Merci, la récitation sera réécoutée"); load(); }}>confirmer le signalement</button>
+                    ? <button className="inl" onClick={async () => { await supabase!.rpc("report_recitation", { p_id: r.id }); setConfirm(null); toast("Merci pour le signalement"); load(); }}>confirmer le signalement</button>
                     : <button className="inl" onClick={() => setConfirm(r.id)}>signaler</button>}</small></span>
                   <button className="pray" aria-pressed={r.cheered} disabled={r.cheered} onClick={async () => {
                     const { error } = await supabase!.rpc("cheer_recitation", { p_id: r.id });
@@ -401,7 +385,6 @@ function VersetTab() {
               ))}
             </ul>
           )}
-        <p className="secintro" style={{ marginTop: 12 }}>Pas de classement ni de compteur public : seul l’auteur voit ses encouragements.</p>
       </section>
     </>
   );
@@ -440,7 +423,7 @@ function RecitationQueue() {
   };
   return (
     <section className="sec">
-      <div className="sechead"><h2>Récitations à écouter</h2><span className="count">{list?.length ?? ""}</span></div>
+      <div className="sechead"><h2>Récitations masquées</h2><span className="count">{list?.length ?? ""}</span></div>
       {list === null ? <p className="empty">Chargement…</p> : !list.length ? <p className="empty">Rien à écouter.</p> : (
         <ul className="reclist">
           {list.map((r) => (
@@ -476,9 +459,9 @@ export function Moderation() {
   };
   return (
     <>
-      <div className="page"><h1>Modération</h1><p className="lead">Les demandes à relire et les récitations à écouter avant publication, et ce qui a été signalé.</p></div>
+      <div className="page"><h1>Modération</h1><p className="lead">La publication est automatique. Ici n’apparaît que ce que les signalements des membres ont masqué : tu peux le republier ou le refuser.</p></div>
       <RecitationQueue />
-      <div className="sechead"><h2>Demandes à relire</h2></div>
+      <div className="sechead"><h2>Souhaits masqués</h2></div>
       {list === null ? <p className="empty">Chargement…</p> : !list.length ? <p className="empty">Rien à relire, al-hamdulillâh.</p> : list.map((r) => (
         <div className="post" key={r.id}>
           <div className="meta"><span className="cat">{REQ_CATS[r.cat] || "Autre"}</span><span>{r.pseudo || "Un membre"}, {ago(r.created_at)}{r.prayers ? ` · ${r.prayers} signalement${r.prayers > 1 ? "s" : ""}` : ""}</span></div>

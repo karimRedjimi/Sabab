@@ -30,6 +30,9 @@ export function errMsg(e: unknown) {
   if (/limite atteinte/.test(m)) return "Tu as déjà publié trois demandes aujourd’hui";
   if (/une récitation par jour/.test(m)) return "Tu as déjà partagé ta récitation aujourd’hui";
   if (/accord pour la voix/.test(m)) return "Il faut d’abord donner ton accord pour partager ta voix";
+  if (/refusé : vulgarité/.test(m)) return "Ce message contient des mots qui ne peuvent pas être publiés";
+  if (/refusé : contact/.test(m)) return "Pas de lien, de numéro ni de réseau social dans ton souhait";
+  if (/trop courte/.test(m)) return "Ta récitation est trop courte";
   if (/consentement/.test(m)) return "Il faut d’abord accepter les conditions de ton compte";
   if (/Failed to fetch|NetworkError|network/i.test(m)) return "Pas de connexion pour le moment";
   return "Une erreur est survenue, réessaie";
