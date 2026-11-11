@@ -1130,3 +1130,71 @@ button,a,summary,.tabs,.rowi,.favrow,.jrow{-webkit-user-select:none;user-select:
 .qpass{padding:0 0 16px}
 .qpass + .qpass{border-top:1px solid var(--line);padding-top:16px}
 .qlist .qsrc{margin:0}
+
+/* ── Communauté : une minute pour les autres, un jour un verset ── */
+.tabs a{position:relative}
+.tabdot{position:absolute;top:7px;right:calc(50% - 16px);width:7px;height:7px;border-radius:50%;background:var(--brass)}
+.ritual{background:var(--surface);border-radius:22px;padding:20px 18px 18px;margin:0 0 22px;box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 4%,transparent)}
+.ritual .k,.vday .k{margin:0;font-size:.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.ritual h2{margin:4px 0 14px;font-size:1.35rem;line-height:1.2;letter-spacing:-.02em}
+.rdots{display:flex;gap:6px;margin:0 0 14px}
+.rdots i{flex:1;height:5px;border-radius:3px;background:var(--fill);transition:background .3s}
+.rdots i.past{background:var(--accent)}
+.rdots i.on{background:color-mix(in srgb,var(--accent) 45%,var(--fill))}
+.rdots.big i{height:8px;border-radius:4px}
+.rsrc{margin:0 0 16px;font-size:.9rem;line-height:1.5;color:var(--muted)}
+.rsrc span{white-space:nowrap;font-weight:600}
+.rnote{margin:12px 0 0;font-size:.9rem;color:var(--muted);text-align:center}
+a.bigbtn{text-decoration:none;box-sizing:border-box}
+.bigbtn:disabled{opacity:.5}
+.ritual.run{animation:qin .28s ease backwards}
+.wish{background:var(--fill);border-radius:18px;padding:16px;animation:qin .28s ease backwards}
+.wmeta{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.82rem;color:var(--muted)}
+.wtext{margin:12px 0 0;font-size:1.12rem;line-height:1.5}
+.wsame{margin:10px 0 0;font-size:.86rem;color:var(--accent);font-weight:600}
+.rhint{margin:14px 2px;font-size:.92rem;color:var(--muted);line-height:1.45}
+.rlinks{display:flex;justify-content:space-between;gap:10px;margin-top:6px}
+.ritual.end{text-align:center}
+.ritual.end h2{margin:12px 0 6px}
+.ritual.end .lead{margin:0 0 14px}
+.how{list-style:none;margin:0 0 22px;padding:0;background:var(--surface);border-radius:20px;counter-reset:how}
+.how li{display:grid;grid-template-columns:30px 1fr;column-gap:12px;padding:13px 16px;border-top:1px solid var(--line);counter-increment:how}
+.how li:first-child{border-top:0}
+.how li::before{content:counter(how);grid-row:1 / span 2;align-self:center;width:30px;height:30px;border-radius:50%;background:var(--soft);color:var(--accent);font-weight:700;display:grid;place-items:center;font-size:.9rem}
+.how b{font-size:.98rem}
+.how span{color:var(--muted);font-size:.88rem}
+.vday{background:var(--surface);border-radius:22px;padding:18px 18px 16px;margin:0 0 22px;box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 4%,transparent)}
+.vhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;color:var(--muted);font-size:.84rem}
+.vnote{margin:14px 0 0;font-size:.88rem;color:var(--muted)}
+.pbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;padding:0}
+.pbtn svg{width:20px;height:20px;fill:currentColor}
+.listen{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:8px 10px 8px 8px;border:0;border-radius:99px;background:var(--fill);text-align:left}
+.listen b{display:block;font-size:.98rem;font-weight:600}
+.listen small{color:var(--muted);font-size:.84rem}
+.recbox{background:var(--surface);border-radius:20px;padding:18px;text-align:center}
+.recbox .link{min-height:40px}
+.mic{width:84px;height:84px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:inline-grid;place-items:center;margin:4px 0 10px;transition:transform .16s var(--ease)}
+.mic:active{transform:scale(.94)}
+.mic svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.mic.live{background:#C2413B;animation:micpulse 1.4s ease-in-out infinite}
+.mic .sq{width:26px;height:26px;border-radius:7px;background:#fff}
+@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,#C2413B 40%,transparent)}50%{box-shadow:0 0 0 14px transparent}}
+.rectime{margin:0;font-size:1.6rem;font-weight:650;font-variant-numeric:tabular-nums}
+.rectime small{font-size:.9rem;color:var(--muted);font-weight:500}
+.rechint{margin:8px 0 0;font-size:.9rem;color:var(--muted);line-height:1.45}
+.rechint b{color:var(--ink);font-size:1rem}
+.rechint a{color:var(--accent);font-weight:600}
+.recrow{display:flex;align-items:center;gap:12px;text-align:left}
+.recrow .rt,.reclist .rt{flex:1;min-width:0;display:flex;flex-direction:column}
+.recrow .rt small,.reclist .rt small{color:var(--muted);font-size:.86rem}
+.recbox .consent{text-align:left}
+.reclist{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:20px}
+.reclist li{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.reclist li:first-child{border-top:0}
+.link.sm{font-size:.8rem}
+@media (prefers-reduced-motion:reduce){.mic.live,.wish,.ritual.run{animation:none}}
+.tabs a{font-size:.66rem;letter-spacing:-.02em}
+.reclist li{flex-wrap:nowrap}
+.reclist .rt b{white-space:nowrap}
+.inl{border:0;background:none;padding:0;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:2px;min-height:28px}
+.tabs a span{overflow:visible;text-overflow:clip}

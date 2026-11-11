@@ -16,7 +16,7 @@ export const coranLevel = (S: State): CoranLevel => (S.coranLevel === 5 || S.cor
 export interface Rappel extends Extrait { ref: string; themed: boolean; tag: string }
 
 const size = (ref: string) => EXTRAITS[ref].verses.length;
-const dayNumber = (d: Date) => Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+export const dayNumber = (d: Date) => Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
 
 /**
  * Les passages du jour. Le choix est fixe pour une date donnée (on retrouve les mêmes en rouvrant l’application).

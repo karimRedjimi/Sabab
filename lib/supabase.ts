@@ -16,6 +16,11 @@ export interface RequestView {
   answered: boolean; prayers: number; created_at: string; mine: boolean; prayed: boolean;
 }
 
+export interface RecitationView {
+  id: string; day: string; ref: string; path: string; seconds: number; status: "pending" | "approved" | "rejected";
+  created_at: string; mine: boolean; cheered: boolean; cheers: number | null;
+}
+
 /** Correspondance entre le domaine de l’objectif et la catégorie des demandes. */
 export const REQ_CAT_OF: Record<string, string> = { emploi: "emploi", activite: "activite", dette: "dette", mariage: "mariage", etudes: "etudes", epreuve: "epreuve", autre: "autre" };
 
@@ -23,6 +28,8 @@ export const REQ_CAT_OF: Record<string, string> = { emploi: "emploi", activite: 
 export function errMsg(e: unknown) {
   const m = (e as { message?: string })?.message || "";
   if (/limite atteinte/.test(m)) return "Tu as déjà publié trois demandes aujourd’hui";
+  if (/une récitation par jour/.test(m)) return "Tu as déjà partagé ta récitation aujourd’hui";
+  if (/accord pour la voix/.test(m)) return "Il faut d’abord donner ton accord pour partager ta voix";
   if (/consentement/.test(m)) return "Il faut d’abord accepter les conditions de ton compte";
   if (/Failed to fetch|NetworkError|network/i.test(m)) return "Pas de connexion pour le moment";
   return "Une erreur est survenue, réessaie";

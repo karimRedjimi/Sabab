@@ -96,6 +96,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => { await supabase?.auth.signOut(); setModerator(false); try { localStorage.removeItem(LINK_KEY); } catch { /* */ } }, []);
   const deleteAccount = useCallback(async () => {
     if (!supabase) return;
+    // Les enregistrements audio partent avec le compte.
+    try { const { data } = await supabase.rpc("my_recitation_paths"); if (Array.isArray(data) && data.length) await supabase.storage.from("recitations").remove(data as string[]); } catch { /* base sans récitations */ }
     const { error } = await supabase.rpc("delete_my_account");
     if (error) throw error;
     await supabase.auth.signOut(); setModerator(false); try { localStorage.removeItem(LINK_KEY); } catch { /* */ }
