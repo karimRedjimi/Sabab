@@ -1223,3 +1223,11 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 .vday .showbar{margin:14px 0 0}
 .recbar{position:static;box-shadow:none}
 .vday{scroll-margin-top:calc(12px + env(safe-area-inset-top,0px))}
+
+/* ── Compte : connexion avec Google, proposée dès la configuration ── */
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);font-weight:600;font-size:1rem}
+.gbtn svg{width:20px;height:20px}
+.gbtn:disabled{opacity:.6}
+.or{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--muted);font-size:.84rem}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.laterline{margin:6px 0 0;text-align:center}

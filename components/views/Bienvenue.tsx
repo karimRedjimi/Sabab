@@ -1,6 +1,8 @@
 "use client";
 // Accueil : quelques questions pour construire le programme, une à la fois, avec un peu de vie.
 import { useRouter } from "next/navigation";
+import { useAccount } from "../Account";
+import { DEBUT_KEY } from "@/lib/supabase";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { GRADES, ITEMS, OBJ_CATS, PARCOURS, PARCOURS_DAYS } from "@/content/programme";
 import { CITIES, LEVELS } from "@/content/reglages";
@@ -30,6 +32,7 @@ const stg = (i: number) => ({ "data-stg": "", style: { "--i": i } as CSSProperti
 export function Bienvenue() {
   const { S, update, setUi, toast } = useStore();
   const router = useRouter();
+  const acc = useAccount();
   // Refaire l’accueil : on repart des choix déjà faits.
   const [OB, setOB] = useState(() => ({
     i: 0,
@@ -81,7 +84,9 @@ export function Bienvenue() {
     });
     buzz([20, 40, 20]);
     setUi(() => ({ forceOb: false, sel: today() }));
-    router.replace("/");
+    // Dernière étape de la configuration : proposer de créer son compte (on peut passer).
+    if (acc.status === "out") { try { sessionStorage.setItem(DEBUT_KEY, "1"); } catch { /* */ } router.replace("/compte"); }
+    else router.replace("/");
     toast("Bismillâh, ton programme commence");
   };
 

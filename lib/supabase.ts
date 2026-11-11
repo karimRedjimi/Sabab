@@ -8,6 +8,17 @@ export const supabase: SupabaseClient | null = url && key
   ? createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "implicit", storageKey: "rizq-auth" } })
   : null;
 
+/** La connexion avec Google est-elle activée sur le projet Supabase ? (On ne montre le bouton que si oui.) */
+export async function googleEnabled(): Promise<boolean> {
+  if (!url || !key) return false;
+  try {
+    const r = await fetch(`${url}/auth/v1/settings`, { headers: { apikey: key } });
+    if (!r.ok) return false;
+    const j = (await r.json()) as { external?: { google?: boolean } };
+    return !!j.external?.google;
+  } catch { return false; }
+}
+
 /** Version du texte de consentement : à changer si le texte change. */
 export const CONSENT_VERSION = "2026-11-v1";
 
@@ -37,3 +48,6 @@ export function errMsg(e: unknown) {
   if (/Failed to fetch|NetworkError|network/i.test(m)) return "Pas de connexion pour le moment";
   return "Une erreur est survenue, réessaie";
 }
+
+/** Marque que la page du compte est ouverte à la fin de la configuration du début. */
+export const DEBUT_KEY = "sabab-debut";

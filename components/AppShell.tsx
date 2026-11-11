@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import { useStore } from "./Store";
 import { needsOnboarding } from "@/lib/state";
-import { supabase } from "@/lib/supabase";
+import { supabase, DEBUT_KEY } from "@/lib/supabase";
 import { DUA_GOAL, duasOn } from "@/lib/verset";
 import { keyOf, today } from "@/lib/dates";
 import { useEdgeSwipeBack, useViewTransitions } from "./Gestures";
@@ -35,7 +35,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!redirect) return;
-    router.replace(onb ? "/bienvenue" : "/");
+    // En sortant de l’accueil, on passe par la page du compte si elle vient d’être proposée.
+    let debut = false; try { debut = sessionStorage.getItem(DEBUT_KEY) === "1"; } catch { /* */ }
+    router.replace(onb ? "/bienvenue" : debut ? "/compte" : "/");
   }, [redirect, onb, router]);
 
   // Nombre de pages visitées depuis l’ouverture : sert au bouton Retour.
