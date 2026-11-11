@@ -16,6 +16,7 @@ import { useCount } from "../Cards";
 import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
+import { coranDone, rappelsDuJour, versesIn } from "@/lib/coran";
 import { FavorableMoments, Journal, Patience, SameNeed } from "../Moments";
 import { usePrayerSheet } from "../Salat";
 import { SALAT, dayExempt, fajrForgotten, salatOf, type SalatKey } from "@/lib/salat";
@@ -214,6 +215,25 @@ function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | nu
       </div>
       {open && <div className="subl">{list.map((e) => <Row key={`${e.id}-${e.m}`} e={e} />)}</div>}
     </>
+  );
+}
+
+/** Le rappel du Coran du jour : quelques versets, hors pourcentage des invocations. */
+function CoranRow() {
+  const { S, ui } = useStore();
+  const t = today();
+  if (ui.sel > t) return null;
+  const dk = keyOf(ui.sel), done = coranDone(S, dk), list = rappelsDuJour(S, ui.sel), n = versesIn(list);
+  const themed = list.some((r) => r.themed);
+  const sub = `${n} verset${n > 1 ? "s" : ""}${done ? " · lu" : themed ? ` · ${list.find((r) => r.themed)!.tag.toLowerCase()}` : ""}`;
+  return (
+    <div className={`rowi sum ${done ? "done" : ""}`}>
+      <Tile k="coran" />
+      <Link className="rbody" href="/coran" aria-label={`Rappel du Coran : ${sub}. Ouvrir la lecture`}>
+        <span className="rt"><b>Rappel du Coran</b><small>{sub}</small></span>
+        {done ? <span className="okdot" aria-label="lu" /> : <span className="chev" aria-hidden="true" />}
+      </Link>
+    </div>
   );
 }
 
@@ -514,6 +534,7 @@ export function Jour() {
       )}
       {(["matin", "jour", "soir"] as const).map((m) => P.sections[m].length ? <Section key={m} m={m} list={P.sections[m]} cur={cur} /> : null)}
       {P.actions.length > 0 && <Section m="actions" list={P.actions} cur={cur} />}
+      <section className="sec"><div className="sechead"><h2>Coran</h2></div><div className="list"><CoranRow /></div></section>
       <Foot s={s} />
       <Journal />
     </div>
@@ -560,7 +581,7 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
       )}
       <section className="sec">
         <div className="sechead"><h2>Ton socle quotidien</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
-        <div className="list">{socle.map(([m, l]) => <SocleRow key={m} m={m} list={[...l]} cur={cur} />)}</div>
+        <div className="list">{socle.map(([m, l]) => <SocleRow key={m} m={m} list={[...l]} cur={cur} />)}<CoranRow /></div>
       </section>
       <Foot s={s} />
       <Journal />

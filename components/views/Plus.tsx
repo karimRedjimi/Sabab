@@ -1,4 +1,5 @@
 "use client";
+import { CORAN_LEVELS, coranLevel } from "@/lib/coran";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -250,6 +251,13 @@ export function Rythme() {
         <div className="choices">
           {Object.entries(LEVELS).map(([k, v]) => (
             <button key={k} className="choice" aria-pressed={S.level === k} onClick={() => update((s) => { s.level = k; s.show = { ...v.show }; })}>{v.l}<small>{v.d}</small></button>
+          ))}
+        </div></section>
+      <section className="sec"><div className="sechead"><h2>Rappel du Coran</h2></div>
+        <p className="secintro">Quelques versets chaque jour dans ton socle, choisis le plus souvent selon ton objectif.</p>
+        <div className="choices">
+          {CORAN_LEVELS.map((l) => (
+            <button key={l.n} className="choice" aria-pressed={coranLevel(S) === l.n} onClick={() => update((s) => { s.coranLevel = l.n; })}>{l.l}<small>{l.d}</small></button>
           ))}
         </div></section>
       <section className="sec"><div className="sechead"><h2>Minimum du jour</h2></div>

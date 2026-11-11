@@ -55,6 +55,7 @@ export const TONES: Record<string, { icon: string; tone: string }> = {
   fajr: { icon: "dawn", tone: "t-dawn" }, dhuhr: { icon: "sun", tone: "t-sun" }, asr: { icon: "cloud", tone: "t-cloud" },
   maghrib: { icon: "sunset", tone: "t-sunset" }, isha: { icon: "moon", tone: "t-night" },
   matin: { icon: "dawn", tone: "t-dawn" }, jour: { icon: "sun", tone: "t-sun" }, soir: { icon: "sunset", tone: "t-sunset" }, actions: { icon: "hand", tone: "t-act" },
+  coran: { icon: "book", tone: "t-coran" },
 };
 export function Tile({ k, size = 40 }: { k: string; size?: number }) {
   const t = TONES[k];

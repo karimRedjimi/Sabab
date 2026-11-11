@@ -33,6 +33,10 @@ export interface State {
   gratitude?: Record<string, string>;
   /** Suivi des cinq prières, par jour. */
   salat?: Record<string, Partial<Record<"fajr" | "dhuhr" | "asr" | "maghrib" | "isha", { s: "on" | "qada" | "ex"; t?: number; m?: boolean }>>>;
+  /** Rappels du Coran : versets par jour (1, 5 ou 10). */
+  coranLevel?: 1 | 5 | 10;
+  /** Rappels du Coran lus, par jour : nombre de versets et temps de lecture (secondes). */
+  coran?: Record<string, { n: number; t?: number }>;
   /** Dernier jour où le message de patience a été vu. */
   patienceSeen?: string;
   // Phase 2 (communauté, binôme) : conservés pour compatibilité avec le prototype.
@@ -96,6 +100,8 @@ export function combine(remoteRaw: unknown, localRaw: unknown): State {
   out.gratitude = { ...(L.gratitude || {}), ...(out.gratitude || {}) };
   out.salat = { ...(L.salat || {}) };
   for (const [k, v] of Object.entries(R.salat || {})) out.salat[k] = { ...(L.salat?.[k] || {}), ...v };
+  out.coran = { ...(L.coran || {}), ...(out.coran || {}) };
+  if (!out.coranLevel && L.coranLevel) out.coranLevel = L.coranLevel;
   if (!out.objective && L.objective) out.objective = L.objective;
   if (!out.parcours && L.parcours) out.parcours = L.parcours;
   if (!out.prayer && L.prayer) out.prayer = L.prayer;

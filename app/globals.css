@@ -1065,3 +1065,41 @@ button,a,summary,.tabs,.rowi,.favrow,.jrow{-webkit-user-select:none;user-select:
 .cfoot{margin:18px 4px 0;font-size:.84rem;color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .cfoot .link{font-size:.84rem}
 .cbtn{white-space:nowrap;font-size:.94rem;padding:0 8px}
+
+/* ── Rappel du Coran ── */
+.t-coran{background:#E7F2EF;color:#2E7D6E}
+:root[data-theme="dark"] .t-coran{background:#1C302C;color:#7CC9B8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .t-coran{background:#1C302C;color:#7CC9B8}}
+.rowi a.rbody{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-decoration:none;color:inherit}
+.rowi a.rbody .chev{flex:none;margin-right:6px}
+.qr{max-width:620px;margin:0 auto;padding-bottom:20px}
+.qtop{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:6px 2px 12px}
+.qtop h1{font-size:1.5rem;margin:0}
+.qcount{color:var(--muted);font-size:.9rem;font-weight:500}
+.qdots{display:flex;gap:5px;margin:0 2px 14px}
+.qdots i{flex:1;height:4px;border-radius:2px;background:var(--fill);transition:background .25s}
+.qdots i.past{background:color-mix(in srgb,var(--accent) 45%,var(--fill))}
+.qdots i.on{background:var(--accent)}
+.qcard{background:var(--surface);border-radius:22px;padding:20px 20px 16px;animation:qin .28s ease backwards}
+@keyframes qin{from{opacity:0;transform:translateY(8px)}}
+.qtag{display:inline-block;padding:5px 11px;border-radius:99px;background:var(--fill);color:var(--muted);font-size:.8rem;font-weight:600}
+.qtag.th{background:var(--soft);color:var(--accent)}
+.qv+.qv{margin-top:14px;padding-top:14px;border-top:1px solid var(--fill)}
+.qar{font-size:1.75rem;line-height:2.15;margin:12px 0 6px}
+.qfr{font-size:1.06rem;line-height:1.6;margin:8px 0 0;color:var(--ink)}
+.qfr sup{color:var(--muted);font-size:.7em;margin-right:5px;font-weight:600}
+.qref{margin:16px 0 0;color:var(--muted);font-size:.86rem;font-weight:500}
+.qnav{display:flex;gap:10px;margin:16px 0 0}
+.qnav .navbtn{flex:1;min-height:50px;font-size:1rem;justify-content:center}
+.qnav .navbtn:not(.primary){flex:0 0 auto;padding:0 18px}
+.qsrc{margin:18px 4px 0;color:var(--muted);font-size:.78rem;line-height:1.5}
+.qsrc a{color:var(--accent);font-weight:600}
+.qend{text-align:center;padding-top:40px}
+.qend h1{margin:14px 0 6px}
+.qok{display:inline-grid;place-items:center;width:72px;height:72px;border-radius:50%;background:var(--soft);color:var(--accent);animation:qpop .4s cubic-bezier(.3,1.5,.5,1) backwards}
+.qok svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+@keyframes qpop{from{transform:scale(.6);opacity:0}}
+.qup{background:var(--surface);border-radius:18px;padding:16px;margin:20px 0 0;text-align:left}
+.qup p{margin:0 0 12px}
+.qgo{margin-top:22px;min-height:50px;padding:0 26px;font-size:1rem}
+@media (prefers-reduced-motion:reduce){.qcard,.qok{animation:none}}

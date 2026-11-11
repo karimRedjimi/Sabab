@@ -1,4 +1,5 @@
 "use client";
+import { coranStats } from "@/lib/coran";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DAYS, ITEMS } from "@/content/programme";
@@ -22,6 +23,7 @@ export function Suivi() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { setUi((u) => ({ weekRef: monday(u.sel) })); }, []);
   const goto = (d: Date) => { setUi(() => ({ sel: d })); router.push("/"); };
+  const coran = coranStats(S, t);
   const m0 = new Date(t.getFullYear(), t.getMonth(), 1);
   let heldMonth = 0;
   for (let x = new Date(m0); x <= t; x = addDays(x, 1)) if (dayPct(S, x) >= HELD) heldMonth++;
@@ -94,6 +96,7 @@ export function Suivi() {
         <ul className="menu">
           <li><button className="menubtn" onClick={() => openBilan("semaine")}><Glyph name="chart" className="mi" /><span className="mt"><b>Bilan de la semaine</b></span><i className="chev" aria-hidden="true" /></button></li>
           <li><button className="menubtn" onClick={() => openBilan("mois")}><Glyph name="cal" className="mi" /><span className="mt"><b>Bilan du mois</b></span><i className="chev" aria-hidden="true" /></button></li>
+          <li><Link href="/coran"><Glyph name="book" className="mi" /><span className="mt"><b>Rappel du Coran</b></span><span className="mv">{coran.read} jour{coran.read > 1 ? "s" : ""} sur 7</span><i className="chev" aria-hidden="true" /></Link></li>
           {answered > 0 && <li><Link href="/carnet"><Glyph name="heart" className="mi" /><span className="mt"><b>Carnet</b></span><span className="mv">{answered} exaucée{answered > 1 ? "s" : ""}</span><i className="chev" aria-hidden="true" /></Link></li>}
         </ul>
       </section>

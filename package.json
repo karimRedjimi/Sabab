@@ -9,7 +9,8 @@
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "content:extract": "node scripts/extract-content.mjs",
-    "icons": "node scripts/icons.cjs"
+    "icons": "node scripts/icons.cjs",
+    "versets:extract": "node scripts/extract-versets.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
@@ -21,6 +22,7 @@
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "quran-json": "^3.1.2",
     "typescript": "^5.9.3",
     "vitest": "^5.1.0"
   }
