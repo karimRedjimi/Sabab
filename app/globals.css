@@ -810,3 +810,46 @@ button,a,summary,.tabs,.rowi,.favrow,.jrow{-webkit-user-select:none;user-select:
 .menu a .mt{text-align:left;color:var(--ink);font-size:1rem;font-weight:400}
 .menu a .mv{flex:none;text-align:right}
 .bar7 small{display:block;height:1.2em;line-height:1.2em}
+
+/* =========================================================
+   Accueil : date, prières en haut, objectif en deux temps
+   ========================================================= */
+.brand{margin-bottom:2px}
+.dateline{margin:0 6px 14px;color:var(--muted);font-size:.92rem}
+.dateline b{color:var(--ink);font-weight:600}
+
+.reperes{margin:0 0 12px}
+.pblock{background:var(--surface);border-radius:20px;padding:12px 10px 8px;box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 4%,transparent)}
+.pnext{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 6px 8px}
+.pnext b{font-size:1rem;font-weight:600}
+.pnext span{color:var(--accent);font-weight:600;font-size:.94rem;white-space:nowrap}
+.prow5{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;text-align:center}
+.prow5 > div{padding:6px 0 5px;border-radius:12px;min-width:0}
+.prow5 .gtile{margin:0 auto 4px;border-radius:9px}
+.prow5 b{display:block;font-size:.92rem;font-weight:600;font-variant-numeric:tabular-nums}
+.prow5 span{display:block;font-size:.72rem;color:var(--muted)}
+.prow5 .now{background:var(--soft)}
+.prow5 .now span{color:var(--accent);font-weight:600}
+.prow5 .past{opacity:.45}
+.pblock .prnote{margin:6px 6px 2px}
+.reperes .fav{margin-top:8px}
+
+.needhead{padding:2px 0 0}
+.needhead .nh{flex:1;min-width:0}
+.need .nt{font-size:1.35rem;margin-top:3px}
+.nprog{display:flex;align-items:center;gap:12px;margin:8px 0 2px;color:var(--accent);font-weight:600;font-size:.9rem;white-space:nowrap}
+.pbar{flex:1;height:6px;border-radius:3px;background:var(--fill);overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--accent);border-radius:3px;transition:width .5s var(--ease)}
+.nblock{margin-top:14px}
+.nbt{display:flex;align-items:center;gap:8px;margin:0 0 2px;font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.nbt svg{width:16px;height:16px}
+.need .nblock .list{margin-top:0;border-top:0}
+.need .list.agir{background:var(--fill);border-radius:16px}
+.need .list.agir .rowi{padding:0 12px 0 14px}
+.need .list.agir .rowi + .rowi{border-top:1px solid var(--line)}
+
+.banner.slim{padding:12px 14px}
+.banner.slim .inl{display:inline;font-size:.9rem;color:var(--muted)}
+.banner.slim .row{margin-top:2px}
+.needhead > span:nth-child(2){flex:none}
+.needhead .chev{flex:none;width:8px;height:8px}

@@ -6,6 +6,7 @@ import { ensureDay } from "@/lib/state";
 import { dayPct, entryPct, getItem, itemPct, momentOf, slotsOf, val, type Entry, type ViewItem } from "@/lib/program";
 import { IconCheck } from "./Icons";
 import { buzz, useStore } from "./Store";
+import { mergedGesture } from "@/lib/objective";
 
 /** Textes arabe, phonétique et français, selon les préférences d’affichage. */
 export function Texts({ it, withDesc = true }: { it: ViewItem; withDesc?: boolean }) {
@@ -61,9 +62,10 @@ export function useCount() {
     else if (act === "set") { next = Math.max(v, slot.t); buzz(12); }
     else next = 0;
     let after = before;
+    const twins = (k === "obj:0" || k === "pact:0") && mergedGesture(S, ui.sel) ? ["obj:0", "pact:0"] : [k];
     update((s) => {
       const r = ensureDay(s, dk); r.c = r.c || {};
-      if (next) r.c[k] = next; else delete r.c[k];
+      for (const kk of twins) { if (next) r.c[kk] = next; else delete r.c[kk]; }
       after = dayPct(s, ui.sel);
     });
     if (act === "inc" && next === slot.t) { buzz([20, 40, 20]); toast(`${slot.l} : ${slot.t} atteint`); }

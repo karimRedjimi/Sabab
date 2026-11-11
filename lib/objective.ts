@@ -76,3 +76,15 @@ export function needsPatience(S: State, d: Date) {
   if (S.patienceSeen) { const [a, b, c] = S.patienceSeen.split("-").map(Number); if (diffDays(d, new Date(a, b - 1, c)) < 7) return false; }
   return dk >= since;
 }
+
+/**
+ * Le geste du parcours et l’action de l’objectif ne font qu’un : « Agir ».
+ * Renvoie le geste proposé ce jour-là, ou null si les deux ne sont pas réunis.
+ */
+export function mergedGesture(S: State, d: Date): string | null {
+  if (!S.objective || !parcoursServesObjective(S) || !S.parcours) return null;
+  const n = parcoursDay(S, d);
+  if (!n) return null;
+  const acts = PARCOURS[S.parcours.id].actions;
+  return acts[(n - 1) % acts.length];
+}

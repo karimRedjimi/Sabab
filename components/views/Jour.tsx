@@ -18,8 +18,8 @@ import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
 import { FavorableMoments, Journal, Patience, SameNeed } from "../Moments";
 import { Star } from "../Star";
-import { Brand, Tile } from "../Glyphs";
-import { needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
+import { Brand, Glyph, Tile } from "../Glyphs";
+import { mergedGesture, needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { fromKey } from "@/lib/dates";
 
 
@@ -80,10 +80,15 @@ function useDaySwipe() {
   };
 }
 
+function hijri(d: Date) {
+  try { return new Intl.DateTimeFormat("fr-FR-u-ca-islamic-umalqura", { day: "numeric", month: "long", year: "numeric" }).format(d).replace(/\s*AH$/, ""); }
+  catch { return ""; }
+}
+
 function DateBar({ refEl }: { refEl?: React.RefObject<HTMLDivElement | null> }) {
   const { ui } = useStore();
   const { move } = useDaySwipe();
-  const d = ui.sel, isToday = sameDay(d, today()), day = DAYS[d.getDay()];
+  const d = ui.sel, isToday = sameDay(d, today()), day = DAYS[d.getDay()], h = hijri(d);
   return (
     <div ref={refEl}>
       <Brand right={
@@ -93,6 +98,7 @@ function DateBar({ refEl }: { refEl?: React.RefObject<HTMLDivElement | null> }) 
           <button aria-label="Jour suivant" disabled={isToday} onClick={() => move(1)}><IconRight /></button>
         </span>
       } />
+      <p className="dateline"><b>{day.name} {fmtShort(d)}</b>{h && <> · {h}</>}</p>
     </div>
   );
 }
@@ -120,23 +126,28 @@ function NeedCard({ need }: { need: Entry[] }) {
   const start = useStartLecture();
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today());
   const serves = parcoursServesObjective(S), pd = serves ? parcoursDay(S, d) : 0, finished = parcoursFinished(S, d);
-  let held = 0;
-  if (serves && S.parcours) for (let x = fromKey(S.parcours.start); x <= d; x = addDays(x, 1)) if (dayPct(S, x) >= HELD) held++;
-  const todo = need.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
-  const started = todo.length < need.filter((e) => !e.opt).length;
-  const sub = finished ? `${PARCOURS_DAYS} jours accomplis` : pd ? `Jour ${pd} sur ${PARCOURS_DAYS}${held ? ` · ${held} jour${held > 1 ? "s" : ""} tenu${held > 1 ? "s" : ""}` : ""}` : "Ton action du jour";
-  const pct = finished ? 1 : pd ? pd / PARCOURS_DAYS : 0;
+  const merged = !!mergedGesture(S, d);
+  // Quand le geste du parcours et l’action ne font qu’un, une seule ligne « Agir ».
+  const shown = merged ? need.filter((e) => e.id !== "pact") : need;
+  const invoke = shown.filter((e) => e.id !== "obj" && e.id !== "pact");
+  const act = shown.filter((e) => e.id === "obj" || e.id === "pact");
+  const todo = shown.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
+  const started = todo.length < shown.filter((e) => !e.opt).length;
   return (
     <div className="need">
       <Link className="needhead" href="/chemin" aria-label="Voir mon chemin">
-        <span className="needstar"><Star pct={pct} /></span>
-        <span>
+        <span className="nh">
           <span className="k">Ton objectif</span>
           <span className="nt">{objectiveName(S)}</span>
-          <span className="ns">{sub}</span>
         </span>
         <span className="chev" aria-hidden="true" />
       </Link>
+      {(pd > 0 || finished) && (
+        <div className="nprog" aria-label={finished ? `${PARCOURS_DAYS} jours accomplis` : `Jour ${pd} sur ${PARCOURS_DAYS}`}>
+          <span>{finished ? `${PARCOURS_DAYS} jours accomplis` : `Jour ${pd} sur ${PARCOURS_DAYS}`}</span>
+          <span className="pbar"><i style={{ width: `${finished ? 100 : (pd / PARCOURS_DAYS) * 100}%` }} /></span>
+        </div>
+      )}
       {finished && (
         <div className="needfin">
           <p>Tes {PARCOURS_DAYS} jours sont accomplis, qu’Allah les accepte.</p>
@@ -146,9 +157,20 @@ function NeedCard({ need }: { need: Entry[] }) {
           </div>
         </div>
       )}
-      {need.length > 0 && <div className="list">{need.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention />)}</div>}
+      {invoke.length > 0 && (
+        <div className="nblock">
+          <p className="nbt"><Glyph name="book" />Invoquer</p>
+          <div className="list">{invoke.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention />)}</div>
+        </div>
+      )}
+      {act.length > 0 && (
+        <div className="nblock">
+          <p className="nbt"><Glyph name="target" />Agir</p>
+          <div className="list agir">{act.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention />)}</div>
+        </div>
+      )}
       {!serves && !finished && <Link className="needlink" href="/parcours">Commencer le parcours de {PARCOURS_DAYS} jours</Link>}
-      {isToday && need.length > 0 && (todo.length ? (
+      {isToday && shown.length > 0 && (todo.length ? (
         <button className="go" onClick={() => start(todo, "Ton objectif", true)}>{started ? "Continuer" : "Commencer"} <IconRight /></button>
       ) : <p className="needdone">Fait pour aujourd’hui, qu’Allah l’accepte.</p>)}
     </div>
@@ -241,17 +263,27 @@ function Prayers({ d }: { d: Date }) {
   const list: [string, string, number][] = [["fajr", "Fajr", pt.fajr], ["dhuhr", "Dhuhr", pt.dhuhr], ["asr", "ʿAsr", pt.asr], ["maghrib", "Maghreb", pt.maghrib], ["isha", "ʿIchâ", pt.isha]];
   const nextIdx = isToday ? list.findIndex(([, , t]) => t > h) : -1;
   const lastHour = isToday && d.getDay() === 5 && h >= pt.maghrib - 1 && h < pt.maghrib;
+  let head = <b>Horaires à {S.prayer.city}</b>, wait = "";
+  if (isToday) {
+    const nx = nextIdx >= 0 ? list[nextIdx] : null;
+    const tom = prayerTimes(addDays(d, 1), S.prayer);
+    const name = nx ? nx[1] : "Fajr", at = nx ? nx[2] : (tom ? tom.fajr + 24 : 0);
+    const mins = Math.max(0, Math.round((at - h) * 60));
+    head = <b>Prochaine prière : {name}</b>;
+    wait = mins < 60 ? `dans ${mins} min` : `dans ${Math.floor(mins / 60)} h ${String(mins % 60).padStart(2, "0")}`;
+  }
   return (
-    <>
-      <div className="ptiles" role="list" aria-label={`Horaires de prière, ${S.prayer.city}`}>
+    <div className="pblock" aria-label={`Horaires de prière, ${S.prayer.city}`}>
+      <div className="pnext">{head}{wait && <span>{wait}</span>}</div>
+      <div className="prow5" role="list">
         {list.map(([k, n, t], i) => (
-          <div role="listitem" key={k} className={`ptile ${i === nextIdx ? "now" : ""}`} aria-label={`${n} à ${hm(t)}${i === nextIdx ? ", prochaine prière" : ""}`}>
-            <Tile k={k} size={38} /><b>{hm(t)}</b><span>{n}</span>
+          <div role="listitem" key={k} className={`${i === nextIdx ? "now" : ""} ${isToday && t <= h ? "past" : ""}`} aria-label={`${n} à ${hm(t)}`}>
+            <Tile k={k} size={30} /><b>{hm(t)}</b><span>{n}</span>
           </div>
         ))}
       </div>
       {d.getDay() === 5 && <p className="prnote">{lastHour ? "Maintenant : " : ""}Dernière heure du vendredi, de {hm(pt.maghrib - 1)} à {hm(pt.maghrib)}</p>}
-    </>
+    </div>
   );
 }
 
@@ -263,9 +295,10 @@ function Row({ e, intention = false }: { e: Entry; intention?: boolean }) {
   const si = e.sl[0], slot = slotsOf(e.id)[si], k = `${e.id}:${si}`, v = val(S, dk, k);
   const done = entryPct(S, dk, e) >= 1;
   const isObj = e.id === "obj";
-  const title = isObj ? (intention ? "Ton action du jour" : S.objective?.title || "Mon objectif") : e.id === "pact" ? it.desc || it.title : it.title;
+  const gesture = isObj ? mergedGesture(S, d) : null, own = S.days[dk]?.objAct?.trim() || "";
+  const title = isObj ? (intention ? own || gesture || "Ton action du jour" : S.objective?.title || "Mon objectif") : e.id === "pact" ? it.desc || it.title : it.title;
   let sub: string;
-  if (isObj) sub = S.days[dk]?.objAct?.trim() || (intention ? "À choisir, une idée t’attend" : "Ton action concrète du jour");
+  if (isObj) sub = intention ? (own ? "Ton action du jour" : gesture ? "Proposé par ton parcours · tu peux le remplacer" : "À choisir, une idée t’attend") : own || "Ton action concrète du jour";
   else if (e.id === "pact") sub = `Geste du jour · ${parcoursDay(S, d)} sur ${PARCOURS_DAYS}`;
   else if (slot.t > 1) sub = slot.l === "Matin" || slot.l === "Soir" ? `${slot.t} fois` : slot.l;
   else if (e.id === "fajr" || e.m === "jour" || e.m === "actions") sub = momentOf(S, it, d) || (it.kind === "action" ? "Le geste du jour" : "Une fois");
@@ -329,14 +362,7 @@ function Coach({ s, only }: { s: Structure; only: "light" | "missed" | "ramp" })
     );
   if (s.light) return null;
   if (only === "missed") return !(isToday && S.start && S.start <= keyOf(y) && dayPct(S, y) < HELD && dayPct(S, d) < HELD) ? null : (
-      <div className="banner warm">
-        <div>
-          <b>Hier n’a pas été tenu, ce n’est pas grave.</b>
-          <span>Ce qui compte, c’est de reprendre.</span>
-          <span className="q">« {REGULARITE.texte} » {REGULARITE.source}</span>
-        </div>
-        <button className="act" onClick={() => light(true)}>Reprendre en douceur</button>
-      </div>
+      <Missed onLight={() => light(true)} />
     );
   if (only === "ramp" && s.ramp)
     return (
@@ -346,6 +372,22 @@ function Coach({ s, only }: { s: Structure; only: "light" | "missed" | "ramp" })
       </div>
     );
   return null;
+}
+
+function Missed({ onLight }: { onLight: () => void }) {
+  const [why, setWhy] = useState(false);
+  return (
+    <div className="banner warm slim">
+      <div>
+        <b>Hier n’a pas été tenu.</b> <span className="inl">Ce n’est pas grave, l’important est de reprendre.</span>
+        {why && <span className="q">« {REGULARITE.texte} » {REGULARITE.source}</span>}
+        <div className="row" style={{ gap: 18 }}>
+          <button className="act" onClick={onLight}>Reprendre en douceur</button>
+          <button className="act" style={{ color: "var(--muted)" }} onClick={() => setWhy(!why)}>{why ? "Masquer" : "Pourquoi ?"}</button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function BilanBanner() {
@@ -415,7 +457,8 @@ export function Jour() {
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today());
   const day = DAYS[d.getDay()];
   const P = plan(S, d), s = P.s, cur = currentMoment(S, d, now);
-  const ids = countable(S, d);
+  // « Agir » réunit le geste et l’action : on ne le compte qu’une fois à l’affichage.
+  const ids = countable(S, d).filter((id) => !(id === "pact" && mergedGesture(S, d)));
   const doneCount = ids.filter((id) => itemPct(S, dk, id) >= 1).length;
   const needMode = !!S.objective && showObjective(S) && !s.light;
   const anim = ui.dir > 0 ? "day-next" : ui.dir < 0 ? "day-prev" : "";
@@ -426,6 +469,7 @@ export function Jour() {
     <div className={`day ${anim}`} key={dk} {...swipe.handlers}>
       <MiniBar watch={topRef} title={title} done={doneCount} total={ids.length} onGo={q ? () => start(q.todo, q.label) : null} />
       <DateBar />
+      <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
       <div className="top" ref={topRef}>
         <div>
           <p className="eyebrow">{day.name} {fmtShort(d)}</p>
@@ -449,7 +493,6 @@ export function Jour() {
           )}
         </div>
       )}
-      <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
       {(["matin", "jour", "soir"] as const).map((m) => P.sections[m].length ? <Section key={m} m={m} list={P.sections[m]} cur={cur} /> : null)}
       {P.actions.length > 0 && <Section m="actions" list={P.actions} cur={cur} />}
       <Foot s={s} />
@@ -467,7 +510,15 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
   const all: Record<Moment, Entry[]> = { ...P.sections, actions: P.actions };
   const need = (["actions", "matin", "jour", "soir"] as Moment[]).flatMap((m) => all[m].filter(isNeed));
   need.sort((a, b) => (a.id === "obj" ? 1 : 0) - (b.id === "obj" ? 1 : 0) || (a.id === "pact" ? 1 : 0) - (b.id === "pact" ? 1 : 0));
-  const socle = (["matin", "jour", "soir", "actions"] as Moment[]).map((m) => [m, all[m].filter((e) => !isNeed(e))] as const).filter(([, l]) => l.length);
+  const order: Moment[] = ["matin", "jour", "soir", "actions"];
+  const rank = (m: Moment, l: readonly Entry[]) => {
+    const c = secCount(S, [...l], dk), done = c.total > 0 && c.done === c.total;
+    if (done) return 3;
+    if (m === cur) return 0;
+    return cur && m !== "actions" && order.indexOf(m) < order.indexOf(cur) ? 1 : 2;
+  };
+  const socle = order.map((m) => [m, all[m].filter((e) => !isNeed(e))] as const).filter(([, l]) => l.length)
+    .sort((a, b) => rank(a[0], a[1]) - rank(b[0], b[1]) || order.indexOf(a[0]) - order.indexOf(b[0]));
   const sc = secCount(S, socle.flatMap(([, l]) => l), dk);
   const needTodo = need.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
   const q = !isToday ? null : needTodo.length ? { todo: needTodo, label: "Ton objectif", intention: true } : nextQueue(S, d, P, now, isNeed);
@@ -476,6 +527,7 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
       <MiniBar watch={topRef} title={objectiveName(S)} done={doneCount} total={total} onGo={q ? () => start(q.todo, q.label, "intention" in q) : null} />
       <DateBar refEl={topRef} />
       {!isToday && <PastBanner />}
+      <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
       <NeedCard need={need} />
       <Coach s={s} only="light" />
       {isToday && (
@@ -489,9 +541,8 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
       )}
       <section className="sec">
         <div className="sechead"><h2>Ton socle quotidien</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
-        <div className="list">{socle.map(([m, l]) => <SocleRow key={m} m={m} list={l} cur={cur} />)}</div>
+        <div className="list">{socle.map(([m, l]) => <SocleRow key={m} m={m} list={[...l]} cur={cur} />)}</div>
       </section>
-      <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
       <Foot s={s} />
       <Journal />
     </>

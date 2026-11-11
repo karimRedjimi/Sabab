@@ -9,7 +9,7 @@ import { dayPct, entryPct, getItem, momentOf, slotsOf, val, MOMENT_LABEL, type E
 import { useCount } from "../Cards";
 import { Star } from "../Star";
 import { Gratitude } from "../Moments";
-import { actionExample, objectiveIdea, objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
+import { actionExample, mergedGesture, objectiveIdea, objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { useStore } from "../Store";
 
 function ShowChips() {
@@ -28,6 +28,7 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
   const { S, ui, update } = useStore();
   const count = useCount();
   const [why, setWhy] = useState(false);
+  const [editing, setEditing] = useState(false);
   useEffect(() => setWhy(false), [e.id, e.m]);
   const d = ui.sel, dk = keyOf(d);
   const it = getItem(S, e.id, d);
@@ -38,11 +39,13 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
   const g = it.grade ? GRADES[it.grade] : null;
   const sub = isObj ? null : momentOf(S, it, d);
   const idea = isObj ? objectiveIdea(S, d) : null;
+  const gesture = isObj ? mergedGesture(S, d) : null;
+  const own = !!S.days[dk]?.objAct?.trim();
 
   return (
     <>
       <p className="eyebrow">{kicker || (isObj ? "Mon objectif" : MOMENT_LABEL[e.m])}</p>
-      <h2>{isObj ? S.objective?.title : e.id === "pact" ? "Ton geste du jour" : it.title}</h2>
+      <h2>{isObj ? (gesture ? "Agir" : S.objective?.title) : e.id === "pact" ? "Ton geste du jour" : it.title}</h2>
       {!isObj && (e.id === "pact" ? it.moment : sub) && <p className="lsub">{e.id === "pact" ? it.moment : sub}</p>}
       {e.origin === "parc" && S.objective && parcoursServesObjective(S) && showObjective(S) && <p className="lfor">{objectiveTag(S)} : {S.objective.title}</p>}
       {(g || it.optional || e.opt) && (
@@ -52,7 +55,21 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
         </div>
       )}
       <div className="ltxt">
-        {isObj ? (
+        {isObj && gesture ? (
+          <>
+            {!own && <p className="desc lmain">{gesture}</p>}
+            {!own && <p className="lsub" style={{ margin: 0 }}><b style={{ color: "var(--accent)" }}>Proposé par ton parcours.</b> Tu peux le remplacer par ta propre action.</p>}
+            {own || editing ? (
+              <label className="field" style={{ margin: 0 }}>
+                <span>Ton action pour aujourd’hui</span>
+                <input className="input" maxLength={160} autoFocus={editing && !own} enterKeyHint="done" onKeyDown={(ev) => { if (ev.key === "Enter") ev.currentTarget.blur(); }}
+                  placeholder={actionExample(S)} value={S.days[dk]?.objAct || ""}
+                  onChange={(ev) => { const t = ev.target.value; update((s) => { ensureDay(s, dk).objAct = t; }); }} />
+                {own && <button className="link" onClick={() => { update((s) => { ensureDay(s, dk).objAct = ""; }); setEditing(false); }}>Revenir au geste proposé</button>}
+              </label>
+            ) : <button className="link" style={{ alignSelf: "flex-start" }} onClick={() => setEditing(true)}>Écrire ma propre action</button>}
+          </>
+        ) : isObj ? (
           <label className="field" style={{ margin: 0 }}>
             <span>Mon action concrète pour aujourd’hui</span>
             <input className="input" maxLength={160} enterKeyHint="done" onKeyDown={(ev) => { if (ev.key === "Enter") ev.currentTarget.blur(); }} placeholder={actionExample(S)} value={S.days[dk]?.objAct || ""}
