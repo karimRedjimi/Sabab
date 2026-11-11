@@ -30,6 +30,7 @@ export function Plus() {
       ["/bilan", "chart", "Mon bilan", "Semaine, mois"],
       ["/rythme", "rhythm", "Mon rythme", rw ? `Semaine ${rw}` : "Complet"],
       ["/programme", "book", "Le programme complet", ""],
+      ["/combat", "leaf", "Mon combat", ""],
     ]],
     ["Ensemble", [
       ["/compte", "user", "Mon compte", acc.status === "in" ? "Connecté" : acc.status === "off" ? "Bientôt" : "Se connecter", acc.status === "in" ? acc.email || undefined : undefined],

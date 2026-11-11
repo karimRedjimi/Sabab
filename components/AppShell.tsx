@@ -10,6 +10,7 @@ import { useEdgeSwipeBack, useViewTransitions } from "./Gestures";
 
 const TAB_OF: Record<string, string> = {
   "/chemin": "/",
+  "/combat": "/plus",
   "/bilan": "/suivi", "/rythme": "/plus", "/binome": "/plus", "/objectif": "/plus", "/parcours": "/plus",
   "/priere": "/plus", "/programme": "/plus", "/confidentialite": "/plus", "/donnees": "/plus", "/compte": "/plus", "/moderation": "/plus", ...(supabase ? {} : { "/communaute": "/plus" }),
 };

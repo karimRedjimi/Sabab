@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { merge } from "@/lib/state";
 import { clearLocal, exportFileName, exportPayload, parseImport } from "@/lib/storage";
+import { clearCombat, loadCombat, parseCombat, saveCombat } from "@/lib/combat";
 import { useStore } from "../Store";
 
 export function Donnees() {
@@ -10,10 +11,12 @@ export function Donnees() {
   const router = useRouter();
   const file = useRef<HTMLInputElement>(null);
   const [confirmDel, setConfirmDel] = useState(false);
+  const [withCombat, setWithCombat] = useState(false);
   const days = Object.keys(S.days).length;
 
   const exportJson = () => {
-    const blob = new Blob([JSON.stringify(exportPayload(S), null, 2)], { type: "application/json" });
+    const payload = withCombat ? { ...exportPayload(S), combat: loadCombat() } : exportPayload(S);
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url; a.download = exportFileName(); document.body.appendChild(a); a.click(); a.remove();
@@ -22,13 +25,15 @@ export function Donnees() {
   };
   const importJson = async (f: File) => {
     try {
-      const data = merge(parseImport(await f.text()));
+      const text = await f.text();
+      const data = merge(parseImport(text));
       update((s) => { Object.assign(s, data); });
+      try { const raw = JSON.parse(text); if (raw && raw.combat) saveCombat(parseCombat(raw.combat)); } catch { /* sans « Mon combat » */ }
       toast("Données importées");
-    } catch { toast("Ce fichier n’est pas un export du Sabab"); }
+    } catch { toast("Ce fichier n’est pas un export de Sabab"); }
   };
   const wipe = () => {
-    clearLocal();
+    clearLocal(); clearCombat();
     update((s) => { Object.assign(s, merge(null)); });
     clearLocal();
     toast("Toutes tes données ont été effacées");
@@ -41,6 +46,10 @@ export function Donnees() {
         <p className="lead">Tout ce que tu enregistres t’appartient.</p></div>
       <section className="sec"><div className="sechead"><h2>Exporter</h2></div>
         <p className="secintro">Un fichier lisible (JSON) avec ta progression ({days} jour{days > 1 ? "s" : ""}), tes notes, ton objectif, ton carnet et tes révisions.</p>
+        <label className="consent" style={{ margin: "0 0 12px" }}>
+          <input type="checkbox" checked={withCombat} onChange={(e) => setWithCombat(e.target.checked)} />
+          <span>Inclure « Mon combat » (non inclus par défaut)</span>
+        </label>
         <button className="navbtn primary" onClick={exportJson}>Télécharger mes données</button></section>
       <section className="sec"><div className="sechead"><h2>Importer</h2></div>
         <p className="secintro">Reprends un fichier exporté depuis cette application. Il remplace les données de cet appareil.</p>
