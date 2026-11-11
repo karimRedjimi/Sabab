@@ -298,9 +298,10 @@ function Prayers({ d }: { d: Date }) {
         <button className="phint ask" onClick={() => sheet.open(d, "fajr")}>Tu as prié le Fajr ? <b>Le noter</b></button>
       ) : exempt ? (
         <p className="phint">Journée non concernée · <button className="link" onClick={() => sheet.open(d, "fajr")}>modifier</button></p>
-      ) : (
+      ) : noted && isToday ? null : (
         <p className="phint">{noted ? `${noted} sur ${due} notée${noted > 1 ? "s" : ""} ${isToday ? "aujourd’hui" : "ce jour-là"}` : "Touche une prière pour la noter"}</p>
       )}
+      {isToday && <FavorableMoments />}
       {sheet.node}
     </div>
   );
@@ -497,7 +498,7 @@ export function Jour() {
     <div className={`day ${anim}`} key={dk} {...swipe.handlers}>
       <MiniBar watch={topRef} title={title} done={doneCount} total={ids.length} onGo={q ? () => start(q.todo, q.label) : null} />
       <DateBar />
-      <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
+      <div className="reperes"><Prayers d={d} /></div>
       <div className="top" ref={topRef}>
         <div>
           <h1 className="display">{title}</h1>
@@ -560,7 +561,7 @@ function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment
       <MiniBar watch={topRef} title={objectiveName(S)} done={sc.done} total={sc.total} onGo={go} />
       <DateBar refEl={topRef} />
       {!isToday && <PastBanner />}
-      <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
+      <div className="reperes"><Prayers d={d} /></div>
       <NeedCard onGo={go} started={sc.done > 0} allDone={sc.total > 0 && sc.done === sc.total} />
       <Coach s={s} only="light" />
       {isToday && (

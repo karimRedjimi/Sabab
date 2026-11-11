@@ -19,16 +19,16 @@ export function FavorableMoments() {
   if (!list.length) return null;
   const sj = sujud(), first = list[0];
   return (
-    <div className={`fav ${open ? "open" : ""}`}>
-      <button className="favsum" aria-expanded={open} onClick={() => setOpen(!open)}>
+    <div className={`fav inl ${open ? "open" : ""}`}>
+      <button className="favsum" aria-expanded={open} onClick={() => setOpen(!open)} aria-label={`${first.now ? "Moment favorable maintenant" : "Prochain moment favorable"} : ${first.label}, ${first.short}. ${open ? "Replier" : "Voir les moments favorables"}`}>
         <span className={`favdot ${first.now ? "now" : ""}`} aria-hidden="true" />
-        <span className="rt"><b>{first.now ? "Moment favorable, maintenant" : "Prochain moment favorable"}</b><small>{first.label} · {first.when.charAt(0).toLowerCase() + first.when.slice(1)}</small></span>
+        <span className="favline"><b>{first.now ? "Moment favorable maintenant" : "Moment favorable"}</b> · {first.short}</span>
         <span className="chev" aria-hidden="true" />
       </button>
       {open && (
         <div className="favmore">
-          {list.slice(1).map((m) => (
-            <div className="favrow" key={m.key}><span className={`favdot ${m.now ? "now" : ""}`} aria-hidden="true" /><span className="rt"><b>{m.label}</b><small>{m.when}</small></span></div>
+          {list.map((m) => (
+            <div className="favrow" key={m.key}><span className={`favdot ${m.now ? "now" : ""}`} aria-hidden="true" /><span className="rt"><b>{m.label.charAt(0).toUpperCase() + m.label.slice(1)}</b><small>{m.when}</small></span></div>
           ))}
           <div className="favrow"><span className="favdot" aria-hidden="true" /><span className="rt"><b>{sj.label}</b><small>À chaque prière</small></span></div>
           <p className="favsrc">{S.objective ? `${objectiveTag(S)} : garde ton invocation pour ces moments. ` : ""}Sources : {[...list.map((m) => m.source), sj.source].join(" ; ")}</p>
