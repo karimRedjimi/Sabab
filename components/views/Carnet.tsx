@@ -4,6 +4,7 @@ import { CARNET_RAPPEL } from "@/content/textes";
 import { diffDays, fmtDate, fromKey, keyOf, today } from "@/lib/dates";
 import { uid8, type CarnetEntry } from "@/lib/state";
 import { buzz, useStore } from "../Store";
+import { Brand } from "../Glyphs";
 
 export function Carnet() {
   const { S, update, toast } = useStore();
@@ -63,6 +64,7 @@ export function Carnet() {
 
   return (
     <>
+      <Brand />
       <div className="page">
         <h1>Carnet des invocations</h1>
         <p className="lead">Note ce que tu demandes à Allah. Le jour où c’est exaucé, raconte comment.</p>

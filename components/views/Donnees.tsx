@@ -25,7 +25,7 @@ export function Donnees() {
       const data = merge(parseImport(await f.text()));
       update((s) => { Object.assign(s, data); });
       toast("Données importées");
-    } catch { toast("Ce fichier n’est pas un export du Programme du rizq"); }
+    } catch { toast("Ce fichier n’est pas un export du Sabab"); }
   };
   const wipe = () => {
     clearLocal();

@@ -5,6 +5,7 @@ import { MASTER } from "@/content/reglages";
 import { fmtShort, fromKey, keyOf, today } from "@/lib/dates";
 import { DUA_IDS, dueIds, grade, maskText } from "@/lib/learn";
 import { useStore } from "../Store";
+import { Brand } from "../Glyphs";
 import { PARCOURS } from "@/content/programme";
 import { objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
 
@@ -84,6 +85,7 @@ export function Apprendre() {
   const totalMastered = Object.keys(S.learn).filter((id) => S.learn[id].lvl >= MASTER).length;
   return (
     <>
+      <Brand />
       <div className="page">
         <h1>Apprendre par cœur</h1>
         <p className="lead">Chaque invocation revient au bon moment, un peu plus masquée à chaque révision. Objectif : le socle en 30 jours.</p>

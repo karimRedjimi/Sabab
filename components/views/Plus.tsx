@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getTheme, setTheme, type Theme } from "@/lib/theme";
 import { useAccount } from "../Account";
+import { Brand, Glyph } from "../Glyphs";
 import { DAYS, ITEMS, OBJ_CATS, PARCOURS, PARCOURS_DAYS, SOCLE } from "@/content/programme";
 import { LEVELS, METHODS } from "@/content/reglages";
 import { FORCE_DU_PROGRAMME, LIRE_LES_SOURCES, PRECISION_WAQIA, PROGRAMME_INTRO } from "@/content/textes";
@@ -19,34 +20,43 @@ export function Plus() {
   const acc = useAccount();
   const p = S.parcours && PARCOURS[S.parcours.id];
   const pd = parcoursDay(S, today()), rw = rampWeek(S, today());
-  type Row = [string, string, string];
+  // [lien, icône, titre, valeur à droite, valeur mise en avant]
+  type Row = [string, string, string, string, string?];
   const groups: [string, Row[]][] = [
     ["Mon programme", [
-      ["/objectif", "Mon objectif", S.objective ? S.objective.title : "Pas encore fixé"],
-      ...(S.objective ? [["/chemin", "Mon chemin", "Ce que tu as parcouru"] as Row] : []),
-      ["/parcours", "Parcours de 40 jours", p && pd ? `${p.title}, jour ${pd}` : "Aucun en cours"],
-      ["/bilan", "Mon bilan", "Semaine et mois"],
-      ["/rythme", "Mon rythme", rw ? `Démarrage, semaine ${rw}` : "Programme complet"],
-      ["/programme", "Le programme complet", "Textes et sources"],
+      ["/objectif", "target", "Mon objectif", S.objective ? "" : "À fixer", S.objective?.title],
+      ...(S.objective ? [["/chemin", "path", "Mon chemin", pd ? `Jour ${pd}` : ""] as Row] : []),
+      ["/parcours", "cal", "Parcours de 40 jours", p && pd ? p.title : "Aucun"],
+      ["/bilan", "chart", "Mon bilan", "Semaine, mois"],
+      ["/rythme", "rhythm", "Mon rythme", rw ? `Semaine ${rw}` : "Complet"],
+      ["/programme", "book", "Le programme complet", ""],
     ]],
     ["Ensemble", [
-      ["/compte", "Mon compte", acc.status === "in" ? acc.email || "Connecté" : acc.status === "off" ? "Bientôt" : "Se connecter"],
-      ["/communaute", "Communauté", acc.status === "in" ? "Invoquer les uns pour les autres" : acc.status === "off" ? "Bientôt" : "Avec un compte"],
-      ["/binome", "Mon binôme", "Bientôt"],
+      ["/compte", "user", "Mon compte", acc.status === "in" ? "Connecté" : acc.status === "off" ? "Bientôt" : "Se connecter", acc.status === "in" ? acc.email || undefined : undefined],
+      ["/communaute", "people", "Communauté", acc.status === "in" ? "" : acc.status === "off" ? "Bientôt" : "Avec un compte"],
+      ["/binome", "pair", "Mon binôme", "Bientôt"],
     ]],
     ["Réglages", [
-      ["/priere", "Horaires de prière", S.prayer ? S.prayer.city : "Ville à choisir"],
-      ["/donnees", "Mes données", "Exporter, importer, effacer"],
-      ["/confidentialite", "Confidentialité", "Ce que l’application garde"],
+      ["/priere", "clock", "Horaires de prière", S.prayer ? S.prayer.city : "À choisir"],
+      ["/donnees", "download", "Mes données", ""],
+      ["/confidentialite", "shield", "Confidentialité", ""],
     ]],
   ];
   return (
     <>
-      <div className="page"><h1>Plus</h1></div>
+      <Brand />
+      <h1 className="sr-only">Plus</h1>
       {groups.map(([title, rows]) => (
         <section className="sec" key={title}>
           <div className="sechead"><h2>{title}</h2></div>
-          <ul className="menu">{rows.map(([href, l, sub]) => <li key={href}><Link href={href}><b>{l}</b><span>{sub}</span><i className="chev" aria-hidden="true" /></Link></li>)}</ul>
+          <ul className="menu">{rows.map(([href, ic, l, v, em]) => (
+            <li key={href}><Link href={href}>
+              <Glyph name={ic} className="mi" />
+              <span className="mt"><b>{l}</b>{em && <em>{em}</em>}</span>
+              {v && <span className="mv">{v}</span>}
+              <i className="chev" aria-hidden="true" />
+            </Link></li>
+          ))}</ul>
         </section>
       ))}
       <Apparence />

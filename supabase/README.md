@@ -14,7 +14,7 @@ Supabase › **Authentication** › **Emails** › **Templates** › **Magic Lin
 
 ```html
 <h2>Ton code de connexion</h2>
-<p>Voici ton code pour te connecter au Programme du rizq :</p>
+<p>Voici ton code pour te connecter à Sabab :</p>
 <p style="font-size:28px;font-weight:bold;letter-spacing:4px">{{ .Token }}</p>
 <p>Il est valable une heure. Si tu n’as rien demandé, ignore ce message.</p>
 ```

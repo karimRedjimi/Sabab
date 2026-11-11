@@ -8,6 +8,8 @@ import { countable, dayPct, itemPct, streaks } from "@/lib/program";
 import { IconLeft, IconRight } from "../Icons";
 import { Star } from "../Star";
 import { useStore } from "../Store";
+import { Brand, Glyph } from "../Glyphs";
+import Link from "next/link";
 
 export const heatLevel = (p: number) => (p >= 1 ? 4 : p >= 0.8 ? 3 : p >= 0.5 ? 2 : p > 0 ? 1 : 0);
 
@@ -52,20 +54,13 @@ export function Suivi() {
 
   return (
     <>
+      <Brand />
       <div className="page"><h1>Ton suivi</h1></div>
       <div className="stats">
         <div className="stat"><b>{cur}</b><span>jour{cur > 1 ? "s" : ""} tenu{cur > 1 ? "s" : ""} d’affilée</span></div>
         <div className="stat"><b>{best}</b><span>meilleure série</span></div>
         <div className="stat"><b>{heldMonth}</b><span>jours tenus en {MONTHS[t.getMonth()]}</span></div>
       </div>
-      <div className="row" style={{ margin: "0 0 18px" }}>
-        <button className="navbtn primary" onClick={() => openBilan("semaine")}>Bilan de la semaine</button>
-        <button className="navbtn strong" onClick={() => openBilan("mois")}>Bilan du mois</button>
-      </div>
-      <p className="secintro" style={{ margin: "0 0 22px" }}>
-        Un jour est « tenu » à partir de 80 % de son programme.{" "}
-        {answered ? `Ton carnet compte ${answered} invocation${answered > 1 ? "s" : ""} exaucée${answered > 1 ? "s" : ""}.` : ""}
-      </p>
       <section className="sec">
         <div className="weeknav">
           <button className="iconbtn" aria-label="Semaine précédente" onClick={() => setUi((u) => ({ weekRef: addDays(u.weekRef, -7) }))}><IconLeft /></button>
@@ -75,16 +70,26 @@ export function Suivi() {
           </div>
           <button className="iconbtn" aria-label="Semaine suivante" disabled={isCurrent} onClick={() => setUi((u) => ({ weekRef: addDays(u.weekRef, 7) }))}><IconRight /></button>
         </div>
-        <div className="list">{Array.from({ length: 7 }, (_, i) => {
+        <div className="bars">{Array.from({ length: 7 }, (_, i) => {
           const d = addDays(start, i), future = d > t, p = future ? 0 : dayPct(S, d), day = DAYS[d.getDay()];
           return (
-            <button key={i} className={`dayrow ${sameDay(d, t) ? "is-today" : ""}`} disabled={future} onClick={() => goto(d)}>
-              <Star pct={p} />
-              <span><span className="dn">{day.name} {d.getDate()}</span><br /><span className="dt">{day.theme}</span></span>
-              <span className="dp">{future ? "" : Math.round(p * 100) + " %"}</span>
+            <button key={i} className={`bar7 ${sameDay(d, t) ? "today" : ""}`} disabled={future} onClick={() => goto(d)}
+              aria-label={`${day.name} ${fmtShort(d)}${future ? "" : ` : ${Math.round(p * 100)} %`}`}>
+              <small>{future || p === 0 ? "" : `${Math.round(p * 100)}`}</small>
+              <i><em style={{ height: `${Math.max(p * 100, p > 0 ? 6 : 0)}%` }} /></i>
+              <span>{day.name.slice(0, 3)}</span>
             </button>
           );
         })}</div>
+        <p className="secintro" style={{ margin: "10px 6px 0" }}>Un jour est « tenu » à partir de 80 % de son programme.</p>
+      </section>
+      <section className="sec">
+        <div className="sechead"><h2>Bilans</h2></div>
+        <ul className="menu">
+          <li><button className="menubtn" onClick={() => openBilan("semaine")}><Glyph name="chart" className="mi" /><span className="mt"><b>Bilan de la semaine</b></span><i className="chev" aria-hidden="true" /></button></li>
+          <li><button className="menubtn" onClick={() => openBilan("mois")}><Glyph name="cal" className="mi" /><span className="mt"><b>Bilan du mois</b></span><i className="chev" aria-hidden="true" /></button></li>
+          {answered > 0 && <li><Link href="/carnet"><Glyph name="heart" className="mi" /><span className="mt"><b>Carnet</b></span><span className="mv">{answered} exaucée{answered > 1 ? "s" : ""}</span><i className="chev" aria-hidden="true" /></Link></li>}
+        </ul>
       </section>
       <section className="sec">
         <div className="sechead"><h2>Les cinq dernières semaines</h2></div>

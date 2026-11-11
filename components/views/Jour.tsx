@@ -18,6 +18,7 @@ import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
 import { FavorableMoments, Journal, Patience, SameNeed } from "../Moments";
 import { Star } from "../Star";
+import { Brand, Tile } from "../Glyphs";
 import { needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { fromKey } from "@/lib/dates";
 
@@ -84,10 +85,14 @@ function DateBar({ refEl }: { refEl?: React.RefObject<HTMLDivElement | null> }) 
   const { move } = useDaySwipe();
   const d = ui.sel, isToday = sameDay(d, today()), day = DAYS[d.getDay()];
   return (
-    <div className="datebar" ref={refEl}>
-      <button aria-label="Jour précédent" onClick={() => move(-1)}><IconLeft /></button>
-      <p className="eyebrow">{isToday ? `Aujourd’hui · ${fmtShort(d)}` : `${day.name} ${fmtShort(d)}`}</p>
-      <button aria-label="Jour suivant" disabled={isToday} onClick={() => move(1)}><IconRight /></button>
+    <div ref={refEl}>
+      <Brand right={
+        <span className="datenav2">
+          <button aria-label="Jour précédent" onClick={() => move(-1)}><IconLeft /></button>
+          <span>{isToday ? "Aujourd’hui" : `${day.name.slice(0, 3)}. ${fmtShort(d)}`}</span>
+          <button aria-label="Jour suivant" disabled={isToday} onClick={() => move(1)}><IconRight /></button>
+        </span>
+      } />
     </div>
   );
 }
@@ -175,9 +180,10 @@ function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | nu
   return (
     <>
       <div className={`rowi sum ${allDone ? "done" : ""}`}>
-        <span className={`ckv ${allDone ? "on" : ""}`} aria-hidden="true" />
+        <Tile k={m} />
         <button className="rbody" onClick={() => start(todo.length ? todo : list.filter((e) => !e.opt), label)} aria-label={`${label} : ${sub}. Ouvrir la lecture guidée`}>
           <span className="rt"><b>{label}{cur === m && !allDone && <span className="nowdot" aria-hidden="true" />}</b><small>{sub}</small></span>
+          {allDone && <span className="okdot" aria-label="fait" />}
         </button>
         <button className={`expand ${open ? "on" : ""}`} aria-expanded={open} aria-label={open ? `Replier ${label}` : `Voir le détail de ${label}`}
           onClick={() => setUi((u) => ({ momentOpen: { ...u.momentOpen, [k]: !open } }))}><span className="chev" /></button>
@@ -227,21 +233,24 @@ function Prayers({ d }: { d: Date }) {
   if (!pt || !S.prayer)
     return (
       <Link className="banner" href="/priere">
-        <span style={{ color: "var(--ink)", fontSize: ".9rem" }}>Choisis ta ville pour caler le programme sur tes horaires de prière.</span>
+        <div><b>Tes horaires de prière</b><span>Choisis ta ville pour caler ton programme dessus.</span></div>
         <span className="act">Choisir</span>
       </Link>
     );
   const isToday = sameDay(d, today()), h = now.getHours() + now.getMinutes() / 60;
-  const list: [string, number][] = [["Fajr", pt.fajr], ["Dhuhr", pt.dhuhr], ["ʿAsr", pt.asr], ["Maghreb", pt.maghrib], ["ʿIchâ", pt.isha]];
-  const nextIdx = isToday ? list.findIndex(([, t]) => t > h) : -1;
+  const list: [string, string, number][] = [["fajr", "Fajr", pt.fajr], ["dhuhr", "Dhuhr", pt.dhuhr], ["asr", "ʿAsr", pt.asr], ["maghrib", "Maghreb", pt.maghrib], ["isha", "ʿIchâ", pt.isha]];
+  const nextIdx = isToday ? list.findIndex(([, , t]) => t > h) : -1;
   const lastHour = isToday && d.getDay() === 5 && h >= pt.maghrib - 1 && h < pt.maghrib;
   return (
     <>
-      <div className="pr" aria-label={`Horaires de prière, ${S.prayer.city}`}>
-        {list.map(([n, t], i) => <div key={n} className={i === nextIdx ? "n" : ""}><b>{hm(t)}</b><span>{n}</span></div>)}
+      <div className="ptiles" role="list" aria-label={`Horaires de prière, ${S.prayer.city}`}>
+        {list.map(([k, n, t], i) => (
+          <div role="listitem" key={k} className={`ptile ${i === nextIdx ? "now" : ""}`} aria-label={`${n} à ${hm(t)}${i === nextIdx ? ", prochaine prière" : ""}`}>
+            <Tile k={k} size={38} /><b>{hm(t)}</b><span>{n}</span>
+          </div>
+        ))}
       </div>
       {d.getDay() === 5 && <p className="prnote">{lastHour ? "Maintenant : " : ""}Dernière heure du vendredi, de {hm(pt.maghrib - 1)} à {hm(pt.maghrib)}</p>}
-      <div className="prgap" />
     </>
   );
 }
@@ -416,9 +425,10 @@ export function Jour() {
   return (
     <div className={`day ${anim}`} key={dk} {...swipe.handlers}>
       <MiniBar watch={topRef} title={title} done={doneCount} total={ids.length} onGo={q ? () => start(q.todo, q.label) : null} />
+      <DateBar />
       <div className="top" ref={topRef}>
         <div>
-          <DateBar />
+          <p className="eyebrow">{day.name} {fmtShort(d)}</p>
           <h1 className="display">{title}</h1>
           <ObjectiveLine />
         </div>

@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import { useStore } from "./Store";
 import { needsOnboarding } from "@/lib/state";
 import { supabase } from "@/lib/supabase";
 import { today } from "@/lib/dates";
+import { useEdgeSwipeBack, useViewTransitions } from "./Gestures";
 
 const TAB_OF: Record<string, string> = {
   "/chemin": "/",
@@ -63,10 +64,21 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const tab = TAB_OF[path] || path;
   const parent = TAB_OF[path];
-  const back = () => { if (navCount.current > 0) router.back(); else router.push(parent || "/"); };
+  const navigate = useViewTransitions(path);
+  const back = () => navigate(() => { if (navCount.current > 0) router.back(); else router.push(parent || "/"); });
+
+  // Glisser depuis le bord gauche : ferme la lecture, ou revient à l’écran précédent.
+  const mainRef = useRef<HTMLElement>(null);
+  const live = useRef({ lecture, parent, path }); live.current = { lecture, parent, path };
+  const canBack = useCallback(() => live.current.lecture || !!live.current.parent, []);
+  const onEdgeBack = useCallback(() => {
+    if (live.current.lecture) { setUi(() => ({ lecture: null })); return; }
+    if (navCount.current > 0) router.back(); else router.push(live.current.parent || "/");
+  }, [router, setUi]);
+  useEdgeSwipeBack(mainRef, canBack, onEdgeBack);
   return (
     <>
-      <main className="app" id="view">
+      <main className="app" id="view" ref={mainRef}>
         {hydrated && !redirect ? (
           <div className="view" key={path}>
             {parent && (

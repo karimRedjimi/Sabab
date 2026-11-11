@@ -1,4 +1,4 @@
-# Programme du rizq
+# Sabab
 
 Application web installable (PWA) de suivi d’invocations reliées à un objectif concret.
 Cahier des charges : `CLAUDE.md`. Prototype de référence : `reference/rizq.html`.

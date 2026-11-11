@@ -16,9 +16,9 @@ export function clearLocal() {
 
 /** Fichier d’export des données personnelles (format lisible, réimportable). */
 export function exportPayload(S: State) {
-  return { application: "Programme du rizq", format: 1, exporte_le: new Date().toISOString(), donnees: S };
+  return { application: "Sabab", format: 1, exporte_le: new Date().toISOString(), donnees: S };
 }
-export const exportFileName = () => `programme-du-rizq-${keyOf(today())}.json`;
+export const exportFileName = () => `sabab-${keyOf(today())}.json`;
 
 /** Lit un fichier d’export (ou un état brut) et renvoie l’état qu’il contient. */
 export function parseImport(text: string): unknown {

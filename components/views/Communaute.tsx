@@ -7,6 +7,7 @@ import { supabase, errMsg, REQ_CAT_OF, type RequestView } from "@/lib/supabase";
 import { objectiveTag } from "@/lib/objective";
 import { useAccount } from "../Account";
 import { buzz, useStore } from "../Store";
+import { Brand } from "../Glyphs";
 
 function ago(iso: string) {
   const m = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -112,6 +113,7 @@ export function Communaute() {
 
   const head = (
     <>
+      <Brand />
       <div className="page"><h1>Communauté</h1>
         <p className="lead">Invoquer les uns pour les autres, sans se montrer. Personne n’a de nom ni de classement.</p></div>
       <div className="acc" style={{ marginBottom: 18 }}><p>{POUR_SON_FRERE.texte}</p><p className="src"><b>Source :</b> {POUR_SON_FRERE.source}</p></div>
