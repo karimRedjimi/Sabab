@@ -1231,3 +1231,9 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 .or{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--muted);font-size:.84rem}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .laterline{margin:6px 0 0;text-align:center}
+
+/* ── Tuiles des cinq prières plus grandes, toujours sur une ligne ── */
+.prow5 .tw{width:44px;margin-bottom:6px}
+.prow5 .gtile{border-radius:13px}
+.prow5 .gtile svg{width:24px;height:24px}
+.prow5 > button{padding:8px 0 6px}

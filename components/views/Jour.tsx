@@ -283,7 +283,7 @@ function Prayers({ d }: { d: Date }) {
           return (
             <button key={k} className={`${i === nextIdx ? "now" : ""} ${notYet ? "fut" : ""} ${r ? "noted" : ""}`} disabled={notYet}
               aria-label={`${n} à ${hm(t)}${state ? `, ${state}` : notYet ? "" : ", à noter"}`} onClick={() => sheet.open(d, k as SalatKey)}>
-              <span className="tw"><Tile k={k} size={30} />{r && r.s !== "ex" && <span className={`okb ${r.m ? "mq" : ""} ${r.s === "qada" ? "late" : ""}`} aria-hidden="true" />}</span>
+              <span className="tw"><Tile k={k} size={44} />{r && r.s !== "ex" && <span className={`okb ${r.m ? "mq" : ""} ${r.s === "qada" ? "late" : ""}`} aria-hidden="true" />}</span>
               <b>{hm(t)}</b><span>{n}</span>
             </button>
           );
