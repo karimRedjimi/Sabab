@@ -17,6 +17,8 @@ import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
 import { FavorableMoments, Journal, Patience, SameNeed } from "../Moments";
+import { usePrayerSheet } from "../Salat";
+import { SALAT, dayExempt, fajrForgotten, salatOf, type SalatKey } from "@/lib/salat";
 import { Star } from "../Star";
 import { Brand, Glyph, Tile } from "../Glyphs";
 import { mergedGesture, needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
@@ -251,6 +253,7 @@ function Hero({ P }: { P: Plan }) {
 
 function Prayers({ d }: { d: Date }) {
   const { S, now } = useStore();
+  const sheet = usePrayerSheet();
   const pt = prayerTimes(d, S.prayer);
   if (!pt || !S.prayer)
     return (
@@ -259,7 +262,10 @@ function Prayers({ d }: { d: Date }) {
         <span className="act">Choisir</span>
       </Link>
     );
-  const isToday = sameDay(d, today()), h = now.getHours() + now.getMinutes() / 60;
+  const isToday = sameDay(d, today()), h = now.getHours() + now.getMinutes() / 60, dk = keyOf(d);
+  const exempt = dayExempt(S, dk);
+  const due = isToday ? SALAT.filter((k) => pt[k] <= h).length : 5;
+  const noted = SALAT.filter((k) => { const r = salatOf(S, dk, k); return r && r.s !== "ex"; }).length;
   const list: [string, string, number][] = [["fajr", "Fajr", pt.fajr], ["dhuhr", "Dhuhr", pt.dhuhr], ["asr", "ʿAsr", pt.asr], ["maghrib", "Maghreb", pt.maghrib], ["isha", "ʿIchâ", pt.isha]];
   const nextIdx = isToday ? list.findIndex(([, , t]) => t > h) : -1;
   const lastHour = isToday && d.getDay() === 5 && h >= pt.maghrib - 1 && h < pt.maghrib;
@@ -275,14 +281,28 @@ function Prayers({ d }: { d: Date }) {
   return (
     <div className="pblock" aria-label={`Horaires de prière, ${S.prayer.city}`}>
       <div className="pnext">{head}{wait && <span>{wait}</span>}</div>
-      <div className="prow5" role="list">
-        {list.map(([k, n, t], i) => (
-          <div role="listitem" key={k} className={`${i === nextIdx ? "now" : ""} ${isToday && t <= h ? "past" : ""}`} aria-label={`${n} à ${hm(t)}`}>
-            <Tile k={k} size={30} /><b>{hm(t)}</b><span>{n}</span>
-          </div>
-        ))}
+      <div className="prow5">
+        {list.map(([k, n, t], i) => {
+          const r = salatOf(S, dk, k as SalatKey), notYet = isToday && t > h;
+          const state = !r ? "" : r.s === "ex" ? "non concerné(e)" : r.s === "qada" ? "rattrapée" : r.m ? "priée à la mosquée" : "priée";
+          return (
+            <button key={k} className={`${i === nextIdx ? "now" : ""} ${notYet ? "fut" : ""} ${r ? "noted" : ""}`} disabled={notYet}
+              aria-label={`${n} à ${hm(t)}${state ? `, ${state}` : notYet ? "" : ", à noter"}`} onClick={() => sheet.open(d, k as SalatKey)}>
+              <span className="tw"><Tile k={k} size={30} />{r && r.s !== "ex" && <span className={`okb ${r.m ? "mq" : ""} ${r.s === "qada" ? "late" : ""}`} aria-hidden="true" />}</span>
+              <b>{hm(t)}</b><span>{n}</span>
+            </button>
+          );
+        })}
       </div>
       {d.getDay() === 5 && <p className="prnote">{lastHour ? "Maintenant : " : ""}Dernière heure du vendredi, de {hm(pt.maghrib - 1)} à {hm(pt.maghrib)}</p>}
+      {isToday && fajrForgotten(S, now) ? (
+        <button className="phint ask" onClick={() => sheet.open(d, "fajr")}>Tu as prié le Fajr ? <b>Le noter</b></button>
+      ) : exempt ? (
+        <p className="phint">Journée non concernée · <button className="link" onClick={() => sheet.open(d, "fajr")}>modifier</button></p>
+      ) : (
+        <p className="phint">{noted ? `${noted} sur ${due} notée${noted > 1 ? "s" : ""} ${isToday ? "aujourd’hui" : "ce jour-là"}` : "Touche une prière pour la noter"}</p>
+      )}
+      {sheet.node}
     </div>
   );
 }
@@ -472,7 +492,6 @@ export function Jour() {
       <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
       <div className="top" ref={topRef}>
         <div>
-          <p className="eyebrow">{day.name} {fmtShort(d)}</p>
           <h1 className="display">{title}</h1>
           <ObjectiveLine />
         </div>

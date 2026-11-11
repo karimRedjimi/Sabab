@@ -31,6 +31,8 @@ export interface State {
   steps?: { id: string; date: string; text: string }[];
   /** Al-hamdulillâh du jour : une chose pour laquelle on remercie Allah. */
   gratitude?: Record<string, string>;
+  /** Suivi des cinq prières, par jour. */
+  salat?: Record<string, Partial<Record<"fajr" | "dhuhr" | "asr" | "maghrib" | "isha", { s: "on" | "qada" | "ex"; t?: number; m?: boolean }>>>;
   /** Dernier jour où le message de patience a été vu. */
   patienceSeen?: string;
   // Phase 2 (communauté, binôme) : conservés pour compatibilité avec le prototype.
@@ -92,6 +94,8 @@ export function combine(remoteRaw: unknown, localRaw: unknown): State {
   const sid = new Set((out.steps || []).map((s) => s.id));
   out.steps = [...(out.steps || []), ...(L.steps || []).filter((s) => !sid.has(s.id))];
   out.gratitude = { ...(L.gratitude || {}), ...(out.gratitude || {}) };
+  out.salat = { ...(L.salat || {}) };
+  for (const [k, v] of Object.entries(R.salat || {})) out.salat[k] = { ...(L.salat?.[k] || {}), ...v };
   if (!out.objective && L.objective) out.objective = L.objective;
   if (!out.parcours && L.parcours) out.parcours = L.parcours;
   if (!out.prayer && L.prayer) out.prayer = L.prayer;

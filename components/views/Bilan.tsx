@@ -9,6 +9,7 @@ import { itemTitle, periodRange, periodStats, type Kind } from "@/lib/bilan";
 import { IconLeft, IconRight } from "../Icons";
 import { Star } from "../Star";
 import { useStore } from "../Store";
+import { SalatBilan } from "../Salat";
 import { heatLevel } from "./Suivi";
 
 const s = (n: number, sing: string, plur: string) => (n > 1 ? plur : sing);
@@ -81,6 +82,7 @@ export function Bilan() {
         <div className="stat"><b>{nf(st.ist)}</b><span>istighfâr</span></div>
         {st.sal ? <div className="stat"><b>{nf(st.sal)}</b><span>salawat</span></div> : null}
       </div>
+      <SalatBilan a={a} b={b} prevA={pa} prevB={pb} />
       {best.length > 0 && (
         <section className="sec"><div className="sechead"><h2>Ce qui a bien marché</h2></div>
           <ul className="blist">{best.map((x) => <li key={x.id}>{itemTitle(x.id)}<small>{Math.round(x.p * 100)} % des jours</small></li>)}</ul></section>

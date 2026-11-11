@@ -9,6 +9,7 @@ import { IconLeft, IconRight } from "../Icons";
 import { Star } from "../Star";
 import { useStore } from "../Store";
 import { Brand, Glyph } from "../Glyphs";
+import { SalatSuivi } from "../Salat";
 import Link from "next/link";
 
 export const heatLevel = (p: number) => (p >= 1 ? 4 : p >= 0.8 ? 3 : p >= 0.5 ? 2 : p > 0 ? 1 : 0);
@@ -55,7 +56,12 @@ export function Suivi() {
   return (
     <>
       <Brand />
-      <div className="page"><h1>Ton suivi</h1></div>
+      <h1 className="sr-only">Ton suivi</h1>
+      <nav className="seg" aria-label="Que suivre ?">
+        <a href="#" aria-current={ui.suiviTab === "salat" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setUi(() => ({ suiviTab: "salat" })); }}>Prières</a>
+        <a href="#" aria-current={ui.suiviTab === "duas" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setUi(() => ({ suiviTab: "duas" })); }}>Invocations</a>
+      </nav>
+      {ui.suiviTab === "salat" ? <SalatSuivi /> : <>
       <div className="stats">
         <div className="stat"><b>{cur}</b><span>jour{cur > 1 ? "s" : ""} tenu{cur > 1 ? "s" : ""} d’affilée</span></div>
         <div className="stat"><b>{best}</b><span>meilleure série</span></div>
@@ -107,6 +113,7 @@ export function Suivi() {
           </ul>
         ) : <p className="empty">Les données apparaîtront dès que tu auras terminé une première journée.</p>}
       </section>
+      </>}
     </>
   );
 }

@@ -23,6 +23,8 @@ export interface UI {
   lecture: { queue: Entry[]; i: number; label: string; intention?: boolean; scrollY?: number } | null;
   /** Sens du dernier changement de jour, pour l’animation. */
   dir: -1 | 0 | 1;
+  /** Onglet du Suivi : prières ou invocations. */
+  suiviTab: "salat" | "duas";
 }
 
 export interface ToastAction { label: string; run: () => void }
@@ -53,7 +55,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [ui, setUiState] = useState<UI>(() => ({
     sel: today(), weekRef: monday(today()), bilan: { kind: "semaine", ref: monday(today()) },
-    forceOb: false, openSet: {}, textState: {}, momentOpen: {}, lecture: null, dir: 0,
+    forceOb: false, openSet: {}, textState: {}, momentOpen: {}, lecture: null, dir: 0, suiviTab: "salat",
   }));
   const [now, setNow] = useState(() => new Date());
   const [toastMsg, setToastMsg] = useState<string | null>(null);
