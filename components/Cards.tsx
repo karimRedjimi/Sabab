@@ -67,7 +67,7 @@ export function useCount() {
       after = dayPct(s, ui.sel);
     });
     if (act === "inc" && next === slot.t) { buzz([20, 40, 20]); toast(`${slot.l} : ${slot.t} atteint`); }
-    if (act === "reset") toast("Compteur remis à zéro");
+    if (act === "reset") toast("Compteur remis à zéro", { label: "Annuler", run: () => update((x) => { ensureDay(x, dk).c[k] = v; }) });
     if (after >= 1 && before < 1) { toast("Journée complète, qu’Allah l’accepte"); buzz([30, 60, 30, 60, 30]); }
     else if (after >= HELD && before < HELD) toast("Journée tenue");
   };

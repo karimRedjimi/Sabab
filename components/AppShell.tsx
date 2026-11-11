@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { useStore } from "./Store";
 import { needsOnboarding } from "@/lib/state";
 import { supabase } from "@/lib/supabase";
+import { today } from "@/lib/dates";
 
 const TAB_OF: Record<string, string> = {
   "/chemin": "/",
@@ -22,37 +23,82 @@ const TABS: { href: string; label: string; icon: ReactNode }[] = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { S, hydrated, ui, toastMsg } = useStore();
+  const { S, hydrated, ui, setUi, toastMsg, toastAction, dismissToast } = useStore();
   const path = usePathname() || "/";
   const router = useRouter();
   const onb = hydrated && needsOnboarding(S);
   const isWelcome = path === "/bienvenue";
   const redirect = hydrated && (onb ? !isWelcome : isWelcome && !ui.forceOb);
+  const lecture = !!ui.lecture && path === "/";
 
   useEffect(() => {
     if (!redirect) return;
     router.replace(onb ? "/bienvenue" : "/");
   }, [redirect, onb, router]);
 
-  useEffect(() => { window.scrollTo(0, 0); }, [path]);
+  // Nombre de pages visitées depuis l’ouverture : sert au bouton Retour.
+  const navCount = useRef(-1);
+  useEffect(() => { navCount.current++; window.scrollTo(0, 0); }, [path]);
+
+  // Lecture guidée : le bouton retour du téléphone la ferme, et on retrouve sa place dans la page.
+  const pushed = useRef(false), backY = useRef(0);
+  useEffect(() => {
+    if (lecture) {
+      backY.current = ui.lecture?.scrollY || 0;
+      if (window.location.hash !== "#lecture") { window.history.pushState(null, "", "#lecture"); pushed.current = true; }
+    } else {
+      if (pushed.current && window.location.hash === "#lecture") { pushed.current = false; window.history.back(); }
+      else if (window.location.hash === "#lecture") window.history.replaceState(null, "", window.location.pathname);
+      const y = backY.current; backY.current = 0;
+      if (y) requestAnimationFrame(() => window.scrollTo(0, y));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lecture]);
+  useEffect(() => {
+    const onPop = () => { if (window.location.hash !== "#lecture") { pushed.current = false; setUi((u) => (u.lecture ? { lecture: null } : {})); } };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setUi((u) => (u.lecture ? { lecture: null } : {})); };
+    window.addEventListener("popstate", onPop); window.addEventListener("keydown", onKey);
+    return () => { window.removeEventListener("popstate", onPop); window.removeEventListener("keydown", onKey); };
+  }, [setUi]);
 
   const tab = TAB_OF[path] || path;
+  const parent = TAB_OF[path];
+  const back = () => { if (navCount.current > 0) router.back(); else router.push(parent || "/"); };
   return (
     <>
       <main className="app" id="view">
-        {hydrated && !redirect ? <div className="view" key={path}>{children}</div> : <div className="boot" aria-busy="true" />}
+        {hydrated && !redirect ? (
+          <div className="view" key={path}>
+            {parent && (
+              <div className="subbar">
+                <button onClick={back}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>Retour</button>
+              </div>
+            )}
+            {children}
+          </div>
+        ) : <div className="boot" aria-busy="true" />}
       </main>
-      <div className="tabs" hidden={isWelcome || !hydrated || onb || (!!ui.lecture && path === "/")}>
+      <div className="tabs" hidden={isWelcome || !hydrated || onb || lecture}>
         <nav aria-label="Navigation">
           {TABS.map((t) => (
-            <Link key={t.href} href={t.href} aria-current={tab === t.href ? "page" : undefined}>
+            <Link key={t.href} href={t.href} aria-current={tab === t.href ? "page" : undefined}
+              onClick={(e) => {
+                // Retoucher l’onglet déjà ouvert : retour en haut (et à aujourd’hui sur la page Jour).
+                if (path !== t.href) return;
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+                if (t.href === "/") setUi(() => ({ sel: today(), dir: 0 }));
+              }}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">{t.icon}</svg>
               <span>{t.label}</span>
             </Link>
           ))}
         </nav>
       </div>
-      <div className={`toast${toastMsg ? " show" : ""}`} role="status">{toastMsg}</div>
+      <div className={`toast${toastMsg ? " show" : ""}${toastAction ? " act" : ""}`} role="status">
+        <span>{toastMsg}</span>
+        {toastAction && <button onClick={() => { toastAction.run(); dismissToast(); }}>{toastAction.label}</button>}
+      </div>
     </>
   );
 }

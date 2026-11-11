@@ -10,7 +10,6 @@ export function Carnet() {
   const [draft, setDraft] = useState("");
   const [edit, setEdit] = useState<string | null>(null);
   const [how, setHow] = useState("");
-  const [del, setDel] = useState<string | null>(null);
   const pend = S.carnet.filter((x) => x.status !== "ok").sort((a, b) => (b.obj ? 1 : 0) - (a.obj ? 1 : 0) || b.date.localeCompare(a.date));
   const done = S.carnet.filter((x) => x.status === "ok").sort((a, b) => (b.answered || "").localeCompare(a.answered || ""));
 
@@ -28,7 +27,7 @@ export function Carnet() {
       <p>{x.text}</p>
       <p className="dt">
         Demandée le {fmtDate(fromKey(x.date))}
-        {x.status === "ok" && x.answered ? `, exaucée le ${fmtDate(fromKey(x.answered))} (${Math.max(0, diffDays(fromKey(x.answered), fromKey(x.date)))} jours plus tard)` : ""}
+        {x.status === "ok" && x.answered ? `, exaucée le ${fmtDate(fromKey(x.answered))} (${((n) => (n <= 0 ? "le jour même" : n === 1 ? "le lendemain" : `${n} jours plus tard`))(diffDays(fromKey(x.answered), fromKey(x.date)))})` : ""}
       </p>
       {x.how && <p className="how">{x.how}</p>}
       {edit === x.id ? (
@@ -47,14 +46,16 @@ export function Carnet() {
       ) : (
         <div className="acts">
           {x.status !== "ok"
-            ? <button className="navbtn strong" onClick={() => { setEdit(x.id); setHow(""); setDel(null); }}>Elle a été exaucée</button>
+            ? <button className="navbtn strong" onClick={() => { setEdit(x.id); setHow(""); }}>Elle a été exaucée</button>
             : (<>
               {x.shared && <span className="dt" style={{ margin: 0 }}>Partagée sur le mur</span>}
               <button className="link" onClick={() => change(x.id, (c) => { c.status = "wait"; delete c.answered; })}>Remettre en attente</button>
             </>)}
-          {del === x.id
-            ? <button className="link" onClick={() => { update((s) => { s.carnet = s.carnet.filter((c) => c.id !== x.id); }); setDel(null); toast("Supprimée du carnet"); }}>Confirmer la suppression</button>
-            : <button className="link danger" onClick={() => setDel(x.id)}>Supprimer</button>}
+          <button className="link danger" onClick={() => {
+            const i = S.carnet.findIndex((c) => c.id === x.id);
+            update((s) => { s.carnet = s.carnet.filter((c) => c.id !== x.id); });
+            toast("Supprimée du carnet", { label: "Annuler", run: () => update((s) => { if (!s.carnet.some((c) => c.id === x.id)) s.carnet.splice(Math.max(i, 0), 0, x); }) });
+          }}>Supprimer</button>
         </div>
       )}
     </div>
@@ -72,7 +73,7 @@ export function Carnet() {
       </div>
       <section className="sec">
         <label className="field"><span>Nouvelle invocation</span>
-          <textarea className="area" id="newdua" maxLength={600} placeholder="Ô Allah, accorde-moi…" value={draft} onChange={(e) => setDraft(e.target.value)} />
+          <textarea className="area grow" id="newdua" maxLength={600} placeholder="Ô Allah, accorde-moi…" value={draft} onChange={(e) => setDraft(e.target.value)} />
         </label>
         <button className="navbtn primary" onClick={add}>Ajouter au carnet</button>
       </section>

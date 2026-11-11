@@ -510,3 +510,116 @@ button,a,summary,select{-webkit-tap-highlight-color:transparent;touch-action:man
 .warn{background:var(--brass-soft);border-radius:12px;padding:10px 12px;font-size:.9rem;margin:0 0 14px}
 .consent{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border-radius:var(--radius);padding:14px 16px;font-size:.96rem}
 .consent input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:var(--accent)}
+
+/* =========================================================
+   Ergonomie : navigation, zones tactiles, retours
+   ========================================================= */
+/* Rien d’interactif ne se sélectionne par erreur au toucher. */
+button,a,summary,.tabs,.rowi,.favrow,.jrow{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+
+/* Barre du bas flottante */
+.app{padding-bottom:calc(118px + env(safe-area-inset-bottom,0px))}
+.tabs{left:0;right:0;bottom:0;background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0 12px calc(10px + env(safe-area-inset-bottom,0px));pointer-events:none}
+.tabs nav{pointer-events:auto;max-width:520px;padding:5px;border-radius:26px;background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);box-shadow:0 10px 30px color-mix(in srgb,var(--ink) 16%,transparent),0 0 0 1px var(--line)}
+.tabs a{padding:7px 2px 6px;border-radius:21px;font-size:.7rem;letter-spacing:-.01em;gap:2px;min-width:0;transition:background-color .25s var(--ease),color .2s var(--ease)}
+.tabs a span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tabs a[aria-current="page"]{background:var(--soft)}
+.tabs a:active{background:var(--soft)}
+.toast{bottom:calc(96px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:14px;border-radius:16px;padding:11px 16px;text-align:left;box-shadow:0 8px 24px color-mix(in srgb,var(--ink) 22%,transparent)}
+.toast.act{pointer-events:auto}
+.toast button{flex:none;background:none;border:0;color:var(--brass-soft);font-weight:700;font-size:.9rem;padding:8px 2px;min-height:36px}
+:root[data-theme="dark"] .toast button{color:var(--accent-ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .toast button{color:var(--accent-ink)}}
+
+/* Bouton retour des sous-pages */
+.subbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:12;margin:-18px -18px 4px;padding:6px 8px;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.subbar button{display:inline-flex;align-items:center;gap:2px;min-height:44px;padding:0 12px 0 6px;border:0;border-radius:12px;background:none;color:var(--accent);font-weight:600;font-size:.96rem}
+.subbar svg{width:20px;height:20px}
+.subbar button:active{background:var(--soft)}
+
+/* Zones tactiles : au moins 44 px, sans changer l’apparence */
+.ck{position:relative}
+.ck::before{content:"";position:absolute;inset:-9px}
+.datebar{gap:0;margin-left:-12px}
+.datebar button{width:44px;height:44px;border-radius:50%}
+.datebar button:active{background:var(--soft)}
+.datebar svg{width:17px;height:17px}
+.link,.banner .act,.foot button,.why,.notebtn,.needlink{min-height:44px;display:inline-flex;align-items:center}
+.banner .act{padding:0 2px}
+.iconbtn{width:44px;height:44px}
+.lbar .iconbtn:disabled{opacity:0;pointer-events:none}
+.lfocus{outline:none;height:0}
+.navbtn{min-height:44px}
+.chip{min-height:36px;padding:6px 14px}
+.seg a{padding:10px 6px}
+
+/* Changement de jour */
+.day{touch-action:pan-y}
+.day.day-next{animation:dayNext .28s var(--ease) backwards}
+.day.day-prev{animation:dayPrev .28s var(--ease) backwards}
+@keyframes dayNext{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes dayPrev{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+
+/* Barre compacte avec la suite en un geste */
+.minibar.on{pointer-events:auto}
+.minibar{background:color-mix(in srgb,var(--bg) 94%,transparent)}
+.datebar .eyebrow{white-space:nowrap}
+.minibar div{align-items:center}
+.minibar .mt{display:flex;flex-direction:column;min-width:0}
+.minibar .mt b{line-height:1.2}
+.minibar button{flex:none;display:inline-flex;align-items:center;gap:4px;min-height:44px;padding:0 12px 0 14px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-weight:600;font-size:.9rem}
+.minibar button svg{width:15px;height:15px}
+
+/* Un seul message à la fois sur la page Jour */
+.notices > *:not(:first-child){display:none}
+.notices:empty{display:none}
+
+/* Repères : horaires et moment favorable, dans un seul bloc */
+.reperes{margin:0 0 22px}
+.reperes .prgap{display:none}
+.reperes .pr{margin-bottom:8px}
+.fav{background:var(--surface);border-radius:var(--radius);overflow:hidden}
+.favsum{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;padding:10px 16px;border:0;background:none;text-align:left}
+.favsum .chev{transform:rotate(45deg);margin-bottom:3px;transition:transform .25s var(--ease)}
+.fav.open .favsum .chev{transform:rotate(-135deg);margin:3px 0 0}
+.favsum .rt b{font-size:.96rem}
+.favdot{margin:0 4px}
+.favdot.now{background:var(--accent)}
+.favmore{animation:fadeIn .24s var(--ease) backwards}
+.favmore .favrow{padding:10px 16px}
+.favsrc{margin:0;padding:10px 16px 14px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line)}
+
+/* Journal du jour */
+.journal{margin-top:22px}
+.jrow{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:10px 16px;border:0;border-top:1px solid var(--line);background:none;text-align:left}
+.jrow:first-child{border-top:0}
+.jrow.open{display:block;padding:14px 16px}
+.jrow.open label{display:block;margin-bottom:8px}
+.jrow b{display:block;font-weight:600;font-size:1rem}
+.jrow small{display:block;color:var(--muted);font-size:.84rem}
+.jrow .input,.jrow .area{background:var(--bg);border-color:transparent}
+.jrow .area{min-height:84px}
+.jplus{width:36px;height:36px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-size:1.25rem;flex:none}
+.jrow:active .jplus{transform:scale(.92)}
+
+/* Pied de la page Jour */
+.foot{margin:0 4px;font-size:.88rem;gap:12px}
+.foot span{min-width:0}
+.foot button{flex:none}
+
+/* Champs : le focus se voit sans alourdir */
+.input:focus,.select:focus,.area:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent)}
+
+/* Lecture : pour un geste, la consigne est le texte principal */
+.ltxt .desc.lmain{font-family:var(--font-newsreader),serif;font-size:1.5rem;line-height:1.35;color:var(--ink)}
+/* Message bref : centré, sur une ligne quand c’est possible */
+.toast{left:16px;right:16px;margin-inline:auto;width:fit-content;max-width:none;transform:translateY(20px)}
+.toast.show{transform:none}
+/* Zone de saisie qui s’agrandit quand on écrit */
+.area.grow{min-height:58px;transition:min-height .25s var(--ease)}
+.area.grow:focus,.area.grow:not(:placeholder-shown){min-height:120px}
+/* Menu groupé, avec chevrons */
+.menu a{min-height:56px;padding:10px 0}
+.menu a b{font-weight:500;flex:none}
+.menu a span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu a .chev{margin-left:2px}

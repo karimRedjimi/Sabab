@@ -16,7 +16,7 @@ import { useCount } from "../Cards";
 import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
-import { FavorableMoments, Gratitude, Patience, SameNeed } from "../Moments";
+import { FavorableMoments, Journal, Patience, SameNeed } from "../Moments";
 import { Star } from "../Star";
 import { needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { fromKey } from "@/lib/dates";
@@ -35,18 +35,59 @@ function Ring({ done, total }: { done: number; total: number }) {
   );
 }
 
-/** Barre compacte qui apparaît en haut quand le titre sort de l’écran. */
-function MiniBar({ watch, title, done, total }: { watch: React.RefObject<HTMLDivElement | null>; title: string; done: number; total: number }) {
+/** Barre compacte qui apparaît en haut quand le titre sort de l’écran : progression et suite en un geste. */
+function MiniBar({ watch, title, done, total, onGo }: { watch: React.RefObject<HTMLDivElement | null>; title: string; done: number; total: number; onGo?: (() => void) | null }) {
   const [show, setShow] = useState(false);
   useEffect(() => {
     const el = watch.current; if (!el) return;
-    const io = new IntersectionObserver(([e]) => setShow(!e.isIntersecting), { rootMargin: "-10px 0px 0px 0px" });
+    const io = new IntersectionObserver(([e]) => setShow(!e.isIntersecting && e.boundingClientRect.top < 0), { rootMargin: "-10px 0px 0px 0px" });
     io.observe(el); return () => io.disconnect();
   }, [watch]);
   return (
     <div className={`minibar ${show ? "on" : ""}`} aria-hidden={!show}>
-      <div><b>{title}</b><span>{done} sur {total}</span></div>
+      <div>
+        <span className="mt"><b>{title}</b><span>{done} sur {total}</span></span>
+        {onGo && <button tabIndex={show ? 0 : -1} onClick={onGo}>Continuer <IconRight /></button>}
+      </div>
       <i style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
+    </div>
+  );
+}
+
+/** Changer de jour en glissant le doigt, sans gêner le défilement vertical. */
+function useDaySwipe() {
+  const { ui, setUi } = useStore();
+  const t0 = useRef<{ x: number; y: number; t: number } | null>(null);
+  const move = (n: 1 | -1) => {
+    if (n === 1 && sameDay(ui.sel, today())) return;
+    setUi((u) => ({ sel: addDays(u.sel, n), dir: n }));
+  };
+  return {
+    move,
+    handlers: {
+      onTouchStart: (e: React.TouchEvent) => {
+        const el = e.target as HTMLElement, p = e.touches[0];
+        if (el.closest("input,textarea,select") || p.clientX < 28 || p.clientX > window.innerWidth - 28) { t0.current = null; return; }
+        t0.current = { x: p.clientX, y: p.clientY, t: Date.now() };
+      },
+      onTouchEnd: (e: React.TouchEvent) => {
+        const s0 = t0.current; t0.current = null; if (!s0) return;
+        const p = e.changedTouches[0], dx = p.clientX - s0.x, dy = p.clientY - s0.y;
+        if (Math.abs(dx) > 72 && Math.abs(dx) > 2.2 * Math.abs(dy) && Date.now() - s0.t < 600) move(dx < 0 ? 1 : -1);
+      },
+    },
+  };
+}
+
+function DateBar({ refEl }: { refEl?: React.RefObject<HTMLDivElement | null> }) {
+  const { ui } = useStore();
+  const { move } = useDaySwipe();
+  const d = ui.sel, isToday = sameDay(d, today()), day = DAYS[d.getDay()];
+  return (
+    <div className="datebar" ref={refEl}>
+      <button aria-label="Jour précédent" onClick={() => move(-1)}><IconLeft /></button>
+      <p className="eyebrow">{isToday ? `Aujourd’hui · ${fmtShort(d)}` : `${day.name} ${fmtShort(d)}`}</p>
+      <button aria-label="Jour suivant" disabled={isToday} onClick={() => move(1)}><IconRight /></button>
     </div>
   );
 }
@@ -65,7 +106,7 @@ function ObjectiveLine() {
 
 function useStartLecture() {
   const { setUi } = useStore();
-  return (queue: Entry[], label: string, intention = false) => { setUi(() => ({ lecture: { queue, i: 0, label, intention } })); window.scrollTo(0, 0); };
+  return (queue: Entry[], label: string, intention = false) => { if (queue.length) setUi(() => ({ lecture: { queue, i: 0, label, intention, scrollY: window.scrollY } })); };
 }
 
 /** La carte du besoin : ce qu’on fait aujourd’hui pour son objectif. */
@@ -264,22 +305,21 @@ function Section({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | nul
   );
 }
 
-function Coach({ s }: { s: Structure }) {
+function Coach({ s, only }: { s: Structure; only: "light" | "missed" | "ramp" }) {
   const { S, ui, update, toast } = useStore();
   const d = ui.sel, t = today(), isToday = sameDay(d, t), y = addDays(t, -1);
   const light = (on: boolean) => {
     update((x) => { const r = ensureDay(x, keyOf(d)); if (on) r.light = true; else delete r.light; });
     toast(on ? "Minimum du jour activé" : "Programme complet rétabli");
   };
-  if (s.light)
-    return (
+  if (only === "light") return !s.light ? null : (
       <div className="banner soft">
         <div><b>Minimum du jour</b><span>Trois invocations courtes suffisent aujourd’hui.</span></div>
         <button className="act" onClick={() => light(false)}>Programme complet</button>
       </div>
     );
-  if (isToday && !(showObjective(S) && needsPatience(S, t)) && S.start && S.start <= keyOf(y) && dayPct(S, y) < HELD && dayPct(S, d) < HELD)
-    return (
+  if (s.light) return null;
+  if (only === "missed") return !(isToday && S.start && S.start <= keyOf(y) && dayPct(S, y) < HELD && dayPct(S, d) < HELD) ? null : (
       <div className="banner warm">
         <div>
           <b>Hier n’a pas été tenu, ce n’est pas grave.</b>
@@ -289,7 +329,7 @@ function Coach({ s }: { s: Structure }) {
         <button className="act" onClick={() => light(true)}>Reprendre en douceur</button>
       </div>
     );
-  if (s.ramp)
+  if (only === "ramp" && s.ramp)
     return (
       <div className="banner soft">
         <div><b>Démarrage en douceur · semaine {s.ramp} sur 2</b><span>{s.ramp === 1 ? "Trois invocations pour installer l’habitude." : "Le socle complet, sans le thème du jour."}</span></div>
@@ -318,121 +358,132 @@ function BilanBanner() {
   );
 }
 
-function Note() {
-  const { S, ui, update } = useStore();
-  const dk = keyOf(ui.sel), note = S.days[dk]?.note || "";
-  const [open, setOpen] = useState(false);
-  if (!open && !note) return <div className="notebox"><button className="notebtn" onClick={() => setOpen(true)}>+ Ajouter une note du jour</button></div>;
+/** Ce qu’il reste à faire en premier : la file de la prochaine lecture guidée. */
+function nextQueue(S: Parameters<typeof plan>[0], d: Date, P: Plan, now: Date, skip?: (e: Entry) => boolean) {
+  const dk = keyOf(d), ns = nextStep(S, d, P, now);
+  if (!ns.next) return null;
+  const all: Record<Moment, Entry[]> = { ...P.sections, actions: P.actions };
+  const order: Moment[] = [ns.next.m, ...(["matin", "jour", "soir", "actions"] as Moment[]).filter((m) => m !== ns.next!.m)];
+  for (const m of order) {
+    const todo = all[m].filter((e) => !e.opt && !(skip && skip(e)) && entryPct(S, dk, e) < 1);
+    if (todo.length) return { todo, label: MOMENT_LABEL[m] };
+  }
+  return null;
+}
+
+function PastBanner() {
+  const { setUi } = useStore();
   return (
-    <section className="notebox">
-      <div className="sechead"><h2><label htmlFor="note">Note du jour</label></h2></div>
-      <textarea id="note" className="area" autoFocus={open && !note} placeholder="Ton intention, une du’â personnelle, ce qui a bloqué ou avancé…" value={note}
-        onChange={(e) => { const v = e.target.value; update((x) => { ensureDay(x, dk).note = v; }); }} />
-      <p className="status">Enregistrée sur cet appareil.</p>
-    </section>
+    <button className="banner soft" onClick={() => setUi(() => ({ sel: today(), dir: 1 }))}>
+      <div><b>Tu consultes une journée passée</b><span>Tu peux encore cocher ce que tu avais fait.</span></div>
+      <span className="act">Aujourd’hui</span>
+    </button>
+  );
+}
+
+function Foot({ s }: { s: Structure }) {
+  const { ui, update, toast } = useStore();
+  const dk = keyOf(ui.sel), day = DAYS[ui.sel.getDay()];
+  const theme = day.theme.charAt(0).toLowerCase() + day.theme.slice(1);
+  if (s.light) return null;
+  return (
+    <div className="foot">
+      <span>Thème du {day.name.toLowerCase()} : {theme}</span>
+      {!s.ramp && <button onClick={() => {
+        update((x) => { ensureDay(x, dk).light = true; });
+        toast("Minimum du jour activé", { label: "Annuler", run: () => update((x) => { delete ensureDay(x, dk).light; }) });
+      }}>Journée chargée ?</button>}
+    </div>
   );
 }
 
 export function Jour() {
-  const { S, ui, setUi, update, toast, now } = useStore();
+  const { S, ui, now } = useStore();
   const topRef = useRef<HTMLDivElement>(null);
+  const start = useStartLecture();
+  const swipe = useDaySwipe();
   if (ui.lecture) return <Lecture />;
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today());
   const day = DAYS[d.getDay()];
   const P = plan(S, d), s = P.s, cur = currentMoment(S, d, now);
   const ids = countable(S, d);
   const doneCount = ids.filter((id) => itemPct(S, dk, id) >= 1).length;
+  const needMode = !!S.objective && showObjective(S) && !s.light;
+  const anim = ui.dir > 0 ? "day-next" : ui.dir < 0 ? "day-prev" : "";
+  if (needMode) return <div className={`day ${anim}`} key={dk} {...swipe.handlers}><JourBesoin P={P} cur={cur} topRef={topRef} doneCount={doneCount} total={ids.length} /></div>;
   const title = s.light ? "Minimum du jour" : s.ramp ? "Démarrage en douceur" : day.theme;
-  if (S.objective && showObjective(S) && !s.light) return <JourBesoin P={P} cur={cur} topRef={topRef} doneCount={doneCount} total={ids.length} />;
+  const q = isToday ? nextQueue(S, d, P, now) : null;
   return (
-    <>
-      <MiniBar watch={topRef} title={title} done={doneCount} total={ids.length} />
+    <div className={`day ${anim}`} key={dk} {...swipe.handlers}>
+      <MiniBar watch={topRef} title={title} done={doneCount} total={ids.length} onGo={q ? () => start(q.todo, q.label) : null} />
       <div className="top" ref={topRef}>
         <div>
-          <div className="datebar">
-            <button aria-label="Jour précédent" onClick={() => setUi((u) => ({ sel: addDays(u.sel, -1) }))}><IconLeft /></button>
-            <p className="eyebrow">{day.name} {fmtShort(d)}</p>
-            <button aria-label="Jour suivant" disabled={isToday} onClick={() => setUi((u) => ({ sel: addDays(u.sel, 1) }))}><IconRight /></button>
-          </div>
+          <DateBar />
           <h1 className="display">{title}</h1>
           <ObjectiveLine />
         </div>
         <Ring done={doneCount} total={ids.length} />
       </div>
-      {isToday ? <Hero P={P} /> : (
-        <button className="banner soft" onClick={() => setUi(() => ({ sel: today() }))}>
-          <div><b>Tu consultes une journée passée</b><span>Tu peux encore cocher ce que tu avais fait.</span></div>
-          <span className="act">Aujourd’hui</span>
-        </button>
-      )}
-      <Prayers d={d} />
-      {isToday && <BilanBanner />}
-      <Coach s={s} />
-      {isToday && <FavorableMoments />}
-      {!s.obj && isToday && !s.light && (
-        <Link className="banner" href="/objectif">
-          <div><b>Fixe un objectif concret</b><span>Chaque jour, une action pour l’atteindre.</span></div>
-          <span className="act">Fixer</span>
-        </Link>
-      )}
-      {(["matin", "jour", "soir"] as const).map((m) => P.sections[m].length ? <Section key={m} m={m} list={P.sections[m]} cur={cur} /> : null)}
-      {P.actions.length > 0 && <Section m="actions" list={P.actions} cur={cur} />}
-      {!s.light && !s.ramp && (
-        <div className="foot"><span>Journée chargée ?</span>
-          <button onClick={() => { update((x) => { ensureDay(x, dk).light = true; }); toast("Minimum du jour activé"); }}>Passer au minimum</button>
+      {isToday ? <Hero P={P} /> : <PastBanner />}
+      <Coach s={s} only="light" />
+      {isToday && (
+        <div className="notices">
+          <Coach s={s} only="missed" />
+          <BilanBanner />
+          <Coach s={s} only="ramp" />
+          {!s.obj && !s.light && (
+            <Link className="banner" href="/objectif">
+              <div><b>Fixe un objectif concret</b><span>Chaque jour, une action pour l’atteindre.</span></div>
+              <span className="act">Fixer</span>
+            </Link>
+          )}
         </div>
       )}
-      <Gratitude />
-      <Note />
-    </>
+      <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
+      {(["matin", "jour", "soir"] as const).map((m) => P.sections[m].length ? <Section key={m} m={m} list={P.sections[m]} cur={cur} /> : null)}
+      {P.actions.length > 0 && <Section m="actions" list={P.actions} cur={cur} />}
+      <Foot s={s} />
+      <Journal />
+    </div>
   );
 }
 
 /** La page Jour organisée autour du besoin de la personne. */
 function JourBesoin({ P, cur, topRef, doneCount, total }: { P: Plan; cur: Moment | null; topRef: React.RefObject<HTMLDivElement | null>; doneCount: number; total: number }) {
-  const { S, ui, setUi, update, toast } = useStore();
+  const { S, ui, now } = useStore();
   const start = useStartLecture();
-  const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today()), day = DAYS[d.getDay()], s = P.s;
+  const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today()), s = P.s;
   const isNeed = (e: Entry) => e.origin === "parc" || e.id === "obj";
   const all: Record<Moment, Entry[]> = { ...P.sections, actions: P.actions };
   const need = (["actions", "matin", "jour", "soir"] as Moment[]).flatMap((m) => all[m].filter(isNeed));
   need.sort((a, b) => (a.id === "obj" ? 1 : 0) - (b.id === "obj" ? 1 : 0) || (a.id === "pact" ? 1 : 0) - (b.id === "pact" ? 1 : 0));
   const socle = (["matin", "jour", "soir", "actions"] as Moment[]).map((m) => [m, all[m].filter((e) => !isNeed(e))] as const).filter(([, l]) => l.length);
   const sc = secCount(S, socle.flatMap(([, l]) => l), dk);
-  const theme = day.theme.charAt(0).toLowerCase() + day.theme.slice(1);
+  const needTodo = need.filter((e) => !e.opt && entryPct(S, dk, e) < 1);
+  const q = !isToday ? null : needTodo.length ? { todo: needTodo, label: "Ton objectif", intention: true } : nextQueue(S, d, P, now, isNeed);
   return (
     <>
-      <MiniBar watch={topRef} title={objectiveName(S)} done={doneCount} total={total} />
-      <div className="datebar" ref={topRef} style={{ marginBottom: 12 }}>
-        <button aria-label="Jour précédent" onClick={() => setUi((u) => ({ sel: addDays(u.sel, -1) }))}><IconLeft /></button>
-        <p className="eyebrow">{isToday ? "Aujourd’hui · " : ""}{day.name} {fmtShort(d)}</p>
-        <button aria-label="Jour suivant" disabled={isToday} onClick={() => setUi((u) => ({ sel: addDays(u.sel, 1) }))}><IconRight /></button>
-      </div>
-      {!isToday && (
-        <button className="banner soft" onClick={() => setUi(() => ({ sel: today() }))}>
-          <div><b>Tu consultes une journée passée</b><span>Tu peux encore cocher ce que tu avais fait.</span></div>
-          <span className="act">Aujourd’hui</span>
-        </button>
-      )}
+      <MiniBar watch={topRef} title={objectiveName(S)} done={doneCount} total={total} onGo={q ? () => start(q.todo, q.label, "intention" in q) : null} />
+      <DateBar refEl={topRef} />
+      {!isToday && <PastBanner />}
       <NeedCard need={need} />
-      {isToday && <Patience onPatience={(e) => start([e], "Patience")} />}
-      <Prayers d={d} />
-      {isToday && <BilanBanner />}
-      <Coach s={s} />
-      {isToday && <FavorableMoments />}
-      {isToday && <SameNeed />}
+      <Coach s={s} only="light" />
+      {isToday && (
+        <div className="notices">
+          <Patience onPatience={(e) => start([e], "Patience")} />
+          <Coach s={s} only="missed" />
+          <BilanBanner />
+          <SameNeed />
+          <Coach s={s} only="ramp" />
+        </div>
+      )}
       <section className="sec">
         <div className="sechead"><h2>Ton socle quotidien</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
         <div className="list">{socle.map(([m, l]) => <SocleRow key={m} m={m} list={l} cur={cur} />)}</div>
       </section>
-      <p className="themeline">Thème du {day.name.toLowerCase()} : {theme}</p>
-      {!s.ramp && (
-        <div className="foot"><span>Journée chargée ?</span>
-          <button onClick={() => { update((x) => { ensureDay(x, dk).light = true; }); toast("Minimum du jour activé"); }}>Passer au minimum</button>
-        </div>
-      )}
-      <Gratitude />
-      <Note />
+      <div className="reperes"><Prayers d={d} />{isToday && <FavorableMoments />}</div>
+      <Foot s={s} />
+      <Journal />
     </>
   );
 }

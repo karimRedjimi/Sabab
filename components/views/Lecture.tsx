@@ -1,6 +1,7 @@
 "use client";
 // Lecture guidée : une étape à la fois, en plein écran.
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { IconLeft } from "../Icons";
 import { GRADES } from "@/content/programme";
 import { keyOf } from "@/lib/dates";
 import { ensureDay } from "@/lib/state";
@@ -41,7 +42,7 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
   return (
     <>
       <p className="eyebrow">{kicker || (isObj ? "Mon objectif" : MOMENT_LABEL[e.m])}</p>
-      <h2>{isObj ? S.objective?.title : it.title}</h2>
+      <h2>{isObj ? S.objective?.title : e.id === "pact" ? "Ton geste du jour" : it.title}</h2>
       {!isObj && (e.id === "pact" ? it.moment : sub) && <p className="lsub">{e.id === "pact" ? it.moment : sub}</p>}
       {e.origin === "parc" && S.objective && parcoursServesObjective(S) && showObjective(S) && <p className="lfor">{objectiveTag(S)} : {S.objective.title}</p>}
       {(g || it.optional || e.opt) && (
@@ -54,7 +55,7 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
         {isObj ? (
           <label className="field" style={{ margin: 0 }}>
             <span>Mon action concrète pour aujourd’hui</span>
-            <input className="input" maxLength={160} placeholder={actionExample(S)} value={S.days[dk]?.objAct || ""}
+            <input className="input" maxLength={160} enterKeyHint="done" onKeyDown={(ev) => { if (ev.key === "Enter") ev.currentTarget.blur(); }} placeholder={actionExample(S)} value={S.days[dk]?.objAct || ""}
               onChange={(ev) => { const t = ev.target.value; update((s) => { ensureDay(s, dk).objAct = t; }); }} />
             {idea && !S.days[dk]?.objAct?.trim() && (
               <button className="idea" onClick={() => update((s) => { ensureDay(s, dk).objAct = idea; })}><span>Une idée</span>{idea}</button>
@@ -65,7 +66,7 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
             {it.ar && S.show.ar && <p className="ar" lang="ar" dir="rtl">{it.ar}</p>}
             {it.ph && S.show.ph && <p className="ph">{it.ph}</p>}
             {it.fr && S.show.fr && <p className="fr">{it.fr}</p>}
-            {it.desc && <p className="desc">{it.desc}</p>}
+            {it.desc && <p className={hasText ? "desc" : "desc lmain"}>{it.desc}</p>}
             {!g && it.src && <p className="src"><b>Source :</b> {it.src}</p>}
             {it.note && <button className="why" aria-expanded={why} onClick={() => setWhy(!why)}>{it.kind === "action" ? "Pourquoi ce geste ?" : "Pourquoi cette invocation ?"}</button>}
             {it.note && why && <p className="whytext">{it.note}</p>}
@@ -83,7 +84,7 @@ function Step({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: str
             </button>
             <div className="tapsub">
               <button onClick={() => count("dec", k)} aria-label="Retirer un">−1</button>
-              <button onClick={() => count("reset", k)}>Remettre à zéro</button>
+              <button onClick={() => count("reset", k)} disabled={v === 0}>Remettre à zéro</button>
             </div>
             <button className={`bigbtn ${v >= slot.t ? "" : "sec2"}`} style={{ marginTop: 10 }} onClick={onNext}>{v >= slot.t ? "Continuer" : "Continuer plus tard"}</button>
           </>
@@ -124,31 +125,36 @@ export function Lecture() {
   const L = ui.lecture!;
   const today0 = keyOf(new Date());
   const endIntention = useCallback(() => update((s) => { s.lastIntention = today0; }), [update, today0]);
+  // Le remerciement de fin reste affiché pendant qu’on l’écrit.
+  const [askGratitude] = useState(() => !S.gratitude?.[today0]?.trim());
+  const head = useRef<HTMLDivElement>(null);
+  useEffect(() => { window.scrollTo(0, 0); head.current?.focus({ preventScroll: true }); }, [L.i]);
   if (L.intention && S.objective && S.lastIntention !== today0 && L.i === 0) return <Intention onDone={endIntention} />;
-  const close = () => { setUi(() => ({ lecture: null })); window.scrollTo(0, 0); };
-  const next = () => { setUi((u) => (u.lecture ? { lecture: { ...u.lecture, i: u.lecture.i + 1 } } : {})); window.scrollTo(0, 0); };
+  const close = () => setUi(() => ({ lecture: null }));
+  const go = (n: number) => setUi((u) => (u.lecture ? { lecture: { ...u.lecture, i: Math.max(0, u.lecture.i + n) } } : {}));
   const finished = L.i >= L.queue.length;
   const dk = keyOf(ui.sel);
   const allDone = L.queue.every((e) => entryPct(S, dk, e) >= 1);
   const dayDone = dayPct(S, ui.sel) >= 1;
+  const many = L.queue.length > 1;
   return (
     <div className="lec">
       <div className="lbar">
+        {many && <button className="iconbtn" onClick={() => go(-1)} disabled={L.i === 0} aria-label="Étape précédente"><IconLeft /></button>}
+        {many ? <div className="steps" role="img" aria-label={`Étape ${Math.min(L.i + 1, L.queue.length)} sur ${L.queue.length}`}>{L.queue.map((_, i) => <i key={i} className={i <= L.i ? "on" : ""} />)}</div> : <span style={{ flex: 1 }} />}
         <button className="iconbtn" onClick={close} aria-label="Fermer la lecture">✕</button>
-        {L.queue.length > 1 && <div className="steps" role="img" aria-label={`Étape ${Math.min(L.i + 1, L.queue.length)} sur ${L.queue.length}`}>{L.queue.map((_, i) => <i key={i} className={i <= L.i ? "on" : ""} />)}</div>}
       </div>
+      <div ref={head} tabIndex={-1} className="lfocus" aria-label={finished ? "Lecture terminée" : `Étape ${L.i + 1} sur ${L.queue.length}`} />
       {finished ? (
         <div className="fin lstep">
           <div className="star"><Star pct={allDone ? 1 : 0.5} /></div>
           <h2 className="display" style={{ fontSize: "1.8rem" }}>{dayDone ? "Journée complète" : allDone ? `${L.label} : c’est fait` : "Tu y reviendras"}</h2>
           <p className="lead" style={{ margin: 0 }}>{allDone ? "Qu’Allah l’accepte." : "Ce qui reste t’attend dans ta journée."}</p>
-          {allDone && !S.gratitude?.[keyOf(new Date())] && <div style={{ width: "100%", marginTop: 14 }}><Gratitude compact /></div>}
+          {allDone && askGratitude && <div style={{ width: "100%", marginTop: 14 }}><Gratitude compact /></div>}
           <button className="bigbtn" style={{ marginTop: 18 }} onClick={close}>Revenir à ma journée</button>
         </div>
       ) : (
-        <>
-          <div className="lstep" key={L.i}><Step e={L.queue[L.i]} onNext={L.queue.length > 1 ? next : close} kicker={L.queue.length > 1 ? `${L.label} · ${L.i + 1} sur ${L.queue.length}` : null} /></div>
-        </>
+        <div className="lstep" key={L.i}><Step e={L.queue[L.i]} onNext={many ? () => go(1) : close} kicker={many ? `${L.label} · ${L.i + 1} sur ${L.queue.length}` : null} /></div>
       )}
     </div>
   );

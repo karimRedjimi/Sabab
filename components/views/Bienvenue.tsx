@@ -104,7 +104,7 @@ export function Bienvenue() {
         </div>
         {OB.cat && (
           <label className="field"><span>En une phrase, dans tes mots (facultatif)</span>
-            <input className="input" id="obtitle" maxLength={100} value={OB.title} placeholder={titleExample(OB.cat)} onChange={(e) => set({ title: e.target.value })} /></label>
+            <input className="input" id="obtitle" maxLength={100} enterKeyHint="next" onKeyDown={(e) => { if (e.key === "Enter") next(); }} value={OB.title} placeholder={titleExample(OB.cat)} onChange={(e) => set({ title: e.target.value })} /></label>
         )}
         {nav(OB.cat ? "Continuer" : "Je verrai plus tard")}
       </>

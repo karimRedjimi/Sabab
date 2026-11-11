@@ -58,16 +58,18 @@ function SignIn() {
     <section className="sec">
       {!sent ? (
         <>
-          <label className="field"><span>Ton adresse e-mail</span>
-            <input className="input" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom@exemple.fr" /></label>
-          <button className="navbtn primary" disabled={busy} onClick={send}>Recevoir un code</button>
+          <form onSubmit={(e) => { e.preventDefault(); send(); }}>
+            <label className="field"><span>Ton adresse e-mail</span>
+              <input className="input" type="email" autoComplete="email" inputMode="email" enterKeyHint="send" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom@exemple.fr" /></label>
+            <button className="navbtn primary" type="submit" disabled={busy}>Recevoir un code</button>
+          </form>
           <p className="secintro" style={{ marginTop: 12 }}>Pas de mot de passe : tu reçois un e-mail avec un code à 6 chiffres ou un lien de connexion.</p>
         </>
       ) : (
         <>
           <p className="secintro">Un e-mail vient d’être envoyé à {email.trim()}. Clique sur le lien qu’il contient, ou saisis le code ci-dessous.</p>
           <label className="field"><span>Le code reçu</span>
-            <input className="input" inputMode="numeric" autoComplete="one-time-code" maxLength={8} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} placeholder="123456" /></label>
+            <input className="input" inputMode="numeric" autoComplete="one-time-code" maxLength={8} enterKeyHint="go" autoFocus value={code} onKeyDown={(e) => { if (e.key === "Enter" && code.length >= 6) verify(); }} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} placeholder="123456" /></label>
           <div className="row">
             <button className="navbtn primary" disabled={busy || code.length < 6} onClick={verify}>Me connecter</button>
             <button className="link" onClick={() => { setSent(false); setCode(""); }}>Changer d’adresse</button>

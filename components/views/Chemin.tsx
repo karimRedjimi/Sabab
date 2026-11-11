@@ -42,8 +42,11 @@ export function Chemin() {
     const r = S.days[k];
     const pactDone = serves && n <= PARCOURS_DAYS && val(S, k, "pact:0") >= 1;
     const objDone = val(S, k, "obj:0") >= 1;
-    if (pactDone) { gestures++; evs.push({ key: k + "p", date: d, label: `Jour ${n}`, title: acts[(n - 1) % acts.length] }); }
-    if (objDone) { gestures++; evs.push({ key: k + "o", date: d, label: serves && n <= PARCOURS_DAYS ? `Jour ${n} · ton action` : "Ton action", title: r?.objAct?.trim() || "Action faite pour ton objectif" }); }
+    const act = objDone ? r?.objAct?.trim() || "" : "";
+    if (pactDone) gestures++;
+    if (objDone) gestures++;
+    if (pactDone) evs.push({ key: k + "p", date: d, label: `Jour ${n}`, title: acts[(n - 1) % acts.length], text: objDone ? (act ? `Ton action : ${act}` : "Et ton action du jour") : undefined });
+    else if (objDone) evs.push({ key: k + "o", date: d, label: serves && n <= PARCOURS_DAYS ? `Jour ${n}` : fmtShort(d), title: act || "Action faite pour ton objectif", text: act ? "Ton action du jour" : undefined });
     if (serves && (n === 7 || n === 21 || n === PARCOURS_DAYS))
       evs.push({ key: k + "m", date: d, label: `Jour ${n}`, kind: "big",
         title: n === 7 ? "Une semaine de constance" : n === 21 ? "Trois semaines sur ton chemin" : "Ton parcours est accompli",

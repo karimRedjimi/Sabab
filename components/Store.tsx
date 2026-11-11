@@ -20,8 +20,12 @@ export interface UI {
   /** Sections de moment ouvertes ou fermées, par jour et moment */
   momentOpen: Record<string, boolean>;
   /** Lecture guidée en cours : la file des étapes et la position. */
-  lecture: { queue: Entry[]; i: number; label: string; intention?: boolean } | null;
+  lecture: { queue: Entry[]; i: number; label: string; intention?: boolean; scrollY?: number } | null;
+  /** Sens du dernier changement de jour, pour l’animation. */
+  dir: -1 | 0 | 1;
 }
+
+export interface ToastAction { label: string; run: () => void }
 
 interface Ctx {
   S: State;
@@ -32,8 +36,11 @@ interface Ctx {
   replace: (S: State) => void;
   ui: UI;
   setUi: (fn: (u: UI) => Partial<UI>) => void;
-  toast: (msg: string) => void;
+  /** Message bref ; avec `action`, un bouton (par exemple « Annuler ») reste quelques secondes. */
+  toast: (msg: string, action?: ToastAction) => void;
   toastMsg: string | null;
+  toastAction: ToastAction | null;
+  dismissToast: () => void;
   /** Heure courante, rafraîchie chaque minute. */
   now: Date;
 }
@@ -46,10 +53,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [ui, setUiState] = useState<UI>(() => ({
     sel: today(), weekRef: monday(today()), bilan: { kind: "semaine", ref: monday(today()) },
-    forceOb: false, openSet: {}, textState: {}, momentOpen: {}, lecture: null,
+    forceOb: false, openSet: {}, textState: {}, momentOpen: {}, lecture: null, dir: 0,
   }));
   const [now, setNow] = useState(() => new Date());
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const [toastAction, setToastAction] = useState<ToastAction | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
@@ -70,11 +78,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const setUi = useCallback((fn: (u: UI) => Partial<UI>) => setUiState((u) => ({ ...u, ...fn(u) })), []);
 
-  const toast = useCallback((msg: string) => {
-    setToastMsg(msg);
+  const toast = useCallback((msg: string, action?: ToastAction) => {
+    setToastMsg(msg); setToastAction(action || null);
     clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(() => setToastMsg(null), 2200);
+    toastTimer.current = setTimeout(() => { setToastMsg(null); setToastAction(null); }, action ? 5000 : 2200);
   }, []);
+  const dismissToast = useCallback(() => { clearTimeout(toastTimer.current); setToastMsg(null); setToastAction(null); }, []);
 
   // Changement de jour et rafraîchissement des horaires, chaque minute.
   useEffect(() => {
@@ -98,7 +107,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  const value = useMemo(() => ({ S, hydrated, update, replace, ui, setUi, toast, toastMsg, now }), [S, hydrated, update, replace, ui, setUi, toast, toastMsg, now]);
+  const value = useMemo(() => ({ S, hydrated, update, replace, ui, setUi, toast, toastMsg, toastAction, dismissToast, now }), [S, hydrated, update, replace, ui, setUi, toast, toastMsg, toastAction, dismissToast, now]);
   return <StoreCtx.Provider value={value}>{children}</StoreCtx.Provider>;
 }
 

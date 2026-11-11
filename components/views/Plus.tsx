@@ -19,25 +19,37 @@ export function Plus() {
   const acc = useAccount();
   const p = S.parcours && PARCOURS[S.parcours.id];
   const pd = parcoursDay(S, today()), rw = rampWeek(S, today());
-  const rows: [string, string, string][] = [
-    ["/objectif", "Mon objectif", S.objective ? S.objective.title : "Pas encore fixé"],
-    ...(S.objective ? [["/chemin", "Mon chemin", "Ce que tu as parcouru"] as [string, string, string]] : []),
-    ["/parcours", "Parcours de 40 jours", p && pd ? `${p.title}, jour ${pd}` : "Aucun en cours"],
-    ["/compte", "Mon compte", acc.status === "in" ? acc.email || "Connecté" : acc.status === "off" ? "Bientôt" : "Se connecter"],
-    ["/communaute", "Communauté", acc.status === "in" ? "Invoquer les uns pour les autres" : acc.status === "off" ? "Bientôt" : "Avec un compte"],
-    ["/binome", "Mon binôme", "Bientôt"],
-    ["/bilan", "Mon bilan", "Semaine et mois"],
-    ["/rythme", "Mon rythme", rw ? `Démarrage, semaine ${rw}` : "Programme complet"],
-    ["/priere", "Horaires de prière", S.prayer ? S.prayer.city : "Ville à choisir"],
-    ["/programme", "Le programme complet", "Textes et sources"],
-    ["/donnees", "Mes données", "Exporter, importer, effacer"],
-    ["/confidentialite", "Confidentialité", "Ce que l’application garde"],
+  type Row = [string, string, string];
+  const groups: [string, Row[]][] = [
+    ["Mon programme", [
+      ["/objectif", "Mon objectif", S.objective ? S.objective.title : "Pas encore fixé"],
+      ...(S.objective ? [["/chemin", "Mon chemin", "Ce que tu as parcouru"] as Row] : []),
+      ["/parcours", "Parcours de 40 jours", p && pd ? `${p.title}, jour ${pd}` : "Aucun en cours"],
+      ["/bilan", "Mon bilan", "Semaine et mois"],
+      ["/rythme", "Mon rythme", rw ? `Démarrage, semaine ${rw}` : "Programme complet"],
+      ["/programme", "Le programme complet", "Textes et sources"],
+    ]],
+    ["Ensemble", [
+      ["/compte", "Mon compte", acc.status === "in" ? acc.email || "Connecté" : acc.status === "off" ? "Bientôt" : "Se connecter"],
+      ["/communaute", "Communauté", acc.status === "in" ? "Invoquer les uns pour les autres" : acc.status === "off" ? "Bientôt" : "Avec un compte"],
+      ["/binome", "Mon binôme", "Bientôt"],
+    ]],
+    ["Réglages", [
+      ["/priere", "Horaires de prière", S.prayer ? S.prayer.city : "Ville à choisir"],
+      ["/donnees", "Mes données", "Exporter, importer, effacer"],
+      ["/confidentialite", "Confidentialité", "Ce que l’application garde"],
+    ]],
   ];
   return (
     <>
       <div className="page"><h1>Plus</h1></div>
+      {groups.map(([title, rows]) => (
+        <section className="sec" key={title}>
+          <div className="sechead"><h2>{title}</h2></div>
+          <ul className="menu">{rows.map(([href, l, sub]) => <li key={href}><Link href={href}><b>{l}</b><span>{sub}</span><i className="chev" aria-hidden="true" /></Link></li>)}</ul>
+        </section>
+      ))}
       <Apparence />
-      <ul className="menu">{rows.map(([href, l, sub]) => <li key={href}><Link href={href}>{l} <span>{sub}</span></Link></li>)}</ul>
     </>
   );
 }
@@ -79,7 +91,7 @@ export function Objectif() {
         <p className="lead">L’invocation et l’effort vont ensemble : chaque jour, une action concrète pour ton objectif.</p></div>
       <section className="sec">
         <label className="field"><span>Ce que je veux atteindre</span>
-          <input className="input" id="otitle" maxLength={100} placeholder="Par exemple : signer trois nouveaux clients" value={title} onChange={(e) => setTitle(e.target.value)} /></label>
+          <input className="input" id="otitle" maxLength={100} enterKeyHint="done" onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }} placeholder="Par exemple : signer trois nouveaux clients" value={title} onChange={(e) => setTitle(e.target.value)} /></label>
         <label className="field"><span>Domaine</span>
           <select className="select" id="ocat" value={cat} onChange={(e) => setCat(e.target.value)}>
             {Object.entries(OBJ_CATS).map(([k, v]) => <option key={k} value={k}>{v.l}</option>)}
@@ -88,7 +100,11 @@ export function Objectif() {
           <textarea className="area" id="owhy" maxLength={400} placeholder="Ton intention, pour Allah et pour les tiens" value={why} onChange={(e) => setWhy(e.target.value)} /></label>
         <div className="row">
           <button className="navbtn primary" onClick={save}>{o ? "Mettre à jour" : "Fixer mon objectif"}</button>
-          {o && <button className="link danger" onClick={() => { update((s) => { s.objective = null; }); setTitle(""); setWhy(""); }}>Retirer l’objectif</button>}
+          {o && <button className="link danger" onClick={() => {
+            const prev = o;
+            update((s) => { s.objective = null; }); setTitle(""); setWhy("");
+            toast("Objectif retiré", { label: "Annuler", run: () => { update((s) => { s.objective = prev; }); setTitle(prev.title); setWhy(prev.why); } });
+          }}>Retirer l’objectif</button>}
         </div>
       </section>
       {o && (
@@ -115,7 +131,7 @@ export function Parcours() {
     <>
       <div className="page"><h1>Parcours de 40 jours</h1>
         <p className="lead">Des invocations ciblées et un geste concret chaque jour, pendant 40 jours. Un parcours à la fois.</p></div>
-      {Object.entries(PARCOURS).map(([id, p]) => {
+      {Object.entries(PARCOURS).sort(([x], [y]) => (cur?.id === y ? 1 : 0) - (cur?.id === x ? 1 : 0)).map(([id, p]) => {
         const active = cur && cur.id === id && pd;
         const finished = cur && cur.id === id && !pd && diffDays(today(), fromKey(cur.start)) >= PARCOURS_DAYS;
         return (
@@ -126,15 +142,16 @@ export function Parcours() {
               <>
                 <div className="learnbar"><i style={{ width: `${(pd / PARCOURS_DAYS) * 100}%` }} /></div>
                 <p style={{ fontSize: ".9rem", margin: "4px 0 10px" }}>Jour {pd} sur {PARCOURS_DAYS}</p>
-                <button className="link danger" onClick={() => update((s) => { s.parcours = null; })}>Arrêter ce parcours</button>
+                <button className="link danger" onClick={() => { const prev = cur; update((s) => { s.parcours = null; }); toast("Parcours arrêté", { label: "Annuler", run: () => update((s) => { s.parcours = prev; }) }); }}>Arrêter ce parcours</button>
               </>
             ) : (
               <>
                 {finished && <p style={{ fontSize: ".9rem", color: "var(--accent)" }}>Parcours terminé, qu’Allah l’accepte.</p>}
                 <button className="navbtn strong" onClick={() => {
+                  const prev = cur;
                   update((s) => { s.parcours = { id, start: keyOf(today()) }; });
-                  toast(`Parcours commencé : jour 1 sur ${PARCOURS_DAYS}`); router.push("/");
-                }}>{cur && pd ? "Remplacer par ce parcours" : "Commencer aujourd’hui"}</button>
+                  toast(`Parcours commencé : jour 1 sur ${PARCOURS_DAYS}`, prev && pd ? { label: "Annuler", run: () => update((s) => { s.parcours = prev; }) } : undefined); router.push("/");
+                }}>{cur && pd ? "Choisir ce parcours" : "Commencer aujourd’hui"}</button>
               </>
             )}
           </div>
