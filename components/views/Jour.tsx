@@ -21,7 +21,8 @@ import { FavorableMoments, Journal, Patience, SameNeed } from "../Moments";
 import { usePrayerSheet } from "../Salat";
 import { SALAT, dayExempt, fajrForgotten, salatOf, type SalatKey } from "@/lib/salat";
 import { Star, starPoints } from "../Star";
-import { Brand, Glyph, Tile, Sky } from "../Glyphs";
+import { Visite } from "../Visite";
+import { Brand, Glyph, Tile } from "../Glyphs";
 import { mergedGesture, needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { fromKey } from "@/lib/dates";
 
@@ -241,30 +242,6 @@ function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | nu
       </div>
       {open && <div className="subl">{list.map((e) => <Row key={`${e.id}-${e.m}`} e={e} />)}</div>}
     </>
-  );
-}
-
-/** Le premier jour : une invitation à faire sa première invocation, tout de suite. */
-function PremierJour({ first }: { first: Entry }) {
-  const { S, update, setUi } = useStore();
-  const it = getItem(S, first.id, today());
-  const go = () => {
-    update((x) => { x.guide = "lecture"; });
-    setUi(() => ({ lecture: { queue: [first], i: 0, label: "Ta première invocation", intention: first.origin === "parc", scrollY: 0 } }));
-  };
-  return (
-    <div className="fday" role="dialog" aria-modal="true" aria-labelledby="fday-t">
-      <Sky />
-      <div className="fdin">
-        <span className="fdstar" aria-hidden="true"><Star pct={0} /></span>
-        <p className="k">Bismillâh</p>
-        <h2 id="fday-t">Ta première invocation</h2>
-        <p className="fdl">{S.objective ? `${objectiveTag(S)}, une minute, maintenant.` : "Une minute, maintenant."} Ensuite, ta journée t’attend.</p>
-        <p className="fdit"><b>{it.title}</b>{it.src && <small>{it.src}</small>}</p>
-        <button className="bigbtn" onClick={go}>Commencer</button>
-        <button className="later" onClick={() => update((x) => { x.guide = "done"; })}>Plus tard</button>
-      </div>
-    </div>
   );
 }
 
@@ -633,6 +610,7 @@ export function Jour() {
       {P.actions.length > 0 && <Section m="actions" list={P.actions} cur={cur} />}
       <Foot s={s} />
       <Journal />
+      {isToday && S.guide === "start" && <Visite />}
     </div>
   );
 }
@@ -652,8 +630,6 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
   const q = isToday ? dayQueue(S, d, P, now) : null;
   const go = q && "todo" in q ? () => start(q.todo!, q.label!, q.intention) : null;
   const wait = q && "wait" in q ? q.wait : null;
-  // La première invocation proposée le premier jour : celle de l’objectif, sinon la première étape de la journée.
-  const firstStep = invoke.find((e) => entryPct(S, dk, e) < 1) || (q && "todo" in q ? q.todo![0] : null);
   return (
     <>
       <MiniBar watch={topRef} title={objectiveName(S)} done={sc.done} total={sc.total} onGo={go} />
@@ -687,7 +663,7 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
       </section>
       <Foot s={s} />
       <Journal />
-      {isToday && (S.guide === "start" || S.guide === "lecture") && firstStep && <PremierJour first={firstStep} />}
+      {isToday && (S.guide === "start" || S.guide === "lecture") && <Visite />}
     </>
   );
 }

@@ -1594,35 +1594,30 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 @keyframes wv{50%{height:100%}}
 @media (prefers-reduced-motion:reduce){.wave i,.recdock .mic.live{animation:none}}
 
-/* Le premier jour guidé */
-.fday{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;justify-content:center;color:#fff;background:radial-gradient(130% 90% at 50% 6%,#8B3A6E 0%,#5B1E47 44%,#2A0C22 100%);animation:fadeIn .35s var(--ease) backwards}
-.fday .hsky{opacity:.9}
-.fdin{position:relative;width:100%;max-width:520px;padding:24px 22px calc(26px + env(safe-area-inset-bottom,0px))}
-.fdstar{display:block;width:96px;height:96px;margin:0 0 22px;filter:drop-shadow(0 0 22px rgba(233,196,106,.4));animation:starIn .9s var(--spring) .1s backwards}
-.fdstar .star-base{fill:rgba(255,255,255,.14)}.fdstar .star-outline{stroke:rgba(233,196,106,.9);stroke-width:2}
-.fday .k{margin:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:#E9C46A;font-weight:600;animation:obRise .5s var(--ease) .2s backwards}
-.fday h2{margin:6px 0 8px;font-size:2.2rem;font-weight:650;letter-spacing:-.025em;line-height:1.08;animation:obRise .5s var(--ease) .28s backwards}
-.fdl{margin:0 0 18px;color:rgba(255,255,255,.8);font-size:1.05rem;animation:obRise .5s var(--ease) .36s backwards}
-.fdit{margin:0 0 22px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);animation:obRise .5s var(--ease) .44s backwards}
-.fdit b{display:block;font-weight:600}.fdit small{display:block;color:rgba(255,255,255,.6);font-size:.84rem;margin-top:2px}
-.fday .bigbtn{background:#fff;color:#4A1739;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:obRise .5s var(--ease) .52s backwards}
-.fday .later{color:rgba(255,255,255,.7)}
-.pe{align-items:flex-start;text-align:left}
-.pestar{position:relative;width:110px;height:110px;margin:10px 0 18px;filter:drop-shadow(0 0 24px rgba(233,196,106,.45))}
-.pestar > svg{width:100%;height:100%}
-.pestar .star-base{fill:rgba(255,255,255,.12)}.pestar .star-fill{fill:#E9C46A;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}.pestar .star-outline{stroke:none}
-.pestar .burst{left:50%;top:50%}.pestar .burst i{background:#E9C46A}.pestar .burst i:nth-child(3n){background:#fff}
-.petour{list-style:none;margin:0;padding:0;display:grid;gap:10px;width:100%}
-.petour li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.08);animation:obRise .5s var(--ease) backwards}
-.petour li:nth-child(1){animation-delay:.5s}.petour li:nth-child(2){animation-delay:.62s}.petour li:nth-child(3){animation-delay:.74s}
-.petour .obi{width:36px;height:36px;border-radius:11px;background:rgba(233,196,106,.16);color:#E9C46A;display:grid;place-items:center;flex:none}
-.petour .obi svg{width:20px;height:20px}
-.petour b{display:block;font-weight:600}
-.petour span:last-child{font-size:.9rem;color:rgba(255,255,255,.75);line-height:1.4}
-@media (prefers-reduced-motion:reduce){.fday,.fdstar,.fday *,.petour li{animation:none!important}}
 /* Partager le verset en image */
 .vfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
 .vfoot .qref{margin:0}
 .vshare{display:inline-flex;align-items:center;gap:6px;flex:none;border:0;border-radius:99px;padding:8px 14px;min-height:40px;background:var(--soft);color:var(--accent);font-weight:600;font-size:.88rem}
 .vshare svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .vshare:active{transform:scale(.96)}
+
+/* La visite du premier jour : un projecteur qui glisse d’un repère à l’autre */
+html.visiting,html.visiting body{overflow:hidden;overscroll-behavior:none}
+.visite{position:fixed;inset:0;z-index:90;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:fadeIn .3s var(--ease) backwards}
+.vspot{position:fixed;box-shadow:0 0 0 9999px rgba(26,8,21,.78),0 0 0 2px rgba(233,196,106,.9),0 0 28px 4px rgba(233,196,106,.35);transition:left .55s cubic-bezier(.3,1,.4,1),top .55s cubic-bezier(.3,1,.4,1),width .55s cubic-bezier(.3,1,.4,1),height .55s cubic-bezier(.3,1,.4,1),border-radius .55s;pointer-events:none}
+.visite.free .vspot{box-shadow:0 0 0 9999px rgba(26,8,21,.82)}
+.vskip{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:14px;z-index:2;border:0;border-radius:99px;padding:8px 14px;min-height:40px;background:rgba(255,255,255,.12);color:#fff;font-weight:600;font-size:.88rem}
+.vbub{position:fixed;left:18px;right:18px;max-width:420px;margin:0 auto;padding:16px 18px 14px;border-radius:20px;color:#fff;background:radial-gradient(140% 160% at 15% 0%,#8B3A6E 0%,#5B1E47 55%,#3A1230 100%);box-shadow:0 14px 40px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.1);animation:vIn .45s cubic-bezier(.2,.8,.2,1) .12s backwards}
+.visite.free .vbub{animation-name:vInC}
+@keyframes vIn{from{opacity:0;transform:translateY(12px) scale(.97)}}
+@keyframes vInC{from{opacity:0;transform:translateY(calc(-50% + 12px)) scale(.97)}}
+.vbub b{display:block;font-size:1.15rem;font-weight:650;letter-spacing:-.01em;margin:8px 0 2px}
+.vbub p{margin:0 0 10px;color:rgba(255,255,255,.85);font-size:.98rem;line-height:1.45}
+.vnext{display:inline-block;font-size:.8rem;font-weight:600;color:#E9C46A;letter-spacing:.02em}
+.vdots{display:flex;gap:5px}
+.vdots i{width:8px;height:8px;background:rgba(255,255,255,.25);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);transition:background .3s,transform .3s var(--spring)}
+.vdots i.past{background:#E9C46A}
+.vdots i.on{background:#fff;transform:scale(1.5)}
+@media (prefers-reduced-motion:reduce){.vspot{transition:none}.vbub,.visite{animation:none}}
+.vfoot2{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.vbub .vskip{position:static;padding:6px 12px;min-height:36px;font-size:.84rem}
