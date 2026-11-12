@@ -80,6 +80,7 @@ export function Bienvenue() {
   const finish = (withParcours: boolean) => {
     const tk = keyOf(today());
     update((s) => {
+      if (!s.onboarded) s.guide = "start";
       s.onboarded = true;
       if (OB.cat) {
         const title = OB.title.trim() || OBJ_CATS[OB.cat].l;

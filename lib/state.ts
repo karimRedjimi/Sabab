@@ -39,6 +39,8 @@ export interface State {
   coran?: Record<string, { n: number; t?: number }>;
   /** La journée du Prophète ﷺ : niveau choisi, depuis quand, et proposition du niveau suivant mise de côté jusqu’à. */
   prophete?: { lvl: 1 | 2 | 3 | 4 | 5; since: string; snooze?: string };
+  /** Le premier jour guidé : proposé à la fin de la configuration, jusqu’à la première invocation. */
+  guide?: "start" | "lecture" | "done";
   /** Dernier jour où le message de patience a été vu. */
   patienceSeen?: string;
   // Phase 2 (communauté, binôme) : conservés pour compatibilité avec le prototype.

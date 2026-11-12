@@ -5,6 +5,7 @@ import { refLabel } from "@/lib/coran";
 import { fmtDate, keyOf, today } from "@/lib/dates";
 import { uid8 } from "@/lib/state";
 import { DUA_GOAL, duasOn, mmss, versetDuJour } from "@/lib/verset";
+import { partagerVerset } from "@/lib/imageVerset";
 import { MAX_SECONDS, useRecorder } from "../Recorder";
 import { REQ_CATS } from "@/content/reglages";
 import { POUR_SON_FRERE } from "@/content/textes";
@@ -316,6 +317,7 @@ function VersetTab() {
   const canShare = acc.status === "in" && !mine;
   const one = v.verses[0];
   const card = useRef<HTMLElement>(null);
+  const [sharing, setSharing] = useState(false);
 
   return (
     <>
@@ -325,7 +327,19 @@ function VersetTab() {
         {S.show.ar && <p className="ar qar" lang="ar" dir="rtl">{one.ar}</p>}
         {S.show.ph && <p className="ph">{one.ph}</p>}
         {S.show.fr && <p className="qfr">{one.fr}</p>}
-        <p className="qref">{refLabel(v)}</p>
+        <div className="vfoot">
+          <p className="qref">{refLabel(v)}</p>
+          <button className="vshare" disabled={sharing} onClick={async () => {
+            setSharing(true);
+            try {
+              const r = await partagerVerset({ ar: one.ar, fr: one.fr, ref: refLabel(v), date: fmtDate(d) });
+              if (r === "téléchargé") toast("Image enregistrée");
+            } catch { toast("Impossible de créer l’image"); }
+            setSharing(false);
+          }}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.5 8.5 12 4l4.5 4.5M5 14v5h14v-5" /></svg>{sharing ? "Image…" : "Partager"}
+          </button>
+        </div>
       </article>
 
       <section className="sec">

@@ -1,6 +1,7 @@
 "use client";
 // Lecture guidée : une étape à la fois, en plein écran.
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { Glyph } from "../Glyphs";
 import { IconLeft } from "../Icons";
 import { GRADES } from "@/content/programme";
 import { keyOf } from "@/lib/dates";
@@ -181,6 +182,33 @@ function ItemStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker:
   );
 }
 
+/** Fin de la première invocation : la première étoile, et les trois repères de l’accueil. */
+function PremiereEtoile({ done, onEnd }: { done: boolean; onEnd: () => void }) {
+  const [p, setP] = useState(0);
+  useEffect(() => { const t = setTimeout(() => setP(1), 300); return () => clearTimeout(t); }, []);
+  if (!done) return (
+    <div className="fin lstep">
+      <h2 className="display" style={{ fontSize: "1.8rem" }}>Tu y reviendras</h2>
+      <p className="lead" style={{ margin: 0 }}>Ta première invocation t’attend sur l’accueil.</p>
+      <button className="bigbtn" style={{ marginTop: 18 }} onClick={onEnd}>Revenir à ma journée</button>
+    </div>
+  );
+  return (
+    <div className="fin lstep pe">
+      <div className="pestar"><span className="burst" aria-hidden="true">{Array.from({ length: 16 }, (_, i) => <i key={i} style={{ "--a": `${i * 22.5}deg`, "--d": `${(i % 4) * 70}ms`, "--r": `${70 + (i % 3) * 26}px` } as CSSProperties} />)}</span><Star pct={p} /></div>
+      <p className="eyebrow">Al-hamdulillâh</p>
+      <h2 className="display" style={{ fontSize: "1.9rem", margin: "4px 0 6px" }}>Ta première étoile</h2>
+      <p className="lead" style={{ margin: "0 0 18px" }}>Chaque moment accompli en allume une. Trois repères pour la suite :</p>
+      <ul className="petour">
+        <li><span className="obi"><Glyph name="sun" /></span><span><b>Tes prières</b>Touche une heure en haut de l’accueil pour noter ta prière.</span></li>
+        <li><span className="obi"><Glyph name="path" /></span><span><b>Ta journée</b>Du matin à la nuit ; « Continuer » reprend là où tu t’es arrêté.</span></li>
+        <li><span className="obi"><Glyph name="target" /></span><span><b>Ton objectif</b>Son étoile se remplit au fil des 40 jours.</span></li>
+      </ul>
+      <button className="bigbtn" style={{ marginTop: 20 }} onClick={onEnd}>C’est parti</button>
+    </div>
+  );
+}
+
 /** Le moment d’intention : quelques secondes avant d’invoquer pour son objectif. */
 function Intention({ onDone }: { onDone: () => void }) {
   const { S } = useStore();
@@ -222,7 +250,9 @@ export function Lecture() {
         <button className="iconbtn" onClick={close} aria-label="Fermer la lecture">✕</button>
       </div>
       <div ref={head} tabIndex={-1} className="lfocus" aria-label={finished ? "Lecture terminée" : `Étape ${L.i + 1} sur ${L.queue.length}`} />
-      {finished ? (
+      {finished && S.guide === "lecture" ? (
+        <PremiereEtoile done={allDone} onEnd={() => { update((s) => { s.guide = allDone ? "done" : "start"; }); close(); }} />
+      ) : finished ? (
         <div className="fin lstep">
           <div className="star"><Star pct={allDone ? 1 : 0.5} /></div>
           <h2 className="display" style={{ fontSize: "1.8rem" }}>{dayDone ? "Journée complète" : allDone ? `${L.label} : c’est fait` : "Tu y reviendras"}</h2>
@@ -231,7 +261,7 @@ export function Lecture() {
           <button className="bigbtn" style={{ marginTop: 18 }} onClick={close}>Revenir à ma journée</button>
         </div>
       ) : (
-        <div className="lstep" key={L.i}><Step e={L.queue[L.i]} onNext={many ? () => go(1) : close} kicker={many ? `${L.label} · ${L.i + 1} sur ${L.queue.length}` : null} /></div>
+        <div className="lstep" key={L.i}><Step e={L.queue[L.i]} onNext={many || S.guide === "lecture" ? () => go(1) : close} kicker={many ? `${L.label} · ${L.i + 1} sur ${L.queue.length}` : null} /></div>
       )}
     </div>
   );
