@@ -14,7 +14,7 @@ import { choisirNiveau, niveau } from "@/lib/journee";
 import { ensureDay, uid8 } from "@/lib/state";
 import { STAGES, titleExample, type Stage } from "@/lib/objective";
 import { SALAT, SALAT_LABEL } from "@/lib/salat";
-import { Glyph, Tile } from "../Glyphs";
+import { Glyph } from "../Glyphs";
 import { Star, starPoints } from "../Star";
 import { buzz, useStore } from "../Store";
 
@@ -47,13 +47,21 @@ export function Bienvenue() {
     niveau: niveau(S) as NiveauId,
   }));
   const dir = useRef<"fwd" | "back">("fwd");
+  // Changer d’étape : l’étape s’efface (220 ms), puis la suivante entre. Un double appui ne saute rien.
+  const [leaving, setLeaving] = useState(false);
+  const busy = useRef(false);
+  const move = (fn: () => void) => {
+    if (busy.current) return;
+    busy.current = true; setLeaving(true);
+    setTimeout(() => { fn(); setLeaving(false); busy.current = false; window.scrollTo(0, 0); }, 220);
+  };
   const set = (p: Partial<typeof OB>) => setOB((o) => ({ ...o, ...p }));
   const steps: Step[] = ["welcome", "ville", "objectif", ...(OB.cat ? (["ecoute"] as Step[]) : []), "arabe", "niveau", "fin"];
   const st = steps[Math.min(OB.i, steps.length - 1)];
   // Avancer depuis une étape précise : un double appui ne saute jamais une question.
-  const go = (from: number) => { dir.current = "fwd"; setOB((o) => (o.i === from ? { ...o, i: o.i + 1 } : o)); window.scrollTo(0, 0); };
+  const go = (from: number) => { dir.current = "fwd"; move(() => setOB((o) => (o.i === from ? { ...o, i: o.i + 1 } : o))); };
   const next = () => go(OB.i);
-  const back = () => { dir.current = "back"; set({ i: Math.max(0, OB.i - 1) }); window.scrollTo(0, 0); };
+  const back = () => { dir.current = "back"; move(() => setOB((o) => ({ ...o, i: Math.max(0, o.i - 1) }))); };
   const P = S.prayer;
   const pid = OB.cat ? OBJ_CATS[OB.cat].p : null;
   const parc = pid ? PARCOURS[pid] : null;
@@ -140,18 +148,7 @@ export function Bienvenue() {
           </label>
           <button className="oblocate" onClick={geoloc}><Glyph name="locate" />Utiliser ma position</button>
         </div>
-        {pt && (
-          <div className="obpray" key={P!.city}>
-            <p className="obpt">Aujourd’hui {P!.city === "Ma position" ? "là où tu es" : `à ${P!.city}`}</p>
-            <div className="obtiles">
-              {SALAT.map((k, i) => (
-                <div key={k} className="obtile" style={{ "--i": i } as CSSProperties}>
-                  <Tile k={k} size={34} /><b>{hm(pt[k])}</b><span>{SALAT_LABEL[k]}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <SunArc pt={pt} place={P ? (P.city === "Ma position" ? "là où tu es" : `à ${P.city}`) : null} key={P?.city || "vide"} />
       </>
     );
     cta = <button className={`bigbtn ${P ? "" : "sec2"}`} onClick={next}>{P ? "Continuer" : "Passer cette étape"}</button>;
@@ -224,22 +221,28 @@ export function Bienvenue() {
     );
     cta = OB.level ? <button className="bigbtn" onClick={next}>Continuer</button> : null;
   } else if (st === "niveau") {
+    const n = OB.niveau;
     body = (
       <>
-        <span className="obicon" {...stg(0)}><Glyph name="sun" /></span>
-        <p className="eyebrow" {...stg(1)}>La journée du Prophète ﷺ</p>
+        <p className="eyebrow" {...stg(0)}>La journée du Prophète ﷺ</p>
         <h1 {...stg(1)}>Par où veux-tu commencer ?</h1>
-        <p className="lead" {...stg(2)}>Prier, invoquer, se lever la nuit : t’en approcher pas à pas.</p>
-        <div className="oblist">
-          {([1, 2, 3, 4, 5] as NiveauId[]).map((n, i) => (
-            <button key={n} className="obrow" aria-pressed={OB.niveau === n} {...stg(3 + i)} onClick={() => pickAndGo({ niveau: n })}>
-              <span className="obi obn">{n}</span>
-              <span className="obl">{NIVEAUX[n].titre}<small>{n === 1 && <em className="obreco">Pour commencer</em>}{NIVEAUX[n].ajoute}</small></span>
-              <span className="obck" aria-hidden="true"><Glyph name="check" /></span>
+        <p className="lead" {...stg(2)}>Prier, invoquer, se lever la nuit : t’en approcher marche après marche.</p>
+        <div className="stairs" role="radiogroup" aria-label="Niveau" {...stg(3)}>
+          {([1, 2, 3, 4, 5] as NiveauId[]).map((k) => (
+            <button key={k} role="radio" aria-checked={n === k} aria-label={`Niveau ${k} : ${NIVEAUX[k].titre}`}
+              className={`stair ${k <= n ? "lit" : ""} ${k === n ? "on" : ""}`} style={{ "--h": k } as CSSProperties}
+              onClick={() => { buzz(10); set({ niveau: k }); }}>
+              {k === n && <span className="stairstar" aria-hidden="true"><Star pct={1} /></span>}
+              <i /><span className="sn">{k}</span>
             </button>
           ))}
         </div>
-        <p className="secintro" {...stg(9)}>Le niveau suivant te sera proposé quand tu seras prêt. Tu peux en changer à tout moment.</p>
+        <div className="stairinfo" key={n} aria-live="polite">
+          <p className="k">Niveau {n}{n === 1 && <em className="obreco">Pour commencer</em>}</p>
+          <b>{NIVEAUX[n].titre}</b>
+          <p>{NIVEAUX[n].ajoute}</p>
+        </div>
+        <p className="secintro" {...stg(5)}>Le niveau suivant te sera proposé quand tu seras prêt. Tu peux en changer à tout moment.</p>
       </>
     );
     cta = <button className="bigbtn" onClick={next}>Continuer</button>;
@@ -318,14 +321,14 @@ export function Bienvenue() {
   }
 
   return (
-    <div className={`ob2 ${st === "welcome" ? "welcome" : ""}`}>
+    <div className={`ob2 imm ${st === "welcome" ? "welcome" : ""} ${leaving ? `leaving ${dir.current}` : ""}`}>
+      <WelcomeSky step={OB.i} />
       {st !== "welcome" && (
         <header className="obtop">
           <button className="obback" onClick={back} aria-label="Question précédente"><Glyph name="arrowleft" /></button>
-          <div className="obprog" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>
+          <Chemin i={OB.i} n={steps.length} progress={progress} />
         </header>
       )}
-      {st === "welcome" && <WelcomeSky />}
       <div className={`obstep ${dir.current}`} key={st}>{body}</div>
       <footer className="obcta" key={`cta-${st}`}>{cta}</footer>
     </div>
@@ -340,10 +343,10 @@ function WelcomeStar() {
 }
 
 /** Le ciel de l’accueil : un dégradé profond, une lueur qui respire et des étoiles à huit branches qui tournent lentement. */
-function WelcomeSky() {
+function WelcomeSky({ step = 0 }: { step?: number }) {
   const stars: [number, number, number, number][] = [[12, 14, 46, 0], [86, 9, 30, 1], [78, 46, 70, 2], [8, 62, 34, 3], [52, 88, 90, 4], [92, 82, 26, 5], [30, 36, 18, 6]];
   return (
-    <div className="obsky" aria-hidden="true">
+    <div className="obsky" aria-hidden="true" style={{ "--step": step } as CSSProperties}>
       <i className="obglow" />
       <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
         {stars.map(([x, y, r, k]) => (
@@ -360,5 +363,50 @@ function Burst() {
     <span className="burst" aria-hidden="true">
       {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ "--a": `${i * 22.5}deg`, "--d": `${(i % 4) * 70}ms`, "--r": `${70 + (i % 3) * 26}px` } as CSSProperties} />)}
     </span>
+  );
+}
+
+/** Le chemin parcouru : une étoile par étape, reliées par un fil qui se dessine. */
+function Chemin({ i, n, progress }: { i: number; n: number; progress: number }) {
+  const W = 100, pts = Array.from({ length: n }, (_, k) => [4 + (k * (W - 8)) / (n - 1), k % 2 ? 6 : 10] as const);
+  const d = pts.map(([x, y], k) => `${k ? "L" : "M"}${x.toFixed(1)} ${y}`).join(" ");
+  return (
+    <div className="chemin" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)} aria-label={`Étape ${i} sur ${n - 1}`}>
+      <svg viewBox="0 0 100 16" preserveAspectRatio="none" aria-hidden="true"><path className="cfil" d={d} /><path className="cfil on" d={d} pathLength={1} style={{ strokeDashoffset: 1 - progress } as CSSProperties} /></svg>
+      {pts.map(([x, y], k) => <i key={k} className={k < i ? "past" : k === i ? "now" : ""} style={{ left: `${x}%`, top: `${(y / 16) * 100}%` }} />)}
+    </div>
+  );
+}
+
+/** La course du soleil : les cinq prières du jour posées sur l’arc, et le soleil à l’heure qu’il est. */
+function SunArc({ pt, place }: { pt: Record<"fajr" | "dhuhr" | "asr" | "maghrib" | "isha", number> | null; place: string | null }) {
+  const cx = 170, cy = 150, R = 120;
+  const a0 = pt ? pt.fajr - 1 : 5, a1 = pt ? pt.isha + 1 : 21;
+  const pos = (h: number, r = R) => { const f = Math.min(1, Math.max(0, (h - a0) / (a1 - a0))), a = Math.PI * (1 - f); return [cx + r * Math.cos(a), cy - r * Math.sin(a), f] as const; };
+  const now = new Date(), h = now.getHours() + now.getMinutes() / 60;
+  const [, , fNow] = pos(h);
+  return (
+    <div className={`sunarc ${pt ? "" : "empty"}`}>
+      <svg viewBox="0 0 340 178" aria-hidden={!pt}>
+        <defs><linearGradient id="arcg" x1="0" x2="1"><stop offset="0" stopColor="#7C8CF0" /><stop offset=".5" stopColor="#E9C46A" /><stop offset="1" stopColor="#D9622E" /></linearGradient></defs>
+        <line x1="20" x2="320" y1={cy} y2={cy} className="horizon" />
+        <path className="arc" d={`M${cx - R} ${cy} A${R} ${R} 0 0 1 ${cx + R} ${cy}`} pathLength={1} />
+        {pt && (
+          <>
+            <g className="sun" style={{ "--rot": `${fNow * 180}deg`, transformOrigin: `${cx}px ${cy}px` } as CSSProperties}><circle cx={cx - R} cy={cy} r="9" /><circle cx={cx - R} cy={cy} r="16" className="halo" /></g>
+            {SALAT.map((k, i) => {
+              const [x, y, f] = pos(pt[k]), [lx, ly] = pos(pt[k], R + 24);
+              return (
+                <g key={k} className="pp" style={{ "--i": i } as CSSProperties}>
+                  <circle cx={x} cy={y} r="5" />
+                  <text x={lx} y={ly - 4} textAnchor={f < 0.2 ? "end" : f > 0.8 ? "start" : "middle"}><tspan className="t">{hm(pt[k])}</tspan><tspan x={lx} dy="14" className="n">{SALAT_LABEL[k]}</tspan></text>
+                </g>
+              );
+            })}
+          </>
+        )}
+      </svg>
+      <p className="obpt">{place ? `Ta journée aujourd’hui, ${place}` : "Choisis ta ville pour voir ta journée"}</p>
+    </div>
   );
 }

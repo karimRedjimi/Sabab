@@ -1299,3 +1299,84 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 .burst i{width:12px;height:12px;left:-6px;top:-6px}
 .revhead .burst i{background:#E9C46A}.revhead .burst i:nth-child(3n){background:#fff}
 @keyframes obBurst{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(.3)}70%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(-1 * var(--r,78px))) scale(1) rotate(90deg)}}
+
+/* ── Accueil immersif : un même ciel d’une étape à l’autre ── */
+.ob2.imm{--bg:transparent;--surface:rgba(255,255,255,.08);--ink:#fff;--muted:rgba(255,255,255,.72);--faint:rgba(255,255,255,.35);--fill:rgba(255,255,255,.1);--line:rgba(255,255,255,.12);--soft:rgba(233,196,106,.16);--accent:#E9C46A;--accent-ink:#2A0C22;--brass:#E9C46A;--brass-soft:rgba(233,196,106,.15);color:var(--ink);position:relative}
+.ob2.imm > .obstep,.ob2.imm > .obcta,.ob2.imm > .obtop{position:relative;z-index:1}
+.ob2.imm .obtop{background:linear-gradient(to bottom,rgba(42,12,34,.0),rgba(42,12,34,0));backdrop-filter:none}
+.ob2.imm .obcta{background:linear-gradient(to bottom,rgba(42,12,34,0),rgba(42,12,34,.85) 26px)}
+.ob2.imm.welcome .obcta{background:none}
+.ob2.imm .bigbtn{background:#fff;color:#4A1739;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.ob2.imm .bigbtn.sec2{background:rgba(255,255,255,.12);color:#fff;box-shadow:none}
+.ob2.imm .later{color:rgba(255,255,255,.75)}
+.ob2.imm .obback{background:rgba(255,255,255,.1);color:#fff;box-shadow:none}
+.ob2.imm .select,.ob2.imm .input,.ob2.imm .area{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.18)}
+.ob2.imm .select option{color:#221A22}
+.ob2.imm ::placeholder{color:rgba(255,255,255,.5)}
+.ob2.imm .obcard,.ob2.imm .obrow{box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ob2.imm .obcard[aria-pressed="true"],.ob2.imm .obrow[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--accent),0 0 28px rgba(233,196,106,.18)}
+.ob2.imm .obicon{background:rgba(233,196,106,.14)}
+.ob2.imm .card{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.ob2.imm .revhead{background:rgba(255,255,255,.07);color:#fff;box-shadow:inset 0 -1px 0 rgba(255,255,255,.1)}
+.ob2.imm .secintro{color:var(--muted)}
+/* Le ciel bouge un peu à chaque étape : on avance */
+.obsky svg{transform:translateY(calc(var(--step,0) * -3.5%)) rotate(calc(var(--step,0) * 7deg)) scale(1.18);transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.ob2:not(.welcome) .obglow{opacity:.45;top:calc(18% + var(--step,0) * 5%);transition:top 1.4s var(--ease),opacity 1s}
+/* Sortie d’une étape, puis entrée de la suivante */
+.ob2.leaving > .obstep{animation:obOutF .22s var(--ease) forwards}
+.ob2.leaving.back > .obstep{animation-name:obOutB}
+.ob2.leaving > .obcta{opacity:0;transition:opacity .15s}
+@keyframes obOutF{to{opacity:0;transform:translateX(-28px) scale(.98);filter:blur(4px)}}
+@keyframes obOutB{to{opacity:0;transform:translateX(28px) scale(.98);filter:blur(4px)}}
+.obstep.fwd{animation:obInF .5s cubic-bezier(.2,.8,.2,1) backwards}
+.obstep.back{animation:obInB .5s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes obInF{from{opacity:0;transform:translateX(34px);filter:blur(6px)}}
+@keyframes obInB{from{opacity:0;transform:translateX(-34px);filter:blur(6px)}}
+/* Le chemin d’étoiles */
+.chemin{position:relative;flex:1;height:22px;margin:0 6px}
+.chemin svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.cfil{fill:none;stroke:rgba(255,255,255,.2);stroke-width:1;stroke-dasharray:1.2 1.6}
+.cfil.on{stroke:#E9C46A;stroke-dasharray:1 1;stroke-width:1.6;transition:stroke-dashoffset .8s cubic-bezier(.3,1.1,.5,1)}
+.chemin i{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;background:rgba(255,255,255,.25);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);transition:background .4s,transform .4s var(--spring)}
+.chemin i.past{background:#E9C46A}
+.chemin i.now{background:#fff;transform:scale(1.9);animation:cPulse 2.2s ease-in-out infinite}
+@keyframes cPulse{50%{transform:scale(2.3) rotate(45deg)}}
+/* La course du soleil */
+.sunarc{margin:20px -6px 0;text-align:center}
+.sunarc svg{width:100%;height:auto;overflow:visible}
+.sunarc .horizon{stroke:rgba(255,255,255,.18);stroke-width:1}
+.sunarc .arc{fill:none;stroke:url(#arcg);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:arcDraw 1.4s cubic-bezier(.3,.8,.3,1) .1s forwards}
+.sunarc.empty .arc{stroke:rgba(255,255,255,.25);stroke-dasharray:.012 .012;stroke-dashoffset:0;animation:none}
+@keyframes arcDraw{to{stroke-dashoffset:0}}
+.sunarc .sun{fill:#E9C46A;transform-box:view-box;transform:rotate(var(--rot));animation:sunGo 1.8s cubic-bezier(.3,.8,.3,1) .2s backwards}
+.sunarc .sun .halo{fill:rgba(233,196,106,.22);animation:obGlowS 3s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes sunGo{from{transform:rotate(0deg)}}
+@keyframes obGlowS{50%{transform:scale(1.35);opacity:.6}}
+.sunarc .pp{animation:obPopS .5s var(--spring) backwards;animation-delay:calc(.5s + var(--i) * 160ms);transform-box:fill-box;transform-origin:center}
+.sunarc .pp circle{fill:#fff;stroke:rgba(42,12,34,.6);stroke-width:2}
+.sunarc text{fill:#fff;font-size:12px}
+.sunarc .t{font-weight:650;font-variant-numeric:tabular-nums}
+.sunarc .n{fill:rgba(255,255,255,.65);font-size:10.5px}
+@keyframes obPopS{from{opacity:0;transform:scale(.3)}}
+.sunarc .obpt{margin:6px 0 0;color:var(--muted);font-size:.92rem}
+/* Le besoin : les autres choix s’effacent quand un est choisi */
+.obgrid:has([aria-pressed="true"]) .obcard:not([aria-pressed="true"]){opacity:.5}
+.obcard{transition:opacity .3s,transform .16s var(--ease),box-shadow .3s}
+.obcard[aria-pressed="true"] .obi{animation:pop .35s var(--spring)}
+/* L’escalier des niveaux */
+.stairs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:end;height:190px;margin:8px 0 14px}
+.stair{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;border:0;background:none;padding:0;color:#fff}
+.stair i{display:block;height:calc(var(--h) * 18% + 6%);border-radius:12px 12px 6px 6px;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);transition:background .35s,box-shadow .35s,height .4s var(--spring)}
+.stair.lit i{background:linear-gradient(to top,rgba(233,196,106,.35),rgba(233,196,106,.85))}
+.stair.on i{box-shadow:0 0 26px rgba(233,196,106,.45)}
+.stair .sn{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-weight:700;font-size:1.05rem}
+.stair.lit .sn{color:#2A0C22}
+.stairstar{position:absolute;left:50%;width:30px;height:30px;margin-left:-15px;bottom:calc(var(--h) * 18% + 6% + 8px);animation:starIn .5s var(--spring)}
+.stairstar .star-base{fill:rgba(255,255,255,.15)}.stairstar .star-fill{fill:#E9C46A}.stairstar .star-outline{stroke:none}
+.stair:active i{transform:scaleY(.97)}
+.stairinfo{background:rgba(255,255,255,.08);border-radius:18px;padding:14px 16px;margin:0 0 14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);animation:obRise .35s var(--ease) backwards}
+.stairinfo .k{margin:0 0 2px;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.stairinfo .k .obreco{margin-left:8px;text-transform:none;letter-spacing:0}
+.stairinfo b{display:block;font-size:1.15rem;font-weight:650}
+.stairinfo p:last-child{margin:4px 0 0;color:var(--muted);font-size:.94rem}
+@media (prefers-reduced-motion:reduce){.ob2.leaving > .obstep,.obstep.fwd,.obstep.back,.sunarc .arc,.sunarc .sun,.sunarc .pp,.chemin i.now,.stairstar{animation:none!important}.sunarc .arc{stroke-dashoffset:0}.obsky svg{transition:none}}
