@@ -1621,3 +1621,7 @@ html.visiting,html.visiting body{overflow:hidden;overscroll-behavior:none}
 @media (prefers-reduced-motion:reduce){.vspot{transition:none}.vbub,.visite{animation:none}}
 .vfoot2{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .vbub .vskip{position:static;padding:6px 12px;min-height:36px;font-size:.84rem}
+/* Mot de passe */
+.pwd{display:flex;gap:8px;align-items:center}
+.pwd .input{flex:1;min-width:0}
+.pwdeye{flex:none;border:0;background:var(--fill);color:var(--accent);border-radius:12px;padding:0 12px;min-height:46px;font-weight:600;font-size:.84rem}

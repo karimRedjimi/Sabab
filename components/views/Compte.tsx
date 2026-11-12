@@ -33,25 +33,70 @@ function Consent() {
   );
 }
 
+const EMAIL_OK = (e: string) => /^\S+@\S+\.\S+$/.test(e.trim());
+
+/** Un champ mot de passe, avec le bouton pour l’afficher. */
+function PasswordField({ value, onChange, label, isNew }: { value: string; onChange: (v: string) => void; label: string; isNew?: boolean }) {
+  const [show, setShow] = useState(false);
+  return (
+    <label className="field"><span>{label}</span>
+      <span className="pwd">
+        <input className="input" type={show ? "text" : "password"} autoComplete={isNew ? "new-password" : "current-password"} value={value} onChange={(e) => onChange(e.target.value)} placeholder={isNew ? "8 caractères au moins" : ""} />
+        <button type="button" className="pwdeye" onClick={() => setShow(!show)} aria-label={show ? "Masquer le mot de passe" : "Afficher le mot de passe"}>{show ? "Masquer" : "Afficher"}</button>
+      </span>
+    </label>
+  );
+}
+
 function SignIn() {
   const { toast } = useStore();
+  const [mode, setMode] = useState<"code" | "mdp">("code");
+  const [creer, setCreer] = useState(false);
   const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
+  const [pwd, setPwd] = useState("");
+  const [sent, setSent] = useState<null | "email" | "signup">(null);
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
+  const redirect = () => `${window.location.origin}/compte`;
   const send = async () => {
     if (!supabase) return;
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) { toast("Vérifie ton adresse e-mail"); return; }
+    if (!EMAIL_OK(email)) { toast("Vérifie ton adresse e-mail"); return; }
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true, emailRedirectTo: `${window.location.origin}/compte` } });
+    const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true, emailRedirectTo: redirect() } });
     setBusy(false);
     if (error) { toast(errMsg(error)); return; }
-    setSent(true); toast("E-mail envoyé, regarde ta boîte de réception");
+    setSent("email"); toast("E-mail envoyé, regarde ta boîte de réception");
+  };
+  const withPassword = async () => {
+    if (!supabase) return;
+    if (!EMAIL_OK(email)) { toast("Vérifie ton adresse e-mail"); return; }
+    if (pwd.length < 8) { toast("Mot de passe trop court : 8 caractères au moins"); return; }
+    setBusy(true);
+    if (creer) {
+      const { data, error } = await supabase.auth.signUp({ email: email.trim(), password: pwd, options: { emailRedirectTo: redirect() } });
+      setBusy(false);
+      if (error) { toast(errMsg(error)); return; }
+      // Adresse déjà inscrite : Supabase ne le dit pas directement.
+      if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) { toast("Un compte existe déjà avec cette adresse : connecte-toi"); setCreer(false); return; }
+      if (!data.session) { setSent("signup"); toast("Un code de confirmation t’a été envoyé"); }
+      return;
+    }
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: pwd });
+    setBusy(false);
+    if (error) toast(errMsg(error));
+  };
+  const forgot = async () => {
+    if (!supabase) return;
+    if (!EMAIL_OK(email)) { toast("Entre d’abord ton adresse e-mail"); return; }
+    setBusy(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: redirect() });
+    setBusy(false);
+    toast(error ? errMsg(error) : "Un lien pour choisir un nouveau mot de passe t’a été envoyé");
   };
   const verify = async () => {
-    if (!supabase) return;
+    if (!supabase || !sent) return;
     setBusy(true);
-    const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: "email" });
+    const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: sent });
     setBusy(false);
     if (error) { toast("Code incorrect ou expiré"); return; }
   };
@@ -60,37 +105,57 @@ function SignIn() {
   const withGoogle = async () => {
     if (!supabase) return;
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/compte` } });
+    const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: redirect() } });
     if (error) { setBusy(false); toast(errMsg(error)); }
   };
+
+  if (sent) return (
+    <section className="sec">
+      <p className="secintro">Un e-mail vient d’être envoyé à {email.trim()}. Saisis le code qu’il contient, ou touche son lien.</p>
+      <label className="field"><span>Le code reçu</span>
+        <input className="input" inputMode="numeric" autoComplete="one-time-code" maxLength={8} enterKeyHint="go" autoFocus value={code} onKeyDown={(e) => { if (e.key === "Enter" && code.length >= 6) verify(); }} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} placeholder="123456" /></label>
+      <div className="row">
+        <button className="navbtn primary" disabled={busy || code.length < 6} onClick={verify}>{sent === "signup" ? "Confirmer mon adresse" : "Me connecter"}</button>
+        <button className="link" onClick={() => { setSent(null); setCode(""); }}>Changer d’adresse</button>
+      </div>
+    </section>
+  );
+
   return (
     <section className="sec">
-      {!sent && google && (
+      {google && (
         <>
           <button className="gbtn" disabled={busy} onClick={withGoogle}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.2c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2.1-1.9 3.3-4.7 3.3-8z" /><path fill="#34A853" d="M12 23c3 0 5.4-1 7.2-2.7l-3.5-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.300-1.900-6.200-4.500H2.200v2.800A11 11 0 0 0 12 23z" /><path fill="#FBBC05" d="M5.800 14.200a6.600 6.600 0 0 1 0-4.300V7.100H2.200a11 11 0 0 0 0 9.900l3.600-2.800z" /><path fill="#EA4335" d="M12 5.400c1.600 0 3.100.6 4.200 1.600l3.100-3.100A11 11 0 0 0 2.200 7.100l3.600 2.800C6.700 7.300 9.100 5.400 12 5.400z" /></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.2c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2.1-1.9 3.3-4.7 3.3-8z" /><path fill="#34A853" d="M12 23c3 0 5.4-1 7.2-2.7l-3.5-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.2v2.8A11 11 0 0 0 12 23z" /><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.2a11 11 0 0 0 0 9.9l3.6-2.8z" /><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.2 7.1l3.6 2.8C6.7 7.3 9.1 5.4 12 5.4z" /></svg>
             Continuer avec Google
           </button>
           <p className="or"><span>ou avec ton e-mail</span></p>
         </>
       )}
-      {!sent ? (
+      <nav className="seg" aria-label="Comment te connecter ?">
+        <a href="#" aria-current={mode === "code" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setMode("code"); }}>Code par e-mail</a>
+        <a href="#" aria-current={mode === "mdp" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setMode("mdp"); }}>Mot de passe</a>
+      </nav>
+      {mode === "code" ? (
         <>
           <form onSubmit={(e) => { e.preventDefault(); send(); }}>
             <label className="field"><span>Ton adresse e-mail</span>
               <input className="input" type="email" autoComplete="email" inputMode="email" enterKeyHint="send" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom@exemple.fr" /></label>
             <button className="navbtn primary" type="submit" disabled={busy}>Recevoir un code</button>
           </form>
-          <p className="secintro" style={{ marginTop: 12 }}>Pas de mot de passe : tu reçois un e-mail avec un code à 6 chiffres ou un lien de connexion.</p>
+          <p className="secintro" style={{ marginTop: 12 }}>Rien à retenir : tu reçois un code à 6 chiffres. Le compte est créé à la première connexion.</p>
         </>
       ) : (
         <>
-          <p className="secintro">Un e-mail vient d’être envoyé à {email.trim()}. Clique sur le lien qu’il contient, ou saisis le code ci-dessous.</p>
-          <label className="field"><span>Le code reçu</span>
-            <input className="input" inputMode="numeric" autoComplete="one-time-code" maxLength={8} enterKeyHint="go" autoFocus value={code} onKeyDown={(e) => { if (e.key === "Enter" && code.length >= 6) verify(); }} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} placeholder="123456" /></label>
-          <div className="row">
-            <button className="navbtn primary" disabled={busy || code.length < 6} onClick={verify}>Me connecter</button>
-            <button className="link" onClick={() => { setSent(false); setCode(""); }}>Changer d’adresse</button>
+          <form onSubmit={(e) => { e.preventDefault(); withPassword(); }}>
+            <label className="field"><span>Ton adresse e-mail</span>
+              <input className="input" type="email" autoComplete={creer ? "email" : "username"} inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom@exemple.fr" /></label>
+            <PasswordField label={creer ? "Choisis un mot de passe" : "Ton mot de passe"} value={pwd} onChange={setPwd} isNew={creer} />
+            <button className="navbtn primary" type="submit" disabled={busy}>{creer ? "Créer mon compte" : "Me connecter"}</button>
+          </form>
+          <div className="row" style={{ marginTop: 10, gap: 18 }}>
+            <button className="link" onClick={() => setCreer(!creer)}>{creer ? "J’ai déjà un compte" : "Créer un compte"}</button>
+            {!creer && <button className="link" onClick={forgot}>Mot de passe oublié ?</button>}
           </div>
         </>
       )}
@@ -98,10 +163,35 @@ function SignIn() {
   );
 }
 
+/** Choisir (ou changer) son mot de passe : après « mot de passe oublié », ou depuis son compte. */
+function NewPassword({ title, onDone }: { title: string; onDone: () => void }) {
+  const { toast } = useStore();
+  const [pwd, setPwd] = useState("");
+  const [busy, setBusy] = useState(false);
+  return (
+    <form className="sec" onSubmit={async (e) => {
+      e.preventDefault();
+      if (!supabase) return;
+      if (pwd.length < 8) { toast("Mot de passe trop court : 8 caractères au moins"); return; }
+      setBusy(true);
+      const { error } = await supabase.auth.updateUser({ password: pwd });
+      setBusy(false);
+      if (error) { toast(errMsg(error)); return; }
+      toast("Mot de passe enregistré"); setPwd(""); onDone();
+    }}>
+      <div className="sechead"><h2>{title}</h2></div>
+      <input type="text" autoComplete="username" hidden readOnly />
+      <PasswordField label="Nouveau mot de passe" value={pwd} onChange={setPwd} isNew />
+      <button className="navbtn primary" type="submit" disabled={busy}>Enregistrer</button>
+    </form>
+  );
+}
+
 export function Compte() {
   const acc = useAccount();
   const { toast } = useStore();
   const [confirmDel, setConfirmDel] = useState(false);
+  const [setPwd, setSetPwd] = useState(false);
   const sync = { idle: "", syncing: "Synchronisation…", ok: "Ta progression est enregistrée sur ton compte et te suit sur tous tes appareils.", error: "La synchronisation a échoué, elle reprendra dès que possible." }[acc.sync];
   // Ouverte à la fin de la configuration du début : on propose le compte, sans l’imposer.
   const router = useRouter();
@@ -119,6 +209,7 @@ export function Compte() {
       {acc.status === "out" && <SignIn />}
       {acc.status === "consent" && <Consent />}
       {welcome && acc.status !== "off" && <p className="laterline"><button className="link" onClick={leave}>Plus tard, commencer sans compte</button></p>}
+      {acc.recovery && acc.status !== "off" && <NewPassword title="Choisis un nouveau mot de passe" onDone={acc.endRecovery} />}
       {acc.status === "in" && (
         <>
           <div className="card">
@@ -129,6 +220,8 @@ export function Compte() {
             <button className="navbtn" onClick={async () => { await acc.signOut(); toast("Déconnecté. Ta progression reste sur cet appareil."); }}>Me déconnecter</button>
             {acc.moderator && <Link className="navbtn strong" href="/moderation">Modération</Link>}
           </div>
+          {setPwd ? <NewPassword title="Mon mot de passe" onDone={() => setSetPwd(false)} />
+            : <p style={{ margin: "0 0 22px" }}><button className="link" onClick={() => setSetPwd(true)}>Choisir ou changer mon mot de passe</button></p>}
           <section className="sec"><div className="sechead"><h2>Supprimer mon compte</h2></div>
             <p className="secintro">Supprime définitivement ton compte, tes données enregistrées et tes demandes dans la communauté. Ce qui est sur cet appareil reste, tu peux l’effacer dans <Link href="/donnees">Mes données</Link>.</p>
             {confirmDel ? (

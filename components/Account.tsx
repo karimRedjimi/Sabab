@@ -14,6 +14,9 @@ interface Acc {
   email: string | null;
   sync: "idle" | "syncing" | "ok" | "error";
   moderator: boolean;
+  /** Arrivé depuis le lien « mot de passe oublié » : il faut en choisir un nouveau. */
+  recovery: boolean;
+  endRecovery: () => void;
   giveConsent: () => Promise<void>;
   signOut: () => Promise<void>;
   deleteAccount: () => Promise<void>;
@@ -27,6 +30,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<Status>(supabase ? "loading" : "off");
   const [sync, setSync] = useState<Acc["sync"]>("idle");
   const [moderator, setModerator] = useState(false);
+  const [recovery, setRecovery] = useState(false);
   const ready = useRef(false);
   const lastPushed = useRef(0);
   const sRef = useRef(S); sRef.current = S;
@@ -34,7 +38,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!supabase) return;
     supabase.auth.getSession().then(({ data }) => { setSession(data.session); if (!data.session) setStatus("out"); });
-    const { data } = supabase.auth.onAuthStateChange((_e, s) => { setSession(s); if (!s) { setStatus("out"); ready.current = false; } });
+    const { data } = supabase.auth.onAuthStateChange((e, s) => { if (e === "PASSWORD_RECOVERY") setRecovery(true); setSession(s); if (!s) { setStatus("out"); ready.current = false; } });
     return () => data.subscription.unsubscribe();
   }, []);
 
@@ -104,7 +108,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AccCtx.Provider value={{ status, email: session?.user.email ?? null, sync, moderator, giveConsent, signOut, deleteAccount }}>
+    <AccCtx.Provider value={{ status, email: session?.user.email ?? null, sync, moderator, recovery, endRecovery: () => setRecovery(false), giveConsent, signOut, deleteAccount }}>
       {children}
     </AccCtx.Provider>
   );

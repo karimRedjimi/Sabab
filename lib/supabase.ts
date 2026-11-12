@@ -38,6 +38,12 @@ export const REQ_CAT_OF: Record<string, string> = { emploi: "emploi", activite: 
 /** Message d’erreur lisible à partir d’une erreur Supabase. */
 export function errMsg(e: unknown) {
   const m = (e as { message?: string })?.message || "";
+  if (/Invalid login credentials/i.test(m)) return "E-mail ou mot de passe incorrect";
+  if (/Email not confirmed/i.test(m)) return "Confirme d’abord ton adresse : regarde ta boîte mail";
+  if (/Password should be at least|weak/i.test(m)) return "Mot de passe trop court : 8 caractères au moins";
+  if (/already registered|already been registered/i.test(m)) return "Un compte existe déjà avec cette adresse : connecte-toi";
+  if (/should be different/i.test(m)) return "Choisis un mot de passe différent de l’ancien";
+  if (/rate limit|security purposes/i.test(m)) return "Trop de tentatives, réessaie dans une minute";
   if (/limite atteinte/.test(m)) return "Tu as déjà publié trois demandes aujourd’hui";
   if (/une récitation par jour/.test(m)) return "Tu as déjà partagé ta récitation aujourd’hui";
   if (/accord pour la voix/.test(m)) return "Il faut d’abord donner ton accord pour partager ta voix";
