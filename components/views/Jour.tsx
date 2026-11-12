@@ -20,7 +20,7 @@ import { choisirNiveau, niveau, niveauSuivant, niveauTitre, planDuJour, plusTard
 import { FavorableMoments, Journal, Patience, SameNeed } from "../Moments";
 import { usePrayerSheet } from "../Salat";
 import { SALAT, dayExempt, fajrForgotten, salatOf, type SalatKey } from "@/lib/salat";
-import { Star } from "../Star";
+import { Star, starPoints } from "../Star";
 import { Brand, Glyph, Tile } from "../Glyphs";
 import { mergedGesture, needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { fromKey } from "@/lib/dates";
@@ -106,6 +106,46 @@ function DateBar({ refEl }: { refEl?: React.RefObject<HTMLDivElement | null> }) 
   );
 }
 
+/** Le bandeau du haut : le ciel de l’accueil, immobile, avec la date et les prières du jour. */
+const SKY: [number, number, number][] = [[30, 30, 40], [330, 20, 26], [300, 150, 52], [60, 180, 22]];
+function Bandeau({ refEl, d }: { refEl?: React.RefObject<HTMLDivElement | null>; d: Date }) {
+  return (
+    <header className="hero2">
+      <svg className="hsky" viewBox="0 0 360 230" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        {SKY.map(([x, y, r], i) => <polygon key={i} points={starPoints(x, y, r)} />)}
+      </svg>
+      <div className="hb"><DateBar refEl={refEl} /><Prayers d={d} /></div>
+    </header>
+  );
+}
+
+/** La course du soleil : les prières sur l’arc, en or une fois notées, et le soleil à l’heure qu’il est. */
+function PrayerArc({ pt, states, sunAt }: { pt: Record<SalatKey, number>; states: Record<SalatKey, "done" | "next" | "">; sunAt: number | null }) {
+  const cx = 170, cy = 118, R = 104, k = 0.78;
+  const a0 = pt.fajr - 1, a1 = pt.isha + 1;
+  const pos = (h: number) => { const f = Math.min(1, Math.max(0, (h - a0) / (a1 - a0))), a = Math.PI * (1 - f); return [cx + R * Math.cos(a), cy - R * Math.sin(a) * k, f] as const; };
+  const path = `M${cx - R} ${cy} A${R} ${R * k} 0 0 1 ${cx + R} ${cy}`;
+  const sun = sunAt == null ? null : pos(sunAt);
+  return (
+    <svg className="harc" viewBox="0 0 340 128" aria-hidden="true">
+      <defs><linearGradient id="hg" x1="0" x2="1"><stop offset="0" stopColor="#9AA6F5" /><stop offset=".5" stopColor="#E9C46A" /><stop offset="1" stopColor="#E07A45" /></linearGradient></defs>
+      <line x1="24" x2="316" y1={cy} y2={cy} className="hz" />
+      <path d={path} className="ar0" />
+      <path d={path} className="ar1" pathLength={1} style={{ strokeDashoffset: sun ? 1 - sun[2] : 0 }} />
+      {sun && <><circle cx={sun[0]} cy={sun[1]} r="15" className="halo" /><circle cx={sun[0]} cy={sun[1]} r="8" className="sun" /></>}
+      {SALAT.map((key) => {
+        const [x, y] = pos(pt[key]), st = states[key];
+        return (
+          <g key={key} className={`ap ${st}`}>
+            <circle cx={x} cy={y} r={st ? 7 : 5} />
+            {st === "done" && <path d={`M${x - 3} ${y}l2 2 4-4`} className="tick" />}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 /** Une ligne fine sous le titre : l’objectif et l’avancée du parcours. */
 function ObjectiveLine() {
   const { S, ui } = useStore();
@@ -130,25 +170,24 @@ function useStartLecture() {
 }
 
 /** Le rappel de l’objectif : court, avec un seul bouton pour avancer dans la journée. */
-function NeedCard({ onGo, wait, started, allDone }: { onGo: (() => void) | null; wait?: { label: string; at: string } | null; started: boolean; allDone: boolean }) {
+function NeedCard({ onGo, goLabel, wait, started, allDone }: { onGo: (() => void) | null; goLabel?: string; wait?: { label: string; at: string } | null; started: boolean; allDone: boolean }) {
   const { S, ui, update, toast } = useStore();
   const d = ui.sel, isToday = sameDay(d, today());
   const serves = parcoursServesObjective(S), pd = serves ? parcoursDay(S, d) : 0, finished = parcoursFinished(S, d);
+  const pct = finished ? 1 : pd / PARCOURS_DAYS;
   return (
-    <div className="need slim">
+    <div className="need slim obj2">
       <Link className="needhead" href="/chemin" aria-label="Voir mon chemin">
+        <span className="ostar" role="img" aria-label={finished ? `${PARCOURS_DAYS} jours accomplis` : pd ? `Jour ${pd} sur ${PARCOURS_DAYS}` : "Parcours non commencé"}>
+          <Star pct={Math.max(pct, 0.02)} />{pd > 0 && !finished && <b>{pd}</b>}
+        </span>
         <span className="nh">
           <span className="k">Ton objectif</span>
           <span className="nt">{objectiveName(S)}</span>
+          {(pd > 0 || finished) && <span className="ns">{finished ? `${PARCOURS_DAYS} jours accomplis` : `Jour ${pd} sur ${PARCOURS_DAYS}`}</span>}
         </span>
         <span className="chev" aria-hidden="true" />
       </Link>
-      {(pd > 0 || finished) && (
-        <div className="nprog" aria-label={finished ? `${PARCOURS_DAYS} jours accomplis` : `Jour ${pd} sur ${PARCOURS_DAYS}`}>
-          <span>{finished ? `${PARCOURS_DAYS} jours accomplis` : `Jour ${pd} sur ${PARCOURS_DAYS}`}</span>
-          <span className="pbar"><i style={{ width: `${finished ? 100 : (pd / PARCOURS_DAYS) * 100}%` }} /></span>
-        </div>
-      )}
       {finished && (
         <div className="needfin">
           <p>Tes {PARCOURS_DAYS} jours sont accomplis, qu’Allah les accepte.</p>
@@ -160,7 +199,7 @@ function NeedCard({ onGo, wait, started, allDone }: { onGo: (() => void) | null;
       )}
       {!serves && !finished && <Link className="needlink" href="/parcours">Commencer le parcours de {PARCOURS_DAYS} jours</Link>}
       {isToday && (onGo
-        ? <button className="go" onClick={onGo}>{started ? "Continuer" : "Commencer ma journée"}</button>
+        ? <button className="go" onClick={onGo}>{started ? `Continuer${goLabel ? ` · ${goLabel}` : ""}` : "Commencer ma journée"}</button>
         : wait ? <button className="go wait" disabled>La suite : {wait.label.toLowerCase()}, dès {wait.at}</button>
         : allDone ? <p className="needdone">Journée accomplie, qu’Allah l’accepte.</p> : null)}
     </div>
@@ -205,13 +244,18 @@ function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | nu
   );
 }
 
+/** Un nœud du fil de la journée : une étoile dorée quand c’est fait. */
+function TlNode({ done, now }: { done: boolean; now?: boolean }) {
+  return <span className={`nd ${done ? "done" : now ? "now" : ""}`} aria-hidden="true">{done && <Star pct={1} />}</span>;
+}
+
 /** Le niveau de la journée du Prophète ﷺ, en une ligne discrète. */
 function NiveauLigne() {
   const { S } = useStore();
   const n = niveau(S);
   return (
     <Link className="lvline" href="/rythme" aria-label={`Journée du Prophète ﷺ, niveau ${n} sur 5 : ${niveauTitre(n)}. Changer de niveau`}>
-      <span className="lvdots" aria-hidden="true">{[1, 2, 3, 4, 5].map((i) => <i key={i} className={i <= n ? "on" : ""} />)}</span>
+      <span className="lvst" aria-hidden="true">{[1, 2, 3, 4, 5].map((i) => <i key={i} className={i <= n ? "on" : ""} />)}</span>
       <span><b>Journée du Prophète ﷺ</b> · niveau {n}</span>
       <span className="chev" aria-hidden="true" />
     </Link>
@@ -314,14 +358,17 @@ function Prayers({ d }: { d: Date }) {
   return (
     <div className="pblock" aria-label={`Horaires de prière, ${S.prayer.city}`}>
       <div className="pnext">{head}{wait && <span>{wait}</span>}</div>
+      <PrayerArc pt={pt} sunAt={isToday ? h : null} states={Object.fromEntries(list.map(([k], i) => {
+        const r = salatOf(S, dk, k as SalatKey);
+        return [k, r && r.s !== "ex" ? "done" : i === nextIdx ? "next" : ""];
+      })) as Record<SalatKey, "done" | "next" | "">} />
       <div className="prow5">
         {list.map(([k, n, t], i) => {
           const r = salatOf(S, dk, k as SalatKey), notYet = isToday && t > h;
           const state = !r ? "" : r.s === "ex" ? "non concerné(e)" : r.s === "qada" ? "rattrapée" : r.m ? "priée à la mosquée" : "priée";
           return (
-            <button key={k} className={`${i === nextIdx ? "now" : ""} ${notYet ? "fut" : ""} ${r ? "noted" : ""}`} disabled={notYet}
+            <button key={k} className={`${i === nextIdx ? "now" : ""} ${notYet ? "fut" : ""} ${r && r.s !== "ex" ? "noted" : ""} ${r?.m ? "mq" : ""}`} disabled={notYet}
               aria-label={`${n} à ${hm(t)}${state ? `, ${state}` : notYet ? "" : ", à noter"}`} onClick={() => sheet.open(d, k as SalatKey)}>
-              <span className="tw"><Tile k={k} size={44} />{r && r.s !== "ex" && <span className={`okb ${r.m ? "mq" : ""} ${r.s === "qada" ? "late" : ""}`} aria-hidden="true" />}</span>
               <b>{hm(t)}</b><span>{n}</span>
             </button>
           );
@@ -535,8 +582,7 @@ export function Jour() {
   return (
     <div className={`day ${anim}`} key={dk} {...swipe.handlers}>
       <MiniBar watch={topRef} title={title} done={doneCount} total={ids.length} onGo={q ? () => start(q.todo, q.label) : null} />
-      <DateBar />
-      <div className="reperes"><Prayers d={d} /></div>
+      <Bandeau d={d} />
       <div className="top" ref={topRef}>
         <div>
           <h1 className="display">{title}</h1>
@@ -576,14 +622,8 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
   const isNeed = (e: Entry) => e.origin === "parc" && e.id !== "pact";
   const order = ["matin", "jour", "soir", "nuit"] as const;
   const invoke = order.flatMap((m) => P.sections[m].filter(isNeed));
-  const rank = (m: Moment, l: readonly Entry[]) => {
-    const c = secCount(S, [...l], dk), done = c.total > 0 && c.done === c.total;
-    if (done) return 3;
-    if (m === cur) return 0;
-    return cur && order.indexOf(m as "matin") < order.indexOf(cur as "matin") ? 1 : 2;
-  };
-  const socle = order.map((m) => [m, P.sections[m].filter((e) => !isNeed(e) && e.id !== "obj" && e.id !== "pact")] as const).filter(([, l]) => l.length)
-    .sort((a, b) => rank(a[0], a[1]) - rank(b[0], b[1]) || order.indexOf(a[0]) - order.indexOf(b[0]));
+  // Le fil de la journée suit l’ordre du jour : matin, journée, soir, nuit.
+  const socle = order.map((m) => [m, P.sections[m].filter((e) => !isNeed(e) && e.id !== "obj" && e.id !== "pact")] as const).filter(([, l]) => l.length);
   const sc = secCount(S, [...invoke, ...socle.flatMap(([, l]) => l)], dk);
   const q = isToday ? dayQueue(S, d, P, now) : null;
   const go = q && "todo" in q ? () => start(q.todo!, q.label!, q.intention) : null;
@@ -591,10 +631,9 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
   return (
     <>
       <MiniBar watch={topRef} title={objectiveName(S)} done={sc.done} total={sc.total} onGo={go} />
-      <DateBar refEl={topRef} />
+      <Bandeau refEl={topRef} d={d} />
       {!isToday && <PastBanner />}
-      <div className="reperes"><Prayers d={d} /></div>
-      <NeedCard onGo={go} wait={wait} started={sc.done > 0} allDone={sc.total > 0 && sc.done === sc.total} />
+      <NeedCard onGo={go} goLabel={q && "todo" in q ? q.label : undefined} wait={wait} started={sc.done > 0} allDone={sc.total > 0 && sc.done === sc.total} />
       <Coach s={s} only="light" />
       {isToday && (
         <div className="notices">
@@ -609,9 +648,15 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
       <section className="sec">
         <div className="sechead"><h2>Ta journée</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
         {!s.light && <NiveauLigne />}
-        <div className="list">
-          {invoke.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention tile="objectif" />)}
-          {socle.map(([m, l]) => <SocleRow key={m} m={m} list={[...l]} cur={cur} />)}
+        <div className="tl">
+          {invoke.map((e) => (
+            <div key={`${e.id}-${e.m}`} className={`tr ${entryPct(S, dk, e) >= 1 ? "done" : ""}`}><TlNode done={entryPct(S, dk, e) >= 1} /><Row e={e} intention tile="objectif" /></div>
+          ))}
+          {socle.map(([m, l]) => {
+            const c = secCount(S, [...l], dk), done = c.total > 0 && c.done === c.total;
+            const st = done ? "done" : !momentOuvert(S, d, m, now) ? "lock" : m === cur ? "now" : "";
+            return <div key={m} className={`tr ${st}`}><TlNode done={done} now={st === "now"} /><SocleRow m={m} list={[...l]} cur={cur} /></div>;
+          })}
         </div>
       </section>
       <Foot s={s} />

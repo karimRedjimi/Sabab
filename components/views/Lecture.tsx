@@ -150,11 +150,11 @@ function ItemStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker:
         {hasText && <ShowChips />}
         {slot.t > 1 ? (
           <>
-            <button className={`tapper ${v >= slot.t ? "full" : ""}`} onClick={() => count("inc", k)} aria-label={`${slot.l} : ${v} sur ${slot.t}. Toucher pour compter`}>
-              <b><span className="bump" key={v}>{v}</span> <small>/ {slot.t}</small></b>
-              <span>{v >= slot.t ? "Objectif atteint" : "Touche pour compter"}</span>
-              <span className="bar"><i style={{ width: `${Math.min(v / slot.t, 1) * 100}%` }} /></span>
+            <button className={`cring ${v >= slot.t ? "full" : ""}`} onClick={() => count("inc", k)} aria-label={`${slot.l} : ${v} sur ${slot.t}. Toucher pour compter`}>
+              <svg viewBox="0 0 150 150" aria-hidden="true"><circle className="r0" cx="75" cy="75" r="66" /><circle className="r1" cx="75" cy="75" r="66" pathLength={100} style={{ strokeDasharray: `${Math.min(v / slot.t, 1) * 100} 100` }} /></svg>
+              <span className="cin"><b className="bump" key={v}>{v}</b><small>sur {slot.t}</small></span>
             </button>
+            <p className="cring-hint">{v >= slot.t ? "Objectif atteint" : "Touche le cercle pour compter"}</p>
             <div className="tapsub">
               <button onClick={() => count("dec", k)} aria-label="Retirer un">−1</button>
               <button onClick={() => count("reset", k)} disabled={v === 0}>Remettre à zéro</button>

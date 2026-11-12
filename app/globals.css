@@ -1380,3 +1380,139 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 .stairinfo b{display:block;font-size:1.15rem;font-weight:650}
 .stairinfo p:last-child{margin:4px 0 0;color:var(--muted);font-size:.94rem}
 @media (prefers-reduced-motion:reduce){.ob2.leaving > .obstep,.obstep.fwd,.obstep.back,.sunarc .arc,.sunarc .sun,.sunarc .pp,.chemin i.now,.stairstar{animation:none!important}.sunarc .arc{stroke-dashoffset:0}.obsky svg{transition:none}}
+
+/* =========================================================
+   Habillage « ciel » de l’application : bandeau, course du soleil,
+   étoile de l’objectif, fil de la journée, nuit prune, lecture sombre.
+   Rien ne bouge en continu : dégradés et dessins fixes.
+   ========================================================= */
+:root{--gold:#C99A2E;--fill:#EFEAF0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1A0B16; --surface:#28141F; --fill:#36202D; --ink:#F6EEF3; --muted:#B9A8B3; --faint:#6F5866; --line:#3A2430;
+  --accent:#E9C46A; --accent-ink:#2A0C22; --soft:rgba(233,196,106,.14); --brass:#D98E5B; --brass-soft:rgba(217,142,91,.14); --gold:#E9C46A}}
+:root[data-theme="dark"]{
+  --bg:#1A0B16; --surface:#28141F; --fill:#36202D; --ink:#F6EEF3; --muted:#B9A8B3; --faint:#6F5866; --line:#3A2430;
+  --accent:#E9C46A; --accent-ink:#2A0C22; --soft:rgba(233,196,106,.14); --brass:#D98E5B; --brass-soft:rgba(217,142,91,.14); --gold:#E9C46A}
+
+/* Le bandeau du haut */
+.hero2{position:relative;margin:-18px -18px 0;padding:10px 18px 30px;color:#fff;background:radial-gradient(130% 120% at 50% 0%,#8B3A6E 0%,#5B1E47 50%,#3A1230 100%);border-radius:0 0 30px 30px;overflow:hidden}
+:root[data-theme="dark"] .hero2{background:radial-gradient(130% 120% at 50% 0%,#5C2149 0%,#3A1230 55%,#22101C 100%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero2{background:radial-gradient(130% 120% at 50% 0%,#5C2149 0%,#3A1230 55%,#22101C 100%)}}
+.hsky{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hsky polygon{fill:none;stroke:rgba(255,255,255,.1);stroke-width:1}
+.hb{position:relative}
+.hero2 .brand{margin-left:0;margin-right:0}
+.hero2 .brand b,.hero2 .datenav2,.hero2 .datenav2 button{color:#fff}
+.hero2 .brand > svg polygon{fill:#E9C46A}
+.hero2 .datenav2 button:active{background:rgba(255,255,255,.12)}
+.hero2 .dateline{margin:2px 0 14px;color:rgba(255,255,255,.72)}
+.hero2 .dateline b{color:#fff}
+.hero2 .pblock{background:none;box-shadow:none;padding:0;border-radius:0}
+.hero2 .pnext{margin:0 0 0}
+.hero2 .pnext b{font-size:1.15rem;font-weight:650}
+.hero2 .pnext span{color:#E9C46A;font-size:1rem}
+.harc{display:block;width:100%;height:auto;margin:4px 0 0;overflow:visible}
+.harc .hz{stroke:rgba(255,255,255,.16)}
+.harc .ar0{fill:none;stroke:rgba(255,255,255,.2);stroke-width:2;stroke-dasharray:3 4}
+.harc .ar1{fill:none;stroke:url(#hg);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:1}
+.harc .halo{fill:rgba(233,196,106,.22)}
+.harc .sun{fill:#E9C46A}
+.harc .ap circle{fill:#5B1E47;stroke:rgba(255,255,255,.7);stroke-width:1.6}
+.harc .ap.done circle{fill:#E9C46A;stroke:none}
+.harc .ap .tick{fill:none;stroke:#3A1230;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.harc .ap.next circle{fill:#fff;stroke:#E9C46A;stroke-width:3}
+.hero2 .prow5{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin:0 -4px 6px}
+.hero2 .prow5 > button{padding:7px 0 6px;border-radius:12px;color:#fff}
+.hero2 .prow5 > button b{font-size:.98rem;font-weight:650;color:#fff}
+.hero2 .prow5 > button span{display:block;font-size:.72rem;color:rgba(255,255,255,.62)}
+.hero2 .prow5 > button.noted b{color:#E9C46A}
+.hero2 .prow5 > button.now{background:rgba(255,255,255,.1)}
+.hero2 .prow5 > button.now span{color:#fff;font-weight:600}
+.hero2 .prow5 > button.fut{opacity:1}
+.hero2 .prow5 > button:not(:disabled):active{background:rgba(255,255,255,.14)}
+.hero2 .phint{color:rgba(255,255,255,.65)}
+.hero2 .phint .link{color:#E9C46A}
+.hero2 .phint.ask{background:rgba(255,255,255,.1);color:#fff}
+.hero2 .phint.ask b{color:#E9C46A}
+.hero2 .prnote{color:#E9C46A}
+.hero2 .pblock .fav.inl{margin:6px 0 0;border:0;background:rgba(255,255,255,.08);border-radius:14px}
+.hero2 .fav.inl .favsum{padding:4px 12px}
+.hero2 .fav.inl .favline{color:rgba(255,255,255,.72)}
+.hero2 .fav.inl .favline b{color:#fff}
+.hero2 .fav.inl .favdot{background:#E9C46A}
+.hero2 .fav .chev{border-color:rgba(255,255,255,.5)}
+.hero2 .favmore .favrow{border-top-color:rgba(255,255,255,.1)}
+.hero2 .favmore .rt b{color:#fff}.hero2 .favmore .rt small,.hero2 .favsrc{color:rgba(255,255,255,.65)}
+.hero2 .favsrc{border-top-color:rgba(255,255,255,.1)}
+.hero2 .banner{background:rgba(255,255,255,.1);color:#fff}
+.hero2 .banner .act{color:#E9C46A}
+/* L’étoile de l’objectif */
+.need.obj2{position:relative;z-index:1;margin:-20px 4px 18px;padding:16px;border-radius:22px;box-shadow:0 8px 28px color-mix(in srgb,#3A1230 14%,transparent)}
+:root[data-theme="dark"] .need.obj2{box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.obj2 .needhead{gap:14px;align-items:center}
+.ostar{position:relative;width:62px;height:62px;flex:none}
+.ostar svg{width:100%;height:100%}
+.ostar .star-base{fill:var(--soft)}
+.ostar .star-fill{fill:var(--gold)}
+.ostar .star-outline{stroke:none}
+.ostar b{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;color:var(--accent);font-size:1.05rem;padding-top:2px}
+.obj2 .nh{flex:1;min-width:0}
+.obj2 .nt{font-size:1.3rem;margin:1px 0}
+.obj2 .ns{color:var(--muted);font-weight:400;font-size:.88rem}
+.obj2 .go{margin-top:14px}
+/* La ligne du niveau : cinq étoiles */
+.lvst{display:flex;gap:3px;flex:none}
+.lvst i{width:10px;height:10px;background:var(--fill);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.lvst i.on{background:var(--gold)}
+/* Le fil de la journée */
+.tl{position:relative;padding-left:26px}
+.tr{position:relative;padding-bottom:8px}
+.tr::before{content:"";position:absolute;left:-18px;top:0;bottom:0;width:2px;background:var(--line)}
+.tr:first-child::before{top:34px}
+.tr:last-child::before{bottom:calc(100% - 34px)}
+.tr.done::before{background:var(--gold)}
+.tr > .rowi{background:var(--surface);border-top:0;border-radius:18px;box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 4%,transparent)}
+.tr > .rowi:has(+ .subl){border-radius:18px 18px 0 0}
+.tr > .subl{background:var(--surface);border-radius:0 0 18px 18px;border-top:1px solid var(--line);overflow:hidden}
+.tr > .subl .rowi:first-child{border-top:0}
+.nd{position:absolute;left:-26px;top:25px;width:18px;height:18px;display:grid;place-items:center;z-index:1}
+.nd:not(.done):not(.now)::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--bg);box-shadow:0 0 0 2px var(--faint)}
+.nd.now::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+.nd svg{width:18px;height:18px}.nd .star-base{fill:var(--gold)}.nd .star-fill{fill:var(--gold)}.nd .star-outline{stroke:none}
+.tr.now > .rowi{box-shadow:inset 0 0 0 1.5px var(--accent),0 6px 18px color-mix(in srgb,var(--accent) 12%,transparent)}
+.tr.lock > .rowi{opacity:.62}
+.tr.done > .rowi .rt b{color:var(--muted)}
+/* Onglets : une étoile dorée sous l’onglet actif */
+.tabs a[aria-current="page"]{background:none}
+.tabs a[aria-current="page"]::after{content:"";position:absolute;bottom:2px;left:50%;width:7px;height:7px;margin-left:-3.5px;background:var(--gold);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+
+/* La lecture guidée, sur le ciel prune, dans les deux modes */
+.lec{--bg:transparent;--surface:rgba(255,255,255,.08);--ink:#fff;--muted:rgba(255,255,255,.7);--faint:rgba(255,255,255,.35);--fill:rgba(255,255,255,.1);--line:rgba(255,255,255,.12);--soft:rgba(233,196,106,.16);--accent:#E9C46A;--accent-ink:#2A0C22;--brass:#E9C46A;--brass-soft:rgba(233,196,106,.15);color:var(--ink);position:relative;isolation:isolate}
+.lec::before{content:"";position:fixed;inset:0;z-index:-1;background:
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 844' preserveAspectRatio='xMidYMid slice'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.07)'%3E%3Cpath d='M40 44l13 31 31 13-31 13-13 31-13-31-31-13 31-13z'/%3E%3Cpath d='M340 40l8 19 19 8-19 8-8 19-8-19-19-8 19-8z'/%3E%3Cpath d='M300 490l20 48 48 20-48 20-20 48-20-48-48-20 48-20z'/%3E%3Cpath d='M30 680l10 23 23 10-23 10-10 23-10-23-23-10 23-10z'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat,
+  radial-gradient(130% 80% at 50% 0%,#7E3264 0%,#4A1739 48%,#220A1C 100%)}
+.lec .iconbtn{background:rgba(255,255,255,.1);color:#fff}
+.lec .steps i{background:rgba(255,255,255,.18)}.lec .steps i.on{background:#E9C46A}
+.lec h2{color:#fff}
+.lec .ar,.lec .qar{color:#fff}
+.lec .ph{color:rgba(255,255,255,.78)}
+.lec .lact{background:linear-gradient(to bottom,rgba(34,10,28,0),rgba(34,10,28,.92) 22px)}
+.lec .bigbtn{background:#fff;color:#4A1739;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.lec .bigbtn.sec2{background:rgba(255,255,255,.12);color:#fff;box-shadow:none}
+.lec .chip{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75)}
+.lec .chip[aria-pressed="true"]{background:rgba(233,196,106,.2);color:#E9C46A}
+.lec .later,.lec .tapsub button{color:rgba(255,255,255,.7)}
+.lec .input,.lec .area{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.18)}
+.lec .fin .star .star-base{fill:rgba(255,255,255,.12)}.lec .fin .star .star-fill{fill:#E9C46A}.lec .fin .star .star-outline{stroke:none}
+.cring{position:relative;display:grid;place-items:center;width:156px;height:156px;margin:6px auto 0;border:0;border-radius:50%;background:none;color:#fff;padding:0;transition:transform .16s var(--ease)}
+.cring:active{transform:scale(.96)}
+.cring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.cring circle{fill:none;stroke-width:8}
+.cring .r0{stroke:rgba(255,255,255,.12)}
+.cring .r1{stroke:#E9C46A;stroke-linecap:round;transition:stroke-dasharray .25s var(--ease)}
+.cring.full .r1{filter:drop-shadow(0 0 8px rgba(233,196,106,.6))}
+.cring .cin{position:relative;display:flex;flex-direction:column;align-items:center}
+.cring b{font-size:2.6rem;font-weight:650;line-height:1;font-variant-numeric:tabular-nums}
+.cring small{color:rgba(255,255,255,.65);font-size:.86rem;margin-top:3px}
+.cring-hint{text-align:center;margin:8px 0 2px;color:rgba(255,255,255,.6);font-size:.86rem}
+.lec .lact:has(.cring){position:static;background:none;padding-top:8px}
