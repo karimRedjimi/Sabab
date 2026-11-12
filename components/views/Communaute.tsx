@@ -374,8 +374,8 @@ function VersetTab() {
                 <li key={r.id}>
                   <button className="pbtn" aria-label={player.playing === r.id ? "Pause" : `Écouter la récitation ${k + 1}`} onClick={() => player.play(r.id, signed(r.path))}><PlayIcon on={player.playing === r.id} /></button>
                   <span className="rt"><b>Un membre</b><small>{mmss(r.seconds)} · {ago(r.created_at)} · {confirm === r.id
-                    ? <button className="inl" onClick={async () => { await supabase!.rpc("report_recitation", { p_id: r.id }); setConfirm(null); toast("Merci pour le signalement"); load(); }}>confirmer le signalement</button>
-                    : <button className="inl" onClick={() => setConfirm(r.id)}>signaler</button>}</small></span>
+                    ? <button className="inlbtn" onClick={async () => { await supabase!.rpc("report_recitation", { p_id: r.id }); setConfirm(null); toast("Merci pour le signalement"); load(); }}>confirmer le signalement</button>
+                    : <button className="inlbtn" onClick={() => setConfirm(r.id)}>signaler</button>}</small></span>
                   <button className="pray" aria-pressed={r.cheered} disabled={r.cheered} onClick={async () => {
                     const { error } = await supabase!.rpc("cheer_recitation", { p_id: r.id });
                     if (error) { toast(errMsg(error)); return; }
