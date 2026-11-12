@@ -11,7 +11,6 @@ import { POUR_SON_FRERE } from "@/content/textes";
 import { supabase, errMsg, REQ_CAT_OF, type RecitationView, type RequestView } from "@/lib/supabase";
 import { useAccount } from "../Account";
 import { buzz, useStore } from "../Store";
-import { DisplayChips } from "../Cards";
 import { PageBand } from "../Glyphs";
 
 function ago(iso: string) {
@@ -231,6 +230,19 @@ function DuaTab() {
 const VOICE_KEY = "sabab-voice-consent";
 const EXT: Record<string, string> = { "audio/mp4": "m4a", "audio/webm": "webm", "audio/ogg": "ogg", "audio/mpeg": "mp3", "audio/aac": "aac" };
 
+/** Arabe, phonétique, français : trois petits interrupteurs, au moins un reste affiché. */
+function ShowToggles() {
+  const { S, update, toast } = useStore();
+  const t = (f: "ar" | "ph" | "fr", label: string) => (
+    <button aria-pressed={S.show[f]} onClick={() => {
+      const others = (["ar", "ph", "fr"] as const).filter((k) => k !== f && S.show[k]);
+      if (S.show[f] && !others.length) { toast("Garde au moins un texte affiché"); return; }
+      update((x) => { x.show[f] = !x.show[f]; });
+    }}>{label}</button>
+  );
+  return <div className="vtog" role="group" aria-label="Textes affichés">{t("ar", "Arabe")}{t("ph", "Phonétique")}{t("fr", "Français")}</div>;
+}
+
 /** Un seul son à la fois dans l’écran. */
 function usePlayer() {
   const el = useRef<HTMLAudioElement | null>(null);
@@ -309,57 +321,11 @@ function VersetTab() {
     <>
       <article className="vday" ref={card}>
         <div className="vhead"><p className="k">Un jour, un verset</p><span>{fmtDate(d)}</span></div>
-        {/* La barre du micro est au-dessus du verset : on le lit en dessous pendant qu’on récite. */}
-        <div className={`recbar ${rec.state === "recording" ? "live" : ""}`}>
-          {mine ? (
-            <>
-              <button className="pbtn" aria-label={player.playing === mine.id ? "Pause" : "Écouter ma récitation"} onClick={() => player.play(mine.id, signed(mine.path))}><PlayIcon on={player.playing === mine.id} /></button>
-              <span className="rt"><b>Ta récitation</b><small>{mmss(mine.seconds)} · {mine.status !== "approved" ? "masquée" : mine.cheers ? `${mine.cheers} encouragement${mine.cheers > 1 ? "s" : ""}` : "publiée"}</small></span>
-              {confirm === mine.id
-                ? <button className="link danger" onClick={() => remove(mine)}>Confirmer</button>
-                : <button className="link" onClick={() => setConfirm(mine.id)}>Supprimer</button>}
-            </>
-          ) : rec.state === "recording" ? (
-            <>
-              <button className="mic live" onClick={rec.stop} aria-label="Arrêter l’enregistrement"><span className="sq" /></button>
-              <span className="rt"><b className="rectime">{mmss(rec.seconds)}</b><small>Touche pour arrêter · {mmss(MAX_SECONDS)} au plus</small></span>
-            </>
-          ) : rec.state === "done" && rec.take ? (
-            <>
-              <button className="pbtn" aria-label={player.playing === "take" ? "Pause" : "Écouter mon enregistrement"} onClick={() => player.play("take", rec.take!.url)}><PlayIcon on={player.playing === "take"} /></button>
-              <span className="rt"><b>Ton enregistrement</b><small>{mmss(rec.take.seconds)} · sur ton téléphone</small></span>
-              <button className="link" onClick={() => { player.stop(); rec.reset(); }}>Refaire</button>
-            </>
-          ) : (
-            <>
-              <button className="mic" onClick={() => { card.current?.scrollIntoView({ block: "start", behavior: "smooth" }); rec.start(); }} disabled={rec.state === "asking"} aria-label="Enregistrer ma récitation">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3" /><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5" /></svg>
-              </button>
-              <span className="rt"><b>À ton tour</b><small>Récite le verset, puis écoute-toi</small></span>
-              {v.audio && <button className="pbtn ghost" aria-label={player.playing === "ref" ? "Pause" : "Écouter le récitateur"} onClick={() => player.play("ref", v.audio!)}><PlayIcon on={player.playing === "ref"} /></button>}
-            </>
-          )}
-        </div>
+        <ShowToggles />
         {S.show.ar && <p className="ar qar" lang="ar" dir="rtl">{one.ar}</p>}
         {S.show.ph && <p className="ph">{one.ph}</p>}
         {S.show.fr && <p className="qfr">{one.fr}</p>}
         <p className="qref">{refLabel(v)}</p>
-        <DisplayChips />
-
-        {rec.error === "denied" && <p className="warn" style={{ marginTop: 10 }}>Le micro n’est pas autorisé. Autorise-le dans les réglages de ton navigateur, puis réessaie.</p>}
-        {rec.error === "unsupported" && <p className="warn" style={{ marginTop: 10 }}>Ce navigateur ne permet pas d’enregistrer. Essaie avec Safari ou Chrome à jour.</p>}
-        {rec.state === "done" && rec.take && !mine && (canShare ? (
-          <div className="sharebox">
-            {!consent && (
-              <label className="consent">
-                <input type="checkbox" checked={consentNow} onChange={(e) => setConsentNow(e.target.checked)} />
-                <span>J’accepte que ma voix soit entendue par les membres, sans mon nom. Des personnes qui me connaissent pourraient la reconnaître.</span>
-              </label>
-            )}
-            <button className="bigbtn" disabled={!(consent || consentNow) || busy} onClick={share}>{busy ? "Envoi…" : "Partager avec la communauté"}</button>
-          </div>
-        ) : acc.status === "out" ? <p className="fine">Pour la partager, <Link href="/compte">connecte-toi</Link>.</p>
-          : acc.status === "off" ? <p className="fine">Le partage ouvrira avec la communauté.</p> : null)}
       </article>
 
       <section className="sec">
@@ -386,6 +352,55 @@ function VersetTab() {
             </ul>
           )}
       </section>
+
+      {/* La barre d’enregistrement reste en bas de l’écran : on lit le verset au-dessus pendant qu’on récite. */}
+      <div className={`recdock ${rec.state === "recording" ? "live" : ""} ${rec.state === "done" && rec.take && !mine ? "open" : ""}`}>
+        <div className="rdrow">
+          {mine ? (
+            <>
+              <button className="pbtn" aria-label={player.playing === mine.id ? "Pause" : "Écouter ma récitation"} onClick={() => player.play(mine.id, signed(mine.path))}><PlayIcon on={player.playing === mine.id} /></button>
+              <span className="rt"><b>Ta récitation du jour</b><small>{mmss(mine.seconds)} · {mine.status !== "approved" ? "masquée" : mine.cheers ? `${mine.cheers} encouragement${mine.cheers > 1 ? "s" : ""}` : "publiée"}</small></span>
+              {confirm === mine.id
+                ? <button className="rdlink danger" onClick={() => remove(mine)}>Confirmer</button>
+                : <button className="rdlink" onClick={() => setConfirm(mine.id)}>Supprimer</button>}
+            </>
+          ) : rec.state === "recording" ? (
+            <>
+              <button className="mic live" onClick={rec.stop} aria-label="Arrêter l’enregistrement"><span className="sq" /></button>
+              <span className="rt"><b className="rectime">{mmss(rec.seconds)}</b><small>Récite le verset · touche pour arrêter</small></span>
+              <span className="wave" aria-hidden="true"><i /><i /><i /><i /><i /></span>
+            </>
+          ) : rec.state === "done" && rec.take ? (
+            <>
+              <button className="pbtn" aria-label={player.playing === "take" ? "Pause" : "Écouter mon enregistrement"} onClick={() => player.play("take", rec.take!.url)}><PlayIcon on={player.playing === "take"} /></button>
+              <span className="rt"><b>Ton enregistrement</b><small>{mmss(rec.take.seconds)} · sur ton téléphone</small></span>
+              <button className="rdlink" onClick={() => { player.stop(); rec.reset(); }}>Refaire</button>
+            </>
+          ) : (
+            <>
+              <button className="mic" onClick={() => { card.current?.scrollIntoView({ block: "start", behavior: "smooth" }); rec.start(); }} disabled={rec.state === "asking"} aria-label="Enregistrer ma récitation">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3" /><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5" /></svg>
+              </button>
+              <span className="rt"><b>Réciter le verset</b><small>Une minute au plus · tu t’écoutes avant de partager</small></span>
+              {v.audio && <button className="pbtn ghost" aria-label={player.playing === "ref" ? "Pause" : "Écouter le récitateur"} onClick={() => player.play("ref", v.audio!)}><PlayIcon on={player.playing === "ref"} /></button>}
+            </>
+          )}
+        </div>
+        {rec.error === "denied" && <p className="rdnote">Le micro n’est pas autorisé : autorise-le dans les réglages de ton navigateur.</p>}
+        {rec.error === "unsupported" && <p className="rdnote">Ce navigateur ne permet pas d’enregistrer. Essaie avec Safari ou Chrome à jour.</p>}
+        {rec.state === "done" && rec.take && !mine && (canShare ? (
+          <div className="sharebox">
+            {!consent && (
+              <label className="consent">
+                <input type="checkbox" checked={consentNow} onChange={(e) => setConsentNow(e.target.checked)} />
+                <span>J’accepte que ma voix soit entendue par les membres, sans mon nom. Des personnes qui me connaissent pourraient la reconnaître.</span>
+              </label>
+            )}
+            <button className="bigbtn" disabled={!(consent || consentNow) || busy} onClick={share}>{busy ? "Envoi…" : "Partager avec la communauté"}</button>
+          </div>
+        ) : acc.status === "out" ? <p className="rdnote">Pour la partager, <Link href="/compte">connecte-toi</Link>.</p>
+          : acc.status === "off" ? <p className="rdnote">Le partage ouvrira avec la communauté. Tu peux t’entraîner et t’écouter.</p> : null)}
+      </div>
     </>
   );
 }

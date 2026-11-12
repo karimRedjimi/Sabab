@@ -150,15 +150,19 @@ function ItemStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker:
         {hasText && <ShowChips />}
         {slot.t > 1 ? (
           <>
-            <button className={`cring ${v >= slot.t ? "full" : ""}`} onClick={() => count("inc", k)} aria-label={`${slot.l} : ${v} sur ${slot.t}. Toucher pour compter`}>
-              <svg viewBox="0 0 150 150" aria-hidden="true"><circle className="r0" cx="75" cy="75" r="66" /><circle className="r1" cx="75" cy="75" r="66" pathLength={100} style={{ strokeDasharray: `${Math.min(v / slot.t, 1) * 100} 100` }} /></svg>
-              <span className="cin"><b className="bump" key={v}>{v}</b><small>sur {slot.t}</small></span>
-            </button>
-            <p className="cring-hint">{v >= slot.t ? "Objectif atteint" : "Touche le cercle pour compter"}</p>
-            <div className="tapsub">
-              <button onClick={() => count("dec", k)} aria-label="Retirer un">−1</button>
-              <button onClick={() => count("reset", k)} disabled={v === 0}>Remettre à zéro</button>
+            <div className="ccount">
+              <button className="cside" onClick={() => count("dec", k)} disabled={v === 0} aria-label="Retirer un">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12" /></svg><span>−1</span>
+              </button>
+              <button className={`cring ${v >= slot.t ? "full" : ""}`} onClick={() => count("inc", k)} aria-label={`${slot.l} : ${v} sur ${slot.t}. Toucher pour compter`}>
+                <svg viewBox="0 0 150 150" aria-hidden="true"><circle className="r0" cx="75" cy="75" r="66" /><circle className="r1" cx="75" cy="75" r="66" pathLength={100} style={{ strokeDasharray: `${Math.min(v / slot.t, 1) * 100} 100` }} /></svg>
+                <span className="cin"><b className="bump" key={v}>{v}</b><small>sur {slot.t}</small></span>
+              </button>
+              <button className="cside" onClick={() => count("reset", k)} disabled={v === 0} aria-label="Remettre à zéro">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.1-5" /><path d="M5 4v4h4" /></svg><span>Zéro</span>
+              </button>
             </div>
+            <p className="cring-hint">{v >= slot.t ? "Objectif atteint, qu’Allah l’accepte" : "Touche le cercle à chaque fois"}</p>
             <button className={`bigbtn ${v >= slot.t ? "" : "sec2"}`} style={{ marginTop: 10 }} onClick={onNext}>{v >= slot.t ? "Continuer" : "Continuer plus tard"}</button>
           </>
         ) : done ? (

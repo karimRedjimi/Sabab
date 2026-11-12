@@ -479,9 +479,9 @@ function Coach({ s, only }: { s: Structure; only: "light" | "missed" | "ramp" })
     );
   if (only === "ramp" && s.ramp)
     return (
-      <div className="banner soft">
-        <div><b>Démarrage en douceur · semaine {s.ramp} sur 2</b><span>{s.ramp === 1 ? "Trois invocations pour installer l’habitude." : "Le socle complet, sans le thème du jour."}</span></div>
-        <button className="act" onClick={() => { update((x) => { x.rampDone = keyOf(today()); }); toast("Programme complet activé"); }}>Tout le programme</button>
+      <div className="rampline">
+        <span className="rl"><b>Démarrage en douceur</b> · semaine {s.ramp} sur 2</span>
+        <button onClick={() => { update((x) => { x.rampDone = keyOf(today()); }); toast("Programme complet activé"); }}>Tout le programme</button>
       </div>
     );
   return null;
@@ -641,13 +641,13 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
           <Coach s={s} only="missed" />
           <BilanBanner />
           <SameNeed />
-          <Coach s={s} only="ramp" />
           <NiveauSuivant />
         </div>
       )}
       <section className="sec">
         <div className="sechead"><h2>Ta journée</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
         {!s.light && <NiveauLigne />}
+        <Coach s={s} only="ramp" />
         <div className="tl">
           {invoke.map((e) => (
             <div key={`${e.id}-${e.m}`} className={`tr ${entryPct(S, dk, e) >= 1 ? "done" : ""}`}><TlNode done={entryPct(S, dk, e) >= 1} /><Row e={e} intention tile="objectif" /></div>
