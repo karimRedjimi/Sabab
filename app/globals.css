@@ -1625,3 +1625,4 @@ html.visiting,html.visiting body{overflow:hidden;overscroll-behavior:none}
 .pwd{display:flex;gap:8px;align-items:center}
 .pwd .input{flex:1;min-width:0}
 .pwdeye{flex:none;border:0;background:var(--fill);color:var(--accent);border-radius:12px;padding:0 12px;min-height:46px;font-weight:600;font-size:.84rem}
+.gnote{margin:8px 4px 0;font-size:.8rem;color:var(--muted);text-align:center}
