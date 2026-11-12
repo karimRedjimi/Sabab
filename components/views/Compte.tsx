@@ -4,12 +4,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase, errMsg, googleEnabled, DEBUT_KEY } from "@/lib/supabase";
 import { useAccount } from "../Account";
+import { Star } from "../Star";
+import { WelcomeSky } from "./Bienvenue";
 import { useStore } from "../Store";
 
 export const CONSENT_TEXT =
   "J’accepte que ma progression, mon carnet, mes notes et mon objectif soient enregistrés sur mon compte. Ces informations révèlent ma pratique religieuse : elles restent privées, ne sont jamais vendues ni partagées, et je peux les supprimer à tout moment.";
 
-function Consent() {
+function Consent({ immersive = false }: { immersive?: boolean }) {
   const { giveConsent, signOut } = useAccount();
   const { toast } = useStore();
   const [ok, setOk] = useState(false);
@@ -22,7 +24,7 @@ function Consent() {
         <span>{CONSENT_TEXT}</span>
       </label>
       <div className="row" style={{ marginTop: 14 }}>
-        <button className="navbtn primary" disabled={!ok || busy} onClick={async () => {
+        <button className={immersive ? "bigbtn" : "navbtn primary"} disabled={!ok || busy} onClick={async () => {
           setBusy(true);
           try { await giveConsent(); toast("Compte activé, ta progression te suit partout"); } catch (e) { toast(errMsg(e)); }
           setBusy(false);
@@ -48,25 +50,16 @@ function PasswordField({ value, onChange, label, isNew }: { value: string; onCha
   );
 }
 
-function SignIn() {
+function SignIn({ immersive = false }: { immersive?: boolean }) {
   const { toast } = useStore();
-  const [mode, setMode] = useState<"code" | "mdp">("code");
-  const [creer, setCreer] = useState(false);
+  const [creer, setCreer] = useState(immersive);
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
-  const [sent, setSent] = useState<null | "email" | "signup">(null);
+  const [sent, setSent] = useState(false);
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const redirect = () => `${window.location.origin}/compte`;
-  const send = async () => {
-    if (!supabase) return;
-    if (!EMAIL_OK(email)) { toast("Vérifie ton adresse e-mail"); return; }
-    setBusy(true);
-    const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true, emailRedirectTo: redirect() } });
-    setBusy(false);
-    if (error) { toast(errMsg(error)); return; }
-    setSent("email"); toast("E-mail envoyé, regarde ta boîte de réception");
-  };
+  const btn = immersive ? "bigbtn" : "navbtn primary";
   const withPassword = async () => {
     if (!supabase) return;
     if (!EMAIL_OK(email)) { toast("Vérifie ton adresse e-mail"); return; }
@@ -78,7 +71,7 @@ function SignIn() {
       if (error) { toast(errMsg(error)); return; }
       // Adresse déjà inscrite : Supabase ne le dit pas directement.
       if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) { toast("Un compte existe déjà avec cette adresse : connecte-toi"); setCreer(false); return; }
-      if (!data.session) { setSent("signup"); toast("Un code de confirmation t’a été envoyé"); }
+      if (!data.session) { setSent(true); toast("Un code de confirmation t’a été envoyé"); }
       return;
     }
     const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: pwd });
@@ -94,9 +87,9 @@ function SignIn() {
     toast(error ? errMsg(error) : "Un lien pour choisir un nouveau mot de passe t’a été envoyé");
   };
   const verify = async () => {
-    if (!supabase || !sent) return;
+    if (!supabase) return;
     setBusy(true);
-    const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: sent });
+    const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: "signup" });
     setBusy(false);
     if (error) { toast("Code incorrect ou expiré"); return; }
   };
@@ -110,19 +103,17 @@ function SignIn() {
   };
 
   if (sent) return (
-    <section className="sec">
-      <p className="secintro">Un e-mail vient d’être envoyé à {email.trim()}. Saisis le code qu’il contient, ou touche son lien.</p>
+    <section className="sec signin">
+      <p className="secintro">Un code vient d’être envoyé à {email.trim()} pour confirmer ton adresse. Saisis-le ci-dessous, ou touche le lien de l’e-mail.</p>
       <label className="field"><span>Le code reçu</span>
         <input className="input" inputMode="numeric" autoComplete="one-time-code" maxLength={8} enterKeyHint="go" autoFocus value={code} onKeyDown={(e) => { if (e.key === "Enter" && code.length >= 6) verify(); }} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} placeholder="123456" /></label>
-      <div className="row">
-        <button className="navbtn primary" disabled={busy || code.length < 6} onClick={verify}>{sent === "signup" ? "Confirmer mon adresse" : "Me connecter"}</button>
-        <button className="link" onClick={() => { setSent(null); setCode(""); }}>Changer d’adresse</button>
-      </div>
+      <button className={btn} disabled={busy || code.length < 6} onClick={verify}>Confirmer mon adresse</button>
+      <p style={{ margin: "10px 0 0" }}><button className="link" onClick={() => { setSent(false); setCode(""); }}>Changer d’adresse</button></p>
     </section>
   );
 
   return (
-    <section className="sec">
+    <section className="sec signin">
       {google && (
         <>
           <button className="gbtn" disabled={busy} onClick={withGoogle}>
@@ -133,33 +124,17 @@ function SignIn() {
           <p className="or"><span>ou avec ton e-mail</span></p>
         </>
       )}
-      <nav className="seg" aria-label="Comment te connecter ?">
-        <a href="#" aria-current={mode === "code" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setMode("code"); }}>Code par e-mail</a>
-        <a href="#" aria-current={mode === "mdp" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setMode("mdp"); }}>Mot de passe</a>
+      <nav className="seg" aria-label="Ton compte">
+        <a href="#" aria-current={!creer ? "page" : undefined} onClick={(e) => { e.preventDefault(); setCreer(false); }}>Se connecter</a>
+        <a href="#" aria-current={creer ? "page" : undefined} onClick={(e) => { e.preventDefault(); setCreer(true); }}>Créer un compte</a>
       </nav>
-      {mode === "code" ? (
-        <>
-          <form onSubmit={(e) => { e.preventDefault(); send(); }}>
-            <label className="field"><span>Ton adresse e-mail</span>
-              <input className="input" type="email" autoComplete="email" inputMode="email" enterKeyHint="send" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom@exemple.fr" /></label>
-            <button className="navbtn primary" type="submit" disabled={busy}>Recevoir un code</button>
-          </form>
-          <p className="secintro" style={{ marginTop: 12 }}>Rien à retenir : tu reçois un code à 6 chiffres. Le compte est créé à la première connexion.</p>
-        </>
-      ) : (
-        <>
-          <form onSubmit={(e) => { e.preventDefault(); withPassword(); }}>
-            <label className="field"><span>Ton adresse e-mail</span>
-              <input className="input" type="email" autoComplete={creer ? "email" : "username"} inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom@exemple.fr" /></label>
-            <PasswordField label={creer ? "Choisis un mot de passe" : "Ton mot de passe"} value={pwd} onChange={setPwd} isNew={creer} />
-            <button className="navbtn primary" type="submit" disabled={busy}>{creer ? "Créer mon compte" : "Me connecter"}</button>
-          </form>
-          <div className="row" style={{ marginTop: 10, gap: 18 }}>
-            <button className="link" onClick={() => setCreer(!creer)}>{creer ? "J’ai déjà un compte" : "Créer un compte"}</button>
-            {!creer && <button className="link" onClick={forgot}>Mot de passe oublié ?</button>}
-          </div>
-        </>
-      )}
+      <form onSubmit={(e) => { e.preventDefault(); withPassword(); }}>
+        <label className="field"><span>Ton adresse e-mail</span>
+          <input className="input" type="email" autoComplete={creer ? "email" : "username"} inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom@exemple.fr" /></label>
+        <PasswordField label={creer ? "Choisis un mot de passe" : "Ton mot de passe"} value={pwd} onChange={setPwd} isNew={creer} />
+        <button className={btn} type="submit" disabled={busy}>{creer ? "Créer mon compte" : "Me connecter"}</button>
+      </form>
+      {!creer && <p style={{ margin: "10px 0 0" }}><button className="link" onClick={forgot}>Mot de passe oublié ?</button></p>}
     </section>
   );
 }
@@ -201,15 +176,35 @@ export function Compte() {
   const leave = () => { try { sessionStorage.removeItem(DEBUT_KEY); } catch { /* */ } setDebut(false); router.replace("/"); };
   useEffect(() => { if (debut && acc.status === "in") { try { sessionStorage.removeItem(DEBUT_KEY); } catch { /* */ } router.replace("/"); } }, [debut, acc.status, router]);
   const welcome = debut && acc.status !== "in";
+  // Pendant l’étape du compte de la configuration, ni onglets ni bouton Retour : on reste dans le parcours.
+  useEffect(() => {
+    if (!welcome || acc.status === "off") return;
+    document.documentElement.classList.add("immersive");
+    return () => document.documentElement.classList.remove("immersive");
+  }, [welcome, acc.status]);
+  if (welcome && acc.status !== "off") return (
+    <div className="ob2 imm accimm">
+      <WelcomeSky step={7} />
+      <div className="obstep fwd">
+        <div className="accstar"><Star pct={1} /></div>
+        <p className="eyebrow">Dernière étape</p>
+        <h1>Garde ton chemin avec toi</h1>
+        <p className="lead">Retrouve ta progression sur tous tes appareils, et rejoins la communauté.</p>
+        {acc.status === "loading" && <p className="empty">Chargement…</p>}
+        {acc.status === "out" && <SignIn immersive />}
+        {acc.status === "consent" && <Consent immersive />}
+        <button className="later" onClick={leave}>Plus tard, commencer sans compte</button>
+      </div>
+    </div>
+  );
   return (
     <>
-      <div className="page"><h1>{welcome ? "Crée ton compte" : "Mon compte"}</h1>
-        <p className="lead">{welcome ? "Pour ne pas perdre ta progression, la retrouver sur tous tes appareils et rejoindre la communauté." : "Pour retrouver ta progression sur tous tes appareils et rejoindre la communauté."}</p></div>
+      <div className="page"><h1>Mon compte</h1>
+        <p className="lead">Pour retrouver ta progression sur tous tes appareils et rejoindre la communauté.</p></div>
       {acc.status === "off" && <p className="empty">Les comptes ne sont pas encore activés sur cette version. Ta progression reste enregistrée sur cet appareil.</p>}
       {acc.status === "loading" && <p className="empty">Chargement…</p>}
       {acc.status === "out" && <SignIn />}
       {acc.status === "consent" && <Consent />}
-      {welcome && acc.status !== "off" && <p className="laterline"><button className="link" onClick={leave}>Plus tard, commencer sans compte</button></p>}
       {acc.recovery && acc.status !== "off" && <NewPassword title="Choisis un nouveau mot de passe" onDone={acc.endRecovery} />}
       {acc.status === "in" && (
         <>

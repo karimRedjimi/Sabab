@@ -1626,3 +1626,30 @@ html.visiting,html.visiting body{overflow:hidden;overscroll-behavior:none}
 .pwd .input{flex:1;min-width:0}
 .pwdeye{flex:none;border:0;background:var(--fill);color:var(--accent);border-radius:12px;padding:0 12px;min-height:46px;font-weight:600;font-size:.84rem}
 .gnote{margin:8px 4px 0;font-size:.8rem;color:var(--muted);text-align:center}
+
+/* L’étape du compte, dans l’univers de la configuration */
+html.immersive .tabs,html.immersive .subbar{display:none}
+.accimm{padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.accimm .obstep{padding-bottom:28px}
+.accstar{width:72px;height:72px;margin:18px 0 18px;filter:drop-shadow(0 0 20px rgba(233,196,106,.45));animation:starIn .9s var(--spring) backwards}
+.accstar svg{width:100%;height:100%}
+.accstar .star-base{fill:rgba(255,255,255,.12)}.accstar .star-fill{fill:#E9C46A}.accstar .star-outline{stroke:none}
+.accimm .eyebrow{color:#E9C46A;animation:obRise .5s var(--ease) .1s backwards}
+.accimm h1{color:#fff;animation:obRise .5s var(--ease) .18s backwards}
+.accimm .lead{color:rgba(255,255,255,.8);animation:obRise .5s var(--ease) .26s backwards}
+.accimm .signin,.accimm > .obstep > .sec{margin:6px 0 0;animation:obRise .5s var(--ease) .34s backwards}
+.accimm .gbtn{background:#fff;color:#2A1622;border:0;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.accimm .gnote{color:rgba(255,255,255,.65)}
+.accimm .or{color:rgba(255,255,255,.6)}
+.accimm .or::before,.accimm .or::after{background:rgba(255,255,255,.18)}
+.accimm .seg{background:rgba(255,255,255,.1);margin:0 0 16px}
+.accimm .seg a{color:rgba(255,255,255,.75)}
+.accimm .seg a[aria-current="page"]{background:#fff;color:#4A1739}
+.accimm .field > span{color:rgba(255,255,255,.75)}
+.accimm .bigbtn{margin-top:4px}
+.accimm .link{color:#E9C46A}
+.accimm .consent{color:rgba(255,255,255,.88)}
+.accimm .sechead h2{color:#fff}
+.accimm .later{margin-top:18px}
+.field > .pwd{display:flex;margin:0}
+html.immersive,html.immersive body{background:#2A0C22}

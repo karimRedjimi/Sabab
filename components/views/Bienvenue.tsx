@@ -344,7 +344,7 @@ function WelcomeStar() {
 }
 
 /** Le ciel de l’accueil : un dégradé profond, une lueur qui respire et des étoiles à huit branches qui tournent lentement. */
-function WelcomeSky({ step = 0 }: { step?: number }) {
+export function WelcomeSky({ step = 0 }: { step?: number }) {
   const stars: [number, number, number, number][] = [[12, 14, 46, 0], [86, 9, 30, 1], [78, 46, 70, 2], [8, 62, 34, 3], [52, 88, 90, 4], [92, 82, 26, 5], [30, 36, 18, 6]];
   return (
     <div className="obsky" aria-hidden="true" style={{ "--step": step } as CSSProperties}>
