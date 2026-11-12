@@ -12,7 +12,7 @@ import { supabase, errMsg, REQ_CAT_OF, type RecitationView, type RequestView } f
 import { useAccount } from "../Account";
 import { buzz, useStore } from "../Store";
 import { DisplayChips } from "../Cards";
-import { Brand } from "../Glyphs";
+import { PageBand } from "../Glyphs";
 
 function ago(iso: string) {
   const m = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -396,12 +396,12 @@ export function Communaute() {
   const pick = (t: "dua" | "verset") => (e: React.MouseEvent) => { e.preventDefault(); setTab(t); try { sessionStorage.setItem("sabab-com-tab", t); } catch { /* */ } };
   return (
     <>
-      <Brand />
-      <h1 className="sr-only">Communauté</h1>
-      <nav className="seg" aria-label="Communauté">
-        <a href="#" aria-current={tab === "dua" ? "page" : undefined} onClick={pick("dua")}>Du’â</a>
-        <a href="#" aria-current={tab === "verset" ? "page" : undefined} onClick={pick("verset")}>Un jour, un verset</a>
-      </nav>
+      <PageBand title="Communauté" lead="Invoquer les uns pour les autres, réciter ensemble. Sans nom, sans classement.">
+        <nav className="seg" aria-label="Communauté">
+          <a href="#" aria-current={tab === "dua" ? "page" : undefined} onClick={pick("dua")}>Du’â</a>
+          <a href="#" aria-current={tab === "verset" ? "page" : undefined} onClick={pick("verset")}>Un jour, un verset</a>
+        </nav>
+      </PageBand>
       {tab === "dua" ? <DuaTab /> : <VersetTab />}
     </>
   );

@@ -145,24 +145,28 @@ function dotClass(r?: SalatRec) {
 }
 
 /** Vue « Prières » du Suivi : chiffres, grille de la semaine, délai sur 4 semaines. */
-export function SalatSuivi() {
+export function SalatSuivi({ only }: { only?: "stats" | "body" } = {}) {
   const { S, ui, setUi } = useStore();
   const [sheet, setSheet] = useState<{ d: Date; k: SalatKey } | null>(null);
   const t = today(), start = ui.weekRef, end = addDays(start, 6), isCurrent = sameDay(start, monday(t));
-  if (!S.prayer) return <p className="empty">Choisis ta ville dans Plus › Horaires de prière pour suivre tes prières.</p>;
+  if (!S.prayer) return only === "stats" ? null : <p className="empty">Choisis ta ville dans Plus › Horaires de prière pour suivre tes prières.</p>;
   const st = salatStats(S, start, end), prev = salatStats(S, addDays(start, -7), addDays(start, -1));
   const rate = st.possible ? st.noted / st.possible : 0, prevRate = prev.possible ? prev.noted / prev.possible : 0;
   const diff = Math.round((rate - prevRate) * 100);
   const weeks = [3, 2, 1, 0].map((i) => { const a = addDays(monday(t), -7 * i); return { a, st: salatStats(S, a, addDays(a, 6)) }; });
   const delays = weeks.map((w) => w.st.avgDelay);
   const known = delays.filter((x): x is number => x != null), max = Math.max(30, ...known);
+  const stats = (
+    <div className="stats">
+      <div className="stat"><b>{st.noted}<small>/{st.possible}</small></b><span>prières notées</span></div>
+      <div className="stat"><b>{st.mosque}</b><span>à la mosquée</span></div>
+      <div className="stat"><b>{st.avgDelay != null ? `${st.avgDelay} min` : "—"}</b><span>après l’appel en moyenne</span></div>
+    </div>
+  );
+  if (only === "stats") return stats;
   return (
     <>
-      <div className="stats">
-        <div className="stat"><b>{st.noted}<small>/{st.possible}</small></b><span>prières notées</span></div>
-        <div className="stat"><b>{st.mosque}</b><span>à la mosquée</span></div>
-        <div className="stat"><b>{st.avgDelay != null ? `${st.avgDelay} min` : "—"}</b><span>après l’appel en moyenne</span></div>
-      </div>
+      {only !== "body" && stats}
       <section className="sec">
         <div className="weeknav">
           <button className="iconbtn" aria-label="Semaine précédente" onClick={() => setUi((u) => ({ weekRef: addDays(u.weekRef, -7) }))}><IconLeft /></button>

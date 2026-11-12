@@ -1516,3 +1516,29 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 .cring small{color:rgba(255,255,255,.65);font-size:.86rem;margin-top:3px}
 .cring-hint{text-align:center;margin:8px 0 2px;color:rgba(255,255,255,.6);font-size:.86rem}
 .lec .lact:has(.cring){position:static;background:none;padding-top:8px}
+
+/* Bandeaux des autres onglets : même ciel que l’accueil */
+.hero2.page2{margin-bottom:18px;padding-bottom:22px}
+.hero2.page2 .brand{margin-bottom:8px}
+.hero2 h1{margin:6px 0 4px;color:#fff;font-size:1.9rem;font-weight:650;letter-spacing:-.025em;line-height:1.1}
+.hero2 .blead{margin:0 0 14px;color:rgba(255,255,255,.75);font-size:.95rem;line-height:1.45}
+.hero2 .seg{background:rgba(255,255,255,.1);margin:10px 0 12px}
+.hero2 .seg a{color:rgba(255,255,255,.75)}
+.hero2 .seg a[aria-current="page"]{background:#fff;color:#4A1739}
+.hero2 .stats{margin:0}
+.hero2 .stat{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.hero2 .stat b{color:#fff}.hero2 .stat b small{color:rgba(255,255,255,.6)}
+.hero2 .stat span{color:rgba(255,255,255,.7)}
+.hero2 .learnbar{background:rgba(255,255,255,.14)}.hero2 .learnbar i{background:#E9C46A}
+.bchips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 2px}
+.bchip{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:99px;background:rgba(255,255,255,.1);color:#fff;font-size:.88rem;font-weight:500;text-decoration:none;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bchip svg{width:16px;height:16px;color:#E9C46A;flex:none}
+.bchip:active{background:rgba(255,255,255,.18)}
+/* Petites touches dorées dans les listes */
+.menu .mi{color:var(--accent)}
+.sechead h2::before{content:"";display:inline-block;width:7px;height:7px;margin:0 8px 1px 0;background:var(--gold);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);vertical-align:middle}
+/* Suivi des prières : les mêmes couleurs que l’accueil (or pour priée) */
+.sdot.a::before,.sleg i.a{background:var(--gold)}
+.sdot.m::before,.sleg i.m{background:var(--accent)}
+:root[data-theme="dark"] .sdot.m::before,:root[data-theme="dark"] .sleg i.m{background:var(--brass)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sdot.m::before,:root:not([data-theme="light"]) .sleg i.m{background:var(--brass)}}

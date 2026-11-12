@@ -9,7 +9,7 @@ import { countable, dayPct, itemPct, streaks } from "@/lib/program";
 import { IconLeft, IconRight } from "../Icons";
 import { Star } from "../Star";
 import { useStore } from "../Store";
-import { Brand, Glyph } from "../Glyphs";
+import { PageBand, Glyph } from "../Glyphs";
 import { SalatSuivi } from "../Salat";
 import Link from "next/link";
 
@@ -57,18 +57,20 @@ export function Suivi() {
 
   return (
     <>
-      <Brand />
-      <h1 className="sr-only">Ton suivi</h1>
-      <nav className="seg" aria-label="Que suivre ?">
-        <a href="#" aria-current={ui.suiviTab === "salat" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setUi(() => ({ suiviTab: "salat" })); }}>Prières</a>
-        <a href="#" aria-current={ui.suiviTab === "duas" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setUi(() => ({ suiviTab: "duas" })); }}>Invocations</a>
-      </nav>
-      {ui.suiviTab === "salat" ? <SalatSuivi /> : <>
-      <div className="stats">
-        <div className="stat"><b>{cur}</b><span>jour{cur > 1 ? "s" : ""} tenu{cur > 1 ? "s" : ""} d’affilée</span></div>
-        <div className="stat"><b>{best}</b><span>meilleure série</span></div>
-        <div className="stat"><b>{heldMonth}</b><span>jours tenus en {MONTHS[t.getMonth()]}</span></div>
-      </div>
+      <PageBand title="Ton suivi">
+        <nav className="seg" aria-label="Que suivre ?">
+          <a href="#" aria-current={ui.suiviTab === "salat" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setUi(() => ({ suiviTab: "salat" })); }}>Prières</a>
+          <a href="#" aria-current={ui.suiviTab === "duas" ? "page" : undefined} onClick={(e) => { e.preventDefault(); setUi(() => ({ suiviTab: "duas" })); }}>Invocations</a>
+        </nav>
+        {ui.suiviTab === "salat" ? <SalatSuivi only="stats" /> : (
+          <div className="stats">
+            <div className="stat"><b>{cur}</b><span>jour{cur > 1 ? "s" : ""} tenu{cur > 1 ? "s" : ""} d’affilée</span></div>
+            <div className="stat"><b>{best}</b><span>meilleure série</span></div>
+            <div className="stat"><b>{heldMonth}</b><span>jours tenus en {MONTHS[t.getMonth()]}</span></div>
+          </div>
+        )}
+      </PageBand>
+      {ui.suiviTab === "salat" ? <SalatSuivi only="body" /> : <>
       <section className="sec">
         <div className="weeknav">
           <button className="iconbtn" aria-label="Semaine précédente" onClick={() => setUi((u) => ({ weekRef: addDays(u.weekRef, -7) }))}><IconLeft /></button>

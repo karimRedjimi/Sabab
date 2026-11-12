@@ -1,3 +1,4 @@
+import { starPoints } from "./Star";
 // Icônes fines de l’application (traits de 1,7 px, 24 × 24).
 import type { ReactNode } from "react";
 
@@ -75,5 +76,30 @@ export function Brand({ right }: { right?: ReactNode }) {
       <b>Sabab</b>
       {right && <span className="brandr">{right}</span>}
     </div>
+  );
+}
+
+const SKY_STARS: [number, number, number][] = [[30, 30, 40], [330, 20, 26], [300, 150, 52], [60, 180, 22]];
+/** Le ciel immobile des bandeaux : quelques étoiles à huit branches en filigrane. */
+export function Sky() {
+  return (
+    <svg className="hsky" viewBox="0 0 360 230" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      {SKY_STARS.map(([x, y, r], i) => <polygon key={i} points={starPoints(x, y, r)} />)}
+    </svg>
+  );
+}
+
+/** Le bandeau prune en haut des onglets : la marque, le titre de la page et ce qui compte le plus. */
+export function PageBand({ title, lead, children }: { title: string; lead?: ReactNode; children?: ReactNode }) {
+  return (
+    <header className="hero2 page2">
+      <Sky />
+      <div className="hb">
+        <Brand />
+        <h1>{title}</h1>
+        {lead && <p className="blead">{lead}</p>}
+        {children}
+      </div>
+    </header>
   );
 }

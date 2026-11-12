@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getTheme, setTheme, type Theme } from "@/lib/theme";
 import { useAccount } from "../Account";
-import { Brand, Glyph } from "../Glyphs";
+import { Glyph, PageBand } from "../Glyphs";
 import { DAYS, ITEMS, OBJ_CATS, PARCOURS, PARCOURS_DAYS, SOCLE } from "@/content/programme";
 import { LEVELS, METHODS } from "@/content/reglages";
 import { FORCE_DU_PROGRAMME, LIRE_LES_SOURCES, PRECISION_WAQIA, PROGRAMME_INTRO } from "@/content/textes";
@@ -48,8 +48,13 @@ export function Plus() {
   ];
   return (
     <>
-      <Brand />
-      <h1 className="sr-only">Plus</h1>
+      <PageBand title="Plus">
+        <div className="bchips">
+          {S.objective && <Link href="/objectif" className="bchip"><Glyph name="target" />{S.objective.title}</Link>}
+          <Link href="/rythme" className="bchip"><Glyph name="sun" />Niveau {niveau(S)} · {NIVEAUX[niveau(S)].titre}</Link>
+          {S.prayer && <Link href="/priere" className="bchip"><Glyph name="pin" />{S.prayer.city}</Link>}
+        </div>
+      </PageBand>
       {groups.map(([title, rows]) => (
         <section className="sec" key={title}>
           <div className="sechead"><h2>{title}</h2></div>
