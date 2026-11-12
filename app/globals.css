@@ -1239,3 +1239,18 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 .prow5 > button{padding:8px 0 6px}
 .gtile svg{display:block}
 .prow5 .tw .gtile{display:grid;place-items:center}
+
+/* ── La journée du Prophète ﷺ : niveau, fiche de prière ── */
+.lvline{display:flex;align-items:center;gap:10px;margin:-2px 4px 10px;min-height:32px;color:var(--muted);font-size:.86rem;text-decoration:none}
+.lvline b{color:var(--ink);font-weight:600}
+.lvline span:nth-child(2){flex:1;min-width:0}
+.lvline .chev{width:7px;height:7px;flex:none}
+.lvdots{display:flex;gap:3px;flex:none}
+.lvdots i{width:12px;height:5px;border-radius:3px;background:var(--fill)}
+.lvdots i.on{background:var(--brass)}
+.sheet .sgroup{margin:16px 2px 8px;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.sheet .sopt.mini{padding-top:11px;padding-bottom:11px}
+.sheet .others{display:block;width:100%;margin:6px 0 10px;border:0;background:none;color:var(--muted);font-size:.88rem;text-align:center;min-height:44px}
+.sheet .go2{flex:none;padding:7px 14px;border-radius:99px;background:var(--surface);color:var(--accent);font-weight:600;font-size:.88rem}
+.src.verif{color:var(--brass);font-size:.82rem}
+.sheet{max-height:92vh;overflow-y:auto}

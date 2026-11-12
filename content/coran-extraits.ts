@@ -131,6 +131,20 @@ export const EXTRAITS: Record<string, Extrait> = {
       }
     ]
   },
+  "2:255": {
+    "s": 2,
+    "name": "Al-Baqarah",
+    "from": 255,
+    "to": 255,
+    "verses": [
+      {
+        "n": 255,
+        "ar": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلۡحَيُّ ٱلۡقَيُّومُۚ لَا تَأۡخُذُهُۥ سِنَةٞ وَلَا نَوۡمٞۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِۗ مَن ذَا ٱلَّذِي يَشۡفَعُ عِندَهُۥٓ إِلَّا بِإِذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ وَمَا خَلۡفَهُمۡۖ وَلَا يُحِيطُونَ بِشَيۡءٖ مِّنۡ عِلۡمِهِۦٓ إِلَّا بِمَا شَآءَۚ وَسِعَ كُرۡسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضَۖ وَلَا يَـُٔودُهُۥ حِفۡظُهُمَاۚ وَهُوَ ٱلۡعَلِيُّ ٱلۡعَظِيمُ",
+        "ph": "Allahu la ilaha illa huwa alhayyu alqayyoomu la takhuthuhu sinatun wala nawmun lahu ma fee alssamawati wama fee alardi man tha allathee yashfaAAu AAindahu illa biithnihi yaAAlamu ma bayna aydeehim wama khalfahum wala yuheetoona bishayin min AAilmihi illa bima shaa wasiAAa kursiyyuhu alssamawati waalarda wala yaooduhu hifthuhuma wahuwa alAAaliyyu alAAatheemu",
+        "fr": "Allah! Point de divinité à part Lui, le Vivant, Celui qui subsiste par lui-même «Al-Qayyûm». Ni somnolence ni sommeil ne Le saisissent. A Lui appartient tout ce qui est dans les cieux et sur la terre. Qui peut intercéder auprès de Lui sans Sa permission? Il connaît leur passé et leur futur. Et, de Sa science, ils n'embrassent que ce qu'Il veut. Son Trône «Kursiy», déborde les cieux et la terre, dont la garde ne Lui coûte aucune peine. Et Il est le Très Haut, le Très Grand"
+      }
+    ]
+  },
   "2:261": {
     "s": 2,
     "name": "Al-Baqarah",
@@ -184,6 +198,26 @@ export const EXTRAITS: Record<string, Extrait> = {
         "ar": "وَإِن كَانَ ذُو عُسۡرَةٖ فَنَظِرَةٌ إِلَىٰ مَيۡسَرَةٖۚ وَأَن تَصَدَّقُواْ خَيۡرٞ لَّكُمۡ إِن كُنتُمۡ تَعۡلَمُونَ",
         "ph": "Wain kana thoo AAusratin fanathiratun ila maysaratin waan tasaddaqoo khayrun lakum in kuntum taAAlamoona",
         "fr": "A celui qui est dans la gêne, accordez un sursis jusqu'à ce qu'il soit dans l'aisance. Mais il est mieux pour vous de faire remise de la dette par charité! Si vous saviez"
+      }
+    ]
+  },
+  "2:285-286": {
+    "s": 2,
+    "name": "Al-Baqarah",
+    "from": 285,
+    "to": 286,
+    "verses": [
+      {
+        "n": 285,
+        "ar": "ءَامَنَ ٱلرَّسُولُ بِمَآ أُنزِلَ إِلَيۡهِ مِن رَّبِّهِۦ وَٱلۡمُؤۡمِنُونَۚ كُلٌّ ءَامَنَ بِٱللَّهِ وَمَلَـٰٓئِكَتِهِۦ وَكُتُبِهِۦ وَرُسُلِهِۦ لَا نُفَرِّقُ بَيۡنَ أَحَدٖ مِّن رُّسُلِهِۦۚ وَقَالُواْ سَمِعۡنَا وَأَطَعۡنَاۖ غُفۡرَانَكَ رَبَّنَا وَإِلَيۡكَ ٱلۡمَصِيرُ",
+        "ph": "Amana alrrasoolu bima onzila ilayhi min rabbihi waalmuminoona kullun amana biAllahi wamalaikatihi wakutubihi warusulihi la nufarriqu bayna ahadin min rusulihi waqaloo samiAAna waataAAna ghufranaka rabbana wailayka almaseeru",
+        "fr": "Le Messager a cru en ce qu'on a fait descendre vers lui venant de son Seigneur, et aussi les croyants: tous ont cru en Allah, en Ses anges, à Ses livres et en Ses messagers; (en disant): «Nous ne faisons aucune distinction entre Ses messagers». Et ils ont dit: «Nous avons entendu et obéi. Seigneur, nous implorons Ton pardon. C'est à Toi que sera le retour»"
+      },
+      {
+        "n": 286,
+        "ar": "لَا يُكَلِّفُ ٱللَّهُ نَفۡسًا إِلَّا وُسۡعَهَاۚ لَهَا مَا كَسَبَتۡ وَعَلَيۡهَا مَا ٱكۡتَسَبَتۡۗ رَبَّنَا لَا تُؤَاخِذۡنَآ إِن نَّسِينَآ أَوۡ أَخۡطَأۡنَاۚ رَبَّنَا وَلَا تَحۡمِلۡ عَلَيۡنَآ إِصۡرٗا كَمَا حَمَلۡتَهُۥ عَلَى ٱلَّذِينَ مِن قَبۡلِنَاۚ رَبَّنَا وَلَا تُحَمِّلۡنَا مَا لَا طَاقَةَ لَنَا بِهِۦۖ وَٱعۡفُ عَنَّا وَٱغۡفِرۡ لَنَا وَٱرۡحَمۡنَآۚ أَنتَ مَوۡلَىٰنَا فَٱنصُرۡنَا عَلَى ٱلۡقَوۡمِ ٱلۡكَٰفِرِينَ",
+        "ph": "La yukallifu Allahu nafsan illa wusAAaha laha ma kasabat waAAalayha ma iktasabat rabbana la tuakhithna in naseena aw akhtana rabbana wala tahmil AAalayna isran kama hamaltahu AAala allatheena min qablina rabbana wala tuhammilna ma la taqata lana bihi waoAAfu AAanna waighfir lana wairhamna anta mawlana faonsurna AAala alqawmi alkafireena",
+        "fr": "Allah n'impose à aucune âme une charge supérieure à sa capacité. Elle sera récompensée du bien qu'elle aura fait, punie du mal qu'elle aura fait. Seigneur, ne nous châtie pas s'il nous arrive d'oublier ou de commettre une erreur. Seigneur! Ne nous charge pas d'un fardeau lourd comme Tu as chargé ceux qui vécurent avant nous. Seigneur! Ne nous impose pas ce que nous ne pouvons supporter, efface nos fautes, pardonne-nous et fais nous miséricorde. Tu es Notre Maître, accorde-nous donc la victoire sur les peuples infidèles"
       }
     ]
   },
@@ -1152,6 +1186,120 @@ export const EXTRAITS: Record<string, Extrait> = {
         "ar": "عَلَّمَ ٱلۡإِنسَٰنَ مَا لَمۡ يَعۡلَمۡ",
         "ph": "AAallama alinsana ma lam yaAAlam",
         "fr": "a enseigné à l'homme ce qu'il ne savait pas"
+      }
+    ]
+  },
+  "112:1-4": {
+    "s": 112,
+    "name": "Al-Ikhlas",
+    "from": 1,
+    "to": 4,
+    "verses": [
+      {
+        "n": 1,
+        "ar": "قُلۡ هُوَ ٱللَّهُ أَحَدٌ",
+        "ph": "Qul huwa Allahu ahadun",
+        "fr": "Dis: «Il est Allah, Unique"
+      },
+      {
+        "n": 2,
+        "ar": "ٱللَّهُ ٱلصَّمَدُ",
+        "ph": "Allahu alssamadu",
+        "fr": "Allah, Le Seul à être imploré pour ce que nous désirons"
+      },
+      {
+        "n": 3,
+        "ar": "لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ",
+        "ph": "Lam yalid walam yooladu",
+        "fr": "Il n'a jamais engendré, n'a pas été engendré non plus"
+      },
+      {
+        "n": 4,
+        "ar": "وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ",
+        "ph": "Walam yakun lahu kufuwan ahadun",
+        "fr": "Et nul n'est égal à Lui»"
+      }
+    ]
+  },
+  "113:1-5": {
+    "s": 113,
+    "name": "Al-Falaq",
+    "from": 1,
+    "to": 5,
+    "verses": [
+      {
+        "n": 1,
+        "ar": "قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ",
+        "ph": "Qul aAAoothu birabbi alfalaqi",
+        "fr": "Dis: «Je cherche protection auprès du Seigneur de l'aube naissante"
+      },
+      {
+        "n": 2,
+        "ar": "مِن شَرِّ مَا خَلَقَ",
+        "ph": "Min sharri ma khalaqa",
+        "fr": "contre le mal des êtres qu'Il a créés"
+      },
+      {
+        "n": 3,
+        "ar": "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ",
+        "ph": "Wamin sharri ghasiqin itha waqaba",
+        "fr": "contre le mal de l'obscurité quand elle s'approfondit"
+      },
+      {
+        "n": 4,
+        "ar": "وَمِن شَرِّ ٱلنَّفَّـٰثَٰتِ فِي ٱلۡعُقَدِ",
+        "ph": "Wamin sharri alnnaffathati fee alAAuqadi",
+        "fr": "contre le mal de celles qui soufflent [les sorcières] sur les nœuds"
+      },
+      {
+        "n": 5,
+        "ar": "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+        "ph": "Wamin sharri hasidin itha hasada",
+        "fr": "et contre le mal de l'envieux quand il envie»"
+      }
+    ]
+  },
+  "114:1-6": {
+    "s": 114,
+    "name": "An-Nas",
+    "from": 1,
+    "to": 6,
+    "verses": [
+      {
+        "n": 1,
+        "ar": "قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ",
+        "ph": "Qul aAAoothu birabbi alnnasi",
+        "fr": "Dis: «Je cherche protection auprès du Seigneur des hommes"
+      },
+      {
+        "n": 2,
+        "ar": "مَلِكِ ٱلنَّاسِ",
+        "ph": "Maliki alnnasi",
+        "fr": "Le Souverain des hommes"
+      },
+      {
+        "n": 3,
+        "ar": "إِلَٰهِ ٱلنَّاسِ",
+        "ph": "Ilahi alnnasi",
+        "fr": "Dieu des hommes"
+      },
+      {
+        "n": 4,
+        "ar": "مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ",
+        "ph": "Min sharri alwaswasi alkhannasi",
+        "fr": "contre le mal du mauvais conseiller, furtif"
+      },
+      {
+        "n": 5,
+        "ar": "ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ",
+        "ph": "Allathee yuwaswisu fee sudoori alnnasi",
+        "fr": "qui souffle le mal dans les poitrines des hommes"
+      },
+      {
+        "n": 6,
+        "ar": "مِنَ ٱلۡجِنَّةِ وَٱلنَّاسِ",
+        "ph": "Mina aljinnati wa alnnasm",
+        "fr": "qu'il (le conseiller) soit un djinn, ou un être humain»"
       }
     ]
   }

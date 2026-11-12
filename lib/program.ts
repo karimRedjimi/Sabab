@@ -1,5 +1,6 @@
 // Modèle d’une journée : ce que contient le programme d’un jour et comment on le compte.
 import { ITEMS, SOCLE, MINIMUM, RAMP1, MOMENT_OF, DAYS, PARCOURS, PARCOURS_DAYS } from "@/content/programme";
+import { JOURNEE_ITEMS } from "@/content/journee";
 import { HELD } from "@/content/reglages";
 import type { Item, Slot } from "@/content/types";
 import { keyOf, fromKey, addDays, today, diffDays, sameDay } from "./dates";
@@ -8,11 +9,11 @@ import type { State } from "./state";
 
 /** Le rappel du Coran, lu le matin et le soir : suivi à part, hors pourcentage des invocations. */
 export const CORAN_AM = "coranM", CORAN_PM = "coranS";
-export type Moment = "matin" | "jour" | "soir" | "actions";
-export const MOMENT_LABEL: Record<Moment, string> = { matin: "Le matin", jour: "Dans la journée", soir: "Le soir", actions: "Mes actions" };
+export type Moment = "matin" | "jour" | "soir" | "nuit" | "actions";
+export const MOMENT_LABEL: Record<Moment, string> = { matin: "Le matin", jour: "Dans la journée", soir: "Le soir", nuit: "La nuit", actions: "Mes actions" };
 
 export interface Structure { socle: string[]; theme: string[]; parc: string[]; obj: boolean; pday: number; light: boolean; ramp: number }
-export type ViewItem = Item | { kind: "objective"; title: string; task?: boolean; moment?: string; desc?: string; optional?: boolean; grade?: undefined; when?: undefined; ar?: undefined; ph?: undefined; fr?: undefined; src?: undefined; note?: undefined };
+export type ViewItem = Item | { kind: "objective"; title: string; task?: boolean; moment?: string; desc?: string; optional?: boolean; grade?: undefined; when?: undefined; ar?: undefined; ph?: undefined; fr?: undefined; src?: undefined; note?: undefined; verif?: undefined };
 
 export function parcoursDay(S: State, d: Date) {
   if (!S.parcours || !PARCOURS[S.parcours.id]) return 0;
@@ -61,9 +62,9 @@ export function getItem(S: State, id: string, d: Date | null): ViewItem {
     const p = PARCOURS[S.parcours.id], n = (d && parcoursDay(S, d)) || 1;
     return { kind: "action", task: true, title: "Le geste du parcours", moment: `${p.title}, jour ${n} sur ${PARCOURS_DAYS}`, desc: p.actions[(n - 1) % p.actions.length] };
   }
-  return ITEMS[id];
+  return ITEMS[id] || JOURNEE_ITEMS[id];
 }
-export const slotsOf = (id: string): Slot[] => ITEMS[id]?.slots || [{ l: "Fait", t: 1 }];
+export const slotsOf = (id: string): Slot[] => ITEMS[id]?.slots || JOURNEE_ITEMS[id]?.slots || [{ l: "Fait", t: 1 }];
 export const val = (S: State, dk: string, k: string) => S.days[dk]?.c?.[k] || 0;
 export function itemPct(S: State, dk: string, id: string) {
   const sl = slotsOf(id);
@@ -88,10 +89,10 @@ export function streaks(S: State) {
 /* ---------- La journée par moments ---------- */
 export type Origin = "socle" | "theme" | "parc" | "obj";
 export interface Entry { id: string; origin: Origin; m: Moment; sl: number[]; opt: boolean }
-export interface Plan { s: Structure; sections: Record<"matin" | "jour" | "soir", Entry[]>; actions: Entry[] }
+export interface Plan { s: Structure; sections: Record<"matin" | "jour" | "soir" | "nuit", Entry[]>; actions: Entry[] }
 
 export function plan(S: State, d: Date): Plan {
-  const s = structure(S, d), out: Plan = { s, sections: { matin: [], jour: [], soir: [] }, actions: [] };
+  const s = structure(S, d), out: Plan = { s, sections: { matin: [], jour: [], soir: [], nuit: [] }, actions: [] };
   const origin: Record<string, Origin> = {};
   s.socle.forEach((i) => (origin[i] = "socle")); s.theme.forEach((i) => (origin[i] = "theme")); s.parc.forEach((i) => (origin[i] = "parc"));
   if (s.obj) out.actions.push({ id: "obj", origin: "obj", m: "actions", sl: [0], opt: false });
@@ -130,6 +131,7 @@ export function momentSub(S: State, m: Moment, d: Date) {
   const pt = prayerTimes(d, S.prayer);
   if (m === "matin") return pt ? `Après le Fajr, ${hm(pt.fajr)}` : "Après la prière du Fajr";
   if (m === "soir") return pt ? `De ${hm(pt.asr)} au Maghreb, ${hm(pt.maghrib)}` : "Après le ʿAsr";
+  if (m === "nuit") return pt ? `Après le ʿIchâ, ${hm(pt.isha)}` : "Après le ʿIchâ";
   if (m === "actions") return "L’effort qui accompagne l’invocation";
   return "Quand tu veux, au fil de la journée";
 }

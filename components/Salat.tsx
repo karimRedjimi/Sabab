@@ -1,6 +1,10 @@
 "use client";
 // Suivi de la prière : la feuille pour noter une prière, et les vues du suivi.
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { apresPriere, niveau, rawatib } from "@/lib/journee";
+import { entryPct, slotsOf } from "@/lib/program";
+import { ensureDay } from "@/lib/state";
 import { addDays, keyOf, monday, sameDay, today, fmtShort } from "@/lib/dates";
 import { prayerTimes, hm } from "@/lib/prayer";
 import {
@@ -13,7 +17,8 @@ import { buzz, useStore } from "./Store";
 
 /** Feuille qui monte du bas : priée (à quelle heure), à la mosquée, rattrapée, ou non concerné(e). */
 export function SalatSheet({ d, k, onClose }: { d: Date; k: SalatKey; onClose: () => void }) {
-  const { S, update, toast } = useStore();
+  const { S, update, toast, setUi } = useStore();
+  const router = useRouter(), path = usePathname();
   const dk = keyOf(d), rec = salatOf(S, dk, k), adhan = adhanMinutes(S, d, k) ?? 0;
   const nowMin = (() => { const n = new Date(); return n.getHours() * 60 + n.getMinutes(); })();
   const isToday = sameDay(d, today());
@@ -31,6 +36,12 @@ export function SalatSheet({ d, k, onClose }: { d: Date; k: SalatKey; onClose: (
     document.addEventListener("keydown", onKey, true);
     return () => document.removeEventListener("keydown", onKey, true);
   }, []);
+  // Autour de la prière, selon le niveau de la journée du Prophète ﷺ.
+  const [more, setMore] = useState(!!rec && rec.s !== "on" || exempt);
+  const rw = rawatib(S, k), adhkar = apresPriere(S, k);
+  const adhDone = adhkar.every((e) => entryPct(S, dk, e) >= 1);
+  const val = (key: string) => !!S.days[dk]?.c?.[key];
+  const toggle = (key: string) => { buzz(10); update((x) => { const r = ensureDay(x, dk); r.c = r.c || {}; if (r.c[key]) delete r.c[key]; else r.c[key] = 1; }); };
   const delay = s === "on" && t != null ? delayOf(S, d, k, { s: "on", t }) : null;
 
   const save = () => {
@@ -61,6 +72,17 @@ export function SalatSheet({ d, k, onClose }: { d: Date; k: SalatKey; onClose: (
     onClose();
   };
 
+  const lire = () => {
+    save();
+    setUi(() => ({ sel: d, lecture: { queue: adhkar, i: 0, label: `Après le ${SALAT_LABEL[k]}` } }));
+    if (path !== "/") router.push("/");
+  };
+  const unit = (x: { id: string; sl: number; key: string } | null) => x && (
+    <button className={`sopt mini ${val(x.key) ? "on" : ""}`} role="checkbox" aria-checked={val(x.key)} onClick={() => toggle(x.key)}>
+      <span className="t"><b>{slotsOf(x.id)[x.sl].l}</b><small>Sunna de la prière</small></span>
+      <span className="ck" aria-pressed={val(x.key)} />
+    </button>
+  );
   const opt = (v: SalatRec["s"], title: string, sub: React.ReactNode) => (
     <button className={`sopt ${s === v ? "on" : ""}`} role="radio" aria-checked={s === v} onClick={() => setS(v)}>
       <span className="t"><b>{title}</b><small>{sub}</small></span>
@@ -90,10 +112,23 @@ export function SalatSheet({ d, k, onClose }: { d: Date; k: SalatKey; onClose: (
             <span className={`sw ${m ? "" : "off"}`} aria-hidden="true" />
           </button>
         )}
-        <div role="radiogroup" aria-label="Autres cas">
-          {opt("qada", "Rattrapée plus tard", "Après la fin de son temps")}
-          {opt("ex", "Non concerné(e) aujourd’hui", "Toute la journée · ne compte pas dans le suivi")}
-        </div>
+        {s !== "ex" && (
+          <div role="group" aria-label="Autour de la prière">
+            <p className="sgroup">Autour de la prière</p>
+            {unit(rw.avant)}
+            <button className={`sopt mini ${adhDone ? "on" : ""}`} onClick={lire}>
+              <span className="t"><b>{niveau(S) >= 2 ? "Invocations après la prière" : "Ayat al-Kursî"}</b><small>{niveau(S) >= 2 ? "Avec Ayat al-Kursî · 2 minutes" : "Après chaque prière · 1 minute"}</small></span>
+              <span className="go2">{adhDone ? "Relire" : "Lire"}</span>
+            </button>
+            {unit(rw.apres)}
+          </div>
+        )}
+        {more ? (
+          <div role="radiogroup" aria-label="Autres cas">
+            {opt("qada", "Rattrapée plus tard", "Après la fin de son temps")}
+            {opt("ex", "Non concerné(e) aujourd’hui", "Toute la journée · ne compte pas dans le suivi")}
+          </div>
+        ) : <button className="others" onClick={() => setMore(true)}>Rattrapée plus tard, non concerné(e)…</button>}
         <button className="bigbtn" onClick={save}>Enregistrer</button>
         {(rec || exempt) && <button className="later" onClick={clear}>{exempt ? "Ce n’est plus le cas" : "Effacer"}</button>}
       </div>

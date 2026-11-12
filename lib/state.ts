@@ -37,6 +37,8 @@ export interface State {
   coranLevel?: 1 | 5 | 10;
   /** Rappels du Coran lus, par jour : nombre de versets et temps de lecture (secondes). */
   coran?: Record<string, { n: number; t?: number }>;
+  /** La journée du Prophète ﷺ : niveau choisi, depuis quand, et proposition du niveau suivant mise de côté jusqu’à. */
+  prophete?: { lvl: 1 | 2 | 3 | 4 | 5; since: string; snooze?: string };
   /** Dernier jour où le message de patience a été vu. */
   patienceSeen?: string;
   // Phase 2 (communauté, binôme) : conservés pour compatibilité avec le prototype.
@@ -102,6 +104,7 @@ export function combine(remoteRaw: unknown, localRaw: unknown): State {
   for (const [k, v] of Object.entries(R.salat || {})) out.salat[k] = { ...(L.salat?.[k] || {}), ...v };
   out.coran = { ...(L.coran || {}), ...(out.coran || {}) };
   if (!out.coranLevel && L.coranLevel) out.coranLevel = L.coranLevel;
+  if (!out.prophete && L.prophete) out.prophete = L.prophete;
   if (!out.objective && L.objective) out.objective = L.objective;
   if (!out.parcours && L.parcours) out.parcours = L.parcours;
   if (!out.prayer && L.prayer) out.prayer = L.prayer;

@@ -16,6 +16,8 @@ export interface Item {
   slots?: Slot[];
   optional?: boolean;
   task?: boolean;
+  /** false : texte ajouté en attente de vérification par une personne de science. */
+  verif?: boolean;
 }
 export interface Day { name: string; theme: string; items: string[] }
 export interface Parcours { title: string; intro: string; duas: string[]; actions: string[] }

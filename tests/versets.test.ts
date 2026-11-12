@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { EXTRAITS } from "@/content/coran-extraits";
-import { VERSETS_GENERAL, VERSETS_THEME } from "@/content/versets";
+import { VERSETS_GENERAL, VERSETS_JOURNEE, VERSETS_THEME } from "@/content/versets";
 import { OBJ_CATS } from "@/content/programme";
 import { coranStats, noteLecture, rappelsDuJour, rappelsDuMoment, refLabel, suggestNextLevel, versesIn } from "@/lib/coran";
 import { addDays, keyOf } from "@/lib/dates";
@@ -11,7 +11,7 @@ import { merge } from "@/lib/state";
 const require = createRequire(import.meta.url);
 const quran = JSON.parse(readFileSync(require.resolve("quran-json/dist/quran_fr.json"), "utf8"));
 const translit = JSON.parse(readFileSync(require.resolve("quran-json/dist/quran_transliteration.json"), "utf8"));
-const refs = [...new Set([...Object.values(VERSETS_THEME).flat(), ...VERSETS_GENERAL])];
+const refs = [...new Set([...Object.values(VERSETS_THEME).flat(), ...VERSETS_GENERAL, ...VERSETS_JOURNEE])];
 
 describe("fidélité des versets", () => {
   it("chaque référence a son extrait, et rien d’autre", () => {

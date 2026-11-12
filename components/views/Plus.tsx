@@ -1,4 +1,6 @@
 "use client";
+import { NIVEAUX } from "@/content/journee";
+import { choisirNiveau, niveau } from "@/lib/journee";
 import { CORAN_LEVELS, coranLevel } from "@/lib/coran";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -240,6 +242,15 @@ export function Rythme() {
   return (
     <>
       <div className="page"><h1>Mon rythme</h1><p className="lead">Adapte le programme à ton niveau.</p></div>
+      <section className="sec"><div className="sechead"><h2>La journée du Prophète ﷺ</h2><span className="count">niveau {niveau(S)}</span></div>
+        <p className="secintro">Chaque niveau ajoute un peu au précédent. Le suivant t’est proposé après quatorze jours tenus ; tu peux revenir en arrière à tout moment.</p>
+        <div className="choices">
+          {([1, 2, 3, 4, 5] as const).map((n) => (
+            <button key={n} className="choice" aria-pressed={niveau(S) === n} onClick={() => { update((s) => choisirNiveau(s, n, today())); toast(`Niveau ${n} : ${NIVEAUX[n].titre.toLowerCase()}`); }}>
+              <b style={{ fontWeight: 600 }}>Niveau {n} · {NIVEAUX[n].titre}</b><small>{NIVEAUX[n].ajoute}</small>
+            </button>
+          ))}
+        </div></section>
       <section className="sec"><div className="sechead"><h2>Démarrage</h2></div>
         <p className="secintro">{ramp ? `Démarrage en douceur, semaine ${ramp} sur 2.` : "Tu suis le programme complet."}</p>
         <div className="row">

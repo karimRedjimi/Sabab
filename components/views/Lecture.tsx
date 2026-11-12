@@ -140,6 +140,7 @@ function ItemStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker:
             {it.fr && S.show.fr && <p className="fr">{it.fr}</p>}
             {it.desc && <p className={hasText ? "desc" : "desc lmain"}>{it.desc}</p>}
             {!g && it.src && <p className="src"><b>Source :</b> {it.src}</p>}
+            {it.verif === false && <p className="src verif">Texte en cours de vérification</p>}
             {it.note && <button className="why" aria-expanded={why} onClick={() => setWhy(!why)}>{it.kind === "action" ? "Pourquoi ce geste ?" : "Pourquoi cette invocation ?"}</button>}
             {it.note && why && <p className="whytext">{it.note}</p>}
           </>

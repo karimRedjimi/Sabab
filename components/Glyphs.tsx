@@ -59,6 +59,7 @@ export const TONES: Record<string, { icon: string; tone: string }> = {
   maghrib: { icon: "sunset", tone: "t-sunset" }, isha: { icon: "moon", tone: "t-night" },
   matin: { icon: "dawn", tone: "t-dawn" }, jour: { icon: "sun", tone: "t-sun" }, soir: { icon: "sunset", tone: "t-sunset" }, actions: { icon: "hand", tone: "t-act" },
   objectif: { icon: "target", tone: "t-act" }, geste: { icon: "climb", tone: "t-geste" },
+  nuit: { icon: "moon", tone: "t-night" },
   coran: { icon: "book", tone: "t-coran" },
 };
 export function Tile({ k, size = 40 }: { k: string; size?: number }) {

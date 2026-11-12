@@ -24,6 +24,9 @@ export const VERSETS_GENERAL: string[] = [
   "6:17", "2:261", "3:8", "7:23", "2:201", "93:3-5", "94:5-6", "12:87", "64:11", "16:97", "42:19", "35:2",
 ];
 
+/** Versets lus dans « La journée du Prophète ﷺ » (après la prière, au coucher). */
+export const VERSETS_JOURNEE: string[] = ["2:255", "2:285-286", "112:1-4", "113:1-5", "114:1-6"];
+
 /** D’où vient le texte affiché. */
 export const VERSETS_SOURCE = {
   arabe: "Texte uthmani : Encyclopédie du Noble Coran (quranenc.com)",
