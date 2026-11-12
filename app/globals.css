@@ -1254,3 +1254,48 @@ a.bigbtn{text-decoration:none;box-sizing:border-box}
 .sheet .go2{flex:none;padding:7px 14px;border-radius:99px;background:var(--surface);color:var(--accent);font-weight:600;font-size:.88rem}
 .src.verif{color:var(--brass);font-size:.82rem}
 .sheet{max-height:92vh;overflow-y:auto}
+.need .go.wait,.need .go.wait:disabled{background:var(--fill);color:var(--muted);opacity:1}
+
+/* ── Accueil de première utilisation : un premier écran marquant ── */
+.ob2.welcome{color:#fff}
+.obsky{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(130% 90% at 50% 6%,#8B3A6E 0%,#5B1E47 44%,#2A0C22 100%)}
+.obsky svg{position:absolute;inset:0;width:100%;height:100%}
+.obsk{fill:none;stroke:rgba(255,255,255,.13);stroke-width:.22;transform-box:view-box;animation:skyTurn calc(70s + var(--k) * 11s) linear infinite,skyIn 1.8s var(--ease) calc(var(--k) * 140ms) backwards}
+.obsk:nth-child(odd){animation-direction:reverse,normal}
+@keyframes skyTurn{to{transform:rotate(360deg)}}
+@keyframes skyIn{from{opacity:0}}
+.obglow{position:absolute;left:50%;top:24%;width:130vw;height:130vw;max-width:720px;max-height:720px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(233,196,106,.32),rgba(233,196,106,0) 62%);animation:obGlow 6s ease-in-out infinite}
+@keyframes obGlow{50%{opacity:.6;transform:translate(-50%,-50%) scale(1.12)}}
+.ob2.welcome .obhero,.ob2.welcome .obcta{position:relative;z-index:1}
+.ob2.welcome .obcta{background:none}
+.ob2.welcome .obstar{width:108px;height:108px;margin-bottom:30px;filter:drop-shadow(0 0 22px rgba(233,196,106,.45));animation:starIn 1s var(--spring) backwards,obFloat 5s ease-in-out 1.4s infinite}
+.ob2.welcome .obstar .star-base{fill:rgba(255,255,255,.12)}
+.ob2.welcome .obstar .star-fill{fill:#E9C46A}
+@keyframes obFloat{50%{transform:translateY(-7px) rotate(4deg)}}
+.ob2 .obtitle{font-size:2.6rem;line-height:1.05;color:#fff;margin:0 0 12px}
+.obtitle span span{display:inline-block;animation:wordIn .85s var(--ease) backwards;animation-delay:calc(.4s + var(--w) * 120ms)}
+@keyframes wordIn{from{opacity:0;transform:translateY(20px);filter:blur(8px)}}
+.obtag{margin:0 0 28px;font-size:1.16rem;line-height:1.4;color:rgba(255,255,255,.86)}
+.ob2.welcome .obfeat li{color:rgba(255,255,255,.94)}
+.ob2.welcome .obfeat .obi{background:rgba(255,255,255,.1);color:#E9C46A;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.ob2.welcome .obgo{position:relative;overflow:hidden;background:#fff;color:#5B1E47;font-size:1.06rem;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.ob2.welcome .obgo::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(110,42,85,.16) 50%,transparent 70%);transform:translateX(-100%);animation:obShine 3.4s ease-in-out 2s infinite}
+@keyframes obShine{40%,100%{transform:translateX(100%)}}
+/* Le choix du niveau */
+.obi.obn{font-weight:700;font-size:1.15rem;color:var(--accent)}
+.obreco{font-style:normal;margin-left:8px;font-size:.72rem;font-weight:600;color:var(--brass);background:var(--brass-soft);padding:2px 8px;border-radius:99px;vertical-align:2px;white-space:nowrap}
+.obprog i{box-shadow:0 0 12px color-mix(in srgb,var(--accent) 45%,transparent)}
+/* La gerbe d’étoiles de la fin */
+.revhead,.burstwrap{position:relative}
+.burst{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none}
+.revhead .burst{left:28px;top:12px}
+.burst i{position:absolute;left:-5px;top:-5px;width:10px;height:10px;background:var(--brass);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);opacity:0;animation:obBurst 1.1s var(--ease) calc(.3s + var(--d)) forwards}
+.burst i:nth-child(3n){background:var(--accent)}
+@keyframes obBurst{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(.3)}70%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(-78px) scale(1)}}
+@media (prefers-reduced-motion:reduce){.obsk,.obglow,.obtitle span,.ob2.welcome .obgo::after,.burst i,.ob2.welcome .obstar{animation:none!important}.burst{display:none}}
+.ob2.welcome .obstep{position:relative;z-index:1}
+.obreco{margin:0 6px 0 0;vertical-align:1px}
+.revhead .burst{left:50%;top:46%}
+.burst i{width:12px;height:12px;left:-6px;top:-6px}
+.revhead .burst i{background:#E9C46A}.revhead .burst i:nth-child(3n){background:#fff}
+@keyframes obBurst{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(.3)}70%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(-1 * var(--r,78px))) scale(1) rotate(90deg)}}

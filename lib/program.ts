@@ -127,6 +127,25 @@ export function currentMoment(S: State, d: Date, now = new Date()): Moment | nul
   if (pt) return h < pt.dhuhr ? "matin" : h >= pt.asr ? "soir" : "jour";
   return h < 12 ? "matin" : h < 16 ? "jour" : "soir";
 }
+/** L’heure (en heures) à partir de laquelle un moment s’ouvre : le soir au ʿAsr, la nuit au ʿIchâ. */
+export function momentStart(S: State, d: Date, m: Moment): number | null {
+  const pt = prayerTimes(d, S.prayer);
+  if (m === "soir") return pt ? pt.asr : 16;
+  if (m === "nuit") return pt ? pt.isha : 20;
+  return null;
+}
+/** Un moment est-il ouvert ? Aujourd’hui, le soir et la nuit n’ouvrent qu’à leur heure ; les jours passés restent ouverts. */
+export function momentOuvert(S: State, d: Date, m: Moment, now = new Date()) {
+  if (!sameDay(d, today())) return true;
+  const st = momentStart(S, d, m);
+  return st == null || now.getHours() + now.getMinutes() / 60 >= st;
+}
+/** « Les invocations du soir commencent au ʿAsr, à 14:51. » */
+export function momentPasEncore(S: State, d: Date, m: Moment) {
+  const st = momentStart(S, d, m), at = st == null ? "" : hm(st);
+  return m === "nuit" ? `La nuit commence après le ʿIchâ, à ${at}` : `Le soir commence au ʿAsr, à ${at}`;
+}
+
 export function momentSub(S: State, m: Moment, d: Date) {
   const pt = prayerTimes(d, S.prayer);
   if (m === "matin") return pt ? `Après le Fajr, ${hm(pt.fajr)}` : "Après la prière du Fajr";

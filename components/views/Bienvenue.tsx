@@ -9,14 +9,16 @@ import { CITIES, LEVELS } from "@/content/reglages";
 import { keyOf, today } from "@/lib/dates";
 import { prayerTimes, hm } from "@/lib/prayer";
 import { rampWeek } from "@/lib/program";
+import { NIVEAUX, type NiveauId } from "@/content/journee";
+import { choisirNiveau, niveau } from "@/lib/journee";
 import { ensureDay, uid8 } from "@/lib/state";
 import { STAGES, titleExample, type Stage } from "@/lib/objective";
 import { SALAT, SALAT_LABEL } from "@/lib/salat";
 import { Glyph, Tile } from "../Glyphs";
-import { Star } from "../Star";
+import { Star, starPoints } from "../Star";
 import { buzz, useStore } from "../Store";
 
-type Step = "welcome" | "ville" | "objectif" | "ecoute" | "arabe" | "fin";
+type Step = "welcome" | "ville" | "objectif" | "ecoute" | "arabe" | "niveau" | "fin";
 
 const CAT_ICON: Record<string, string> = { emploi: "briefcase", activite: "store", dette: "coins", mariage: "rings", etudes: "cap", epreuve: "leaf", autre: "sparkle" };
 const STAGE_ICON: Record<Stage, string> = { start: "seed", lead: "climb", heavy: "feather" };
@@ -42,10 +44,11 @@ export function Bienvenue() {
     stage: (S.onboarded && S.objective?.stage) || (null as Stage | null),
     level: (S.onboarded && S.level) || (null as string | null),
     ramp: S.onboarded ? !!rampWeek(S, today()) : true,
+    niveau: niveau(S) as NiveauId,
   }));
   const dir = useRef<"fwd" | "back">("fwd");
   const set = (p: Partial<typeof OB>) => setOB((o) => ({ ...o, ...p }));
-  const steps: Step[] = ["welcome", "ville", "objectif", ...(OB.cat ? (["ecoute"] as Step[]) : []), "arabe", "fin"];
+  const steps: Step[] = ["welcome", "ville", "objectif", ...(OB.cat ? (["ecoute"] as Step[]) : []), "arabe", "niveau", "fin"];
   const st = steps[Math.min(OB.i, steps.length - 1)];
   // Avancer depuis une étape précise : un double appui ne saute jamais une question.
   const go = (from: number) => { dir.current = "fwd"; setOB((o) => (o.i === from ? { ...o, i: o.i + 1 } : o)); window.scrollTo(0, 0); };
@@ -78,6 +81,7 @@ export function Bienvenue() {
         else s.carnet = s.carnet.map((c) => (c.obj && c.status !== "ok" ? { ...c, text: title } : c));
         if (withParcours && pid && PARCOURS[pid] && s.parcours?.id !== pid) s.parcours = { id: pid, start: tk };
       }
+      if (!s.prophete || s.prophete.lvl !== OB.niveau) choisirNiveau(s, OB.niveau, today());
       if (OB.level) { s.level = OB.level; s.show = { ...LEVELS[OB.level].show }; }
       if (OB.ramp) { s.rampStart = tk; s.rampDone = null; } else if (rampWeek(s, today())) s.rampDone = tk;
       ensureDay(s, tk);
@@ -105,16 +109,16 @@ export function Bienvenue() {
     body = (
       <div className="obhero">
         <WelcomeStar />
-        <h1 {...stg(1)}>Bienvenue dans Sabab</h1>
-        <p className="lead" {...stg(2)}>Ton programme d’invocations au quotidien, relié à ce que tu demandes à Allah.</p>
+        <h1 className="obtitle">{"Bienvenue dans Sabab".split(" ").map((w, i) => <span key={i}>{i > 0 && " "}<span style={{ "--w": i } as CSSProperties}>{w}</span></span>)}</h1>
+        <p className="obtag" {...stg(5)}>Prends les moyens, confie-t’en à Allah.</p>
         <ul className="obfeat">
-          {[["book", "Des invocations authentiques et sourcées"], ["target", "Reliées à ton objectif, avec une action par jour"], ["clock", "Calées sur tes horaires de prière"]].map(([ic, t], i) => (
-            <li key={ic} {...stg(3 + i)}><span className="obi"><Glyph name={ic} /></span>{t}</li>
+          {[["sun", "La journée du Prophète ﷺ, pas à pas"], ["target", "Reliée à ce que tu demandes à Allah"], ["clock", "Calée sur tes horaires de prière"]].map(([ic, t], i) => (
+            <li key={ic} {...stg(7 + i)}><span className="obi"><Glyph name={ic} /></span>{t}</li>
           ))}
         </ul>
       </div>
     );
-    cta = <button className="bigbtn" onClick={next}>Commencer</button>;
+    cta = <button className="bigbtn obgo" onClick={next}>Commencer</button>;
   } else if (st === "ville") {
     const custom = P && !CITIES.some((c) => c[0] === P.city);
     const pt = P ? prayerTimes(today(), P) : null;
@@ -219,12 +223,33 @@ export function Bienvenue() {
       </>
     );
     cta = OB.level ? <button className="bigbtn" onClick={next}>Continuer</button> : null;
+  } else if (st === "niveau") {
+    body = (
+      <>
+        <span className="obicon" {...stg(0)}><Glyph name="sun" /></span>
+        <p className="eyebrow" {...stg(1)}>La journée du Prophète ﷺ</p>
+        <h1 {...stg(1)}>Par où veux-tu commencer ?</h1>
+        <p className="lead" {...stg(2)}>Prier, invoquer, se lever la nuit : t’en approcher pas à pas.</p>
+        <div className="oblist">
+          {([1, 2, 3, 4, 5] as NiveauId[]).map((n, i) => (
+            <button key={n} className="obrow" aria-pressed={OB.niveau === n} {...stg(3 + i)} onClick={() => pickAndGo({ niveau: n })}>
+              <span className="obi obn">{n}</span>
+              <span className="obl">{NIVEAUX[n].titre}<small>{n === 1 && <em className="obreco">Pour commencer</em>}{NIVEAUX[n].ajoute}</small></span>
+              <span className="obck" aria-hidden="true"><Glyph name="check" /></span>
+            </button>
+          ))}
+        </div>
+        <p className="secintro" {...stg(9)}>Le niveau suivant te sera proposé quand tu seras prêt. Tu peux en changer à tout moment.</p>
+      </>
+    );
+    cta = <button className="bigbtn" onClick={next}>Continuer</button>;
   } else if (OB.cat && parc) {
     // Révélation : le programme sur mesure.
     const name = OB.title.trim() || OBJ_CATS[OB.cat].l;
     body = (
       <div className="reveal">
         <div className="revhead">
+          <Burst />
           <p className="eyebrow" {...stg(0)}>Ton programme sur mesure</p>
           <h1 {...stg(1)}>{name}</h1>
           <p {...stg(2)}>Chaque jour, une invocation ciblée, un geste concret et ton socle quotidien. Pendant {PARCOURS_DAYS} jours.</p>
@@ -267,7 +292,7 @@ export function Bienvenue() {
   } else {
     body = (
       <>
-        <span className="obicon" {...stg(0)}><Glyph name="sparkle" /></span>
+        <span className="obicon burstwrap" {...stg(0)}><Burst /><Glyph name="sparkle" /></span>
         <h1 {...stg(1)}>Ton programme est prêt</h1>
         <div className="recap" {...stg(2)}>
           <p><b>Objectif :</b> à fixer plus tard</p>
@@ -293,13 +318,14 @@ export function Bienvenue() {
   }
 
   return (
-    <div className="ob2">
+    <div className={`ob2 ${st === "welcome" ? "welcome" : ""}`}>
       {st !== "welcome" && (
         <header className="obtop">
           <button className="obback" onClick={back} aria-label="Question précédente"><Glyph name="arrowleft" /></button>
           <div className="obprog" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ width: `${progress * 100}%` }} /></div>
         </header>
       )}
+      {st === "welcome" && <WelcomeSky />}
       <div className={`obstep ${dir.current}`} key={st}>{body}</div>
       <footer className="obcta" key={`cta-${st}`}>{cta}</footer>
     </div>
@@ -311,4 +337,28 @@ function WelcomeStar() {
   const [p, setP] = useState(0);
   useEffect(() => { const t = setTimeout(() => setP(1), 250); return () => clearTimeout(t); }, []);
   return <div className="obstar"><Star pct={p} /></div>;
+}
+
+/** Le ciel de l’accueil : un dégradé profond, une lueur qui respire et des étoiles à huit branches qui tournent lentement. */
+function WelcomeSky() {
+  const stars: [number, number, number, number][] = [[12, 14, 46, 0], [86, 9, 30, 1], [78, 46, 70, 2], [8, 62, 34, 3], [52, 88, 90, 4], [92, 82, 26, 5], [30, 36, 18, 6]];
+  return (
+    <div className="obsky" aria-hidden="true">
+      <i className="obglow" />
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+        {stars.map(([x, y, r, k]) => (
+          <polygon key={k} className="obsk" points={starPoints(x, y, r / 4)} style={{ "--k": k, transformOrigin: `${x}px ${y}px` } as CSSProperties} />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+/** Une petite gerbe d’étoiles, pour fêter la fin de l’accueil. */
+function Burst() {
+  return (
+    <span className="burst" aria-hidden="true">
+      {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ "--a": `${i * 22.5}deg`, "--d": `${(i % 4) * 70}ms`, "--r": `${70 + (i % 3) * 26}px` } as CSSProperties} />)}
+    </span>
+  );
 }

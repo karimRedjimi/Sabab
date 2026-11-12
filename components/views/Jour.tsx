@@ -10,7 +10,7 @@ import { ensureDay } from "@/lib/state";
 import { prayerTimes, hm } from "@/lib/prayer";
 import {
   countable, currentMoment, parcoursDay, dayPct, entryPct, getItem, itemPct, momentOf, nextStep, plan, secCount, slotsOf, val,
-  MOMENT_LABEL, type Entry, type Moment, type Plan, type Structure, CORAN_AM, CORAN_PM } from "@/lib/program";
+  MOMENT_LABEL, type Entry, type Moment, type Plan, type Structure, CORAN_AM, CORAN_PM, momentOuvert, momentPasEncore, momentStart } from "@/lib/program";
 import { useCount, useCoranMark } from "../Cards";
 import { IconLeft, IconRight } from "../Icons";
 import { useStore } from "../Store";
@@ -119,12 +119,18 @@ function ObjectiveLine() {
 }
 
 function useStartLecture() {
-  const { setUi } = useStore();
-  return (queue: Entry[], label: string, intention = false) => { if (queue.length) setUi(() => ({ lecture: { queue, i: 0, label, intention, scrollY: window.scrollY } })); };
+  const { S, ui, setUi, toast } = useStore();
+  return (queue: Entry[], label: string, intention = false) => {
+    if (!queue.length) return;
+    // Le soir et la nuit ne s’ouvrent qu’à leur heure.
+    const m = queue[0].m;
+    if (!momentOuvert(S, ui.sel, m)) { toast(momentPasEncore(S, ui.sel, m)); return; }
+    setUi(() => ({ lecture: { queue, i: 0, label, intention, scrollY: window.scrollY } }));
+  };
 }
 
 /** Le rappel de l’objectif : court, avec un seul bouton pour avancer dans la journée. */
-function NeedCard({ onGo, started, allDone }: { onGo: (() => void) | null; started: boolean; allDone: boolean }) {
+function NeedCard({ onGo, wait, started, allDone }: { onGo: (() => void) | null; wait?: { label: string; at: string } | null; started: boolean; allDone: boolean }) {
   const { S, ui, update, toast } = useStore();
   const d = ui.sel, isToday = sameDay(d, today());
   const serves = parcoursServesObjective(S), pd = serves ? parcoursDay(S, d) : 0, finished = parcoursFinished(S, d);
@@ -155,6 +161,7 @@ function NeedCard({ onGo, started, allDone }: { onGo: (() => void) | null; start
       {!serves && !finished && <Link className="needlink" href="/parcours">Commencer le parcours de {PARCOURS_DAYS} jours</Link>}
       {isToday && (onGo
         ? <button className="go" onClick={onGo}>{started ? "Continuer" : "Commencer ma journée"}</button>
+        : wait ? <button className="go wait" disabled>La suite : {wait.label.toLowerCase()}, dès {wait.at}</button>
         : allDone ? <p className="needdone">Journée accomplie, qu’Allah l’accepte.</p> : null)}
     </div>
   );
@@ -228,11 +235,17 @@ function NiveauSuivant() {
   );
 }
 
-/** La file de « Continuer » : on reprend la journée dans l’ordre, là où elle s’est arrêtée. */
-function dayQueue(S: Parameters<typeof plan>[0], dk: string, P: Plan) {
+/**
+ * La file de « Continuer » : on reprend la journée dans l’ordre, là où elle s’est arrêtée.
+ * Un moment pas encore ouvert (le soir avant le ʿAsr, la nuit avant le ʿIchâ) bloque la suite : on indique son heure.
+ */
+function dayQueue(S: Parameters<typeof plan>[0], d: Date, P: Plan, now: Date) {
+  const dk = keyOf(d);
   for (const m of ["matin", "jour", "soir", "nuit"] as const) {
     const todo = P.sections[m].filter((e) => !e.opt && e.id !== "obj" && e.id !== "pact" && entryPct(S, dk, e) < 1);
-    if (todo.length) return { todo, label: MOMENT_LABEL[m], intention: todo[0].origin === "parc" };
+    if (!todo.length) continue;
+    if (!momentOuvert(S, d, m, now)) return { wait: { label: MOMENT_LABEL[m], at: hm(momentStart(S, d, m)!) } };
+    return { todo, label: MOMENT_LABEL[m], intention: todo[0].origin === "parc" };
   }
   return null;
 }
@@ -469,6 +482,7 @@ function nextQueue(S: Parameters<typeof plan>[0], d: Date, P: Plan, now: Date, s
   const all: Record<Moment, Entry[]> = { ...P.sections, actions: P.actions };
   const order: Moment[] = [ns.next.m, ...(["matin", "jour", "soir", "actions"] as Moment[]).filter((m) => m !== ns.next!.m)];
   for (const m of order) {
+    if (!momentOuvert(S, d, m, now)) continue;
     const todo = all[m].filter((e) => !e.opt && !(skip && skip(e)) && entryPct(S, dk, e) < 1);
     if (todo.length) return { todo, label: MOMENT_LABEL[m] };
   }
@@ -555,7 +569,7 @@ export function Jour() {
 
 /** La page Jour organisée autour du besoin de la personne. */
 function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: React.RefObject<HTMLDivElement | null> }) {
-  const { S, ui } = useStore();
+  const { S, ui, now } = useStore();
   const start = useStartLecture();
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today()), s = P.s;
   // L’invocation de l’objectif est mise en avant en première ligne ; le reste suit par moment.
@@ -571,15 +585,16 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
   const socle = order.map((m) => [m, P.sections[m].filter((e) => !isNeed(e) && e.id !== "obj" && e.id !== "pact")] as const).filter(([, l]) => l.length)
     .sort((a, b) => rank(a[0], a[1]) - rank(b[0], b[1]) || order.indexOf(a[0]) - order.indexOf(b[0]));
   const sc = secCount(S, [...invoke, ...socle.flatMap(([, l]) => l)], dk);
-  const q = isToday ? dayQueue(S, dk, P) : null;
-  const go = q ? () => start(q.todo, q.label, q.intention) : null;
+  const q = isToday ? dayQueue(S, d, P, now) : null;
+  const go = q && "todo" in q ? () => start(q.todo!, q.label!, q.intention) : null;
+  const wait = q && "wait" in q ? q.wait : null;
   return (
     <>
       <MiniBar watch={topRef} title={objectiveName(S)} done={sc.done} total={sc.total} onGo={go} />
       <DateBar refEl={topRef} />
       {!isToday && <PastBanner />}
       <div className="reperes"><Prayers d={d} /></div>
-      <NeedCard onGo={go} started={sc.done > 0} allDone={sc.total > 0 && sc.done === sc.total} />
+      <NeedCard onGo={go} wait={wait} started={sc.done > 0} allDone={sc.total > 0 && sc.done === sc.total} />
       <Coach s={s} only="light" />
       {isToday && (
         <div className="notices">
