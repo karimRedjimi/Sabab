@@ -245,6 +245,44 @@ function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | nu
   );
 }
 
+/** La progression de la journée : une barre dorée qui se remplit, une étoile qui avance, et le pourcentage qui défile. */
+function DayProgress({ done, total, marks }: { done: number; total: number; marks: { m: Moment; n: number }[] }) {
+  const pct = total ? done / total : 0;
+  const [shown, setShown] = useState(0);
+  const [num, setNum] = useState(0);
+  useEffect(() => { const t = setTimeout(() => setShown(pct), 60); return () => clearTimeout(t); }, [pct]);
+  // Le pourcentage défile jusqu’à sa valeur.
+  useEffect(() => {
+    const target = Math.round(pct * 100);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setNum(target); return; }
+    let raf = 0; const from = num, t0 = performance.now();
+    const step = (t: number) => { const k = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - k, 3); setNum(Math.round(from + (target - from) * e)); if (k < 1) raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pct]);
+  const full = total > 0 && done >= total;
+  let acc = 0;
+  const ticks = marks.map((x) => { const at = total ? acc / total : 0; acc += x.n; return { ...x, at, end: total ? acc / total : 0 }; });
+  return (
+    <div className={`dprog ${full ? "full" : ""}`} role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done} aria-label={`Ta journée : ${done} sur ${total}`}>
+      <div className="dphead">
+        <h2>Ta journée</h2>
+        <span className="dpnum"><b>{num}</b><small>%</small></span>
+      </div>
+      <div className="dpbar">
+        <i className="dpfill" style={{ width: `${shown * 100}%` }}><em className="dpshine" /></i>
+        {ticks.slice(1).map((t) => <span key={t.m} className="dptick" style={{ left: `${t.at * 100}%` }} />)}
+        <span className="dpstar" style={{ left: `${shown * 100}%` }} aria-hidden="true"><Star pct={1} /></span>
+      </div>
+      <div className="dplabels" aria-hidden="true">
+        {ticks.map((t) => <span key={t.m} className={shown >= t.end - 0.001 ? "ok" : ""} style={{ left: `${((t.at + t.end) / 2) * 100}%` }}>{t.m === "matin" ? "Matin" : t.m === "jour" ? "Journée" : t.m === "soir" ? "Soir" : "Nuit"}</span>)}
+      </div>
+      <p className="dpsub">{full ? "Journée accomplie, qu’Allah l’accepte" : `${done} sur ${total} · ${total - done > 1 ? `encore ${total - done}` : "plus qu’une"}`}</p>
+    </div>
+  );
+}
+
 /** Un nœud du fil de la journée : une étoile dorée quand c’est fait. */
 function TlNode({ done, now }: { done: boolean; now?: boolean }) {
   return <span className={`nd ${done ? "done" : now ? "now" : ""}`} aria-hidden="true">{done && <Star pct={1} />}</span>;
@@ -418,7 +456,7 @@ function Row({ e, intention = false, tile }: { e: Entry; intention?: boolean; ti
         {tile ? (
           <span className="rt">
             <b>{e.origin === "parc" && e.id !== "pact" ? (parcoursServesObjective(S) ? objectiveTag(S) : "Ton parcours") : "Ton geste du jour"}</b>
-            <small>{isObj && !own && !gesture ? "À choisir, une idée t’attend" : title}</small>
+            <small>{isObj && !own && !gesture ? "À choisir, une idée t’attend" : slotsOf(e.id).length === 2 && (e.m === "matin" || e.m === "soir") ? `${e.m === "matin" ? "Matin" : "Soir"} · ${title}` : title}</small>
           </span>
         ) : (
           <span className="rt">
@@ -647,17 +685,24 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
         </div>
       )}
       <section className="sec">
-        <div className="sechead"><h2>Ta journée</h2><span className="count">{sc.done === sc.total && sc.total ? "fait" : `${sc.done} sur ${sc.total}`}</span></div>
+        <DayProgress done={sc.done} total={sc.total} marks={order.map((m) => ({ m, n: [...(socle.find(([x]) => x === m)?.[1] || []), ...invoke.filter((e) => e.m === m)].filter((e) => !e.opt).length })).filter((x) => x.n > 0)} />
         {!s.light && <NiveauLigne />}
         <Coach s={s} only="ramp" />
         <div className="tl">
-          {invoke.map((e) => (
-            <div key={`${e.id}-${e.m}`} className={`tr ${entryPct(S, dk, e) >= 1 ? "done" : ""}`}><TlNode done={entryPct(S, dk, e) >= 1} /><Row e={e} intention tile="objectif" /></div>
-          ))}
-          {socle.map(([m, l]) => {
-            const c = secCount(S, [...l], dk), done = c.total > 0 && c.done === c.total;
-            const st = done ? "done" : !momentOuvert(S, d, m, now) ? "lock" : m === cur ? "now" : "";
-            return <div key={m} className={`tr ${st}`}><TlNode done={done} now={st === "now"} /><SocleRow m={m} list={[...l]} cur={cur} /></div>;
+          {/* Dans l’ordre du jour : chaque moment, puis l’invocation de l’objectif qui lui revient. */}
+          {order.map((m) => {
+            const l = socle.find(([x]) => x === m)?.[1];
+            const need = invoke.filter((e) => e.m === m);
+            const c = l ? secCount(S, [...l], dk) : null, done = !!c && c.total > 0 && c.done === c.total;
+            const lock = !momentOuvert(S, d, m, now);
+            const st = done ? "done" : lock ? "lock" : m === cur ? "now" : "";
+            return [
+              l && <div key={m} className={`tr ${st}`}><TlNode done={done} now={st === "now"} /><SocleRow m={m} list={[...l]} cur={cur} /></div>,
+              ...need.map((e) => {
+                const ok = entryPct(S, dk, e) >= 1;
+                return <div key={`${e.id}-${e.m}`} className={`tr need ${ok ? "done" : lock ? "lock" : ""}`}><TlNode done={ok} /><Row e={e} intention tile="objectif" /></div>;
+              }),
+            ];
           })}
         </div>
       </section>

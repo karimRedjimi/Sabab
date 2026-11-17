@@ -72,6 +72,14 @@ export function SalatSheet({ d, k, onClose }: { d: Date; k: SalatKey; onClose: (
     onClose();
   };
 
+  // Déjà lue en priant : on la valide d’un geste, sans ouvrir la lecture.
+  const marquerAdhkar = () => {
+    buzz(adhDone ? 6 : 14);
+    update((x) => {
+      const r = ensureDay(x, dk); r.c = r.c || {};
+      for (const e of adhkar) { const key = `${e.id}:${e.sl[0]}`; if (adhDone) delete r.c[key]; else r.c[key] = slotsOf(e.id)[e.sl[0]].t; }
+    });
+  };
   const lire = () => {
     save();
     setUi(() => ({ sel: d, lecture: { queue: adhkar, i: 0, label: `Après le ${SALAT_LABEL[k]}` } }));
@@ -116,10 +124,14 @@ export function SalatSheet({ d, k, onClose }: { d: Date; k: SalatKey; onClose: (
           <div role="group" aria-label="Autour de la prière">
             <p className="sgroup">Autour de la prière</p>
             {unit(rw.avant)}
-            <button className={`sopt mini ${adhDone ? "on" : ""}`} onClick={lire}>
-              <span className="t"><b>{niveau(S) >= 2 ? "Invocations après la prière" : "Ayat al-Kursî"}</b><small>{niveau(S) >= 2 ? "Avec Ayat al-Kursî · 2 minutes" : "Après chaque prière · 1 minute"}</small></span>
-              <span className="go2">{adhDone ? "Relire" : "Lire"}</span>
-            </button>
+            <div className={`sopt mini adh ${adhDone ? "on" : ""}`}>
+              <button className="adhck" role="checkbox" aria-checked={adhDone} onClick={marquerAdhkar}
+                aria-label={`${niveau(S) >= 2 ? "Invocations après la prière" : "Ayat al-Kursî"} : ${adhDone ? "lue" : "déjà lue ? Toucher pour valider"}`}>
+                <span className="ck" aria-pressed={adhDone} />
+                <span className="t"><b>{niveau(S) >= 2 ? "Invocations après la prière" : "Ayat al-Kursî"}</b><small>{adhDone ? "Lue, qu’Allah l’accepte" : "Déjà lue ? Coche-la"}</small></span>
+              </button>
+              <button className="go2" onClick={lire}>{adhDone ? "Relire" : "Lire"}</button>
+            </div>
             {unit(rw.apres)}
           </div>
         )}
