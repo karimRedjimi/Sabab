@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { EXTRAITS } from "@/content/coran-extraits";
 import { APRES_PRIERE, JOURNEE_ITEMS, MATIN_NIVEAU, NUIT_NIVEAU, RAWATIB } from "@/content/journee";
 import { ITEMS } from "@/content/programme";
@@ -78,6 +78,8 @@ describe("ce que chaque niveau ajoute", () => {
 });
 
 describe("passer au niveau suivant", () => {
+  beforeAll(() => { vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date(2026, 10, 12, 12)); });
+  afterAll(() => { vi.useRealTimers(); });
   const held = (lvl: 1 | 5, days: number) => {
     const s = S(lvl);
     s.prophete = { lvl, since: "2026-10-20" };

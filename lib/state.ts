@@ -1,5 +1,6 @@
 import { SOCLE } from "@/content/programme";
 import { keyOf, today } from "./dates";
+import type { NotifPrefs } from "./notifs";
 
 export interface Prayer { city: string; lat: number; lng: number; method: string }
 export interface DayRec { c: Record<string, number>; note: string; objAct?: string; light?: boolean }
@@ -41,6 +42,8 @@ export interface State {
   prophete?: { lvl: 1 | 2 | 3 | 4 | 5; since: string; snooze?: string };
   /** Le premier jour guidé : proposé à la fin de la configuration, jusqu’à la première invocation. */
   guide?: "start" | "lecture" | "done";
+  /** Les rappels : ce que la personne veut recevoir. */
+  notifs?: NotifPrefs;
   /** Dernier jour où le message de patience a été vu. */
   patienceSeen?: string;
   // Phase 2 (communauté, binôme) : conservés pour compatibilité avec le prototype.
@@ -107,6 +110,7 @@ export function combine(remoteRaw: unknown, localRaw: unknown): State {
   out.coran = { ...(L.coran || {}), ...(out.coran || {}) };
   if (!out.coranLevel && L.coranLevel) out.coranLevel = L.coranLevel;
   if (!out.prophete && L.prophete) out.prophete = L.prophete;
+  if (!out.notifs && L.notifs) out.notifs = L.notifs;
   if (!out.objective && L.objective) out.objective = L.objective;
   if (!out.parcours && L.parcours) out.parcours = L.parcours;
   if (!out.prayer && L.prayer) out.prayer = L.prayer;

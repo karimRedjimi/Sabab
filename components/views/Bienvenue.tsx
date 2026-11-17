@@ -11,6 +11,8 @@ import { prayerTimes, hm } from "@/lib/prayer";
 import { rampWeek } from "@/lib/program";
 import { NIVEAUX, type NiveauId } from "@/content/journee";
 import { choisirNiveau, niveau } from "@/lib/journee";
+import { prefs } from "@/lib/notifs";
+import { demander, iphoneHorsAccueil, pushPossible } from "@/lib/push";
 import { ensureDay, uid8 } from "@/lib/state";
 import { STAGES, titleExample, type Stage } from "@/lib/objective";
 import { SALAT, SALAT_LABEL } from "@/lib/salat";
@@ -18,7 +20,7 @@ import { Glyph } from "../Glyphs";
 import { Star, starPoints } from "../Star";
 import { buzz, useStore } from "../Store";
 
-type Step = "welcome" | "ville" | "objectif" | "ecoute" | "arabe" | "niveau" | "fin";
+type Step = "welcome" | "ville" | "objectif" | "ecoute" | "arabe" | "niveau" | "rappels" | "fin";
 
 const CAT_ICON: Record<string, string> = { emploi: "briefcase", activite: "store", dette: "coins", mariage: "rings", etudes: "cap", epreuve: "leaf", autre: "sparkle" };
 const STAGE_ICON: Record<Stage, string> = { start: "seed", lead: "climb", heavy: "feather" };
@@ -45,6 +47,7 @@ export function Bienvenue() {
     level: (S.onboarded && S.level) || (null as string | null),
     ramp: S.onboarded ? !!rampWeek(S, today()) : true,
     niveau: niveau(S) as NiveauId,
+    rappels: !!S.notifs?.on,
   }));
   const dir = useRef<"fwd" | "back">("fwd");
   // Changer d’étape : l’étape s’efface (220 ms), puis la suivante entre. Un double appui ne saute rien.
@@ -56,7 +59,7 @@ export function Bienvenue() {
     setTimeout(() => { fn(); setLeaving(false); busy.current = false; window.scrollTo(0, 0); }, 220);
   };
   const set = (p: Partial<typeof OB>) => setOB((o) => ({ ...o, ...p }));
-  const steps: Step[] = ["welcome", "ville", "objectif", ...(OB.cat ? (["ecoute"] as Step[]) : []), "arabe", "niveau", "fin"];
+  const steps: Step[] = ["welcome", "ville", "objectif", ...(OB.cat ? (["ecoute"] as Step[]) : []), "arabe", "niveau", "rappels", "fin"];
   const st = steps[Math.min(OB.i, steps.length - 1)];
   // Avancer depuis une étape précise : un double appui ne saute jamais une question.
   const go = (from: number) => { dir.current = "fwd"; move(() => setOB((o) => (o.i === from ? { ...o, i: o.i + 1 } : o))); };
@@ -91,6 +94,7 @@ export function Bienvenue() {
         if (withParcours && pid && PARCOURS[pid] && s.parcours?.id !== pid) s.parcours = { id: pid, start: tk };
       }
       if (!s.prophete || s.prophete.lvl !== OB.niveau) choisirNiveau(s, OB.niveau, today());
+      if (OB.rappels) s.notifs = { ...prefs(s), on: true };
       if (OB.level) { s.level = OB.level; s.show = { ...LEVELS[OB.level].show }; }
       if (OB.ramp) { s.rampStart = tk; s.rampDone = null; } else if (rampWeek(s, today())) s.rampDone = tk;
       ensureDay(s, tk);
@@ -247,6 +251,29 @@ export function Bienvenue() {
       </>
     );
     cta = <button className="bigbtn" onClick={next}>Continuer</button>;
+  } else if (st === "rappels") {
+    const hors = iphoneHorsAccueil(), possible = pushPossible();
+    body = (
+      <>
+        <span className="obicon" {...stg(0)}><Glyph name="bell" /></span>
+        <h1 {...stg(1)}>Tes rappels</h1>
+        <p className="lead" {...stg(2)}>Juste ce qu’il faut pour tenir ta journée, sans être dérangé.</p>
+        <ul className="obfeat obrap">
+          {[["clock", "10 minutes avant chaque prière"], ["sun", "Tes invocations du matin et du soir, seulement si elles ne sont pas faites"], ["check", "Jamais plus de trois rappels par jour en plus des prières"]].map(([ic, t], i) => (
+            <li key={ic} {...stg(3 + i)}><span className="obi"><Glyph name={ic} /></span>{t}</li>
+          ))}
+        </ul>
+        {hors ? <p className="secintro" {...stg(6)}>Sur iPhone, les rappels marchent depuis l’icône de l’écran d’accueil : Partager, puis « Sur l’écran d’accueil ». Tu pourras les activer ensuite dans Plus › Notifications.</p>
+          : !possible ? <p className="secintro" {...stg(6)}>Ce navigateur ne permet pas les rappels. Tu pourras les activer depuis un autre, dans Plus › Notifications.</p>
+          : <p className="secintro" {...stg(6)}>Tout se règle ensuite dans Plus › Notifications.</p>}
+      </>
+    );
+    cta = hors || !possible ? <button className="bigbtn" onClick={next}>Continuer</button> : (
+      <>
+        <button className="bigbtn" onClick={async () => { const r = await demander(); set({ rappels: r === "granted" }); if (r === "granted") buzz(12); next(); }}>Activer les rappels</button>
+        <button className="later" onClick={() => { set({ rappels: false }); next(); }}>Plus tard</button>
+      </>
+    );
   } else if (OB.cat && parc) {
     // Révélation : le programme sur mesure.
     const name = OB.title.trim() || OBJ_CATS[OB.cat].l;

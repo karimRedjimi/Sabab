@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import { useStore } from "./Store";
 import { needsOnboarding } from "@/lib/state";
 import { supabase, DEBUT_KEY } from "@/lib/supabase";
+import { RappelsSync } from "./Rappels";
 import { DUA_GOAL, duasOn } from "@/lib/verset";
 import { keyOf, today } from "@/lib/dates";
 import { useEdgeSwipeBack, useViewTransitions } from "./Gestures";
@@ -13,7 +14,7 @@ const TAB_OF: Record<string, string> = {
   "/chemin": "/",
   "/combat": "/plus",
   "/bilan": "/suivi", "/rythme": "/plus", "/binome": "/plus", "/objectif": "/plus", "/parcours": "/plus",
-  "/priere": "/plus", "/programme": "/plus", "/confidentialite": "/plus", "/donnees": "/plus", "/compte": "/plus", "/moderation": "/plus", "/carnet": "/plus",
+  "/priere": "/plus", "/programme": "/plus", "/confidentialite": "/plus", "/donnees": "/plus", "/compte": "/plus", "/moderation": "/plus", "/carnet": "/plus", "/notifications": "/plus", "/cles": "/plus",
 };
 
 const TABS: { href: string; label: string; icon: ReactNode }[] = [
@@ -113,6 +114,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
       </div>
+      <RappelsSync />
       <div className={`toast${toastMsg ? " show" : ""}${toastAction ? " act" : ""}`} role="status">
         <span>{toastMsg}</span>
         {toastAction && <button onClick={() => { toastAction.run(); dismissToast(); }}>{toastAction.label}</button>}

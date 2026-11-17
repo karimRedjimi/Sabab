@@ -1,6 +1,6 @@
 // Service worker : l’application reste utilisable hors ligne.
 // Pages : réseau d’abord, copie en cache en secours. Fichiers statiques : cache d’abord.
-const CACHE = "sabab-v3";
+const CACHE = "sabab-v4";
 const PAGES = ["/", "/apprendre", "/communaute", "/carnet", "/suivi", "/plus", "/bilan", "/objectif", "/parcours", "/priere", "/programme", "/rythme", "/confidentialite", "/bienvenue", "/binome", "/donnees", "/chemin", "/combat"];
 
 self.addEventListener("install", (e) => {
@@ -28,4 +28,22 @@ self.addEventListener("fetch", (e) => {
       return res;
     }).catch(() => caches.match(req).then((hit) => hit || caches.match("/"))));
   }
+});
+
+// Les rappels : afficher, puis ouvrir l’application au bon endroit quand on touche la notification.
+self.addEventListener("push", (e) => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch { d = { title: "Sabab", body: e.data ? e.data.text() : "" }; }
+  e.waitUntil(self.registration.showNotification(d.title || "Sabab", {
+    body: d.body || "", tag: d.tag || "sabab", renotify: true,
+    icon: "/icons/icon-192.png", badge: "/icons/icon-192.png", data: { url: d.url || "/" },
+  }));
+});
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close();
+  const url = new URL((e.notification.data && e.notification.data.url) || "/", self.location.origin).href;
+  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+    for (const c of list) if ("focus" in c) { c.navigate(url).catch(() => {}); return c.focus(); }
+    return self.clients.openWindow(url);
+  }));
 });

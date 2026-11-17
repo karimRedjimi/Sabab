@@ -17,3 +17,9 @@ create function storage.foldername(name text) returns text[] language sql immuta
 grant usage on schema storage to authenticated;
 grant select, insert, delete on storage.objects to authenticated;
 grant execute on function storage.foldername(text) to authenticated;
+-- Imitation de pg_net (les requêtes sont seulement enregistrées).
+create schema net;
+create table net.sent (id bigserial primary key, url text, body jsonb, headers jsonb);
+create table net._http_response (id bigint primary key, status_code int, content text);
+create function net.http_post(url text, body jsonb default '{}', params jsonb default '{}', headers jsonb default '{}', timeout_milliseconds int default 5000) returns bigint
+language sql as $$ insert into net.sent (url, body, headers) values (url, body, headers) returning id $$;

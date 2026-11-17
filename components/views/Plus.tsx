@@ -42,6 +42,7 @@ export function Plus() {
     ]],
     ["Réglages", [
       ["/priere", "clock", "Horaires de prière", S.prayer ? S.prayer.city : "À choisir"],
+      ["/notifications", "bell", "Notifications", S.notifs?.on ? "Activées" : "Désactivées"],
       ["/donnees", "download", "Mes données", ""],
       ["/confidentialite", "shield", "Confidentialité", ""],
     ]],
