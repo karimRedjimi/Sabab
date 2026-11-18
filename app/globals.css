@@ -2063,3 +2063,8 @@ a.card{display:block;text-decoration:none;color:inherit}
 .qv.lit{background:color-mix(in srgb,#E9C46A 14%,transparent);box-shadow:0 0 0 6px color-mix(in srgb,#E9C46A 14%,transparent)}
 @media (prefers-reduced-motion: reduce){.qwave b{animation:none;height:10px}}
 .vplay{margin:4px 0 8px}.vplay .vtog{margin:0}
+/* Le bouton « Écouter » du verset du jour ne déborde jamais : il passe à la ligne si la place manque. */
+.vplay{flex-wrap:wrap;justify-content:flex-start;row-gap:8px;min-width:0}
+.vplay .vtog{flex:0 1 auto;min-width:0}
+.vplay .qplay{flex:none;margin-left:auto}
+.vday{overflow:hidden}
