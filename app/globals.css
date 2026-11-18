@@ -1819,3 +1819,28 @@ button.rowi.clot{width:100%;border:0;text-align:left;font:inherit;color:inherit;
 .gsealed span{flex:1;min-width:0}
 .gsealed small{display:block;color:var(--brass);font-weight:700;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase}
 @media (prefers-reduced-motion: reduce){.rit *,.rit,.ciel *{animation:none!important;transition:none!important}}
+
+/* ---------- Le fil de la journée, harmonisé : chaque étape a le même gabarit ---------- */
+.tl .tr{padding-bottom:10px}
+.tl .tr > .rowi{height:76px;min-height:76px;padding:0 14px;gap:14px;box-sizing:border-box}
+.tl .tr > .rowi .gtile{width:46px!important;height:46px!important;border-radius:14px}
+.tl .tr > .rowi .rbody{flex:1;min-width:0;display:flex;align-items:center;gap:10px;align-self:stretch}
+.tl .tr > .rowi .rt{flex:1;min-width:0}
+.tl .tr > .rowi .rt b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:1.04rem}
+.tl .tr > .rowi .rt b .nowdot{display:inline-block;vertical-align:middle;margin-left:8px}
+.tl .tr > .rowi .rt small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.tl .tr > .rowi .okdot{display:none}
+.tl .tr > .rowi .expand{width:36px;height:36px}
+.expand.go .chev{transform:rotate(-45deg);margin:0 3px 0 0;border-color:var(--accent)}
+.tl .nd{top:29px}
+.tl .tr.done > .rowi .gtile{filter:saturate(.75)}
+.tilew{position:relative;display:inline-grid;flex:none}
+.tbadge{position:absolute;top:-5px;right:-5px;width:19px;height:19px;background:#E9C46A;clip-path:polygon(50% 0,63% 21%,85% 15%,79% 37%,100% 50%,79% 63%,85% 85%,63% 79%,50% 100%,37% 79%,15% 85%,21% 63%,0 50%,21% 37%,15% 15%,37% 21%);filter:drop-shadow(0 0 4px rgba(233,196,106,.9));animation:tbPulse 2.6s ease-in-out infinite}
+@keyframes tbPulse{50%{transform:scale(1.15) rotate(22deg)}}
+.tl .tr > .subl .rowi{min-height:68px}
+.dprog + .lvline,.lvline + .jhier{margin-top:6px}
+section > .jseal{margin:2px 0 8px 36px}
+@media (prefers-reduced-motion: reduce){.tbadge{animation:none}}
+.tl .subl .rowi{min-height:66px;padding-top:8px;padding-bottom:8px}
+.tl .subl .rt b,.tl .subl .rt small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl .subl .rt small .tag{margin-right:6px}

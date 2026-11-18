@@ -18,12 +18,12 @@ const fmtJour = (dk: string) => { const [y, m, d] = dk.split("-").map(Number); r
 export function ClotureRow({ onOpen }: { onOpen: () => void }) {
   const { S, ui } = useStore();
   const dk = keyOf(ui.sel), g = gratitudeDe(S, dk), clos = journeeClose(S, dk), n = etoiles(S).length;
-  const sub = clos ? `Journée close · ${n} étoile${n > 1 ? "s" : ""} dans ton ciel` : g ? "Al-hamdulillâh noté · à terminer" : "3 questions · 30 secondes · ne compte pas dans le %";
+  const sub = clos ? `${n} étoile${n > 1 ? "s" : ""} dans ton ciel` : g ? "Al-hamdulillâh noté · à terminer" : "3 questions · 30 secondes";
   return (
     <button className={`rowi sum clot ${clos ? "done" : ""}`} onClick={onOpen} aria-label={`Clôturer ta journée : ${sub}`}>
       <span className="gtile t-clot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10z" /><polygon points={starPoints(17.5, 6.5, 2.6)} /></svg></span>
       <span className="rbody"><span className="rt"><b>{clos ? "Ta journée est close" : "Clôturer ta journée"}</b><small>{sub}</small></span></span>
-      {clos ? <span className="okdot" aria-hidden="true" /> : <span className="chev" aria-hidden="true" />}
+      <span className="expand go" aria-hidden="true"><span className="chev" /></span>
     </button>
   );
 }

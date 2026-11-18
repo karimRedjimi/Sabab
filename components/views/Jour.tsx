@@ -209,7 +209,7 @@ function NeedCard({ onGo, goLabel, wait, started, allDone }: { onGo: (() => void
   );
 }
 
-function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | null }) {
+function SocleRow({ m, list, cur, need }: { m: Moment; list: Entry[]; cur: Moment | null; need?: string | null }) {
   const { S, ui, setUi, now } = useStore();
   const start = useStartLecture();
   const d = ui.sel, dk = keyOf(d), c = secCount(S, list, dk);
@@ -234,15 +234,15 @@ function SocleRow({ m, list, cur }: { m: Moment; list: Entry[]; cur: Moment | nu
   return (
     <>
       <div className={`rowi sum ${allDone ? "done" : ""}`}>
-        <Tile k={m} />
-        <button className="rbody" onClick={() => start(todo.length ? todo : list.filter((e) => !e.opt), label)} aria-label={`${label} : ${sub}. Ouvrir la lecture guidée`}>
+        <span className="tilew"><Tile k={m} />{need && <i className="tbadge" title={need} aria-hidden="true" />}</span>
+        <button className="rbody" onClick={() => { const q = todo.length ? todo : list.filter((e) => !e.opt); start(q, label, q[0]?.origin === "parc"); }} aria-label={`${label} : ${sub}${need ? `, avec ${need.toLowerCase()}` : ""}. Ouvrir la lecture guidée`}>
           <span className="rt"><b>{label}{cur === m && !allDone && <span className="nowdot" aria-hidden="true" />}</b><small>{sub}</small></span>
           {allDone && <span className="okdot" aria-label="fait" />}
         </button>
         <button className={`expand ${open ? "on" : ""}`} aria-expanded={open} aria-label={open ? `Replier ${label}` : `Voir le détail de ${label}`}
           onClick={() => setUi((u) => ({ momentOpen: { ...u.momentOpen, [k]: !open } }))}><span className="chev" /></button>
       </div>
-      {open && <div className="subl">{list.map((e) => <Row key={`${e.id}-${e.m}`} e={e} />)}</div>}
+      {open && <div className="subl">{list.map((e) => <Row key={`${e.id}-${e.m}`} e={e} intention={e.origin === "parc" && e.id !== "pact"} />)}</div>}
     </>
   );
 }
@@ -698,23 +698,20 @@ function JourBesoin({ P, cur, topRef, rit }: { P: Plan; cur: Moment | null; topR
         <div className="tl">
           {/* Dans l’ordre du jour : chaque moment, puis l’invocation de l’objectif qui lui revient. */}
           {order.map((m) => {
-            const l = socle.find(([x]) => x === m)?.[1];
+            // L’invocation de ton besoin vit dans son moment : elle passe en premier, et une pastille dorée la signale.
             const need = invoke.filter((e) => e.m === m);
-            const c = l ? secCount(S, [...l], dk) : null, done = !!c && c.total > 0 && c.done === c.total;
+            const l = [...need, ...(socle.find(([x]) => x === m)?.[1] || [])];
+            if (!l.length) return null;
+            const c = secCount(S, l, dk), done = c.total > 0 && c.done === c.total;
             const lock = !momentOuvert(S, d, m, now);
             const st = done ? "done" : lock ? "lock" : m === cur ? "now" : "";
-            return [
-              l && <div key={m} className={`tr ${st}`}><TlNode done={done} now={st === "now"} /><SocleRow m={m} list={[...l]} cur={cur} /></div>,
-              ...need.map((e) => {
-                const ok = entryPct(S, dk, e) >= 1;
-                return <div key={`${e.id}-${e.m}`} className={`tr need ${ok ? "done" : lock ? "lock" : ""}`}><TlNode done={ok} /><Row e={e} intention tile="objectif" /></div>;
-              }),
-            ];
+            const pending = need.some((e) => entryPct(S, dk, e) < 1);
+            return <div key={m} className={`tr ${st}`}><TlNode done={done} now={st === "now"} /><SocleRow m={m} list={l} cur={cur} need={pending ? objectiveTag(S) : null} /></div>;
           })}
           {/* La dernière étape : clôturer sa journée (ne compte pas dans le pourcentage). */}
           <div className={`tr clotr ${journeeClose(S, dk) ? "done" : ""}`}><TlNode done={journeeClose(S, dk)} /><ClotureRow onOpen={() => rit.setOpen(true)} /></div>
-          <ClotureResume onEdit={() => rit.setOpen(true)} />
         </div>
+        <ClotureResume onEdit={() => rit.setOpen(true)} />
       </section>
       <Foot s={s} />
       {rit.open && <Rituel onClose={() => rit.setOpen(false)} />}
