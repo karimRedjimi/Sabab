@@ -1915,3 +1915,51 @@ section > .jseal,.clotsec .jseal{background:linear-gradient(180deg,#3E1240 0%,#2
 .cielacc .catxt{margin:14px 0 2px;font-size:1.08rem;font-weight:600}
 .cielacc .cadem{margin:2px 0 6px;color:var(--muted);font-size:.9rem}
 .cielacc .link{font-size:.9rem}
+
+/* ---------- Bibliothèque d’invocations ---------- */
+.bsearch{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:0 14px;box-shadow:inset 0 0 0 1.5px var(--line);margin-bottom:14px;transition:box-shadow .2s}
+.bsearch:focus-within{box-shadow:inset 0 0 0 2px var(--accent)}
+.bsearch svg{width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;flex:none}
+.bsearch input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:1rem;padding:14px 0;color:var(--ink);outline:none}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:0;border-radius:20px;padding:14px;background:var(--surface);color:var(--ink);font:inherit;box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 5%,transparent);animation:obRise .45s var(--ease) backwards;transition:transform .15s}
+.bt:active{transform:scale(.97)}
+.bt b{font-size:.96rem;line-height:1.25;margin-top:8px}
+.bt small{color:var(--muted);font-size:.8rem}
+.btile{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--soft);color:var(--accent);flex:none}
+.btile svg{width:23px;height:23px}
+.bt:first-child{background:linear-gradient(160deg,#5B1E47,#2A0C22);color:#fff}
+.bt:first-child small{color:rgba(255,255,255,.7)}
+.bt:first-child .btile{background:rgba(233,196,106,.18);color:#E9C46A}
+.bback{display:inline-flex;align-items:center;gap:8px;border:0;background:none;font:inherit;color:var(--accent);font-weight:600;padding:4px 0 8px}
+.bback .chev{transform:rotate(135deg);border-color:var(--accent)}
+.bth{display:flex;align-items:center;gap:12px;margin:2px 0 14px;font-size:1.25rem}
+.btheme{animation:obRise .4s var(--ease)}
+.bchapb{background:var(--surface);border-radius:18px;margin-bottom:8px;overflow:hidden}
+.bchaph{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;font:inherit;color:var(--ink);text-align:left;padding:14px 16px;min-height:56px}
+.bchaph span:first-child{flex:1;font-weight:600;font-size:.96rem;line-height:1.3}
+.bchaph small{color:var(--muted);background:var(--fill);border-radius:99px;padding:2px 9px;font-size:.78rem}
+.bchaph .chev,.bhead .chev{transform:rotate(45deg);transition:transform .25s var(--ease);flex:none}
+.bchapb.open > .bchaph .chev,.bcard.open > .bhead .chev{transform:rotate(-135deg)}
+.bchapl{border-top:1px solid var(--line);padding:6px 8px 8px}
+.bchapl .bcard{background:transparent;box-shadow:none;margin:0;border-radius:14px}
+.bchapl .bcard + .bcard{border-top:1px solid var(--line);border-radius:0}
+.bcard{background:var(--surface);border-radius:18px;margin-bottom:8px;box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 4%,transparent)}
+.bhead{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;font:inherit;color:var(--ink);text-align:left;padding:12px 14px}
+.bhead .rt{flex:1;min-width:0}
+.bhead .rt b{font-size:.96rem;line-height:1.3}
+.bhead .rt small{line-height:1.4}
+.bhead .bchap{color:var(--brass);font-weight:600}
+.bstate{font-size:.72rem;font-weight:700;color:var(--accent);background:var(--soft);border-radius:99px;padding:3px 8px;white-space:nowrap}
+.bstate.ok{background:#E9C46A;color:#2A0C22}
+.bbody{padding:0 14px 14px;animation:obRise .35s var(--ease)}
+.bbody .ar{font-family:var(--font-amiri),"Amiri",serif;font-size:1.45rem;line-height:2;text-align:right;margin:4px 0 10px;white-space:pre-line}
+.bbody .ph{font-style:italic;color:var(--muted);margin:0 0 10px;line-height:1.5}
+.bbody .fr{margin:0 0 10px;line-height:1.55;white-space:pre-line}
+.bsrc{font-size:.8rem;color:var(--brass);margin:0 0 12px}
+.bin{font-size:.86rem;color:var(--muted);margin:0}
+.bapp{width:100%;justify-content:center}
+.bcount{color:var(--muted);font-size:.86rem;margin:0 0 8px}
+.bnote{font-size:.76rem;color:var(--faint);margin:16px 4px 0;line-height:1.5}
+.bsrcar{display:block;font-family:var(--font-amiri),"Amiri",serif;font-size:1rem;text-align:right;margin-top:2px}
+.bchapl .bcard:only-child .bbody{padding-top:8px}

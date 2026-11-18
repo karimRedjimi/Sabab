@@ -3,7 +3,9 @@ import { useState } from "react";
 import { ITEMS, SOCLE } from "@/content/programme";
 import { MASTER } from "@/content/reglages";
 import { fmtShort, fromKey, keyOf, today } from "@/lib/dates";
-import { DUA_IDS, dueIds, grade, maskText } from "@/lib/learn";
+import { dueIds, grade, maskText } from "@/lib/learn";
+import { invocation } from "@/lib/bibliotheque";
+import { Bibliotheque } from "../Bibliotheque";
 import { useStore } from "../Store";
 import { PageBand } from "../Glyphs";
 import { PARCOURS } from "@/content/programme";
@@ -27,7 +29,7 @@ interface Study { queue: string[]; i: number; revealed: boolean }
 
 function StudyCard({ study, setStudy }: { study: Study; setStudy: (s: Study | null) => void }) {
   const { S, update, toast } = useStore();
-  const id = study.queue[study.i], it = ITEMS[id], L = S.learn[id] || { lvl: 0 };
+  const id = study.queue[study.i], it = invocation(id) || { title: "Invocation" }, L = S.learn[id] || { lvl: 0 };
   const lvl = study.revealed ? 0 : Math.min(L.lvl, 3);
   const first = L.lvl === 0;
   const instr = first ? "Découverte : lis-la trois fois à voix haute en suivant le texte."
@@ -46,7 +48,7 @@ function StudyCard({ study, setStudy }: { study: Study; setStudy: (s: Study | nu
       <p className="step">{study.i + 1} sur {study.queue.length}</p>
       <h2>{it.title}</h2>
       <p className="secintro" style={{ margin: "2px 0 0" }}>{instr}</p>
-      <div className="cue">{it.fr}</div>
+      {it.fr && <div className="cue">{it.fr}</div>}
       {it.ar && <p className="ar" lang="ar" dir="rtl"><Masked text={it.ar} lvl={lvl} isAr /></p>}
       {it.ph && <p className="ph"><Masked text={it.ph} lvl={lvl} isAr={false} /></p>}
       <div className="studyactions">
@@ -62,12 +64,11 @@ function StudyCard({ study, setStudy }: { study: Study; setStudy: (s: Study | nu
 export function Apprendre() {
   const { S, update, toast } = useStore();
   const [study, setStudy] = useState<Study | null>(null);
-  const [more, setMore] = useState(false);
   if (study) return <StudyCard study={study} setStudy={setStudy} />;
   const due = dueIds(S), tk = keyOf(today());
-  const inLearn = DUA_IDS.filter((id) => S.learn[id]), others = DUA_IDS.filter((id) => !S.learn[id]);
+  const inLearn = Object.keys(S.learn).filter((id) => invocation(id));
   const row = (id: string) => {
-          const it = ITEMS[id], L = S.learn[id], lvl = L ? L.lvl : -1;
+          const it = invocation(id) || { title: id }, L = S.learn[id], lvl = L ? L.lvl : -1;
           const status = !L ? "Pas encore dans tes révisions" : lvl >= MASTER ? "Sue par cœur" : L.next <= tk ? "À réviser aujourd’hui" : `Prochaine révision le ${fmtShort(fromKey(L.next))}`;
           return (
             <div className="lrow" key={id}>
@@ -85,7 +86,7 @@ export function Apprendre() {
   const totalMastered = Object.keys(S.learn).filter((id) => S.learn[id].lvl >= MASTER).length;
   return (
     <>
-      <PageBand title="Apprendre par cœur" lead="Chaque invocation revient au bon moment, un peu plus masquée à chaque révision. Objectif : le socle en 30 jours.">
+      <PageBand title="Apprendre par cœur" lead="Plus de 280 invocations du Coran et de la Sunna, classées par thème. Chacune revient au bon moment, un peu plus masquée à chaque révision.">
         <div className="stats">
           <div className="stat"><b>{socleMastered} / {SOCLE.length}</b><span>du socle sues par cœur</span><div className="learnbar"><i style={{ width: `${(socleMastered / SOCLE.length) * 100}%` }} /></div></div>
           <div className="stat"><b>{totalMastered}</b><span>invocations sues au total</span></div>
@@ -114,11 +115,7 @@ export function Apprendre() {
         <div className="sechead"><h2>Tes révisions</h2><span className="count">{inLearn.length}</span></div>
         {inLearn.length ? <div className="list">{inLearn.map(row)}</div> : <p className="empty">Ajoute une première invocation ci-dessous.</p>}
       </section>
-      <section className="sec">
-        <div className="sechead"><h2>À découvrir</h2><span className="count">{others.length}</span></div>
-        <div className="list">{(more ? others : others.slice(0, 4)).map(row)}</div>
-        {others.length > 4 && <button className="link" style={{ margin: "6px 4px 0" }} onClick={() => setMore(!more)}>{more ? "Voir moins" : `Voir les ${others.length - 4} autres`}</button>}
-      </section>
+      <Bibliotheque />
     </>
   );
 }

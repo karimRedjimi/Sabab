@@ -5,7 +5,9 @@ import { keyOf, today, addDays } from "./dates";
 import type { State } from "./state";
 
 export const DUA_IDS = Object.keys(ITEMS).filter((id) => ITEMS[id].kind === "dua");
-export function dueIds(S: State) { const tk = keyOf(today()); return Object.keys(S.learn).filter((id) => ITEMS[id] && S.learn[id].next <= tk); }
+/** Une invocation qu’on peut apprendre : celles du programme, et celles de la bibliothèque (« hm-… »). */
+export const apprenable = (id: string) => !!ITEMS[id] || id.startsWith("hm-");
+export function dueIds(S: State) { const tk = keyOf(today()); return Object.keys(S.learn).filter((id) => apprenable(id) && S.learn[id].next <= tk); }
 
 export type MaskPart = { word: string } | { mask: number };
 /** Découpe un texte en mots, en masquant une part croissante selon le niveau. */
