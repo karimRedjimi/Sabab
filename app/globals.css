@@ -2068,3 +2068,28 @@ a.card{display:block;text-decoration:none;color:inherit}
 .vplay .vtog{flex:0 1 auto;min-width:0}
 .vplay .qplay{flex:none;margin-left:auto}
 .vday{overflow:hidden}
+
+/* « Ton ciel » sur l’accueil : une vraie scène de nuit */
+.cielacc{margin-top:28px}
+.cielacc .cabox{position:relative;overflow:hidden;padding:16px 10px 0;border-radius:28px;text-decoration:none;color:#fff;
+  background:radial-gradient(70% 55% at 88% 6%,rgba(246,231,188,.22),transparent 60%),radial-gradient(90% 70% at 15% 100%,rgba(196,86,44,.28),transparent 60%),linear-gradient(180deg,#4E1F52 0%,#2A0C22 55%,#1A0614 100%);
+  box-shadow:0 18px 40px color-mix(in srgb,#2A0C22 35%,transparent),inset 0 0 0 1px rgba(255,255,255,.06)}
+.cahead{display:flex;justify-content:space-between;align-items:center;padding:0 8px;position:relative;z-index:1}
+.cielacc .caeye{margin:0;color:#E9C46A;font-size:.74rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.cacount{font-size:.76rem;font-weight:700;color:#2A0C22;background:#E9C46A;border-radius:99px;padding:3px 10px;box-shadow:0 0 16px rgba(233,196,106,.45)}
+.cielacc .ciel{margin-top:-6px}
+.ciel .cpulse{fill:none;stroke:#E9C46A;stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:cPulse 2.6s ease-out infinite}
+@keyframes cPulse{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(3.2)}}
+.caville{display:block;width:calc(100% + 20px);height:58px;margin:-46px -10px 0;position:relative}
+.caville path{fill:#12040D}
+.caville .cacr{fill:#E9C46A}
+.caquote{position:absolute;left:0;right:0;bottom:12px;margin:0;padding:0 20px;text-align:center;font-size:1.12rem;font-weight:600;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.6);animation:obRise .6s var(--ease) .3s backwards}
+.caquote span{color:#E9C46A;margin:0 6px;font-size:1.2em}
+.cielacc .caquote ~ *{display:none}
+.cielacc .cabox:has(.caquote) .caville{height:84px;margin-top:-56px}
+.cafoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
+.cielacc .cadem{display:flex;align-items:center;gap:10px;margin:0;padding:8px 14px 8px 10px;border-radius:16px;background:var(--surface);box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 6%,transparent);text-align:left;min-width:0}
+.cielacc .cadem svg{width:22px;height:22px;flex:none;fill:none;stroke:#C98A2E;stroke-width:1.8;stroke-linecap:round}
+.cielacc .cadem small{display:block;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brass)}
+.cielacc .cadem span{font-size:.92rem;color:var(--ink);min-width:0}
+@media (prefers-reduced-motion: reduce){.ciel .cpulse{animation:none;opacity:0}}

@@ -37,12 +37,18 @@ export function ClotureResume({ onEdit }: { onEdit: () => void }) {
   const demain = r?.demain?.trim();
   return (
     <section className="sec cielacc" aria-label="Ton ciel">
-      <p className="caeye">Ton ciel</p>
-      <p className="calead">{n ? `${n} bienfait${n > 1 ? "s" : ""}, une étoile chacun` : "Chaque bienfait devient une étoile"}</p>
-      <Link className="cabox" href="/suivi#ciel" aria-label="Voir ton ciel"><Ciel nouvelle={g ? dk : undefined} /></Link>
-      {g && <p className="catxt">« {g} »</p>}
-      {demain && <p className="cadem">Demain : {demain}</p>}
-      <button className="link" onClick={onEdit}>Modifier</button>
+      <Link className="cabox" href="/suivi#ciel" aria-label={`Ton ciel : ${n} étoile${n > 1 ? "s" : ""}. Voir ton ciel`}>
+        <div className="cahead"><span className="caeye">Ton ciel</span><span className="cacount">{n} étoile{n > 1 ? "s" : ""}</span></div>
+        <Ciel nouvelle={g ? dk : undefined} />
+        <svg className="caville" viewBox="0 0 360 64" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 64V50h34v-7c6-14 30-14 36 0v7h26V22l3-7 3 7v28h22v-5c10-30 58-30 68 0v5h24V26l3-7 3 7v24h22v-6c6-12 26-12 32 0v6h48v14z" />
+        </svg>
+        {g && <p className="caquote"><span aria-hidden="true">«</span>{g}<span aria-hidden="true">»</span></p>}
+      </Link>
+      <div className="cafoot">
+        {demain ? <p className="cadem"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4" /></svg><span><small>Demain</small>{demain}</span></p> : <span />}
+        <button className="link" onClick={onEdit}>Modifier</button>
+      </div>
     </section>
   );
 }
@@ -96,6 +102,7 @@ export function Ciel({ max = 40, nouvelle, onPick, sel, deco = true }: { max?: n
           onClick={onPick ? () => onPick(p.dk) : undefined} role={onPick ? "button" : undefined} tabIndex={onPick ? 0 : undefined}
           aria-label={onPick ? `${fmtJour(p.dk)} : ${p.text}` : undefined} onKeyDown={onPick ? (e) => { if (e.key === "Enter") onPick(p.dk); } : undefined}>
           <circle cx={p.x} cy={p.y} r={p.r + 9} className="chalo" />
+          {p.dk === nouvelle && <circle cx={p.x} cy={p.y} r={p.r + 4} className="cpulse" />}
           <polygon points={starPoints(p.x, p.y, p.r)} />
         </g>
       ))}
