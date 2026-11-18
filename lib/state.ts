@@ -3,7 +3,9 @@ import { keyOf, today } from "./dates";
 import type { NotifPrefs } from "./notifs";
 
 export interface Prayer { city: string; lat: number; lng: number; method: string }
-export interface DayRec { c: Record<string, number>; note: string; objAct?: string; light?: boolean }
+export interface DayRec { c: Record<string, number>; note: string; objAct?: string; light?: boolean;
+  /** Journal du soir : l’intention pour le lendemain, et la journée close. */
+  demain?: string; clos?: boolean }
 export interface Objective { title: string; cat: string; why: string; since: string; stage?: "start" | "lead" | "heavy" }
 export interface CarnetEntry { id: string; text: string; date: string; status: "wait" | "ok"; answered?: string; how?: string; shared?: boolean; obj?: boolean }
 export interface LearnRec { lvl: number; next: string; mastered?: string }
@@ -32,6 +34,8 @@ export interface State {
   steps?: { id: string; date: string; text: string }[];
   /** Al-hamdulillâh du jour : une chose pour laquelle on remercie Allah. */
   gratitude?: Record<string, string>;
+  /** Dernier souvenir de bienfait montré sur l’accueil (une fois par semaine). */
+  souvenirVu?: string;
   /** Suivi des cinq prières, par jour. */
   salat?: Record<string, Partial<Record<"fajr" | "dhuhr" | "asr" | "maghrib" | "isha", { s: "on" | "qada" | "ex"; t?: number; m?: boolean }>>>;
   /** Rappels du Coran : versets par jour (1, 5 ou 10). */

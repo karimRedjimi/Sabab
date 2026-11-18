@@ -115,6 +115,11 @@ export function Bilan() {
         <section className="sec"><div className="sechead"><h2>Appris par cœur</h2></div>
           <ul className="blist">{st.mastered.map((id) => <li key={id}>{ITEMS[id].title}</li>)}</ul></section>
       )}
+      {st.grat.length > 0 && (
+        <section className="sec"><div className="sechead"><h2>Tes al-hamdulillâh</h2><span className="count">{st.grat.length} étoile{st.grat.length > 1 ? "s" : ""}</span></div>
+          <ul className="blist bgrat">{st.grat.slice(-3).reverse().map((x) => <li key={keyOf(x.d)}>{x.text}<small>{DAYS[x.d.getDay()].name} {fmtShort(x.d)}</small></li>)}</ul>
+          <Link className="link" href="/suivi#ciel">Voir ton ciel</Link></section>
+      )}
       {st.notes.length > 0 && (
         <section className="sec"><div className="sechead"><h2>Mes notes</h2></div>
           <ul className="blist">{st.notes.slice(-10).reverse().map((x) => <li key={keyOf(x.d)}>{x.text.length > 220 ? x.text.slice(0, 220) + "…" : x.text}<small>{DAYS[x.d.getDay()].name} {fmtShort(x.d)}</small></li>)}</ul></section>

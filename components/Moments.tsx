@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { supabase, REQ_CAT_OF, type RequestView } from "@/lib/supabase";
 import { useAccount } from "./Account";
 import { keyOf, today } from "@/lib/dates";
-import { ensureDay } from "@/lib/state";
 import { favorableMoments, sujud } from "@/lib/moments";
 import { needsPatience, objectiveTag } from "@/lib/objective";
 import type { Entry } from "@/lib/program";
 import { FORMES_DE_REPONSE } from "@/content/textes";
 import { useStore } from "./Store";
+import { derniersBienfaits } from "@/lib/journal";
 
 /** Les prochains moments où l’invocation est exaucée : une ligne, qui se déplie. */
 export function FavorableMoments() {
@@ -38,63 +38,21 @@ export function FavorableMoments() {
   );
 }
 
-/** Le journal du jour : remerciement et note, repliés tant qu’ils sont vides. */
-export function Journal() {
-  const { S, ui, update } = useStore();
-  const dk = keyOf(ui.sel);
-  const g = S.gratitude?.[dk] || "", note = S.days[dk]?.note || "";
-  const [openG, setOpenG] = useState(false), [openN, setOpenN] = useState(false);
-  return (
-    <section className="sec journal">
-      <div className="sechead"><h2>Ton journal</h2></div>
-      <div className="list">
-        {openG || g ? (
-          <div className="jrow open">
-            <label htmlFor="grat-j"><b>Al-hamdulillâh</b><small>Une chose pour laquelle tu remercies Allah aujourd’hui</small></label>
-            <input id="grat-j" className="input" maxLength={140} autoFocus={openG && !g} enterKeyHint="done" value={g} placeholder="Par exemple : la santé de mes parents"
-              onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
-              onChange={(e) => { const t = e.target.value; update((s) => { s.gratitude = { ...(s.gratitude || {}), [dk]: t }; }); }} />
-          </div>
-        ) : (
-          <button className="jrow" onClick={() => setOpenG(true)}><span className="rt"><b>Al-hamdulillâh du jour</b><small>Une chose pour laquelle tu remercies Allah</small></span><span className="jplus" aria-hidden="true">+</span></button>
-        )}
-        {openN || note ? (
-          <div className="jrow open">
-            <label htmlFor="note"><b>Note du jour</b><small>Ton intention, ce qui a bloqué ou avancé</small></label>
-            <textarea id="note" className="area" autoFocus={openN && !note} placeholder="Écris ici…" value={note}
-              onChange={(e) => { const v = e.target.value; update((x) => { ensureDay(x, dk).note = v; }); }} />
-          </div>
-        ) : (
-          <button className="jrow" onClick={() => setOpenN(true)}><span className="rt"><b>Note du jour</b><small>Ton intention, ce qui a bloqué ou avancé</small></span><span className="jplus" aria-hidden="true">+</span></button>
-        )}
-      </div>
-    </section>
-  );
-}
-
-/** Al-hamdulillâh du jour : une chose pour laquelle on remercie Allah. */
-export function Gratitude({ compact = false }: { compact?: boolean }) {
-  const { S, ui, update } = useStore();
-  const dk = keyOf(compact ? today() : ui.sel), v = S.gratitude?.[dk] || "";
-  return (
-    <section className={`grat ${compact ? "compact" : ""}`}>
-      <label htmlFor={`grat-${compact ? "c" : "j"}`}><b>Al-hamdulillâh</b><span>Une chose pour laquelle tu remercies Allah aujourd’hui</span></label>
-      <input id={`grat-${compact ? "c" : "j"}`} className="input" maxLength={140} enterKeyHint="done" onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }} value={v} placeholder="Par exemple : la santé de mes parents"
-        onChange={(e) => { const t = e.target.value; update((s) => { s.gratitude = { ...(s.gratitude || {}), [dk]: t }; }); }} />
-    </section>
-  );
-}
-
 /** Quand la réponse tarde : un mot doux, la patience, et les formes que prend la réponse. */
 export function Patience({ onPatience }: { onPatience: (e: Entry) => void }) {
   const { S, update } = useStore();
   if (!needsPatience(S, today())) return null;
+  const bienfaits = derniersBienfaits(S, 3);
   const close = () => update((s) => { s.patienceSeen = keyOf(today()); });
   return (
     <div className="banner warm pat">
       <div>
         <b>La réponse prend parfois un autre chemin</b>
         <span>{FORMES_DE_REPONSE}</span>
+        {bienfaits.length > 0 && (
+          <div className="patb"><small>Ce qu’Allah t’a déjà donné, d’après ton journal :</small>
+            <ul>{bienfaits.map((b) => <li key={b.dk}>{b.text}</li>)}</ul></div>
+        )}
         <div className="row" style={{ marginTop: 8, gap: 16 }}>
           <button className="act" onClick={() => { close(); onPatience({ id: "sabr", origin: "socle", m: "jour", sl: [0], opt: false }); }}>Invoquer la patience</button>
           <button className="act" style={{ color: "var(--muted)" }} onClick={close}>Merci</button>

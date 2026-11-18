@@ -17,7 +17,9 @@ import { useStore } from "../Store";
 import { Lecture } from "./Lecture";
 import { rappelsDuMoment, versesIn } from "@/lib/coran";
 import { choisirNiveau, niveau, niveauSuivant, niveauTitre, planDuJour, plusTard } from "@/lib/journee";
-import { FavorableMoments, Journal, Patience, SameNeed } from "../Moments";
+import { FavorableMoments, Patience, SameNeed } from "../Moments";
+import { journeeClose } from "@/lib/journal";
+import { ClotureResume, ClotureRow, IntentionDuJour, Rituel, Souvenir, useRituel } from "../Journal";
 import { usePrayerSheet } from "../Salat";
 import { SALAT, dayExempt, fajrForgotten, salatOf, type SalatKey } from "@/lib/salat";
 import { Star, starPoints } from "../Star";
@@ -606,6 +608,7 @@ export function Jour() {
   const topRef = useRef<HTMLDivElement>(null);
   const start = useStartLecture();
   const swipe = useDaySwipe();
+  const rit = useRituel();
   if (ui.lecture) return <Lecture />;
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today());
   const day = DAYS[d.getDay()];
@@ -615,7 +618,7 @@ export function Jour() {
   const doneCount = ids.filter((id) => itemPct(S, dk, id) >= 1).length;
   const needMode = !!S.objective && showObjective(S) && !s.light;
   const anim = ui.dir > 0 ? "day-next" : ui.dir < 0 ? "day-prev" : "";
-  if (needMode) return <div className={`day ${anim}`} key={dk} {...swipe.handlers}><JourBesoin P={P} cur={cur} topRef={topRef} /></div>;
+  if (needMode) return <div className={`day ${anim}`} key={dk} {...swipe.handlers}><JourBesoin P={P} cur={cur} topRef={topRef} rit={rit} /></div>;
   const title = s.light ? "Minimum du jour" : s.ramp ? "Démarrage en douceur" : day.theme;
   const q = isToday ? nextQueue(S, d, P, now) : null;
   return (
@@ -635,6 +638,7 @@ export function Jour() {
         <div className="notices">
           <Coach s={s} only="missed" />
           <BilanBanner />
+          <Souvenir />
           <Coach s={s} only="ramp" />
           {!s.obj && !s.light && (
             <Link className="banner" href="/objectif">
@@ -646,15 +650,16 @@ export function Jour() {
       )}
       {(["matin", "jour", "soir", "nuit"] as const).map((m) => P.sections[m].length ? <Section key={m} m={m} list={P.sections[m]} cur={cur} /> : null)}
       {P.actions.length > 0 && <Section m="actions" list={P.actions} cur={cur} />}
+      <section className="sec clotsec"><ClotureRow onOpen={() => rit.setOpen(true)} /><ClotureResume onEdit={() => rit.setOpen(true)} /></section>
       <Foot s={s} />
-      <Journal />
+      {rit.open && <Rituel onClose={() => rit.setOpen(false)} />}
       {isToday && S.guide === "start" && <Visite />}
     </div>
   );
 }
 
 /** La page Jour organisée autour du besoin de la personne. */
-function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: React.RefObject<HTMLDivElement | null> }) {
+function JourBesoin({ P, cur, topRef, rit }: { P: Plan; cur: Moment | null; topRef: React.RefObject<HTMLDivElement | null>; rit: ReturnType<typeof useRituel> }) {
   const { S, ui, now } = useStore();
   const start = useStartLecture();
   const d = ui.sel, dk = keyOf(d), isToday = sameDay(d, today()), s = P.s;
@@ -680,6 +685,7 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
           <Patience onPatience={(e) => start([e], "Patience")} />
           <Coach s={s} only="missed" />
           <BilanBanner />
+          <Souvenir />
           <SameNeed />
           <NiveauSuivant />
         </div>
@@ -687,6 +693,7 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
       <section className="sec">
         <DayProgress done={sc.done} total={sc.total} marks={order.map((m) => ({ m, n: [...(socle.find(([x]) => x === m)?.[1] || []), ...invoke.filter((e) => e.m === m)].filter((e) => !e.opt).length })).filter((x) => x.n > 0)} />
         {!s.light && <NiveauLigne />}
+        <IntentionDuJour />
         <Coach s={s} only="ramp" />
         <div className="tl">
           {/* Dans l’ordre du jour : chaque moment, puis l’invocation de l’objectif qui lui revient. */}
@@ -704,10 +711,13 @@ function JourBesoin({ P, cur, topRef }: { P: Plan; cur: Moment | null; topRef: R
               }),
             ];
           })}
+          {/* La dernière étape : clôturer sa journée (ne compte pas dans le pourcentage). */}
+          <div className={`tr clotr ${journeeClose(S, dk) ? "done" : ""}`}><TlNode done={journeeClose(S, dk)} /><ClotureRow onOpen={() => rit.setOpen(true)} /></div>
+          <ClotureResume onEdit={() => rit.setOpen(true)} />
         </div>
       </section>
       <Foot s={s} />
-      <Journal />
+      {rit.open && <Rituel onClose={() => rit.setOpen(false)} />}
       {isToday && (S.guide === "start" || S.guide === "lecture") && <Visite />}
     </>
   );

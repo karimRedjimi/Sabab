@@ -8,12 +8,14 @@ import { prayerTimes, type Times } from "./prayer";
 import { SALAT, SALAT_LABEL, salatOf, type SalatKey } from "./salat";
 import type { State } from "./state";
 
-export type NotifKind = "priere" | "matin" | "soir" | "relance" | "verset" | "vendredi" | "nuit";
+export type NotifKind = "priere" | "matin" | "soir" | "relance" | "verset" | "vendredi" | "nuit" | "journal";
 export interface NotifPrefs {
   on: boolean;
   prieres: Record<SalatKey, boolean>;
   avant: 5 | 10 | 15 | 30;
   matin: boolean; soir: boolean; relance: boolean; verset: boolean; vendredi: boolean; nuit: boolean;
+  /** Le journal du soir : une question, seulement s’il n’est pas encore rempli. */
+  journal: boolean;
   /** Écran verrouillé : « Sabab · un moment t’attend », sans rien de religieux. */
   discret: boolean;
 }
@@ -21,7 +23,7 @@ export const NOTIFS_DEFAUT: NotifPrefs = {
   on: false,
   prieres: { fajr: true, dhuhr: true, asr: true, maghrib: true, isha: true },
   avant: 10,
-  matin: true, soir: true, relance: true, verset: false, vendredi: true, nuit: false,
+  matin: true, soir: true, relance: true, verset: false, vendredi: true, nuit: false, journal: true,
   discret: false,
 };
 export const prefs = (S: State): NotifPrefs => ({ ...NOTIFS_DEFAUT, ...(S.notifs || {}), prieres: { ...NOTIFS_DEFAUT.prieres, ...(S.notifs?.prieres || {}) } });
@@ -30,7 +32,7 @@ export interface Rappel { id: string; at: string; kind: NotifKind; title: string
 
 /** Plus de 3 rappels par jour en dehors des prières ? Jamais. Dans cet ordre de priorité. */
 export const MAX_PAR_JOUR = 3;
-const PRIORITE: NotifKind[] = ["soir", "matin", "vendredi", "relance", "verset", "nuit"];
+const PRIORITE: NotifKind[] = ["soir", "matin", "vendredi", "relance", "journal", "verset", "nuit"];
 /** Deux rappels à moins de 30 minutes n’en font qu’un. */
 const ECART_MIN = 30;
 /** Plage calme : de 22 h à 30 minutes avant le Fajr (sauf la prière du Fajr et la prière de nuit). */
@@ -48,6 +50,7 @@ const TEXTES: Record<Exclude<NotifKind, "priere">, [string, string][]> = {
   relance: [["Ta journée t’attend encore", "Il reste un peu de temps pour la tenir, sans pression."], ["Un dernier pas aujourd’hui ?", "Même un petit moment compte auprès d’Allah."], ["Avant de dormir", "Ce qui reste de ta journée t’attend, si tu le peux."]],
   verset: [["Le verset du jour", "Récite-le à voix haute, et partage ta voix si tu le souhaites."], ["Un jour, un verset", "Le verset du jour t’attend dans Communauté."]],
   vendredi: [["La dernière heure du vendredi", "Un moment où l’invocation est exaucée : pense à ton besoin."], ["Vendredi, avant le Maghreb", "Profite de la dernière heure pour invoquer."]],
+  journal: [["Ton journal du soir", "Une chose pour laquelle remercier Allah aujourd’hui ?"], ["Clôture ta journée", "Trois questions, trente secondes, et une étoile de plus dans ton ciel."], ["Avant de dormir", "Qu’est-ce qui t’a fait dire al-hamdulillâh aujourd’hui ?"]],
   nuit: [["Le dernier tiers de la nuit", "Allah descend au ciel le plus proche : c’est le moment de prier et d’invoquer."], ["La nuit est à toi", "Une prière, une invocation, dans le calme du dernier tiers."]],
 };
 
@@ -90,6 +93,8 @@ export function planifier(S: State, now: Date, ctx: Contexte = {}, jours = 7): R
     }
     if (P.soir && !(today && invocationsFaites(S, d, "soir"))) autres.push({ kind: "soir", t: at(d, pt.asr + 0.5) });
     if (P.relance && !(today && dayPct(S, d) >= HELD)) autres.push({ kind: "relance", t: at(d, Math.max(Math.min(pt.isha + 0.75, 21.5), pt.asr + 1.5)) });
+    // Le journal : vers 21 h 30 au plus tard (avant la plage calme), seulement s’il est vide.
+    if (P.journal && !(today && (S.days[dk]?.clos || (S.gratitude?.[dk] || "").trim()))) autres.push({ kind: "journal", t: at(d, Math.min(Math.max(pt.isha + 1, 20.5), 21.75)) });
     if (P.verset) autres.push({ kind: "verset", t: at(d, pt.dhuhr + 0.5) });
     if (P.vendredi && d.getDay() === 5) autres.push({ kind: "vendredi", t: at(d, pt.maghrib - 1) });
     if (P.nuit) autres.push({ kind: "nuit", t: at(d, pt.maghrib + (2 * (tom.fajr + 24 - pt.maghrib)) / 3) });
@@ -117,7 +122,7 @@ export function planifier(S: State, now: Date, ctx: Contexte = {}, jours = 7): R
       // Ouverte dans l’heure : pas de rappel en dehors des prières.
       if (ctx.ouvert && r.kind !== "priere" && r.t.getTime() - ctx.ouvert.getTime() < 3600000) continue;
       const id = `${dk}-${r.key || r.kind}`;
-      out.push({ id, at: r.t.toISOString(), kind: r.kind, title: r.title, body: r.body, url: r.kind === "verset" ? `/communaute?n=${r.kind}&i=${id}` : `/?n=${r.kind}&i=${id}`, tag: r.key || r.kind });
+      out.push({ id, at: r.t.toISOString(), kind: r.kind, title: r.title, body: r.body, url: r.kind === "verset" ? `/communaute?n=${r.kind}&i=${id}` : r.kind === "journal" ? `/?journal=1&n=${r.kind}&i=${id}` : `/?n=${r.kind}&i=${id}`, tag: r.key || r.kind });
     }
   }
   return out.sort((a, b) => a.at.localeCompare(b.at));

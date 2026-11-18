@@ -11,6 +11,7 @@ import { Star } from "../Star";
 import { useStore } from "../Store";
 import { PageBand, Glyph } from "../Glyphs";
 import { SalatSuivi } from "../Salat";
+import { CielSection } from "../Journal";
 import Link from "next/link";
 
 export const heatLevel = (p: number) => (p >= 1 ? 4 : p >= 0.8 ? 3 : p >= 0.5 ? 2 : p > 0 ? 1 : 0);
@@ -22,6 +23,8 @@ export function Suivi() {
   // Comme le prototype : en arrivant sur le suivi, on affiche la semaine du jour sélectionné.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { setUi((u) => ({ weekRef: monday(u.sel) })); }, []);
+  // Arrivée par « Voir ton ciel » : on descend jusqu’au ciel.
+  useEffect(() => { if (window.location.hash === "#ciel") setTimeout(() => document.getElementById("ciel")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120); }, []);
   const goto = (d: Date) => { setUi(() => ({ sel: d })); router.push("/"); };
   const coran = coranStats(S, t), coran30 = coranStats(S, t, 30), nextLevel = suggestNextLevel(S, t);
   const m0 = new Date(t.getFullYear(), t.getMonth(), 1);
@@ -70,6 +73,7 @@ export function Suivi() {
           </div>
         )}
       </PageBand>
+      <CielSection />
       {ui.suiviTab === "salat" ? <SalatSuivi only="body" /> : <>
       <section className="sec">
         <div className="weeknav">

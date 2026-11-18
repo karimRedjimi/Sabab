@@ -1713,3 +1713,109 @@ html.immersive,html.immersive body{background:#2A0C22}
 .adhck:active{background:color-mix(in srgb,var(--ink) 6%,transparent)}
 .hero2 .sheetwrap{color:var(--ink)}
 .sheet button.go2{border:0}
+
+/* ---------- Le journal du soir : clôturer sa journée, et le ciel des bienfaits ---------- */
+.t-clot{background:linear-gradient(160deg,#5B1E47,#2A0C22);color:#E9C46A;width:40px;height:40px}
+.t-clot svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.t-clot svg polygon{fill:currentColor;stroke:none}
+button.rowi.clot{width:100%;border:0;text-align:left;font:inherit;color:inherit;cursor:pointer;padding-right:16px}
+.rowi.clot .rbody{flex:1;min-width:0;display:flex}
+.rowi.clot .chev{width:9px;height:9px;border-right:2px solid var(--faint);border-bottom:2px solid var(--faint);transform:rotate(-45deg);flex:none;margin-right:6px}
+.tr.clotr > .rowi{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#E9C46A 55%,transparent),0 6px 18px color-mix(in srgb,#5B1E47 10%,transparent)}
+.tr.clotr.done > .rowi{box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 4%,transparent)}
+.clotsec .rowi.clot{background:var(--surface);border-radius:18px;border:0;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#E9C46A 55%,transparent)}
+.jseal{margin:2px 0 8px 22px;padding:14px 16px 10px;border-radius:18px;background:linear-gradient(170deg,color-mix(in srgb,#E9C46A 14%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,#E9C46A 35%,transparent);animation:obRise .45s var(--ease) backwards}
+.clotsec .jseal{margin-left:0;margin-top:8px}
+.jseal p{margin:0 0 8px;font-size:.98rem;line-height:1.4}
+.jseal .jl{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--brass)}
+.jseal .link{font-size:.9rem}
+.jhier{margin:4px 0 12px;font-size:.92rem;color:var(--muted);animation:obRise .45s var(--ease) backwards}
+.jhier span{color:var(--brass)}
+.jhier b{color:var(--ink);font-weight:600}
+.souv{position:relative;overflow:hidden}
+.souvst{width:34px;height:34px;flex:none;fill:#E9C46A;filter:drop-shadow(0 0 8px rgba(233,196,106,.7));animation:souvPulse 2.4s ease-in-out infinite}
+@keyframes souvPulse{50%{transform:scale(1.12) rotate(12deg)}}
+.patb{margin-top:10px}
+.patb small{display:block;color:var(--muted);margin-bottom:4px}
+.patb ul{margin:0;padding:0;list-style:none}
+.patb li{padding:2px 0 2px 20px;position:relative;font-weight:500}
+.patb li::before{content:"✦";position:absolute;left:0;color:var(--brass)}
+.bgrat li{position:relative;padding-left:24px}
+.bgrat li::before{content:"✦";position:absolute;left:2px;color:var(--brass)}
+
+/* Le ciel des bienfaits */
+.ciel{display:block;width:100%;height:auto;overflow:visible}
+.ciel .cfil{fill:none;stroke:#E9C46A;stroke-opacity:.35;stroke-width:1;stroke-dasharray:3 3}
+.ciel .cst polygon{fill:#E9C46A;filter:drop-shadow(0 0 4px rgba(233,196,106,.85));transform-box:fill-box;transform-origin:center;animation:cstIn .6s var(--ease) backwards;animation-delay:calc(var(--i) * 40ms)}
+.ciel .cst .chalo{fill:transparent}
+.ciel .cst[role="button"]{cursor:pointer;outline:none}
+.ciel .cst.sel polygon{fill:#FFF3CF;filter:drop-shadow(0 0 9px rgba(255,236,190,1))}
+.ciel .cst.sel .chalo{fill:rgba(233,196,106,.16)}
+.ciel .cst.new polygon{animation:cstNew 1.6s cubic-bezier(.2,.9,.3,1.2) .3s backwards,cstGlow 2.4s ease-in-out 1.9s infinite}
+@keyframes cstIn{from{opacity:0;transform:scale(0) rotate(-90deg)}}
+@keyframes cstNew{0%{opacity:0;transform:translateY(160px) scale(3.2) rotate(-200deg)}60%{opacity:1}100%{transform:none}}
+@keyframes cstGlow{50%{filter:drop-shadow(0 0 12px rgba(255,236,190,1))}}
+.cielbox{border-radius:22px;padding:16px 14px 14px;background:radial-gradient(120% 90% at 50% 0%,#5B1E47 0%,#2A0C22 70%);color:#fff;box-shadow:0 12px 30px color-mix(in srgb,#2A0C22 25%,transparent)}
+.cielsel{margin:8px 4px 0;font-size:1rem;line-height:1.4;min-height:3em;animation:obRise .35s var(--ease)}
+.cielsel small{display:block;color:#E9C46A;font-size:.78rem;letter-spacing:.06em;text-transform:capitalize;margin-bottom:2px}
+
+/* Le rituel plein écran */
+.rit{position:fixed;inset:0;z-index:200;overflow-y:auto;color:#fff;display:flex;flex-direction:column;padding:calc(12px + env(safe-area-inset-top,0px)) 22px calc(20px + env(safe-area-inset-bottom,0px));
+  --surface:rgba(255,255,255,.08);--ink:#fff;--muted:rgba(255,255,255,.72);--faint:rgba(255,255,255,.35);--line:rgba(255,255,255,.14);--accent:#E9C46A;--accent-ink:#2A0C22;--brass:#E9C46A;animation:ritIn .45s var(--ease)}
+@keyframes ritIn{from{opacity:0}}
+.ritsky{position:fixed;inset:0;z-index:-1;transition:background 1.2s ease;background:linear-gradient(180deg,#5B1E47 0%,#8B3A6E 55%,#C4562C 100%)}
+.ritsky.s1{background:linear-gradient(180deg,#3E1240 0%,#5B1E47 55%,#8B3A6E 100%)}
+.ritsky.s2{background:linear-gradient(180deg,#22091B 0%,#3E1240 60%,#5B1E47 100%)}
+.ritsky.s3{background:radial-gradient(120% 80% at 50% 10%,#3E1240 0%,#1A0614 70%)}
+.ritsky::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity 1.2s;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 72% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 86% 34%,#fff,transparent),radial-gradient(1px 1px at 30% 40%,#fff,transparent),radial-gradient(1px 1px at 55% 26%,#fff,transparent),radial-gradient(1.5px 1.5px at 20% 70%,#fff,transparent),radial-gradient(1px 1px at 90% 66%,#fff,transparent),radial-gradient(1px 1px at 46% 84%,#fff,transparent)}
+.ritsky.s1::before{opacity:.4}.ritsky.s2::before{opacity:.75}.ritsky.s3::before{opacity:1}
+.ritmoon{position:absolute;right:14%;width:64px;height:64px;border-radius:50%;box-shadow:-14px 8px 0 0 #F3E3B5;transform:rotate(-20deg);transition:top 1.2s var(--ease),opacity 1.2s;top:62%;opacity:.0;filter:drop-shadow(0 0 18px rgba(243,227,181,.6))}
+.s3 .ritmoon{top:8%;opacity:1}
+.rittop{display:flex;align-items:center;justify-content:space-between;min-height:44px}
+.ritdots{display:flex;gap:6px}
+.ritdots i{width:26px;height:5px;border-radius:3px;background:rgba(255,255,255,.22);transition:background .3s,width .3s}
+.ritdots i.on{background:#fff;width:38px}.ritdots i.ok{background:#E9C46A}
+.ritx{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:1.6rem;line-height:1}
+.ritstep{flex:1;display:flex;flex-direction:column;padding-top:4vh;max-width:520px;width:100%;margin:0 auto}
+.ritstep > *{animation:obRise .5s var(--ease) backwards}
+.ritstep > :nth-child(2){animation-delay:.08s}.ritstep > :nth-child(3){animation-delay:.16s}.ritstep > :nth-child(4){animation-delay:.24s}.ritstep > :nth-child(5){animation-delay:.32s}
+.riteye{margin:0;color:#E9C46A;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.ritstep h1{margin:8px 0 18px;font-size:1.9rem;line-height:1.15;letter-spacing:-.02em;color:#fff}
+.ritin{width:100%;box-sizing:border-box;border:0;border-radius:18px;padding:16px;font:inherit;font-size:1.1rem;color:#fff;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18);resize:none;outline:none;transition:box-shadow .2s}
+.ritin:focus{box-shadow:inset 0 0 0 2px #E9C46A,0 0 0 4px rgba(233,196,106,.15)}
+.ritin::placeholder{color:rgba(255,255,255,.45)}
+.ritchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ritchips button{border:0;border-radius:999px;padding:9px 14px;font:inherit;font-size:.92rem;color:#fff;background:rgba(255,255,255,.1);transition:background .2s,transform .15s}
+.ritchips button:active{transform:scale(.95)}
+.ritchips button.on{background:#E9C46A;color:#2A0C22;font-weight:600}
+.ritgeste{display:flex;gap:14px;align-items:center;width:100%;text-align:left;border:0;border-radius:18px;padding:14px 16px;margin-bottom:12px;font:inherit;color:#fff;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1.5px rgba(233,196,106,.5);transition:background .25s}
+.ritgeste small{display:block;color:#E9C46A;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:2px}
+.ritgeste.on{background:rgba(233,196,106,.18)}
+.ritck{width:34px;height:34px;flex:none;border-radius:11px;box-shadow:inset 0 0 0 2px #E9C46A;display:grid;place-items:center;transition:background .2s}
+.ritgeste.on .ritck{background:#E9C46A;animation:ckPop .35s cubic-bezier(.3,1.6,.5,1)}
+.ritck svg{width:22px;height:22px;fill:none;stroke:#2A0C22;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+@keyframes ckPop{from{transform:scale(.6)}}
+.ritnote{margin:12px 0 0;color:rgba(255,255,255,.6);font-size:.9rem}
+.ritcta{margin-top:auto;padding-top:24px;display:flex;flex-direction:column;gap:6px}
+.rit .bigbtn{background:#E9C46A;color:#2A0C22;font-weight:700;box-shadow:0 12px 30px rgba(233,196,106,.25);transition:opacity .2s,transform .15s}
+.rit .bigbtn:disabled{opacity:.35;box-shadow:none}
+.rit .bigbtn:active{transform:scale(.98)}
+.ritskip{border:0;background:none;color:rgba(255,255,255,.65);font:inherit;padding:12px}
+.ritfin{text-align:center;padding-top:1vh}
+.ritfin h1{font-size:2rem}
+.ritciel{margin:0 -6px 6px;padding:10px 6px}
+.ritv{margin:0 0 4px;padding:16px;border-radius:18px;background:rgba(255,255,255,.07);text-align:left}
+.ritv .ar{font-family:var(--font-amiri),"Amiri",serif;font-size:1.35rem;line-height:1.9;margin:0 0 8px;text-align:right}
+.ritv blockquote{margin:0;font-size:.95rem;line-height:1.45;color:rgba(255,255,255,.85)}
+.ritv figcaption{margin-top:8px;font-size:.78rem;color:#E9C46A}
+
+/* Al-hamdulillâh rapide (fin de lecture) */
+.gform{display:flex;gap:8px}
+.gform .input{flex:1;min-width:0}
+.gsave{border:0;border-radius:12px;padding:0 14px;font:inherit;font-weight:600;background:var(--accent);color:var(--accent-ink);transition:opacity .2s}
+.gsave:disabled{opacity:.4}
+.gsealed{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border-radius:16px;background:var(--brass-soft);animation:obRise .4s var(--ease)}
+.gsealed svg{width:30px;height:30px;flex:none;fill:#E9C46A;animation:cstIn .6s cubic-bezier(.3,1.6,.5,1)}
+.gsealed span{flex:1;min-width:0}
+.gsealed small{display:block;color:var(--brass);font-weight:700;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase}
+@media (prefers-reduced-motion: reduce){.rit *,.rit,.ciel *{animation:none!important;transition:none!important}}

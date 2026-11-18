@@ -10,7 +10,7 @@ import { rappelsDuMoment, refLabel } from "@/lib/coran";
 import { VERSETS_SOURCE } from "@/content/versets";
 import { useCoranMark, useCount } from "../Cards";
 import { Star } from "../Star";
-import { Gratitude } from "../Moments";
+import { GratitudeRapide } from "../Journal";
 import { actionExample, mergedGesture, objectiveIdea, objectiveTag, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { useStore } from "../Store";
 
@@ -227,7 +227,7 @@ export function Lecture() {
           <div className="star"><Star pct={allDone ? 1 : 0.5} /></div>
           <h2 className="display" style={{ fontSize: "1.8rem" }}>{dayDone ? "Journée complète" : allDone ? `${L.label} : c’est fait` : "Tu y reviendras"}</h2>
           <p className="lead" style={{ margin: 0 }}>{allDone ? "Qu’Allah l’accepte." : "Ce qui reste t’attend dans ta journée."}</p>
-          {allDone && askGratitude && <div style={{ width: "100%", marginTop: 14 }}><Gratitude compact /></div>}
+          {allDone && askGratitude && <div style={{ width: "100%", marginTop: 14 }}><GratitudeRapide /></div>}
           <button className="bigbtn" style={{ marginTop: 18 }} onClick={close}>Revenir à ma journée</button>
         </div>
       ) : (

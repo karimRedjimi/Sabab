@@ -14,11 +14,12 @@ const TYPES: [Exclude<NotifKind, "priere">, string, string][] = [
   ["matin", "Invocations du matin", "1 h après le Fajr, si elles ne sont pas faites. Avec tes révisions du jour."],
   ["soir", "Invocations du soir", "30 min après le ʿAsr, si elles ne sont pas faites."],
   ["relance", "Relance douce", "Une seule, le soir, si ta journée n’est pas tenue."],
+  ["journal", "Ton journal du soir", "Vers 21 h 30, seulement s’il n’est pas rempli. Il prend la place de la relance quand ta journée est tenue."],
   ["vendredi", "Dernière heure du vendredi", "Une fois par semaine, avant le Maghreb."],
   ["verset", "Verset du jour", "En milieu de journée, pour le réciter."],
   ["nuit", "Prière de nuit", "Au début du dernier tiers de la nuit."],
 ];
-const LABEL: Record<NotifKind, string> = { priere: "Prière", matin: "Matin", soir: "Soir", relance: "Relance", vendredi: "Vendredi", verset: "Verset", nuit: "Nuit" };
+const LABEL: Record<NotifKind, string> = { priere: "Prière", matin: "Matin", soir: "Soir", relance: "Relance", vendredi: "Vendredi", verset: "Verset", nuit: "Nuit", journal: "Journal" };
 
 function Interrupteur({ on, titre, sous, onClick, disabled }: { on: boolean; titre: string; sous?: string; onClick: () => void; disabled?: boolean }) {
   return (
