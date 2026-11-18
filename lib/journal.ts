@@ -21,11 +21,11 @@ export function placeEtoile(i: number, dk: string, n = 40): { x: number; y: numb
   const k = i % 40, col = k % cols, row = Math.floor(k / cols);
   let h = 0;
   for (const c of dk) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  const cw = 300 / cols, rh = 170 / rows;
+  const cw = 272 / cols, rh = 168 / rows;
   const jx = ((h % 1000) / 1000 - 0.5) * cw * 0.5, jy = (((h >> 10) % 1000) / 1000 - 0.5) * rh * 0.45;
   // Les rangées impaires vont de droite à gauche : le fil des jours serpente.
   const c2 = row % 2 ? cols - 1 - col : col;
-  return { x: 30 + cw * (c2 + 0.5) + jx, y: 25 + rh * (row + 0.5) + jy, r: 7 + (h % 5) };
+  return { x: 22 + cw * (c2 + 0.5) + jx, y: 30 + rh * (row + 0.5) + jy, r: 7 + (h % 5) };
 }
 
 /** L’intention notée la veille, à rappeler aujourd’hui. */

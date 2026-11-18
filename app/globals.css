@@ -1770,7 +1770,7 @@ button.rowi.clot{width:100%;border:0;text-align:left;font:inherit;color:inherit;
 .ritsky::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity 1.2s;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 72% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 86% 34%,#fff,transparent),radial-gradient(1px 1px at 30% 40%,#fff,transparent),radial-gradient(1px 1px at 55% 26%,#fff,transparent),radial-gradient(1.5px 1.5px at 20% 70%,#fff,transparent),radial-gradient(1px 1px at 90% 66%,#fff,transparent),radial-gradient(1px 1px at 46% 84%,#fff,transparent)}
 .ritsky.s1::before{opacity:.4}.ritsky.s2::before{opacity:.75}.ritsky.s3::before{opacity:1}
 .ritmoon{position:absolute;right:14%;width:64px;height:64px;border-radius:50%;box-shadow:-14px 8px 0 0 #F3E3B5;transform:rotate(-20deg);transition:top 1.2s var(--ease),opacity 1.2s;top:62%;opacity:.0;filter:drop-shadow(0 0 18px rgba(243,227,181,.6))}
-.s3 .ritmoon{top:8%;opacity:1}
+.s3 .ritmoon{display:none}
 .rittop{display:flex;align-items:center;justify-content:space-between;min-height:44px}
 .ritdots{display:flex;gap:6px}
 .ritdots i{width:26px;height:5px;border-radius:3px;background:rgba(255,255,255,.22);transition:background .3s,width .3s}
@@ -1844,3 +1844,65 @@ section > .jseal{margin:2px 0 8px 36px}
 .tl .subl .rowi{min-height:66px;padding-top:8px;padding-bottom:8px}
 .tl .subl .rt b,.tl .subl .rt small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl .subl .rt small .tag{margin-right:6px}
+
+/* Le ciel, plus vivant : petites étoiles qui scintillent, une lune, une étoile filante */
+.ciel .cpt{fill:#fff;opacity:.35;animation:cTw 4s ease-in-out infinite}
+.ciel .cpt.t1{animation-delay:-.6s}.ciel .cpt.t2{animation-delay:-1.3s}.ciel .cpt.t3{animation-delay:-2s}.ciel .cpt.t4{animation-delay:-2.6s;opacity:.2}.ciel .cpt.t5{animation-delay:-3.1s}.ciel .cpt.t6{animation-delay:-3.6s;opacity:.5}
+@keyframes cTw{50%{opacity:.08}}
+.ciel .clune circle:last-child{fill:#F6E7BC;filter:drop-shadow(0 0 6px rgba(246,231,188,.8))}
+.ciel .lhalo{fill:rgba(246,231,188,.08)}
+.ciel .cfil2{stroke:#fff;stroke-width:1.2;stroke-linecap:round;stroke-dasharray:14 200;stroke-dashoffset:14;opacity:0;animation:cShoot 9s ease-in 2s infinite}
+@keyframes cShoot{0%{stroke-dashoffset:14;opacity:0}2%{opacity:.9}7%{stroke-dashoffset:-60;opacity:0}100%{stroke-dashoffset:-60;opacity:0}}
+.cielbox{position:relative;overflow:hidden;background:radial-gradient(90% 70% at 85% 0%,#7A2E5E 0%,transparent 60%),linear-gradient(180deg,#3E1240 0%,#2A0C22 55%,#1A0614 100%)}
+.cielbox::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-38px;height:70px;border-radius:50%;background:radial-gradient(closest-side,rgba(233,196,106,.18),transparent);pointer-events:none}
+
+/* Sur l’accueil, la journée close devient une carte de nuit avec ton ciel */
+section > .jseal,.clotsec .jseal{background:linear-gradient(180deg,#3E1240 0%,#2A0C22 70%,#1A0614 100%);border:0;color:#fff;padding:10px 16px 12px;box-shadow:0 14px 30px color-mix(in srgb,#2A0C22 30%,transparent)}
+.jseal .jciel{display:block;margin:0 -8px 4px}
+.jseal .jl{color:#E9C46A}
+.jseal p{color:#fff}
+.jseal .link{color:#E9C46A}
+
+/* Fin du rituel : tout tient à l’écran, le bouton reste visible */
+.ritfin{padding-top:0;justify-content:flex-start}
+.ritfin .ritciel{margin:0 -4px;padding:0}
+.ritfin .ritciel .ciel{max-height:24vh;width:auto;max-width:100%;margin:0 auto}
+.ritfin h1{font-size:1.65rem;margin:6px 0 12px}
+.ritfin .ritv{padding:12px 14px}
+.ritfin .ritv .ar{font-size:1.15rem;line-height:1.75;margin-bottom:6px}
+.ritfin .ritv blockquote{font-size:.86rem}
+.ritfin .ritcta{position:sticky;bottom:0;margin-top:auto;padding:16px 0 4px;background:linear-gradient(to bottom,rgba(26,6,20,0),#1A0614 30%)}
+.rit .ritstep{min-height:0}
+.ck.lockd,.plus.lockd{opacity:.4}
+.tclear{display:inline-grid;place-items:center;width:24px;height:24px;margin:0 2px 0 6px;border-radius:50%;background:var(--fill);color:var(--muted);font-size:1rem;line-height:1;vertical-align:middle;cursor:pointer}
+
+/* La prochaine prière : un cadre doré qui tourne doucement ; les prières passées à noter : un point qui respire */
+.prow5 > button{position:relative;isolation:isolate}
+.prow5 > button.now::before{content:"";position:absolute;inset:0;border-radius:12px;padding:1.5px;background:conic-gradient(from var(--pa,0deg),transparent 0 55%,#E9C46A 75%,#FFF1C4 82%,transparent 95%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:pSpin 3.2s linear infinite;z-index:-1}
+.prow5 > button.now::after{content:"";position:absolute;inset:0;border-radius:12px;box-shadow:0 0 18px rgba(233,196,106,.35);animation:pGlow 3.2s ease-in-out infinite;z-index:-1;pointer-events:none}
+@property --pa{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes pSpin{to{--pa:360deg}}
+@keyframes pGlow{50%{box-shadow:0 0 4px rgba(233,196,106,.1)}}
+.prow5 > button.todo b::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#E9C46A;margin-left:4px;vertical-align:super;animation:pDot 1.8s ease-in-out infinite}
+@keyframes pDot{50%{transform:scale(.5);opacity:.5}}
+
+/* « Tu as prié le Dhuhr ? » */
+.ppass{display:flex;gap:12px;align-items:flex-start;margin:10px 0 4px;padding:12px 12px 10px;border-radius:18px;background:var(--surface);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#E9C46A 55%,transparent);animation:ppIn .55s cubic-bezier(.2,.9,.3,1.2) backwards .25s}
+@keyframes ppIn{from{opacity:0;transform:translateY(10px) scale(.97)}}
+.pptile{position:relative;flex:none}
+.pptile::after{content:"";position:absolute;inset:-4px;border-radius:15px;border:2px solid #E9C46A;animation:ppRing 2s ease-out infinite}
+@keyframes ppRing{from{opacity:.9;transform:scale(.9)}to{opacity:0;transform:scale(1.25)}}
+.pptxt{flex:1;min-width:0}
+.pptxt b{display:block;font-size:1rem}
+.pptxt small{display:block;color:var(--muted);font-size:.82rem;margin-top:1px}
+.ppbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.ppbtns button{border:0;border-radius:999px;padding:7px 12px;font:inherit;font-size:.86rem;font-weight:600;background:var(--fill);color:var(--ink)}
+.ppbtns .ppyes{background:#E9C46A;color:#2A0C22}
+.ppbtns .pplater{background:none;color:var(--muted);font-weight:500;padding-left:4px;padding-right:4px}
+.hero2 .ppass{background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1.5px rgba(233,196,106,.6);color:#fff}
+.hero2 .pptxt small{color:rgba(255,255,255,.7)}
+.hero2 .ppbtns button{background:rgba(255,255,255,.14);color:#fff}
+.hero2 .ppbtns .ppyes{background:#E9C46A;color:#2A0C22}
+.hero2 .ppbtns .pplater{background:none;color:rgba(255,255,255,.7)}
+@media (prefers-reduced-motion: reduce){.prow5 > button.now::before,.prow5 > button.now::after,.pptile::after,.ppass,.prow5 > button.todo b::after{animation:none}}

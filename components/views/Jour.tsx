@@ -13,7 +13,7 @@ import {
   MOMENT_LABEL, type Entry, type Moment, type Plan, type Structure, CORAN_AM, CORAN_PM, momentOuvert, momentPasEncore, momentStart } from "@/lib/program";
 import { useCount, useCoranMark } from "../Cards";
 import { IconLeft, IconRight } from "../Icons";
-import { useStore } from "../Store";
+import { buzz, useStore } from "../Store";
 import { Lecture } from "./Lecture";
 import { rappelsDuMoment, versesIn } from "@/lib/coran";
 import { choisirNiveau, niveau, niveauSuivant, niveauTitre, planDuJour, plusTard } from "@/lib/journee";
@@ -21,7 +21,7 @@ import { FavorableMoments, Patience, SameNeed } from "../Moments";
 import { journeeClose } from "@/lib/journal";
 import { ClotureResume, ClotureRow, IntentionDuJour, Rituel, Souvenir, useRituel } from "../Journal";
 import { usePrayerSheet } from "../Salat";
-import { SALAT, dayExempt, fajrForgotten, salatOf, type SalatKey } from "@/lib/salat";
+import { SALAT, SALAT_LABEL, dayExempt, salatOf, windowEnd, type SalatKey } from "@/lib/salat";
 import { Star, starPoints } from "../Star";
 import { Visite } from "../Visite";
 import { Brand, Glyph, Tile } from "../Glyphs";
@@ -369,6 +369,39 @@ function Hero({ P }: { P: Plan }) {
   );
 }
 
+/** Une prière est passée sans être notée : on propose de la noter, en un toucher. */
+function PrierePassee({ pt, onDetail }: { pt: Record<SalatKey, number>; onDetail: (k: SalatKey) => void }) {
+  const { S, now, update, toast } = useStore();
+  const d = today(), dk = keyOf(d), h = now.getHours() + now.getMinutes() / 60;
+  const [vu, setVu] = useState<string[]>(() => { try { return JSON.parse(sessionStorage.getItem("sabab-prieres-vues") || "[]"); } catch { return []; } });
+  const reste = SALAT.filter((k) => pt[k] <= h && !salatOf(S, dk, k));
+  const k = [...reste].reverse().find((x) => !vu.includes(`${dk}-${x}`));
+  if (!k) return null;
+  const nom = SALAT_LABEL[k], fin = (windowEnd(S, d, k) ?? 1440) / 60, encore = h < fin;
+  const autres = reste.length - 1;
+  const plusTard = () => { const v = [...vu, `${dk}-${k}`]; setVu(v); try { sessionStorage.setItem("sabab-prieres-vues", JSON.stringify(v)); } catch { /* indisponible */ } };
+  const noter = (st: "on" | "qada") => {
+    buzz(14);
+    update((x) => { x.salat = { ...(x.salat || {}), [dk]: { ...(x.salat?.[dk] || {}), [k]: { s: st } } }; });
+    toast(st === "qada" ? `${nom} notée comme rattrapée` : `${nom} notée, qu’Allah l’accepte`);
+  };
+  return (
+    <div className="ppass" key={k} role="group" aria-label={`${nom} pas encore notée`}>
+      <span className="pptile" aria-hidden="true"><Tile k={k} size={40} /></span>
+      <div className="pptxt">
+        <b>Tu as prié le {nom} ?</b>
+        <small>{encore ? `Son temps court jusqu’à ${hm(fin)}` : "Son temps est passé"}{autres > 0 ? ` · ${autres} autre${autres > 1 ? "s" : ""} à noter` : ""}</small>
+        <div className="ppbtns">
+          <button className="ppyes" onClick={() => noter("on")}>{encore ? "Oui, priée" : "À l’heure"}</button>
+          {!encore && <button onClick={() => noter("qada")}>Rattrapée</button>}
+          <button onClick={() => onDetail(k)}>Détails</button>
+          <button className="pplater" onClick={plusTard}>{encore ? "Pas encore" : "Plus tard"}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Prayers({ d }: { d: Date }) {
   const { S, now } = useStore();
   const sheet = usePrayerSheet();
@@ -408,7 +441,7 @@ function Prayers({ d }: { d: Date }) {
           const r = salatOf(S, dk, k as SalatKey), notYet = isToday && t > h;
           const state = !r ? "" : r.s === "ex" ? "non concerné(e)" : r.s === "qada" ? "rattrapée" : r.m ? "priée à la mosquée" : "priée";
           return (
-            <button key={k} className={`${i === nextIdx ? "now" : ""} ${notYet ? "fut" : ""} ${r && r.s !== "ex" ? "noted" : ""} ${r?.m ? "mq" : ""}`} disabled={notYet}
+            <button key={k} className={`${i === nextIdx ? "now" : ""} ${notYet ? "fut" : ""} ${r && r.s !== "ex" ? "noted" : ""} ${r?.m ? "mq" : ""} ${isToday && !notYet && !r && !exempt ? "todo" : ""}`} disabled={notYet}
               aria-label={`${n} à ${hm(t)}${state ? `, ${state}` : notYet ? "" : ", à noter"}`} onClick={() => sheet.open(d, k as SalatKey)}>
               <b>{hm(t)}</b><span>{n}</span>
             </button>
@@ -416,11 +449,10 @@ function Prayers({ d }: { d: Date }) {
         })}
       </div>
       {d.getDay() === 5 && <p className="prnote">{lastHour ? "Maintenant : " : ""}Dernière heure du vendredi, de {hm(pt.maghrib - 1)} à {hm(pt.maghrib)}</p>}
-      {isToday && fajrForgotten(S, now) ? (
-        <button className="phint ask" onClick={() => sheet.open(d, "fajr")}>Tu as prié le Fajr ? <b>Le noter</b></button>
-      ) : exempt ? (
+      {isToday && !exempt && <PrierePassee pt={pt} onDetail={(k) => sheet.open(d, k)} />}
+      {exempt ? (
         <p className="phint">Journée non concernée · <button className="link" onClick={() => sheet.open(d, "fajr")}>modifier</button></p>
-      ) : noted && isToday ? null : (
+      ) : isToday ? null : (
         <p className="phint">{noted ? `${noted} sur ${due} notée${noted > 1 ? "s" : ""} ${isToday ? "aujourd’hui" : "ce jour-là"}` : "Touche une prière pour la noter"}</p>
       )}
       {isToday && <FavorableMoments />}
@@ -430,7 +462,7 @@ function Prayers({ d }: { d: Date }) {
 }
 
 function Row({ e, intention = false, tile }: { e: Entry; intention?: boolean; tile?: string }) {
-  const { S, ui } = useStore();
+  const { S, ui, toast } = useStore();
   const count = useCount();
   const start = useStartLecture();
   const d = ui.sel, dk = keyOf(d), it = getItem(S, e.id, d);
@@ -450,7 +482,10 @@ function Row({ e, intention = false, tile }: { e: Entry; intention?: boolean; ti
   else sub = "Une fois";
   const forObj = e.origin === "parc" && parcoursServesObjective(S) && showObjective(S);
   const tag = e.origin === "theme" ? <span className="tag">Thème du jour</span> : e.origin === "parc" ? <span className="tag t-parc">{forObj ? objectiveTag(S) : "Parcours"}</span> : null;
-  const ck = slot.t === 1 ? <button className="ck" aria-pressed={done} aria-label={`${title} : ${done ? "fait" : "à faire"}`} onClick={() => (isCoran ? markCoran(e, !done) : count("toggle", k))} data-k={k} /> : null;
+  // Le soir et la nuit ne se cochent pas avant leur heure, comme ils ne s’ouvrent pas.
+  const locked = !momentOuvert(S, d, e.m);
+  const guard = (f: () => void) => () => { if (locked && !done) { toast(momentPasEncore(S, d, e.m)); return; } f(); };
+  const ck = slot.t === 1 ? <button className={`ck ${locked && !done ? "lockd" : ""}`} aria-pressed={done} aria-label={`${title} : ${done ? "fait" : locked ? "pas encore" : "à faire"}`} onClick={guard(() => (isCoran ? markCoran(e, !done) : count("toggle", k)))} data-k={k} /> : null;
   return (
     <div className={`rowi ${tile ? "sum tiled" : ""} ${done ? "done" : ""}`} id={`card-${e.id}-${e.m}`}>
       {tile ? <Tile k={tile} /> : ck}
@@ -471,7 +506,7 @@ function Row({ e, intention = false, tile }: { e: Entry; intention?: boolean; ti
       </button>
       {tile && ck}
       {slot.t > 1 && (
-        <button className={`plus ${v >= slot.t ? "full" : ""}`} onClick={() => count("inc", k)} aria-label={`${title} : ${v} sur ${slot.t}. Ajouter un`} data-k={k}>
+        <button className={`plus ${v >= slot.t ? "full" : ""} ${locked ? "lockd" : ""}`} onClick={() => { if (locked) { toast(momentPasEncore(S, d, e.m)); return; } count("inc", k); }} aria-label={`${title} : ${v} sur ${slot.t}. Ajouter un`} data-k={k}>
           {v >= slot.t ? "✓" : "+"}
         </button>
       )}

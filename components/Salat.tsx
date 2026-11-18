@@ -111,6 +111,7 @@ export function SalatSheet({ d, k, onClose }: { d: Date; k: SalatKey; onClose: (
           {opt("on", "Priée", (
             <>À <input className="stime" type="time" aria-label="Heure de la prière" value={t != null ? fmtMinutes(t) : ""} onClick={(e) => { e.stopPropagation(); setS("on"); }}
               onChange={(e) => { const [h, mi] = e.target.value.split(":").map(Number); setT(isNaN(h) ? undefined : h * 60 + (mi || 0)); }} />
+              {t != null && <span role="button" tabIndex={0} className="tclear" aria-label="Retirer l’heure" onClick={(e) => { e.stopPropagation(); setT(undefined); }} onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); setT(undefined); } }}>×</span>}
               {delay != null ? <> · {fmtDelay(delay)}</> : t == null ? <> · heure facultative</> : null}</>
           ))}
         </div>

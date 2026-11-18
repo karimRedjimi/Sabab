@@ -1,7 +1,8 @@
 "use client";
 // Le journal du soir : « Clôturer ta journée » en trois questions, et « Ton ciel » des bienfaits.
 import Link from "next/link";
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useId, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { EXTRAITS } from "@/content/coran-extraits";
 import { keyOf, sameDay, today } from "@/lib/dates";
 import { DEMAIN_IDEES, GRATITUDE_IDEES, etoiles, gratitudeDe, intentionDHier, journeeClose, placeEtoile, souvenir } from "@/lib/journal";
@@ -35,6 +36,7 @@ export function ClotureResume({ onEdit }: { onEdit: () => void }) {
   if (!journeeClose(S, dk) || (!g && !r?.note?.trim() && !r?.demain?.trim())) return null;
   return (
     <div className="jseal">
+      <Link className="jciel" href="/suivi#ciel" aria-label="Voir ton ciel"><Ciel nouvelle={g ? dk : undefined} /></Link>
       {g && <p><span className="jl">Al-hamdulillâh</span>{g}</p>}
       {r?.note?.trim() && <p><span className="jl">Aujourd’hui</span>{r.note.trim()}</p>}
       {r?.demain?.trim() && <p><span className="jl">Pour demain</span>{r.demain.trim()}</p>}
@@ -72,12 +74,20 @@ export function Souvenir() {
 }
 
 /** Le ciel des bienfaits : une étoile par al-hamdulillâh, reliées dans l’ordre des jours. */
-export function Ciel({ max = 40, nouvelle, onPick, sel }: { max?: number; nouvelle?: string; onPick?: (dk: string) => void; sel?: string | null }) {
+const FOND = Array.from({ length: 46 }, (_, i) => { const a = Math.sin(i * 12.9898) * 43758.5453, b = Math.sin(i * 78.233) * 12543.123; return { x: (a - Math.floor(a)) * 360, y: (b - Math.floor(b)) * 220, r: 0.4 + ((a * 7) % 1 + 1) % 1 * 0.9, t: i % 7 }; });
+export function Ciel({ max = 40, nouvelle, onPick, sel, deco = true }: { max?: number; nouvelle?: string; onPick?: (dk: string) => void; sel?: string | null; deco?: boolean }) {
   const { S } = useStore();
+  const mid = "cm" + useId().replace(/:/g, "");
   const all = etoiles(S), l = all.slice(-max);
   const pts = l.map((e, i) => ({ ...e, ...placeEtoile(i, e.dk, l.length) }));
   return (
     <svg className="ciel" viewBox="0 0 360 220" role="img" aria-label={`${all.length} bienfait${all.length > 1 ? "s" : ""} dans ton ciel`}>
+      {deco && <g className="cdeco" aria-hidden="true">
+        {FOND.map((f, i) => <circle key={i} cx={f.x} cy={f.y} r={f.r} className={`cpt t${f.t}`} />)}
+        <line className="cfil2" x1="250" y1="10" x2="200" y2="40" />
+        <mask id={mid}><rect width="360" height="220" fill="#fff" /><circle cx="339" cy="28" r="12" fill="#000" /></mask>
+        <g className="clune"><circle cx="333" cy="34" r="22" className="lhalo" /><circle cx="333" cy="34" r="13" mask={`url(#${mid})`} /></g>
+      </g>}
       <polyline className="cfil" points={pts.map((p) => `${p.x},${p.y}`).join(" ")} />
       {pts.map((p, i) => (
         <g key={p.dk} className={`cst ${p.dk === nouvelle ? "new" : ""} ${p.dk === sel ? "sel" : ""}`} style={{ "--i": i } as CSSProperties}
@@ -141,7 +151,9 @@ export function Rituel({ onClose }: { onClose: () => void }) {
     { eye: "2 sur 3 · Ta journée", h: geste ? "Un pas vers ton besoin, aujourd’hui ?" : "Qu’est-ce qui a avancé, ou bloqué ?", ok: note.trim().length > 0 || fait },
     { eye: "3 sur 3 · Pour demain", h: "Ton intention pour demain ?", ok: demain.trim().length > 0 },
   ];
-  return (
+  if (typeof document === "undefined") return null;
+  // Rendu hors de la page (portail) : la page Jour est animée, ce qui décalerait un écran « fixe ».
+  return createPortal(
     <div className="rit" role="dialog" aria-modal="true" aria-label="Clôturer ta journée">
       <div className={`ritsky s${Math.min(step, 3)}`} aria-hidden="true"><i className="ritmoon" /></div>
       <div className="rittop">
@@ -153,7 +165,7 @@ export function Rituel({ onClose }: { onClose: () => void }) {
           <p className="riteye">{Q[step].eye}</p>
           <h1>{Q[step].h}</h1>
           {step === 0 && <>
-            <textarea className="ritin" rows={2} maxLength={140} autoFocus value={g} placeholder="Par exemple : la santé de mes parents" enterKeyHint="done"
+            <textarea className="ritin" rows={2} maxLength={140} value={g} placeholder="Par exemple : la santé de mes parents" enterKeyHint="done"
               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); if (g.trim()) valider(); } }} onChange={(e) => setG(e.target.value)} />
             <div className="ritchips">{GRATITUDE_IDEES.map((t) => <button key={t} className={g === t ? "on" : ""} onClick={() => setG(t)}>{t}</button>)}</div>
           </>}
@@ -195,7 +207,8 @@ export function Rituel({ onClose }: { onClose: () => void }) {
           </div>
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }
 
