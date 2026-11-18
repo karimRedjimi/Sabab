@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { EXTRAITS } from "@/content/coran-extraits";
-import { AUDIO_RECITATEUR } from "@/content/versets-audio";
+import { VERSETS_AUDIO, fichierVerset } from "@/content/versets-audio";
+import { existsSync } from "node:fs";
 import { addDays } from "@/lib/dates";
 import { DUA_GOAL, VERSETS_SEULS, duasOn, mmss, versetDuJour } from "@/lib/verset";
 
@@ -24,7 +25,13 @@ describe("un jour, un verset", () => {
     expect(seen.size).toBe(VERSETS_SEULS.length);
   });
   it("l’audio n’est proposé que pour un fichier hébergé avec l’application", () => {
-    for (const [ref, f] of Object.entries(AUDIO_RECITATEUR.fichiers)) { expect(EXTRAITS[ref]).toBeTruthy(); expect(f.startsWith("/audio/")).toBe(true); }
+    // Chaque verset de l’application a son fichier, hébergé avec elle.
+    for (const e of Object.values(EXTRAITS)) for (const v of e.verses) {
+      const f = fichierVerset(e.s, v.n);
+      expect(f).toBeTruthy();
+      expect(existsSync("public" + f)).toBe(true);
+    }
+    expect(VERSETS_AUDIO.size).toBeGreaterThanOrEqual(112);
     expect(versetDuJour(d0).audio === null || versetDuJour(d0).audio!.startsWith("/audio/")).toBe(true);
   });
 });

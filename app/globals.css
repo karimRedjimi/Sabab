@@ -2047,3 +2047,18 @@ a.card{display:block;text-decoration:none;color:inherit}
 .srr button{border:0;background:var(--soft);color:var(--accent);font:inherit;font-weight:700;font-size:.8rem;padding:7px 12px;border-radius:99px;flex:none}
 .suivi2 #ciel{margin-top:22px}
 @media (prefers-reduced-motion: reduce){.suivi2 *{animation:none!important;transition:none!important}}
+
+/* Écouter la récitation d’un passage */
+.qhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.qplay{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:99px;padding:7px 14px 7px 8px;font:inherit;font-size:.86rem;font-weight:700;background:var(--soft);color:var(--accent);transition:background .2s,transform .15s}
+.qplay:active{transform:scale(.96)}
+.qplay > span{width:26px;height:26px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+.qplay svg{width:14px;height:14px;fill:var(--accent-ink)}
+.qplay.on{background:#E9C46A;color:#2A0C22}.qplay.on > span{background:#2A0C22}.qplay.on svg{fill:#E9C46A}
+.qwave{display:inline-flex;gap:3px;align-items:center;height:16px}
+.qwave b{width:3px;border-radius:2px;background:#2A0C22;animation:qW 1s ease-in-out infinite}
+.qwave b:nth-child(2){animation-delay:-.25s}.qwave b:nth-child(3){animation-delay:-.5s}.qwave b:nth-child(4){animation-delay:-.75s}
+@keyframes qW{0%,100%{height:4px}50%{height:16px}}
+.qv{transition:background .3s,box-shadow .3s;border-radius:14px}
+.qv.lit{background:color-mix(in srgb,#E9C46A 14%,transparent);box-shadow:0 0 0 6px color-mix(in srgb,#E9C46A 14%,transparent)}
+@media (prefers-reduced-motion: reduce){.qwave b{animation:none;height:10px}}

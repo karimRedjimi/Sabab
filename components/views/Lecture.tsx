@@ -7,6 +7,7 @@ import { keyOf } from "@/lib/dates";
 import { ensureDay } from "@/lib/state";
 import { dayPct, entryPct, getItem, momentOf, slotsOf, val, CORAN_AM, CORAN_PM, MOMENT_LABEL, type Entry } from "@/lib/program";
 import { rappelsDuMoment, refLabel } from "@/lib/coran";
+import { RECITATEUR, fichierVerset } from "@/content/versets-audio";
 import { VERSETS_SOURCE } from "@/content/versets";
 import { useCoranMark, useCount } from "../Cards";
 import { Star } from "../Star";
@@ -27,6 +28,41 @@ function ShowChips() {
 }
 
 /** Le rappel du Coran dans la lecture guidée : les versets du moment, puis « J’ai lu ». */
+/** Un lecteur pour toute la page : il enchaîne les versets d’un passage, un seul son à la fois. */
+function useLecteur() {
+  const el = useRef<HTMLAudioElement | null>(null);
+  const [cur, setCur] = useState<string | null>(null);
+  const [joue, setJoue] = useState<string | null>(null);
+  useEffect(() => () => { el.current?.pause(); }, []);
+  const stop = () => { el.current?.pause(); setCur(null); setJoue(null); };
+  const lire = (id: string, s: number, versets: number[]) => {
+    if (joue === id) { stop(); return; }
+    el.current?.pause();
+    const files = versets.map((n) => ({ n, f: fichierVerset(s, n) })).filter((x): x is { n: number; f: string } => !!x.f);
+    if (!files.length) return;
+    let i = 0;
+    const a = el.current || (el.current = new Audio());
+    const next = () => {
+      if (i >= files.length) { setCur(null); setJoue(null); return; }
+      setCur(`${id}:${files[i].n}`); a.src = files[i].f; i++;
+      a.play().catch(() => { setCur(null); setJoue(null); });
+    };
+    a.onended = next; setJoue(id); next();
+  };
+  return { cur, joue, lire };
+}
+type Lecteur = ReturnType<typeof useLecteur>;
+function Ecouter({ s, versets, id, lecteur }: { s: number; versets: number[]; id: string; lecteur: Lecteur }) {
+  if (!versets.some((n) => fichierVerset(s, n))) return null;
+  const on = lecteur.joue === id;
+  return (
+    <button className={`qplay ${on ? "on" : ""}`} onClick={() => lecteur.lire(id, s, versets)} aria-label={on ? "Arrêter la récitation" : "Écouter la récitation"}>
+      <span aria-hidden="true">{on ? <svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg> : <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg>}</span>
+      {on ? <i className="qwave" aria-hidden="true"><b /><b /><b /><b /></i> : "Écouter"}
+    </button>
+  );
+}
+
 function CoranStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker: string | null }) {
   const { S, ui } = useStore();
   const mark = useCoranMark();
@@ -36,6 +72,7 @@ function CoranStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker
   const list = rappelsDuMoment(S, d, m), done = entryPct(S, dk, e) >= 1;
   const again = m === "soir" && rappelsDuMoment(S, d, "matin")[0]?.ref === list[0]?.ref;
   const showAr = S.show.ar, showFr = S.show.fr;
+  const lecteur = useLecteur();
   return (
     <>
       <p className="eyebrow">{kicker || MOMENT_LABEL[e.m]}</p>
@@ -44,9 +81,9 @@ function CoranStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker
       <div className="ltxt qlist">
         {list.map((r) => (
           <article className="qpass" key={r.ref}>
-            <span className={`qtag ${r.themed ? "th" : ""}`}>{r.tag}</span>
+            <div className="qhead"><span className={`qtag ${r.themed ? "th" : ""}`}>{r.tag}</span><Ecouter s={r.s} versets={r.verses.map((v) => v.n)} id={r.ref} lecteur={lecteur} /></div>
             {r.verses.map((v) => (
-              <div className="qv" key={v.n}>
+              <div className={`qv ${lecteur.cur === `${r.ref}:${v.n}` ? "lit" : ""}`} key={v.n}>
                 {showAr && <p className="ar qar" lang="ar" dir="rtl">{v.ar}</p>}
                 {S.show.ph && <p className="ph">{v.ph}</p>}
                 {showFr && <p className="qfr">{r.verses.length > 1 && <sup>{v.n}</sup>}{v.fr}</p>}
@@ -55,7 +92,7 @@ function CoranStep({ e, onNext, kicker }: { e: Entry; onNext: () => void; kicker
             <p className="qref">{refLabel(r)}</p>
           </article>
         ))}
-        <p className="qsrc">{VERSETS_SOURCE.traduction}. {VERSETS_SOURCE.arabe}.{S.show.ph ? ` ${VERSETS_SOURCE.phonetique}.` : ""}</p>
+        <p className="qsrc">{VERSETS_SOURCE.traduction}. {VERSETS_SOURCE.arabe}.{S.show.ph ? ` ${VERSETS_SOURCE.phonetique}.` : ""} Récitation : {RECITATEUR.nom}.</p>
       </div>
       <div className="lact">
         <ShowChips />

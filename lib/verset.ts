@@ -1,6 +1,6 @@
 // « Un jour, un verset » : le même verset pour toute la communauté, chaque jour.
 import { EXTRAITS, type Extrait } from "@/content/coran-extraits";
-import { AUDIO_RECITATEUR } from "@/content/versets-audio";
+import { fichierVerset } from "@/content/versets-audio";
 import { dayNumber } from "./coran";
 
 /** Les versets seuls et assez courts pour être récités d’un souffle, dans l’ordre du Coran. */
@@ -13,7 +13,7 @@ export interface VersetDuJour extends Extrait { ref: string; audio: string | nul
 /** Le verset du jour : il ne dépend que de la date, pas de la personne. Un pas de 7 évite deux versets voisins de suite. */
 export function versetDuJour(d: Date): VersetDuJour {
   const ref = SEULS[(dayNumber(d) * 7) % SEULS.length];
-  return { ...EXTRAITS[ref], ref, audio: AUDIO_RECITATEUR.fichiers[ref] || null };
+  return { ...EXTRAITS[ref], ref, audio: fichierVerset(EXTRAITS[ref].s, EXTRAITS[ref].verses[0].n) };
 }
 export const VERSETS_SEULS = SEULS;
 
