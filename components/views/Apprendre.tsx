@@ -6,6 +6,7 @@ import { fmtShort, fromKey, keyOf, today } from "@/lib/dates";
 import { dueIds, grade, maskText } from "@/lib/learn";
 import { invocation } from "@/lib/bibliotheque";
 import { Bibliotheque } from "../Bibliotheque";
+import { ShowToggles } from "../ShowToggles";
 import { useStore } from "../Store";
 import { PageBand } from "../Glyphs";
 import { PARCOURS } from "@/content/programme";
@@ -48,9 +49,10 @@ function StudyCard({ study, setStudy }: { study: Study; setStudy: (s: Study | nu
       <p className="step">{study.i + 1} sur {study.queue.length}</p>
       <h2>{it.title}</h2>
       <p className="secintro" style={{ margin: "2px 0 0" }}>{instr}</p>
+      <ShowToggles />
       {it.fr && <div className="cue">{it.fr}</div>}
-      {it.ar && <p className="ar" lang="ar" dir="rtl"><Masked text={it.ar} lvl={lvl} isAr /></p>}
-      {it.ph && <p className="ph"><Masked text={it.ph} lvl={lvl} isAr={false} /></p>}
+      {it.ar && S.show.ar && <p className="ar" lang="ar" dir="rtl"><Masked text={it.ar} lvl={lvl} isAr /></p>}
+      {it.ph && S.show.ph && <p className="ph"><Masked text={it.ph} lvl={lvl} isAr={false} /></p>}
       <div className="studyactions">
         {first ? <button className="ok" onClick={() => answer(true)}>C’est lu, je continue</button>
           : study.revealed ? (<><button onClick={() => answer(false)}>À revoir</button><button className="ok" onClick={() => answer(true)}>Je l’ai sue</button></>)

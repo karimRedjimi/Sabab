@@ -7,6 +7,7 @@ import { keyOf, today } from "@/lib/dates";
 import { CHAPITRES, SOURCE_BIBLIO, THEMES, TOTAL_BIBLIO, chercher, nbParTheme, type Chapitre } from "@/lib/bibliotheque";
 import { DUA_IDS } from "@/lib/learn";
 import { Glyph } from "./Glyphs";
+import { ShowToggles } from "./ShowToggles";
 import { buzz, useStore } from "./Store";
 
 const ICONES: Record<string, string> = {
@@ -32,7 +33,7 @@ function Carte({ f, chap, open, onToggle, seule }: { f: Fiche; chap?: string; op
         <div className="bbody">
           {f.ar && S.show.ar !== false && <p className="ar" lang="ar" dir="rtl">{f.ar}</p>}
           {f.ph && S.show.ph !== false && <p className="ph">{f.ph}</p>}
-          {f.fr && <p className="fr">{f.fr}</p>}
+          {f.fr && S.show.fr !== false && <p className="fr">{f.fr}</p>}
           <p className="bsrc">{f.src ? <>Source : {f.src}</> : f.srcAr ? <>Source (note du livre arabe) :<bdi className="bsrcar" lang="ar" dir="rtl">{f.srcAr}</bdi></> : null}</p>
           {L ? <p className="bin">Dans tes révisions{L.lvl >= MASTER ? " · sue par cœur" : ""}</p>
             : <button className="navbtn strong bapp" onClick={ajouter}>Apprendre par cœur</button>}
@@ -70,6 +71,7 @@ export function Bibliotheque() {
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4.5 4.5" /></svg>
         <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Chercher : voyage, colère, pluie…" aria-label="Chercher une invocation" enterKeyHint="search" />
       </label>
+      <ShowToggles />
       {res ? (
         <div className="blist2">
           <p className="bcount">{res.length ? `${res.length}${res.length === 40 ? "+" : ""} résultat${res.length > 1 ? "s" : ""}` : "Aucun résultat. Essaie un autre mot."}</p>

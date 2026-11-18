@@ -12,6 +12,7 @@ import { POUR_SON_FRERE } from "@/content/textes";
 import { supabase, errMsg, REQ_CAT_OF, type RecitationView, type RequestView } from "@/lib/supabase";
 import { useAccount } from "../Account";
 import { buzz, useStore } from "../Store";
+import { ShowToggles } from "../ShowToggles";
 import { PageBand } from "../Glyphs";
 
 function ago(iso: string) {
@@ -230,19 +231,6 @@ function DuaTab() {
 
 const VOICE_KEY = "sabab-voice-consent";
 const EXT: Record<string, string> = { "audio/mp4": "m4a", "audio/webm": "webm", "audio/ogg": "ogg", "audio/mpeg": "mp3", "audio/aac": "aac" };
-
-/** Arabe, phonétique, français : trois petits interrupteurs, au moins un reste affiché. */
-function ShowToggles() {
-  const { S, update, toast } = useStore();
-  const t = (f: "ar" | "ph" | "fr", label: string) => (
-    <button aria-pressed={S.show[f]} onClick={() => {
-      const others = (["ar", "ph", "fr"] as const).filter((k) => k !== f && S.show[k]);
-      if (S.show[f] && !others.length) { toast("Garde au moins un texte affiché"); return; }
-      update((x) => { x.show[f] = !x.show[f]; });
-    }}>{label}</button>
-  );
-  return <div className="vtog" role="group" aria-label="Textes affichés">{t("ar", "Arabe")}{t("ph", "Phonétique")}{t("fr", "Français")}</div>;
-}
 
 /** Un seul son à la fois dans l’écran. */
 function usePlayer() {

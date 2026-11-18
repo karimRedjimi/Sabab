@@ -1963,3 +1963,4 @@ section > .jseal,.clotsec .jseal{background:linear-gradient(180deg,#3E1240 0%,#2
 .bnote{font-size:.76rem;color:var(--faint);margin:16px 4px 0;line-height:1.5}
 .bsrcar{display:block;font-family:var(--font-amiri),"Amiri",serif;font-size:1rem;text-align:right;margin-top:2px}
 .bchapl .bcard:only-child .bbody{padding-top:8px}
+.biblio .vtog{margin:0 0 14px}
