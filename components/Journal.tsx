@@ -29,19 +29,21 @@ export function ClotureRow({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-/** Ce que la personne a écrit, une fois la journée close : une carte scellée. */
+/** Une fois la journée close : « Ton ciel », une section à part sur l’accueil, centrée. */
 export function ClotureResume({ onEdit }: { onEdit: () => void }) {
   const { S, ui } = useStore();
-  const dk = keyOf(ui.sel), r = S.days[dk], g = gratitudeDe(S, dk);
-  if (!journeeClose(S, dk) || (!g && !r?.note?.trim() && !r?.demain?.trim())) return null;
+  const dk = keyOf(ui.sel), r = S.days[dk], g = gratitudeDe(S, dk), n = etoiles(S).length;
+  if (!journeeClose(S, dk)) return null;
+  const demain = r?.demain?.trim();
   return (
-    <div className="jseal">
-      <Link className="jciel" href="/suivi#ciel" aria-label="Voir ton ciel"><Ciel nouvelle={g ? dk : undefined} /></Link>
-      {g && <p><span className="jl">Al-hamdulillâh</span>{g}</p>}
-      {r?.note?.trim() && <p><span className="jl">Aujourd’hui</span>{r.note.trim()}</p>}
-      {r?.demain?.trim() && <p><span className="jl">Pour demain</span>{r.demain.trim()}</p>}
+    <section className="sec cielacc" aria-label="Ton ciel">
+      <p className="caeye">Ton ciel</p>
+      <p className="calead">{n ? `${n} bienfait${n > 1 ? "s" : ""}, une étoile chacun` : "Chaque bienfait devient une étoile"}</p>
+      <Link className="cabox" href="/suivi#ciel" aria-label="Voir ton ciel"><Ciel nouvelle={g ? dk : undefined} /></Link>
+      {g && <p className="catxt">« {g} »</p>}
+      {demain && <p className="cadem">Demain : {demain}</p>}
       <button className="link" onClick={onEdit}>Modifier</button>
-    </div>
+    </section>
   );
 }
 

@@ -685,8 +685,9 @@ export function Jour() {
       )}
       {(["matin", "jour", "soir", "nuit"] as const).map((m) => P.sections[m].length ? <Section key={m} m={m} list={P.sections[m]} cur={cur} /> : null)}
       {P.actions.length > 0 && <Section m="actions" list={P.actions} cur={cur} />}
-      <section className="sec clotsec"><ClotureRow onOpen={() => rit.setOpen(true)} /><ClotureResume onEdit={() => rit.setOpen(true)} /></section>
+      <section className="sec clotsec"><ClotureRow onOpen={() => rit.setOpen(true)} /></section>
       <Foot s={s} />
+      <ClotureResume onEdit={() => rit.setOpen(true)} />
       {rit.open && <Rituel onClose={() => rit.setOpen(false)} />}
       {isToday && S.guide === "start" && <Visite />}
     </div>
@@ -746,9 +747,9 @@ function JourBesoin({ P, cur, topRef, rit }: { P: Plan; cur: Moment | null; topR
           {/* La dernière étape : clôturer sa journée (ne compte pas dans le pourcentage). */}
           <div className={`tr clotr ${journeeClose(S, dk) ? "done" : ""}`}><TlNode done={journeeClose(S, dk)} /><ClotureRow onOpen={() => rit.setOpen(true)} /></div>
         </div>
-        <ClotureResume onEdit={() => rit.setOpen(true)} />
       </section>
       <Foot s={s} />
+      <ClotureResume onEdit={() => rit.setOpen(true)} />
       {rit.open && <Rituel onClose={() => rit.setOpen(false)} />}
       {isToday && (S.guide === "start" || S.guide === "lecture") && <Visite />}
     </>

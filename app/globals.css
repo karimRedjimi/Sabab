@@ -1906,3 +1906,12 @@ section > .jseal,.clotsec .jseal{background:linear-gradient(180deg,#3E1240 0%,#2
 .hero2 .ppbtns .ppyes{background:#E9C46A;color:#2A0C22}
 .hero2 .ppbtns .pplater{background:none;color:rgba(255,255,255,.7)}
 @media (prefers-reduced-motion: reduce){.prow5 > button.now::before,.prow5 > button.now::after,.pptile::after,.ppass,.prow5 > button.todo b::after{animation:none}}
+
+/* « Ton ciel » sur l’accueil : une section à part, centrée */
+.cielacc{text-align:center;margin-top:26px}
+.cielacc .caeye{margin:0;font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brass)}
+.cielacc .calead{margin:4px 0 12px;color:var(--muted);font-size:.92rem}
+.cielacc .cabox{display:block;border-radius:24px;padding:14px 10px 8px;background:radial-gradient(90% 70% at 85% 0%,#7A2E5E 0%,transparent 60%),linear-gradient(180deg,#3E1240 0%,#2A0C22 55%,#1A0614 100%);box-shadow:0 14px 34px color-mix(in srgb,#2A0C22 28%,transparent);animation:obRise .5s var(--ease) backwards}
+.cielacc .catxt{margin:14px 0 2px;font-size:1.08rem;font-weight:600}
+.cielacc .cadem{margin:2px 0 6px;color:var(--muted);font-size:.9rem}
+.cielacc .link{font-size:.9rem}
