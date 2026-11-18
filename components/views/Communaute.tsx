@@ -13,6 +13,7 @@ import { supabase, errMsg, REQ_CAT_OF, type RecitationView, type RequestView } f
 import { useAccount } from "../Account";
 import { buzz, useStore } from "../Store";
 import { ShowToggles } from "../ShowToggles";
+import { Ecouter, useLecteur } from "../Recitation";
 import { PageBand } from "../Glyphs";
 
 function ago(iso: string) {
@@ -304,6 +305,7 @@ function VersetTab() {
   };
   const canShare = acc.status === "in" && !mine;
   const one = v.verses[0];
+  const lecteur = useLecteur();
   const card = useRef<HTMLElement>(null);
   const [sharing, setSharing] = useState(false);
 
@@ -311,10 +313,12 @@ function VersetTab() {
     <>
       <article className="vday" ref={card}>
         <div className="vhead"><p className="k">Un jour, un verset</p><span>{fmtDate(d)}</span></div>
-        <ShowToggles />
-        {S.show.ar && <p className="ar qar" lang="ar" dir="rtl">{one.ar}</p>}
-        {S.show.ph && <p className="ph">{one.ph}</p>}
-        {S.show.fr && <p className="qfr">{one.fr}</p>}
+        <div className="qhead vplay"><ShowToggles /><Ecouter s={v.s} versets={[one.n]} id={v.ref} lecteur={lecteur} /></div>
+        <div className={`qv ${lecteur.cur ? "lit" : ""}`}>
+          {S.show.ar && <p className="ar qar" lang="ar" dir="rtl">{one.ar}</p>}
+          {S.show.ph && <p className="ph">{one.ph}</p>}
+          {S.show.fr && <p className="qfr">{one.fr}</p>}
+        </div>
         <div className="vfoot">
           <p className="qref">{refLabel(v)}</p>
           <button className="vshare" disabled={sharing} onClick={async () => {
@@ -384,7 +388,6 @@ function VersetTab() {
                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3" /><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5" /></svg>
               </button>
               <span className="rt"><b>Réciter le verset</b><small>Une minute au plus · tu t’écoutes avant de partager</small></span>
-              {v.audio && <button className="pbtn ghost" aria-label={player.playing === "ref" ? "Pause" : "Écouter le récitateur"} onClick={() => player.play("ref", v.audio!)}><PlayIcon on={player.playing === "ref"} /></button>}
             </>
           )}
         </div>
