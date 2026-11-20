@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { DAYS, PARCOURS_DAYS } from "@/content/programme";
 import { HELD, MONTHS } from "@/content/reglages";
 import { REGULARITE } from "@/content/textes";
-import { addDays, fmtShort, keyOf, monday, sameDay, today } from "@/lib/dates";
+import { addDays, diffDays, fmtShort, keyOf, monday, sameDay, today } from "@/lib/dates";
 import { ensureDay } from "@/lib/state";
 import { prayerTimes, hm } from "@/lib/prayer";
 import {
@@ -536,12 +536,12 @@ function Coach({ s, only }: { s: Structure; only: "light" | "missed" | "ramp" })
   const d = ui.sel, t = today(), isToday = sameDay(d, t), y = addDays(t, -1);
   const light = (on: boolean) => {
     update((x) => { const r = ensureDay(x, keyOf(d)); if (on) r.light = true; else delete r.light; });
-    toast(on ? "Minimum du jour activé" : "Programme complet rétabli");
+    toast(on ? "Minimum du jour activé" : "Ta journée habituelle est rétablie");
   };
   if (only === "light") return !s.light ? null : (
       <div className="banner soft">
         <div><b>Minimum du jour</b><span>Trois invocations courtes suffisent aujourd’hui.</span></div>
-        <button className="act" onClick={() => light(false)}>Programme complet</button>
+        <button className="act" onClick={() => light(false)}>Reprendre ma journée</button>
       </div>
     );
   if (s.light) return null;
@@ -555,6 +555,13 @@ function Coach({ s, only }: { s: Structure; only: "light" | "missed" | "ramp" })
         <button onClick={() => { update((x) => { x.rampDone = keyOf(today()); }); toast("Programme complet activé"); }}>Tout le programme</button>
       </div>
     );
+  if (only === "ramp" && isToday && S.rampStart && S.rampDone && diffDays(t, fromKey(S.rampStart)) < 14)
+    return (
+      <div className="rampline">
+        <span className="rl"><b>Tout le programme</b></span>
+        <button onClick={() => { const prev = S.rampDone; update((x) => { x.rampDone = null; }); toast("Démarrage en douceur repris", { label: "Annuler", run: () => update((x) => { x.rampDone = prev; }) }); }}>Revenir en douceur</button>
+      </div>
+    );
   return null;
 }
 
@@ -566,7 +573,7 @@ function Missed({ onLight }: { onLight: () => void }) {
         <b>Hier n’a pas été tenu.</b> <span className="inl">Ce n’est pas grave, l’important est de reprendre.</span>
         {why && <span className="q">« {REGULARITE.texte} » {REGULARITE.source}</span>}
         <div className="row" style={{ gap: 18 }}>
-          <button className="act" onClick={onLight}>Reprendre en douceur</button>
+          <button className="act" onClick={onLight}>Commencer par le minimum</button>
           <button className="act" style={{ color: "var(--muted)" }} onClick={() => setWhy(!why)}>{why ? "Masquer" : "Pourquoi ?"}</button>
         </div>
       </div>
@@ -646,7 +653,7 @@ export function Jour() {
   // « Agir » réunit le geste et l’action : on ne le compte qu’une fois à l’affichage.
   const ids = countable(S, d).filter((id) => !(id === "pact" && mergedGesture(S, d)));
   const doneCount = ids.filter((id) => itemPct(S, dk, id) >= 1).length;
-  const needMode = !!S.objective && showObjective(S) && !s.light;
+  const needMode = !!S.objective && showObjective(S);
   const anim = ui.dir > 0 ? "day-next" : ui.dir < 0 ? "day-prev" : "";
   if (needMode) return <div className={`day ${anim}`} key={dk} {...swipe.handlers}><JourBesoin P={P} cur={cur} topRef={topRef} rit={rit} /></div>;
   const title = s.light ? "Minimum du jour" : s.ramp ? "Démarrage en douceur" : day.theme;
