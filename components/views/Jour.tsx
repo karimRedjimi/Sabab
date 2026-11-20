@@ -632,7 +632,7 @@ function Foot({ s }: { s: Structure }) {
   return (
     <div className="foot">
       <span>Thème du {day.name.toLowerCase()} : {theme}</span>
-      {!s.ramp && <button onClick={() => {
+      {<button onClick={() => {
         update((x) => { ensureDay(x, dk).light = true; });
         toast("Minimum du jour activé", { label: "Annuler", run: () => update((x) => { delete ensureDay(x, dk).light; }) });
       }}>Journée chargée ?</button>}
