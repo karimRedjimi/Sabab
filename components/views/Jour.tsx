@@ -158,7 +158,7 @@ function ObjectiveLine() {
   const pd = parcoursServesObjective(S) ? parcoursDay(S, ui.sel) : 0;
   return (
     <Link className="objline" href="/objectif">
-      <span>{objectiveTag(S)}</span>{pd ? (() => { const c = cycle(S, ui.sel); return <> · {c.mois}, jour {c.jour} sur {c.longueur}</>; })() : null}
+      <span>{objectiveTag(S)}</span>{pd ? (() => { const c = cycle(S, ui.sel); return <> · {c.nom.toLowerCase()}, jour {c.jour} sur {c.longueur}</>; })() : null}
     </Link>
   );
 }
@@ -185,13 +185,13 @@ function NeedCard({ onGo, goLabel, wait, started, allDone }: { onGo: (() => void
   return (
     <div className="need slim obj2">
       <Link className="needhead" href="/chemin" aria-label="Voir mon chemin">
-        <span className="ostar" role="img" aria-label={pd ? `Cycle ${cy.num}, ${cy.mois}, jour ${cy.jour} sur ${cy.longueur}` : "Parcours non commencé"}>
+        <span className="ostar" role="img" aria-label={pd ? `${cy.nom}, jour ${cy.jour} sur ${cy.longueur}` : "Parcours non commencé"}>
           <Star pct={Math.max(pct, 0.02)} />{pd > 0 && !finished && <b>{cy.jour}</b>}
         </span>
         <span className="nh">
           <span className="k">Ton objectif</span>
           <span className="nt">{objectiveName(S)}</span>
-          {pd > 0 && <span className="ns">Cycle {cy.num} · {cy.mois} · jour {cy.jour} sur {cy.longueur}</span>}
+          {pd > 0 && <span className="ns">{cy.nom} · jour {cy.jour} sur {cy.longueur}</span>}
         </span>
         <span className="chev" aria-hidden="true" />
       </Link>
@@ -471,7 +471,7 @@ function Row({ e, intention = false, tile }: { e: Entry; intention?: boolean; ti
   let sub: string;
   if (isCoran) { const n = versesIn(rappelsDuMoment(S, d, e.m === "soir" ? "soir" : "matin")); sub = `${n} verset${n > 1 ? "s" : ""}`; }
   else if (isObj) sub = intention ? (own ? "Ton action du jour" : gesture ? "Proposé par ton parcours · tu peux le remplacer" : "À choisir, une idée t’attend") : own || "Ton action concrète du jour";
-  else if (e.id === "pact") { const c = cycle(S, d); sub = `Geste du jour · ${c.mois}, jour ${c.jour}`; }
+  else if (e.id === "pact") { const c = cycle(S, d); sub = `Geste du jour · jour ${c.jour} sur ${c.longueur}`; }
   else if (slot.t > 1) sub = slot.l === "Matin" || slot.l === "Soir" ? `${slot.t} fois` : slot.l;
   else if (e.id === "fajr" || e.m === "jour" || e.m === "actions" || it.verif !== undefined) sub = momentOf(S, it, d) || (it.kind === "action" ? "Le geste du jour" : "Une fois");
   else sub = "Une fois";

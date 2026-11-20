@@ -283,7 +283,7 @@ export function Bienvenue() {
           <Burst />
           <p className="eyebrow" {...stg(0)}>Ton programme sur mesure</p>
           <h1 {...stg(1)}>{name}</h1>
-          <p {...stg(2)}>Chaque jour, une invocation ciblée, un geste concret et ton socle quotidien. Mois après mois, au rythme du calendrier lunaire.</p>
+          <p {...stg(2)}>Chaque jour, une invocation ciblée, un geste concret et ton socle quotidien. Par cycles de 30 jours, qui s’enchaînent.</p>
         </div>
         <section className="sec">
           <div className="sechead" {...stg(3)}><h2>Tes invocations</h2></div>

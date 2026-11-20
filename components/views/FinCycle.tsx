@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NIVEAUX } from "@/content/journee";
 import { REGULARITE } from "@/content/textes";
-import { bilanAMontrer, bilanCycle, cycle, cyclePrecedent, decisionNiveau, nomMois, recapAMontrer, recapAnnee, type Cycle } from "@/lib/cycle";
+import { bilanAMontrer, bilanCycle, cycle, cyclePrecedent, decisionNiveau, hijri, recapAMontrer, recapAnnee, type Cycle } from "@/lib/cycle";
 import { keyOf, today } from "@/lib/dates";
 import { choisirNiveau, niveau } from "@/lib/journee";
 import { objectiveName } from "@/lib/objective";
@@ -23,7 +23,7 @@ export function CycleBanner() {
   if (!p) return null;
   return (
     <Link className="banner cyb" href="/cycle">
-      <div><b>Ton cycle de {p.mois} est terminé</b><span>Ton bilan, et ce que tu choisis pour {cycle(S, today()).mois}.</span></div>
+      <div><b>{p.ramadan ? "Ramadan est terminé, qu’Allah l’accepte" : `Ton ${p.nom.toLowerCase()} est terminé`}</b><span>Ton bilan, et ce que tu choisis pour la suite.</span></div>
       <span className="act">Voir</span>
     </Link>
   );
@@ -47,7 +47,7 @@ export function FinCycle() {
   const router = useRouter();
   const t = today();
   // Le cycle à montrer : celui qui vient de se terminer, sinon le cycle en cours (consultation).
-  const [c] = useState<Cycle>(() => bilanAMontrer(S, t) || cyclePrecedent(S, t));
+  const [c] = useState<Cycle>(() => bilanAMontrer(S, t) || cyclePrecedent(S, t) || cycle(S, t));
   const suivant = cycle(S, t);
   const b = bilanCycle(S, c);
   const dec = decisionNiveau(S, b), n = niveau(S);
@@ -59,15 +59,15 @@ export function FinCycle() {
       if (choix === "monter" && n < 5) choisirNiveau(s, (n + 1) as 1 | 2 | 3 | 4 | 5, t);
       if (choix === "alleger" && n > 1) choisirNiveau(s, (n - 1) as 1 | 2 | 3 | 4 | 5, t);
     });
-    if (choix === "monter") toast(`Niveau ${n + 1} pour ${suivant.mois}, bismillâh`);
-    if (choix === "alleger") toast(`Niveau ${n - 1} pour ${suivant.mois} : un pas sûr vaut mieux`);
+    if (choix === "monter") toast(`Niveau ${n + 1} pour ton ${suivant.nom.toLowerCase()}, bismillâh`);
+    if (choix === "alleger") toast(`Niveau ${n - 1} : un pas sûr vaut mieux`);
     router.push(besoin === "changer" ? "/objectif" : besoin === "exauce" ? "/carnet" : "/");
   };
   return (
     <div className="fincy">
-      <p className="fk">Fin du cycle {c.num}</p>
-      <h1>{c.mois} s’achève.<br />Qu’Allah l’accepte.</h1>
-      <div className="fciel"><Ciel mois={c.cle} /></div>
+      <p className="fk">{c.ramadan ? c.nom : `Fin du ${c.nom.toLowerCase()}`} · {c.periode}</p>
+      <h1>{c.ramadan ? "Ramadan s’achève." : `Ton ${c.nom.toLowerCase()} s’achève.`}<br />Qu’Allah l’accepte.</h1>
+      <div className="fciel"><Ciel cyc={c} /></div>
       <div className="fst">
         <div><b>{b.tenus}<small> / {b.jours}</small></b><span>jours tenus</span></div>
         <div><b>{b.fajr}</b><span>Fajr à l’heure</span></div>
@@ -79,8 +79,8 @@ export function FinCycle() {
       {dec && (
         <div className="flv">
           {dec === "monter"
-            ? <><b>{b.tenus} jours tenus ce mois-ci</b><p>Passer au niveau {n + 1} de la journée du Prophète ﷺ pour {suivant.mois} : « {NIVEAUX[(n + 1) as 1 | 2 | 3 | 4 | 5].titre} » ?</p></>
-            : <><b>Un mois plus difficile, et c’est humain</b><p>Revenir au niveau {n - 1} pour {suivant.mois}, et tenir avec régularité ? « {REGULARITE.texte} » <small>{REGULARITE.source}</small></p></>}
+            ? <><b>{b.tenus} jours tenus sur {b.jours}</b><p>Passer au niveau {n + 1} de la journée du Prophète ﷺ pour ton {suivant.nom.toLowerCase()} : « {NIVEAUX[(n + 1) as 1 | 2 | 3 | 4 | 5].titre} » ?</p></>
+            : <><b>Un cycle plus difficile, et c’est humain</b><p>Revenir au niveau {n - 1} pour ton {suivant.nom.toLowerCase()}, et tenir avec régularité ? « {REGULARITE.texte} » <small>{REGULARITE.source}</small></p></>}
           <div className="fbtns">
             <button className={choix === dec ? "on" : ""} onClick={() => setChoix(dec)}>{dec === "monter" ? "Monter" : "Alléger"}</button>
             <button className={choix === "rester" ? "on" : ""} onClick={() => setChoix("rester")}>Rester au niveau {n}</button>
@@ -89,13 +89,13 @@ export function FinCycle() {
       )}
       {S.objective && (
         <div className="fch">
-          <p>Pour {suivant.mois}, ton besoin :</p>
+          <p>Pour ton {suivant.nom.toLowerCase()}, ton besoin :</p>
           <button className="on" onClick={() => terminer("continuer")}><span>Continuer : {objectiveName(S)}</span><span aria-hidden="true">✓</span></button>
           <button onClick={() => terminer("changer")}><span>Changer de besoin</span><span aria-hidden="true">›</span></button>
           <button onClick={() => terminer("exauce")}><span>Exaucé, al-hamdulillâh</span><span aria-hidden="true">›</span></button>
         </div>
       )}
-      {!S.objective && <button className="bigbtn fgo" onClick={() => terminer("continuer")}>Bismillâh, commencer {suivant.mois}</button>}
+      {!S.objective && <button className="bigbtn fgo" onClick={() => terminer("continuer")}>Bismillâh, commencer mon {suivant.nom.toLowerCase()}</button>}
     </div>
   );
 }
@@ -105,7 +105,7 @@ export function Annee() {
   const { S, update } = useStore();
   const router = useRouter();
   const t = today();
-  const a = recapAMontrer(S, t) || cycle(S, t).annee;
+  const a = recapAMontrer(S, t) || hijri(t).a;
   const r = recapAnnee(S, a, t);
   const fajr = r.fajrDebut && r.fajrFin > r.fajrDebut ? `×${(r.fajrFin / r.fajrDebut).toFixed(1).replace(".0", "").replace(".", ",")}` : `${r.fajrFin}/30`;
   const vu = () => update((s) => { s.recaps = { ...(s.recaps || {}), [a]: keyOf(t) }; });
@@ -113,10 +113,10 @@ export function Annee() {
     <div className="fincy">
       <p className="fk">Avant Ramadan</p>
       <h1>Ton année {a},<br />avant d’accueillir Ramadan</h1>
-      <div className="fgal"><Galaxie annee={a} jusqua={8} /></div>
+      <div className="fgal"><Galaxie liste={r.cycles} /></div>
       <div className="fst f3">
         <div><b>{r.prieres.toLocaleString("fr-FR")}</b><span>prières notées</span></div>
-        <div><b>{fajr}</b><span>Fajr à l’heure{r.fajrDebut && r.fajrFin > r.fajrDebut ? ` depuis ${nomMois(1)}` : " ce mois-ci"}</span></div>
+        <div><b>{fajr}</b><span>Fajr à l’heure{r.fajrDebut && r.fajrFin > r.fajrDebut ? " depuis ton premier cycle de l’année" : " sur ce cycle"}</span></div>
         <div><b>{r.niveau}</b><span>niveau atteint</span></div>
         <div><b>{r.versets.toLocaleString("fr-FR")}</b><span>versets lus</span></div>
         <div><b>{r.sues}</b><span>invocations sues</span></div>

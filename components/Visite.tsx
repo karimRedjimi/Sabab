@@ -8,7 +8,7 @@ interface Etape { sel?: string; titre: string; texte: string; pad?: number; radi
 const ETAPES: Etape[] = [
   { titre: "Bienvenue dans ta journée", texte: "Quelques repères, en trente secondes. Touche l’écran pour avancer." },
   { sel: ".hero2 .prow5", titre: "Tes prières", texte: "Touche une heure pour noter ta prière. Elle passe en or.", pad: 6, radius: 16 },
-  { sel: ".need.obj2 .needhead", titre: "Ton objectif", texte: "Son étoile se remplit au fil du mois lunaire.", pad: 8, radius: 18 },
+  { sel: ".need.obj2 .needhead", titre: "Ton objectif", texte: "Son étoile se remplit au fil de ton cycle de 30 jours.", pad: 8, radius: 18 },
   { sel: ".need.obj2 .go", titre: "Un seul bouton pour avancer", texte: "« Continuer » reprend ta journée là où tu t’es arrêté.", pad: 6, radius: 18 },
   { sel: ".tl", titre: "Ta journée", texte: "Du matin à la nuit. Une étoile s’allume à chaque moment accompli.", pad: 8, radius: 20 },
   { sel: '.tabs a[href="/communaute"]', titre: "Ensemble", texte: "Invoque pour les autres et récite le verset du jour.", pad: 4, radius: 20 },

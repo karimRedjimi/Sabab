@@ -151,7 +151,7 @@ export function Parcours() {
   return (
     <>
       <div className="page"><h1>Parcours</h1>
-        <p className="lead">Des invocations ciblées et un geste concret chaque jour, mois après mois, au rythme du calendrier lunaire. Un parcours à la fois.</p></div>
+        <p className="lead">Des invocations ciblées et un geste concret chaque jour, par cycles de 30 jours qui s’enchaînent, et un cycle à part pendant Ramadan. Un parcours à la fois.</p></div>
       {Object.entries(PARCOURS).sort(([x], [y]) => (cur?.id === y ? 1 : 0) - (cur?.id === x ? 1 : 0)).map(([id, p]) => {
         const active = cur && cur.id === id && pd;
         const finished = false, cy = cycle(S, today());
@@ -162,7 +162,7 @@ export function Parcours() {
             {active ? (
               <>
                 <div className="learnbar"><i style={{ width: `${(cy.jour / cy.longueur) * 100}%` }} /></div>
-                <p style={{ fontSize: ".9rem", margin: "4px 0 10px" }}>Cycle {cy.num} · {cy.mois} · jour {cy.jour} sur {cy.longueur}</p>
+                <p style={{ fontSize: ".9rem", margin: "4px 0 10px" }}>{cy.nom} · jour {cy.jour} sur {cy.longueur}</p>
                 <button className="link danger" onClick={() => { const prev = cur; update((s) => { s.parcours = null; }); toast("Parcours arrêté", { label: "Annuler", run: () => update((s) => { s.parcours = prev; }) }); }}>Arrêter ce parcours</button>
               </>
             ) : (

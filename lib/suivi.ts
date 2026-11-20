@@ -106,7 +106,7 @@ export function besoin(S: State, t = today()) {
     joursInv++;
     if (l.every((e) => entryPct(S, dk, e) >= 1)) faitsInv++;
   }
-  return { jour, longueur: c.longueur, mois: c.mois, num: c.num, gestes, faitsInv, joursInv };
+  return { jour, longueur: c.longueur, nom: c.nom, gestes, faitsInv, joursInv };
 }
 
 /** Le niveau de la journée du Prophète ﷺ, et les jours tenus vers le suivant. */
