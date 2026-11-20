@@ -666,9 +666,9 @@ export function Jour() {
       <Coach s={s} only="light" />
       {isToday && (
         <div className="notices">
-          <Coach s={s} only="missed" />
-          <CycleBanner />
           <RecapBanner />
+          <CycleBanner />
+          <Coach s={s} only="missed" />
           <BilanBanner />
           <Souvenir />
           <Coach s={s} only="ramp" />
@@ -715,10 +715,10 @@ function JourBesoin({ P, cur, topRef, rit }: { P: Plan; cur: Moment | null; topR
       <Coach s={s} only="light" />
       {isToday && (
         <div className="notices">
+          <RecapBanner />
+          <CycleBanner />
           <Patience onPatience={(e) => start([e], "Patience")} />
           <Coach s={s} only="missed" />
-          <CycleBanner />
-          <RecapBanner />
           <BilanBanner />
           <Souvenir />
           <SameNeed />
