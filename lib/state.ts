@@ -36,6 +36,10 @@ export interface State {
   gratitude?: Record<string, string>;
   /** Dernier souvenir de bienfait montré sur l’accueil (une fois par semaine). */
   souvenirVu?: string;
+  /** Les cycles (mois lunaires) : bilan vu, décision prise. */
+  cycles?: Record<string, { vu?: string; decision?: "monter" | "alleger" | "rester" }>;
+  /** Les récapitulatifs annuels vus, par année hégirienne. */
+  recaps?: Record<number, string>;
   /** Suivi des cinq prières, par jour. */
   salat?: Record<string, Partial<Record<"fajr" | "dhuhr" | "asr" | "maghrib" | "isha", { s: "on" | "qada" | "ex"; t?: number; m?: boolean }>>>;
   /** Rappels du Coran : versets par jour (1, 5 ou 10). */

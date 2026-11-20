@@ -283,7 +283,7 @@ export function Bienvenue() {
           <Burst />
           <p className="eyebrow" {...stg(0)}>Ton programme sur mesure</p>
           <h1 {...stg(1)}>{name}</h1>
-          <p {...stg(2)}>Chaque jour, une invocation ciblée, un geste concret et ton socle quotidien. Pendant {PARCOURS_DAYS} jours.</p>
+          <p {...stg(2)}>Chaque jour, une invocation ciblée, un geste concret et ton socle quotidien. Mois après mois, au rythme du calendrier lunaire.</p>
         </div>
         <section className="sec">
           <div className="sechead" {...stg(3)}><h2>Tes invocations</h2></div>
@@ -303,7 +303,7 @@ export function Bienvenue() {
           <div className="sechead" {...stg(5 + parc.duas.length)}><h2>Ton chemin</h2></div>
           <div className="card revpath stg" style={{ "--i": 6 + parc.duas.length } as CSSProperties}>
             <div className="star"><Star pct={0.03} /></div>
-            <div><h3>{PARCOURS_DAYS} jours, un geste par jour</h3><p>Jour 1 : {parc.actions[0].charAt(0).toLowerCase() + parc.actions[0].slice(1)}</p></div>
+            <div><h3>Un geste concret chaque jour</h3><p>Jour 1 : {parc.actions[0].charAt(0).toLowerCase() + parc.actions[0].slice(1)}</p></div>
           </div>
           <button className="obrow small stg" style={{ "--i": 7 + parc.duas.length } as CSSProperties} aria-pressed={OB.ramp} onClick={() => { buzz(10); set({ ramp: !OB.ramp }); }}>
             <span className="obi"><Glyph name="seed" /></span>

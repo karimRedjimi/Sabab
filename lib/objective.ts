@@ -56,12 +56,8 @@ export const STAGES: Record<Stage, { l: string; d: string; ramp: boolean }> = {
 /** Le nom court de l’objectif, dans les mots de la personne. */
 export const objectiveName = (S: State) => S.objective?.title || (S.objective && OBJ_CATS[S.objective.cat]?.l) || "";
 
-/** Le parcours de l’objectif est-il arrivé au bout des 40 jours ? */
-export function parcoursFinished(S: State, d: Date) {
-  if (!parcoursServesObjective(S) || !S.parcours) return false;
-  const [y, m, j] = S.parcours.start.split("-").map(Number);
-  return diffDays(d, new Date(y, m - 1, j)) >= 40;
-}
+/** Le parcours ne se termine plus : il continue de cycle en cycle (mois lunaires). */
+export function parcoursFinished(_S: State, _d: Date) { return false; }
 
 /** Afficher un mot de patience : objectif ancien, aucune avancée récente, pas vu depuis une semaine. */
 export function needsPatience(S: State, d: Date) {

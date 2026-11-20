@@ -8,6 +8,7 @@ import { REGULARITE } from "@/content/textes";
 import { addDays, fmtDate, fmtShort, fromKey, keyOf, today } from "@/lib/dates";
 import { dayPct, parcoursDay, val } from "@/lib/program";
 import { ensureDay, uid8 } from "@/lib/state";
+import { cycle, hijri } from "@/lib/cycle";
 import { objectiveName, parcoursFinished, parcoursServesObjective } from "@/lib/objective";
 import { useStore } from "../Store";
 import { useRouter } from "next/navigation";
@@ -40,16 +41,17 @@ export function Chemin() {
     const k = keyOf(d), n = Math.round((d.getTime() - start.getTime()) / 86400000) + 1;
     if (dayPct(S, d) >= HELD) held++;
     const r = S.days[k];
-    const pactDone = serves && n <= PARCOURS_DAYS && val(S, k, "pact:0") >= 1;
+    const pactDone = serves && val(S, k, "pact:0") >= 1;
     const objDone = val(S, k, "obj:0") >= 1;
     const act = objDone ? r?.objAct?.trim() || "" : "";
     if (pactDone) gestures++;
     if (objDone) gestures++;
     if (pactDone) evs.push({ key: k + "p", date: d, label: `Jour ${n}`, title: acts[(n - 1) % acts.length], text: objDone ? (act ? `Ton action : ${act}` : "Et ton action du jour") : undefined });
-    else if (objDone) evs.push({ key: k + "o", date: d, label: serves && n <= PARCOURS_DAYS ? `Jour ${n}` : fmtShort(d), title: act || "Action faite pour ton objectif", text: act ? "Ton action du jour" : undefined });
-    if (serves && (n === 7 || n === 21 || n === PARCOURS_DAYS))
+    else if (objDone) evs.push({ key: k + "o", date: d, label: serves ? `Jour ${n}` : fmtShort(d), title: act || "Action faite pour ton objectif", text: act ? "Ton action du jour" : undefined });
+    if (serves && n > 1 && hijri(d).j === 1) { const c = cycle(S, d); evs.push({ key: k + "c", date: d, label: `Cycle ${c.num}`, kind: "big", title: `${c.mois} commence`, text: "Un nouveau chapitre, bismillâh" }); }
+    if (serves && (n === 7 || n === 21))
       evs.push({ key: k + "m", date: d, label: `Jour ${n}`, kind: "big",
-        title: n === 7 ? "Une semaine de constance" : n === 21 ? "Trois semaines sur ton chemin" : "Ton parcours est accompli",
+        title: n === 7 ? "Une semaine de constance" : "Trois semaines sur ton chemin",
         quote: n === 7 ? `« ${REGULARITE.texte} » ${REGULARITE.source}` : undefined });
   }
   for (const [k, g] of Object.entries(S.gratitude || {})) if (g.trim() && k >= startKey) evs.push({ key: "g" + k, date: fromKey(k), label: "Al-hamdulillâh", title: g.trim() });
@@ -72,7 +74,7 @@ export function Chemin() {
       <div className="page">
         <p className="eyebrow">Mon chemin</p>
         <h1>{objectiveName(S)}</h1>
-        <p className="lead">Depuis le {fmtDate(start)}{pdToday ? ` · jour ${pdToday} sur ${PARCOURS_DAYS}` : parcoursFinished(S, t) ? ` · ${PARCOURS_DAYS} jours accomplis` : ""}</p>
+        <p className="lead">Depuis le {fmtDate(start)}{pdToday ? (() => { const c = cycle(S, t); return ` · cycle ${c.num}, ${c.mois}`; })() : ""}</p>
       </div>
       <div className="stats">
         <div className="stat"><b>{held}</b><span>jour{held > 1 ? "s" : ""} tenu{held > 1 ? "s" : ""}</span></div>

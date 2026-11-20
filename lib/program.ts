@@ -18,7 +18,8 @@ export type ViewItem = Item | { kind: "objective"; title: string; task?: boolean
 export function parcoursDay(S: State, d: Date) {
   if (!S.parcours || !PARCOURS[S.parcours.id]) return 0;
   const n = diffDays(d, fromKey(S.parcours.start)) + 1;
-  return n >= 1 && n <= PARCOURS_DAYS ? n : 0;
+  // Plus de fin au jour 40 : les invocations et les gestes tournent en continu, cycle après cycle.
+  return n >= 1 ? n : 0;
 }
 export const hasObjective = (S: State, d: Date) => !!(S.objective && keyOf(d) >= S.objective.since);
 export function rampWeek(S: State, d: Date) {

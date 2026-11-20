@@ -13,6 +13,7 @@ import { LEVELS, METHODS } from "@/content/reglages";
 import { FORCE_DU_PROGRAMME, LIRE_LES_SOURCES, PRECISION_WAQIA, PROGRAMME_INTRO } from "@/content/textes";
 import { diffDays, fromKey, keyOf, today } from "@/lib/dates";
 import { parcoursDay, rampWeek } from "@/lib/program";
+import { cycle } from "@/lib/cycle";
 import { prayerTimes } from "@/lib/prayer";
 import { DisplayChips, ReadonlyCard } from "../Cards";
 import { CityPicker, PrayerStrip } from "../Prayer";
@@ -29,7 +30,7 @@ export function Plus() {
     ["Mon programme", [
       ["/objectif", "target", "Mon objectif", S.objective ? "" : "À fixer", S.objective?.title],
       ...(S.objective ? [["/chemin", "path", "Mon chemin", pd ? `Jour ${pd}` : ""] as Row] : []),
-      ["/parcours", "cal", "Parcours de 40 jours", p && pd ? p.title : "Aucun"],
+      ["/parcours", "cal", "Parcours", p && pd ? p.title : "Aucun"],
       ["/bilan", "chart", "Mon bilan", "Semaine, mois"],
       ["/rythme", "rhythm", "Mon rythme", rw ? `Semaine ${rw}` : "Complet"],
       ["/programme", "book", "Le programme complet", ""],
@@ -149,19 +150,19 @@ export function Parcours() {
   const cur = S.parcours, pd = parcoursDay(S, today());
   return (
     <>
-      <div className="page"><h1>Parcours de 40 jours</h1>
-        <p className="lead">Des invocations ciblées et un geste concret chaque jour, pendant 40 jours. Un parcours à la fois.</p></div>
+      <div className="page"><h1>Parcours</h1>
+        <p className="lead">Des invocations ciblées et un geste concret chaque jour, mois après mois, au rythme du calendrier lunaire. Un parcours à la fois.</p></div>
       {Object.entries(PARCOURS).sort(([x], [y]) => (cur?.id === y ? 1 : 0) - (cur?.id === x ? 1 : 0)).map(([id, p]) => {
         const active = cur && cur.id === id && pd;
-        const finished = cur && cur.id === id && !pd && diffDays(today(), fromKey(cur.start)) >= PARCOURS_DAYS;
+        const finished = false, cy = cycle(S, today());
         return (
           <div key={id} className={`card ${active ? "active" : ""}`}>
             <h3>{p.title}</h3><p>{p.intro}</p>
             <p style={{ fontSize: ".9rem" }}>{p.duas.map((d) => ITEMS[d].title).join(" · ")}</p>
             {active ? (
               <>
-                <div className="learnbar"><i style={{ width: `${(pd / PARCOURS_DAYS) * 100}%` }} /></div>
-                <p style={{ fontSize: ".9rem", margin: "4px 0 10px" }}>Jour {pd} sur {PARCOURS_DAYS}</p>
+                <div className="learnbar"><i style={{ width: `${(cy.jour / cy.longueur) * 100}%` }} /></div>
+                <p style={{ fontSize: ".9rem", margin: "4px 0 10px" }}>Cycle {cy.num} · {cy.mois} · jour {cy.jour} sur {cy.longueur}</p>
                 <button className="link danger" onClick={() => { const prev = cur; update((s) => { s.parcours = null; }); toast("Parcours arrêté", { label: "Annuler", run: () => update((s) => { s.parcours = prev; }) }); }}>Arrêter ce parcours</button>
               </>
             ) : (
@@ -170,7 +171,7 @@ export function Parcours() {
                 <button className="navbtn strong" onClick={() => {
                   const prev = cur;
                   update((s) => { s.parcours = { id, start: keyOf(today()) }; });
-                  toast(`Parcours commencé : jour 1 sur ${PARCOURS_DAYS}`, prev && pd ? { label: "Annuler", run: () => update((s) => { s.parcours = prev; }) } : undefined); router.push("/");
+                  toast("Parcours commencé, bismillâh", prev && pd ? { label: "Annuler", run: () => update((s) => { s.parcours = prev; }) } : undefined); router.push("/");
                 }}>{cur && pd ? "Choisir ce parcours" : "Commencer aujourd’hui"}</button>
               </>
             )}

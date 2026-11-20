@@ -200,8 +200,8 @@ export function Suivi() {
         <section className="sec">
           <div className="sechead"><h2>Ton besoin</h2><span className="count">{objectiveName(S)}</span></div>
           <Link className="card sbes" href="/chemin">
-            <div className="sduo"><div><span className="big">{B.jour}<small>/40</small></span><small>jours de parcours</small></div><div className="r"><span className="big">{B.gestes}</span><small>geste{B.gestes > 1 ? "s" : ""} fait{B.gestes > 1 ? "s" : ""}</small></div></div>
-            <div className="spath" aria-hidden="true">{Array.from({ length: 40 }, (_, i) => <i key={i} className={i + 1 < B.jour ? "on" : i + 1 === B.jour ? "cur" : ""} style={{ animationDelay: `${i * 15}ms` }} />)}</div>
+            <div className="sduo"><div><span className="big">{B.jour}<small>/{B.longueur}</small></span><small>cycle {B.num} · {B.mois}</small></div><div className="r"><span className="big">{B.gestes}</span><small>geste{B.gestes > 1 ? "s" : ""} fait{B.gestes > 1 ? "s" : ""}</small></div></div>
+            <div className="spath" aria-hidden="true">{Array.from({ length: B.longueur }, (_, i) => <i key={i} className={i + 1 < B.jour ? "on" : i + 1 === B.jour ? "cur" : ""} style={{ animationDelay: `${i * 15}ms` }} />)}</div>
             {B.joursInv > 0 && <small>L’invocation de ton besoin : faite {B.faitsInv} jour{B.faitsInv > 1 ? "s" : ""} sur {B.joursInv}</small>}
           </Link>
         </section>

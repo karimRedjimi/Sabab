@@ -6,6 +6,7 @@ import { addDays, diffDays, fromKey, keyOf, today } from "./dates";
 import { JOURS_POUR_MONTER, NIVEAU_MAX, niveau, planDuJour } from "./journee";
 import { dayPct, entryPct, parcoursDay, streaks, val, type Entry } from "./program";
 import { SALAT, SALAT_LABEL, type SalatKey } from "./salat";
+import { cycle } from "./cycle";
 import type { State } from "./state";
 
 export type Periode = "semaine" | "mois";
@@ -93,7 +94,8 @@ export const coranSemaine = (S: State, fin: Date) => Array.from({ length: 7 }, (
 /** Le parcours de ton besoin : jour, gestes faits, jours où l’invocation du besoin a été faite. */
 export function besoin(S: State, t = today()) {
   if (!S.objective || !S.parcours) return null;
-  const jour = parcoursDay(S, t) || 0;
+  const c = cycle(S, t);
+  const jour = parcoursDay(S, t) ? c.jour : 0;
   let gestes = 0, faitsInv = 0, joursInv = 0;
   for (let d = fromKey(S.parcours.start); d <= t; d = addDays(d, 1)) {
     const dk = keyOf(d);
@@ -104,7 +106,7 @@ export function besoin(S: State, t = today()) {
     joursInv++;
     if (l.every((e) => entryPct(S, dk, e) >= 1)) faitsInv++;
   }
-  return { jour: Math.min(jour, 40), gestes, faitsInv, joursInv };
+  return { jour, longueur: c.longueur, mois: c.mois, num: c.num, gestes, faitsInv, joursInv };
 }
 
 /** Le niveau de la journée du Prophète ﷺ, et les jours tenus vers le suivant. */
