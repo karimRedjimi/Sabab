@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useId, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { EXTRAITS } from "@/content/coran-extraits";
-import { keyOf, sameDay, today } from "@/lib/dates";
+import { fromKey, keyOf, sameDay, today } from "@/lib/dates";
+import { cleMois, cycle, nomMois } from "@/lib/cycle";
 import { DEMAIN_IDEES, GRATITUDE_IDEES, etoiles, gratitudeDe, intentionDHier, journeeClose, placeEtoile, souvenir } from "@/lib/journal";
 import { mergedGesture } from "@/lib/objective";
 import { val } from "@/lib/program";
@@ -32,14 +33,15 @@ export function ClotureRow({ onOpen }: { onOpen: () => void }) {
 /** Une fois la journée close : « Ton ciel », une section à part sur l’accueil, centrée. */
 export function ClotureResume({ onEdit }: { onEdit: () => void }) {
   const { S, ui } = useStore();
-  const dk = keyOf(ui.sel), r = S.days[dk], g = gratitudeDe(S, dk), n = etoiles(S).length;
+  const dk = keyOf(ui.sel), r = S.days[dk], g = gratitudeDe(S, dk), cm = cleMois(ui.sel);
+  const n = etoiles(S).filter((e) => cleMois(fromKey(e.dk)) === cm).length;
   if (!journeeClose(S, dk)) return null;
   const demain = r?.demain?.trim();
   return (
     <section className="sec cielacc" aria-label="Ton ciel">
       <Link className="cabox" href="/suivi#ciel" aria-label={`Ton ciel : ${n} étoile${n > 1 ? "s" : ""}. Voir ton ciel`}>
-        <div className="cahead"><span className="caeye">Ton ciel</span><span className="cacount">{n} étoile{n > 1 ? "s" : ""}</span></div>
-        <Ciel nouvelle={g ? dk : undefined} />
+        <div className="cahead"><span className="caeye">Ton ciel de {cycle(S, ui.sel).mois}</span><span className="cacount">{n} étoile{n > 1 ? "s" : ""}</span></div>
+        <Ciel nouvelle={g ? dk : undefined} mois={cm} />
         <svg className="caville" viewBox="0 0 360 64" preserveAspectRatio="none" aria-hidden="true">
           <path d="M0 64V50h34v-7c6-14 30-14 36 0v7h26V22l3-7 3 7v28h22v-5c10-30 58-30 68 0v5h24V26l3-7 3 7v24h22v-6c6-12 26-12 32 0v6h48v14z" />
         </svg>
@@ -83,10 +85,11 @@ export function Souvenir() {
 
 /** Le ciel des bienfaits : une étoile par al-hamdulillâh, reliées dans l’ordre des jours. */
 const FOND = Array.from({ length: 46 }, (_, i) => { const a = Math.sin(i * 12.9898) * 43758.5453, b = Math.sin(i * 78.233) * 12543.123; return { x: (a - Math.floor(a)) * 360, y: (b - Math.floor(b)) * 220, r: 0.4 + ((a * 7) % 1 + 1) % 1 * 0.9, t: i % 7 }; });
-export function Ciel({ max = 40, nouvelle, onPick, sel, deco = true }: { max?: number; nouvelle?: string; onPick?: (dk: string) => void; sel?: string | null; deco?: boolean }) {
+export function Ciel({ max = 40, nouvelle, onPick, sel, deco = true, mois }: { max?: number; nouvelle?: string; onPick?: (dk: string) => void; sel?: string | null; deco?: boolean; mois?: string }) {
   const { S } = useStore();
   const mid = "cm" + useId().replace(/:/g, "");
-  const all = etoiles(S), l = all.slice(-max);
+  // Un mois lunaire = une constellation : au plus 30 étoiles, aucune n’est perdue.
+  const all = etoiles(S).filter((e) => !mois || cleMois(fromKey(e.dk)) === mois), l = all.slice(-max);
   const pts = l.map((e, i) => ({ ...e, ...placeEtoile(i, e.dk, l.length) }));
   return (
     <svg className="ciel" viewBox="0 0 360 220" role="img" aria-label={`${all.length} bienfait${all.length > 1 ? "s" : ""} dans ton ciel`}>
@@ -114,17 +117,53 @@ export function Ciel({ max = 40, nouvelle, onPick, sel, deco = true }: { max?: n
 export function CielSection() {
   const { S } = useStore();
   const all = etoiles(S);
+  const cm = cleMois(today());
+  // Les mois qui ont des étoiles, du plus récent au plus ancien, et toujours le mois en cours.
+  const moisListe = [...new Set([cm, ...all.map((e) => cleMois(fromKey(e.dk))).reverse()])];
+  const [onglet, setOnglet] = useState<string>(cm);
   const [sel, setSel] = useState<string | null>(null);
-  const cur = all.find((e) => e.dk === sel) || all[all.length - 1];
+  const duMois = all.filter((e) => cleMois(fromKey(e.dk)) === onglet);
+  const cur = duMois.find((e) => e.dk === sel) || duMois[duMois.length - 1];
+  const nom = (cle: string) => nomMois(Number(cle.split("-")[1]));
   return (
     <section className="sec" id="ciel">
       <div className="sechead"><h2>Ton ciel</h2><span className="count">{all.length} bienfait{all.length > 1 ? "s" : ""}</span></div>
-      <div className="cielbox">
-        <Ciel onPick={setSel} sel={cur?.dk} />
-        {cur ? <p className="cielsel"><small>{fmtJour(cur.dk)}</small>« {cur.text} »</p>
-          : <p className="cielsel"><small>Ton ciel est encore vide</small>Chaque soir, un al-hamdulillâh devient une étoile.</p>}
+      <div className="cieltabs" role="tablist" aria-label="Mois lunaires">
+        {moisListe.map((c) => <button key={c} role="tab" aria-selected={onglet === c} onClick={() => { setOnglet(c); setSel(null); }}>{nom(c)}</button>)}
+        <button role="tab" aria-selected={onglet === "annee"} onClick={() => setOnglet("annee")}>L’année</button>
       </div>
+      {onglet === "annee" ? <Galaxie onOuvrir={(c) => { setOnglet(c); setSel(null); }} /> : (
+        <div className="cielbox" key={onglet}>
+          <div className="cielmois">{nom(onglet)} {onglet.split("-")[0]}<span>{duMois.length} étoile{duMois.length > 1 ? "s" : ""}</span></div>
+          <Ciel onPick={setSel} sel={cur?.dk} mois={onglet} />
+          {cur ? <p className="cielsel"><small>{fmtJour(cur.dk)}</small>« {cur.text} »</p>
+            : <p className="cielsel"><small>Pas encore d’étoile ce mois-ci</small>Chaque soir, un al-hamdulillâh devient une étoile.</p>}
+        </div>
+      )}
     </section>
+  );
+}
+
+/** L’année : une petite constellation par mois lunaire, de Mouharram à Dhou al-Hijja. */
+export function Galaxie({ annee, onOuvrir, jusqua = 12 }: { annee?: number; onOuvrir?: (cle: string) => void; jusqua?: number }) {
+  const { S } = useStore();
+  const a = annee || Number(cleMois(today()).split("-")[0]);
+  const cm = cleMois(today());
+  const all = etoiles(S);
+  return (
+    <div className="galaxie">
+      {Array.from({ length: jusqua }, (_, i) => {
+        const cle = `${a}-${String(i + 1).padStart(2, "0")}`;
+        const n = all.filter((e) => cleMois(fromKey(e.dk)) === cle).length;
+        const etat = cle === cm ? "en cours" : cle > cm ? "à venir" : n ? `${n} étoile${n > 1 ? "s" : ""}` : "—";
+        return (
+          <button key={cle} className={`gm ${n ? "on" : ""} ${cle === cm ? "cur" : ""}`} disabled={!n || !onOuvrir} onClick={() => onOuvrir?.(cle)}>
+            <Ciel mois={cle} deco={false} />
+            <b>{nomMois(i + 1)}</b><small>{etat}</small>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 

@@ -26,6 +26,7 @@ import { Star, starPoints } from "../Star";
 import { Visite } from "../Visite";
 import { Brand, Glyph, Tile } from "../Glyphs";
 import { cycle } from "@/lib/cycle";
+import { CycleBanner, RecapBanner } from "./FinCycle";
 import { mergedGesture, needsPatience, objectiveName, objectiveTag, parcoursFinished, parcoursServesObjective, showObjective } from "@/lib/objective";
 import { fromKey } from "@/lib/dates";
 
@@ -666,6 +667,8 @@ export function Jour() {
       {isToday && (
         <div className="notices">
           <Coach s={s} only="missed" />
+          <CycleBanner />
+          <RecapBanner />
           <BilanBanner />
           <Souvenir />
           <Coach s={s} only="ramp" />
@@ -714,6 +717,8 @@ function JourBesoin({ P, cur, topRef, rit }: { P: Plan; cur: Moment | null; topR
         <div className="notices">
           <Patience onPatience={(e) => start([e], "Patience")} />
           <Coach s={s} only="missed" />
+          <CycleBanner />
+          <RecapBanner />
           <BilanBanner />
           <Souvenir />
           <SameNeed />
