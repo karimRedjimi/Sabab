@@ -7,4 +7,3 @@
 - 2026-11-22 (essai) : ﷺ s’affiche mal en DM Sans gras → police Amiri pour les mots qui le contiennent (fait dans SousTitres ; à faire aussi dans les cartes de texte).
 - 2026-11-22 (essai) : la voix « apaisant » à 1,12 était trop courte (14 s) → VITESSE=0.92 pour ce format.
 - 2026-11-22 (essai) : un même texte peut apparaître deux fois sur un écran (ex. « 24 » du calendrier et « 24 / 30 ») → vérifier l’occurrence (3ᵉ argument de zone).
-- test des droits d'écriture
