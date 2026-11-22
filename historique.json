@@ -1,5 +1,82 @@
 [
- {"date": "2026-11-20", "format": "souci", "angle": "l’angoisse et le souci", "contenu": "programme.ts · hamm (Al-Bukhârî n° 6369)", "titre": "Le poids", "fichier": "sabab-pub-poids.mp4"},
- {"date": "2026-11-22", "format": "saviez", "angle": "l’invocation la plus fréquente", "contenu": "programme.ts · atina (Al-Baqara 2:201 ; Al-Bukhârî n° 6389)", "titre": "La du’â la plus fréquente", "fichier": "sabab-saviez-dua-atina.mp4"},
- {"date": "2026-11-22", "format": "fonction", "angle": "la communauté (invoquer les uns pour les autres)", "contenu": "textes.ts · POUR_SON_FRERE (Muslim n° 2733)", "titre": "La communauté", "fichier": "sabab-pub-communaute-v2.mp4"}
+ {
+  "date": "2026-11-20",
+  "format": "souci",
+  "angle": "l’angoisse et le souci",
+  "contenu": "programme.ts · hamm (Al-Bukhârî n° 6369)",
+  "titre": "Le poids",
+  "fichier": "sabab-pub-poids.mp4"
+ },
+ {
+  "date": "2026-11-22",
+  "format": "saviez",
+  "angle": "l’invocation la plus fréquente",
+  "contenu": "programme.ts · atina (Al-Baqara 2:201 ; Al-Bukhârî n° 6389)",
+  "titre": "La du’â la plus fréquente",
+  "fichier": "sabab-saviez-dua-atina.mp4"
+ },
+ {
+  "date": "2026-11-22",
+  "format": "fonction",
+  "angle": "la communauté (invoquer les uns pour les autres)",
+  "contenu": "textes.ts · POUR_SON_FRERE (Muslim n° 2733)",
+  "titre": "La communauté",
+  "fichier": "sabab-pub-communaute-v2.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "saviez",
+  "angle": "une invocation courte au grand mérite",
+  "contenu": "citadelle.json · hm-272 (Al-Bukhârî 7/167, Muslim 4/2072)",
+  "titre": "Deux paroles légères",
+  "fichier": "2026-11-23-1-saviez.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "fonction",
+  "angle": "la journée par moments sur l’accueil",
+  "contenu": "aucun texte religieux dit",
+  "titre": "Ta journée en trois moments",
+  "fichier": "2026-11-23-2-fonction.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "quiz",
+  "angle": "en sortant de chez soi",
+  "contenu": "citadelle.json · hm-29 (Abû Dâwûd 4/325, At-Tirmidhî 5/490)",
+  "titre": "En sortant de chez soi",
+  "fichier": "2026-11-23-3-quiz.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "souci",
+  "angle": "une dette qui empêche de dormir",
+  "contenu": "programme.ts · dette (At-Tirmidhî n° 3563)",
+  "titre": "Une dette qui empêche de dormir",
+  "fichier": "2026-11-23-4-souci.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "avant",
+  "angle": "les adhkâr du matin oubliés",
+  "contenu": "textes.ts · REGULARITE (Al-Bukhârî n° 6464 ; Muslim n° 783)",
+  "titre": "Les invocations du matin… à midi ?",
+  "fichier": "2026-11-23-5-avant.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "moment",
+  "angle": "le lundi",
+  "contenu": "programme.ts · jeuneLun (Muslim n° 1162) ; musa (Al-Qasas 28:24)",
+  "titre": "Le lundi",
+  "fichier": "2026-11-23-6-moment.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "apaisant",
+  "angle": "clôturer sa journée",
+  "contenu": "aucun texte religieux",
+  "titre": "Clôturer sa journée",
+  "fichier": "2026-11-23-7-apaisant.mp4"
+ }
 ]

@@ -5,3 +5,5 @@ public/ecrans/*
 public/voix/*
 !public/voix/communaute.*
 !public/ecrans/communaute-*
+!public/voix/*.lignes.json
+!public/ecrans/manifeste.json

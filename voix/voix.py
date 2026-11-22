@@ -4,7 +4,7 @@
    Sortie : <sortie>.mp3, <sortie>.json (mots minutés pour les sous-titres) et <sortie>-rapport.json (essais, ce qui a été entendu)."""
 import json, base64, re, sys, subprocess, urllib.request, unicodedata
 import os
-lignes = json.load(open(sys.argv[1])); voice = sys.argv[2]; out = sys.argv[3]
+lignes = json.load(open(sys.argv[1])); voice = sys.argv[2]; out = os.path.abspath(sys.argv[3])
 LEX = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "lexique.json")))
 U = "zéro un deux trois quatre cinq six sept huit neuf dix onze douze treize quatorze quinze seize dix-sept dix-huit dix-neuf".split()
 D = {2: "vingt", 3: "trente", 4: "quarante", 5: "cinquante", 6: "soixante", 8: "quatre-vingt"}
@@ -62,20 +62,33 @@ parts = []; rapport = []
 seulement = set(int(x) for x in sys.argv[4].split(",")) if len(sys.argv) > 4 else None
 for i, l in enumerate(lignes):
   attendu = norm(l["dit"])
-  meilleur = None
-  for essai in range(6):
-    d = tts(i); p = f"{out}-l{i}-e{essai}.mp3"; open(p, "wb").write(base64.b64decode(d["audio_base64"]))
-    lu = norm(stt(p))
-    doublon = any(lu[k] == lu[k - 1] and lu[k] not in ("de", "la", "le", "nous", "vous") for k in range(1, len(lu)))
-    import difflib
-    score = difflib.SequenceMatcher(None, lu, attendu).ratio() - (0.2 if doublon else 0)
-    if not meilleur or score > meilleur[0]: meilleur = (score, d, p, lu, essai)
-    if lu == attendu and not doublon: break
-    print(f"  ligne {i} essai {essai}: entendu « {' '.join(lu)} »")
-  else:
-    print(f"  ligne {i}: AUCUN essai parfait, gardé le meilleur ({meilleur[0]:.2f}) — À VÉRIFIER À L’OREILLE")
-  score, d, p, lu, essai = meilleur
-  rapport.append({"ligne": i, "affiche": l["affiche"], "dit": l["dit"], "entendu": " ".join(lu), "parfait": lu == attendu, "essais": essai + 1, "score": round(score, 3)})
+  cache = f"{out}-l{i}.json"
+  # Refaire seulement certaines phrases : les autres reprennent le résultat déjà gardé (même texte dit).
+  if seulement is not None and i not in seulement and os.path.exists(cache):
+    c = json.load(open(cache))
+    if c["rapport"]["dit"] == l["dit"]:
+      d, p = c["d"], c["p"]; rapport.append(c["rapport"]); print(f"  ligne {i}: reprise")
+      meilleur = None
+    else: c = None
+  else: c = None
+  if c is None:
+   meilleur = None
+   for essai in range(6):
+     d = tts(i); p = f"{out}-l{i}-e{essai}.mp3"; open(p, "wb").write(base64.b64decode(d["audio_base64"]))
+     lu = norm(stt(p))
+     doublon = any(lu[k] == lu[k - 1] and lu[k] not in ("de", "la", "le", "nous", "vous") for k in range(1, len(lu)))
+     import difflib
+     score = difflib.SequenceMatcher(None, lu, attendu).ratio() - (0.2 if doublon else 0)
+     if not meilleur or score > meilleur[0]: meilleur = (score, d, p, lu, essai)
+     if lu == attendu and not doublon: break
+     print(f"  ligne {i} essai {essai}: entendu « {' '.join(lu)} »")
+   else:
+     print(f"  ligne {i}: AUCUN essai parfait, gardé le meilleur ({meilleur[0]:.2f}) — À VÉRIFIER À L’OREILLE")
+   score, d, p, lu, essai = meilleur
+   r = {"ligne": i, "affiche": l["affiche"], "dit": l["dit"], "entendu": " ".join(lu), "parfait": lu == attendu, "essais": essai + 1, "score": round(score, 3)}
+   rapport.append(r)
+   d = {"alignment": d["alignment"]}
+   json.dump({"d": d, "p": p, "rapport": r}, open(cache, "w"), ensure_ascii=False)
   al = d["alignment"]; mots, w, t0 = [], "", 0
   for c, s in zip(al["characters"], al["character_start_times_seconds"]):
     if c == " ":

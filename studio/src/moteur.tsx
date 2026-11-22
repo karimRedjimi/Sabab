@@ -62,7 +62,7 @@ export const SousTitres: React.FC<{ T: Minutage; or: RegExp; grandsDes?: number 
         const M = T.MOTS[m], on = M.a <= f, s = spring({ frame: f - M.a, fps, config: { damping: 11, stiffness: 300 } });
         const isA = m === actif, gold = or.test(M.w.replace(/^[« ]+/, ""));
         return (
-          <span key={m} style={{ position: "relative", display: "inline-block", fontFamily: MIX, fontWeight: 700, fontSize: fin ? 96 : 80, lineHeight: 1.12, letterSpacing: "-0.02em",
+          <span key={m} style={{ position: "relative", display: "inline-block", fontFamily: /\uFDFA/.test(M.w) ? AR : MIX, fontWeight: 700, fontSize: fin ? 96 : 80, lineHeight: 1.12, letterSpacing: "-0.02em",
             color: isA ? PLUM : gold ? GOLD : "#fff", opacity: on ? 1 : 0, transform: `scale(${on ? 0.6 + 0.4 * s + (isA ? 0.06 : 0) : 0.6}) translateY(${(1 - s) * 30}px)`,
             textShadow: isA ? "none" : "0 3px 0 rgba(0,0,0,0.55), 0 0 24px rgba(0,0,0,0.6)", padding: "0 12px", zIndex: isA ? 2 : 1 }}>
             {isA && <span style={{ position: "absolute", inset: "4px 0 2px", borderRadius: 18, background: gold ? GOLD : "#fff", zIndex: -1, boxShadow: "0 8px 30px rgba(0,0,0,0.35)" }} />}
@@ -165,6 +165,18 @@ export const Surligne: React.FC<{ at: number; x: number; y: number; w: number; h
   return <div style={{ position: "absolute", left: x * W - 8, top: y * H - 8, width: w * W + 16, height: h * H + 16, borderRadius: 18, opacity: Math.min(1, s * 1.5),
     boxShadow: `0 0 0 ${5 * s}px ${GOLD}, 0 0 ${44 * s}px rgba(233,196,106,0.75)`, transform: `scale(${0.96 + 0.04 * s})` }} />;
 };
+
+// ---------- Les positions des textes dans les captures (studio/public/ecrans/manifeste.json) ----------
+import MANIFESTE from "../public/ecrans/manifeste.json";
+type Zone = { t: string; b: number[] };
+/** La zone (x, y, w, h en fractions) du n-ième texte d’un écran qui correspond à `re`. Lève une erreur si introuvable : ne jamais deviner. */
+export function zone(ecran: string, re: RegExp, n = 0): { x: number; y: number; w: number; h: number } {
+  const nom = ecran.replace(/^ecrans\//, "");
+  const zs = ((MANIFESTE as Record<string, { zones: Zone[] }>)[nom]?.zones || []).filter((z) => re.test(z.t));
+  const z = zs[n];
+  if (!z) throw new Error(`zone introuvable : ${re} (n° ${n}) dans ${nom} — ${zs.length} correspondance(s)`);
+  return { x: z.b[0], y: z.b[1], w: z.b[2], h: z.b[3] };
+}
 
 export const Pastille: React.FC<{ at: number; x: number; y: number; children: React.ReactNode; gold?: boolean; size?: number }> = ({ at, x, y, children, gold, size = 40 }) => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();

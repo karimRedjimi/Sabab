@@ -38,13 +38,15 @@ Dossiers (adapter les chemins) : l’appli = le dépôt cloné (branche `main`, 
      (`character_limit - character_count`). Une vidéo coûte environ 1 000 caractères avec les essais.
      S’il n’y en a pas assez pour 7, faire les formats dans l’ordre jusqu’à épuisement et le dire dans le compte rendu.
 1. **Captures** (une fois pour les 7 vidéos)
-   - `captures/lancer.sh <appli>` puis `node captures/tout.cjs <appli> studio/public/ecrans` puis `python3 qa/captures.py studio/public/ecrans`.
-   - Toutes doivent passer (✓). Regarder une planche des captures (PIL) : écrans entiers, propres, à jour.
+   - `captures/lancer.sh <appli>` puis `node captures/tout.cjs <appli> studio/public/ecrans` puis `/usr/bin/python3 qa/captures.py studio/public/ecrans`.
+   - Toutes doivent passer (✓). Regarder une planche des captures (Pillow : utiliser `/usr/bin/python3`, le `python3` par défaut peut ne pas l’avoir) : écrans entiers, propres, à jour.
    - `studio/public/ecrans/manifeste.json` donne, pour chaque écran, la position de chaque texte visible
-     (`b` = x, y, largeur, hauteur en fractions de l’image). S’en servir pour `<Surligne>` : ne jamais deviner une position.
+     (`b` = x, y, largeur, hauteur en fractions de l’image). S’en servir pour `<Surligne>` via `zone(ecran, /texte/, n)` du moteur (n = n-ième occurrence) : ne jamais deviner une position.
    - Besoin d’un écran qui n’existe pas : l’ajouter dans `captures/tout.cjs` (même méthode : page entière, cadrée sur
      un titre avec `haut`/`hautTexte`, jamais coupée au milieu d’une carte), relancer, et le garder pour les nuits suivantes.
 2. **Pour chacune des 7 vidéos** (ordre de `planning.json`)
+   0. Le texte arabe, la phonétique, la traduction et la source se copient par programme depuis `content/`
+      (lire le fichier, extraire le champ, écrire un JSON dans `studio/public/voix/<id>.textes.json`), jamais à la main.
    1. **Choisir** l’angle utilisé le moins récemment dans `historique.json` pour ce format, et un contenu jamais utilisé
       (même invocation = interdit à moins de 30 jours d’écart).
    2. **Écrire le script** : `studio/public/voix/<id>.lignes.json` = `[{"affiche": "…"}]`, une phrase par ligne.
@@ -95,6 +97,8 @@ Dossiers (adapter les chemins) : l’appli = le dépôt cloné (branche `main`, 
    - Committer sur la branche `pubs` : `historique.json`, les scripts (`studio/public/voix/*.lignes.json`), les vidéos
      `studio/src/videos/*.tsx`, et toute amélioration du studio. Jamais les .mp4, .mp3 ni les captures (voir .gitignore).
      `git push origin pubs`. Ne jamais toucher à `main`.
+     Si le push est refusé (403), ne pas insister : `git format-patch -1 -o livraison/`, envoyer le .patch, et le dire
+     clairement dans le compte rendu (les sujets de la nuit ne seront pas dans l’historique des nuits suivantes).
 
 ## Améliorer la recette
 

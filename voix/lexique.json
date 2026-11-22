@@ -1,22 +1,91 @@
 {
-  "_explication": "Ce que la voix doit DIRE à la place de ce qui est AFFICHÉ. Appliqué automatiquement par voix.py (mots entiers). Ajouter ici tout mot mal prononcé.",
-  "remplacer": {
-    "du’â": "dou’a", "du'â": "dou’a", "du’as": "dou’as", "du’â’s": "dou’as", "duas": "dou’as",
-    "ﷺ": "paix et salut sur lui",
-    "Al-Bukhârî": "Al-Boukhâri", "Bukhârî": "Boukhâri", "Muslim (n°": "Mouslim (numéro", "Muslim": "Mouslim",
-    "at-Tirmidhî": "at-Tirmidi", "Tirmidhî": "Tirmidi", "Abû Dâwûd": "Abou Daoud", "an-Nasâ’î": "an-Nassaï", "Ibn Mâjah": "Ibn Mâja",
-    "in shâ’ Allâh": "in cha Allah", "mâ shâ’ Allâh": "machallah", "Mâ shâ Allâh": "machallah", "al-hamdulillâh": "al hamdoulillah", "Al-hamdu lillâh": "al hamdoulillah",
-    "bismillâh": "bismillah", "subhân Allâh": "soubhanallah", "Allâh": "Allah",
-    "dhikr": "zikr", "adhkâr": "azkar", "‘Asr": "Asr", "‘Ichâ": "Icha", "Fajr": "Fajr", "Cha‘ban": "Chaabane", "Ramadan": "Ramadan",
-    "hadith": "hadith", "sunna": "sounna", "Sunna": "Sounna", "salât": "salat", "sourate": "sourate", "n°": "numéro"
-  },
-  "_entendus": "Transcriptions acceptées pour un mot (la transcription automatique écrit parfois ces mots autrement).",
-  "entendus": {
-    "sabab": ["sabab", "sabbab", "sabbat", "saba", "sabap"],
-    "doua": ["doua", "douaa", "douas", "dou", "dua", "duas"],
-    "machallah": ["machallah", "mashallah", "macha", "masha"],
-    "inchallah": ["inchallah", "inshallah", "incha"],
-    "mouslim": ["mouslim", "muslim", "moslim"],
-    "boukhari": ["boukhari", "bukhari", "bokhari"]
-  }
+ "_explication": "Ce que la voix doit DIRE à la place de ce qui est AFFICHÉ. Appliqué automatiquement par voix.py (mots entiers). Ajouter ici tout mot mal prononcé.",
+ "remplacer": {
+  "du’â": "dou’a",
+  "du'â": "dou’a",
+  "du’as": "dou’as",
+  "du’â’s": "dou’as",
+  "duas": "dou’as",
+  "ﷺ": "paix et salut sur lui",
+  "Al-Bukhârî": "Al-Boukhâri",
+  "Bukhârî": "Boukhâri",
+  "Muslim (n°": "Mouslim (numéro",
+  "Muslim": "Mouslim",
+  "at-Tirmidhî": "at-Tirmidi",
+  "Tirmidhî": "Tirmidi",
+  "Abû Dâwûd": "Abou Daoud",
+  "an-Nasâ’î": "an-Nassaï",
+  "Ibn Mâjah": "Ibn Mâja",
+  "in shâ’ Allâh": "in cha Allah",
+  "mâ shâ’ Allâh": "machallah",
+  "Mâ shâ Allâh": "machallah",
+  "al-hamdulillâh": "al hamdoulillah",
+  "Al-hamdu lillâh": "al hamdoulillah",
+  "bismillâh": "bismillah",
+  "subhân Allâh": "soubhanallah",
+  "Allâh": "Allah",
+  "dhikr": "zikr",
+  "adhkâr": "azkar",
+  "‘Asr": "Asr",
+  "‘Ichâ": "Icha",
+  "Fajr": "Fajr",
+  "Cha‘ban": "Chaabane",
+  "Ramadan": "Ramadan",
+  "hadith": "hadith",
+  "sunna": "sounna",
+  "Sunna": "Sounna",
+  "salât": "salat",
+  "sourate": "sourate",
+  "n°": "numéro",
+  "rizq": "la subsistance",
+  "Rizq": "La subsistance"
+ },
+ "_entendus": "Transcriptions acceptées pour un mot (la transcription automatique écrit parfois ces mots autrement).",
+ "entendus": {
+  "sabab": [
+   "sabab",
+   "sabbab",
+   "sabbat",
+   "saba",
+   "sabap"
+  ],
+  "doua": [
+   "doua",
+   "douaa",
+   "douas",
+   "dou",
+   "dua",
+   "duas"
+  ],
+  "machallah": [
+   "machallah",
+   "mashallah",
+   "macha",
+   "masha"
+  ],
+  "inchallah": [
+   "inchallah",
+   "inshallah",
+   "incha"
+  ],
+  "mouslim": [
+   "mouslim",
+   "muslim",
+   "moslim"
+  ],
+  "boukhari": [
+   "boukhari",
+   "bukhari",
+   "bokhari"
+  ],
+  "abou": [
+   "abou",
+   "abu"
+  ],
+  "tirmidi": [
+   "tirmidi",
+   "tirmidhi",
+   "tirmizi"
+  ]
+ }
 }
