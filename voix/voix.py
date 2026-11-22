@@ -2,7 +2,7 @@
    python3 -I voix/voix.py <lignes.json> <id de la voix> <sortie sans extension> [numéros de lignes à refaire]
    lignes.json : [{"affiche": "texte des sous-titres"}, ...]  ("dit" est optionnel : sinon il est calculé avec voix/lexique.json)
    Sortie : <sortie>.mp3, <sortie>.json (mots minutés pour les sous-titres) et <sortie>-rapport.json (essais, ce qui a été entendu)."""
-import json, base64, re, sys, subprocess, urllib.request, unicodedata
+import json, base64, re, sys, subprocess, urllib.request, urllib.error, unicodedata
 import os
 lignes = json.load(open(sys.argv[1])); voice = sys.argv[2]; out = os.path.abspath(sys.argv[3])
 LEX = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "lexique.json")))
@@ -53,11 +53,20 @@ def tts(i):
     "previous_text": lignes[i - 1]["dit"] if i else None, "next_text": lignes[i + 1]["dit"] if i + 1 < len(lignes) else None,
     "voice_settings": VOIX_REGLAGES}
   r = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{voice}/with-timestamps", data=json.dumps(body).encode(), headers={**H, "Content-Type": "application/json"})
-  return json.load(urllib.request.urlopen(r, timeout=180))
+  # Trop de demandes en même temps (429) : on attend et on recommence.
+  import time
+  for k in range(8):
+    try: return json.load(urllib.request.urlopen(r, timeout=180))
+    except urllib.error.HTTPError as e:
+      if e.code not in (429, 500, 502, 503) or k == 7: raise
+      time.sleep(5 * (k + 1))
 def stt(path):
   r = subprocess.run(["curl", "-s", "--max-time", "120", "-X", "POST", "https://api.elevenlabs.io/v1/speech-to-text", "-H", "xi-api-key: proxy-injected",
     "-F", "model_id=scribe_v1", "-F", "language_code=fra", "-F", f"file=@{path}"], capture_output=True, text=True)
-  return json.loads(r.stdout).get("text", "")
+  d = json.loads(r.stdout or "{}")
+  if "text" not in d:
+    import time; time.sleep(8); return stt(path)
+  return d["text"]
 parts = []; rapport = []
 seulement = set(int(x) for x in sys.argv[4].split(",")) if len(sys.argv) > 4 else None
 for i, l in enumerate(lignes):
@@ -110,7 +119,8 @@ for i, (l, pt) in enumerate(zip(lignes, parts)):
     a, b = pt["mots"][0][1], pt["fin"]; tot = sum(len(x) + 2 for x in disp); acc = 0; row = []
     for dw in disp: row.append({"w": dw, "t": round(t - d0 + a + (b - a) * acc / tot, 3)}); acc += len(dw) + 2
   res.append(row)
-  gap = 0.0 if i == len(lignes) - 1 else (0.16 if re.search(r"[.?»]$", l["dit"].strip()) else 0.05)
+  # PAUSE (secondes, facultatif) : un silence posé entre les phrases, pour le format apaisant.
+  gap = 0.0 if i == len(lignes) - 1 else float(os.environ["PAUSE"]) if os.environ.get("PAUSE") else (0.16 if re.search(r"[.?»]$", l["dit"].strip()) else 0.05)
   # On coupe le silence de fin de chaque phrase pour garder le rythme.
   seg = f"{out}-s{i}.wav"
   subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", pt["p"], "-af", f"atrim={max(0, pt['mots'][0][1] - 0.04)}:{pt['fin'] + 0.05},asetpts=PTS-STARTPTS,apad=pad_dur={gap}", "-ar", "44100", "-ac", "1", seg], check=True)

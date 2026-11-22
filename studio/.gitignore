@@ -7,3 +7,4 @@ public/voix/*
 !public/ecrans/communaute-*
 !public/voix/*.lignes.json
 !public/ecrans/manifeste.json
+!public/voix/*.textes.json

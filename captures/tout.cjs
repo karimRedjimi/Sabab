@@ -80,7 +80,21 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
     await ecran("geste", "Le rituel du soir : le geste concret pour son besoin.");
   });
   await seed(base({ clos: true }));
-  await essai("ciel", async () => { await p.goto(B + "/"); await p.waitForTimeout(2200); await haut(".cielacc", 40); await ecran("ciel", "Le ciel : chaque bienfait noté devient une étoile."); });
+  // Cadré sous la barre collante : la carte « Dans la journée » entière en haut, le ciel et « Demain » dessous.
+  await essai("ciel", async () => { await p.goto(B + "/"); await p.waitForTimeout(2200); await haut(".tr:has-text('Dans la journée')", 64); await ecran("ciel", "Le ciel : chaque bienfait noté devient une étoile (journée close, 11 étoiles)."); });
+  // ---------- Les moments favorables, dépliés (Abû Dâwûd n° 521 ; Al-Bukhârî n° 1145 ; Muslim n° 482) ----------
+  await heure("14:05"); await seed(base());
+  await essai("moments", async () => { await p.goto(B + "/"); await p.waitForTimeout(2400); await p.locator(".favsum").first().click(); await p.waitForTimeout(900); await ecran("moments", "Accueil : les moments favorables dépliés (à l’appel, la prosternation) avec leurs sources."); });
+  // ---------- Un autre besoin : le mariage (parcours « Le mariage ») ----------
+  const mariage = () => { const s = base(); s.objective = { title: "Me marier", cat: "mariage", why: "Fonder un foyer apaisé", since: DEMO.start }; s.parcours = { id: "mariage", start: DEMO.start }; return s; };
+  await seed(mariage());
+  await essai("mariage-accueil", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("mariage-accueil", "Accueil avec le besoin « Me marier » (parcours Le mariage)."); });
+  await essai("mariage-journee", async () => { await haut(".dprog", 70); await ecran("mariage-journee", "Accueil plus bas, besoin « Me marier » : la journée par moments."); });
+  await essai("mariage-lecture", async () => {
+    await p.locator(".tr", { hasText: "Dans la journée" }).first().locator(".rbody").click(); await p.waitForTimeout(1200);
+    for (let i = 0; i < 3; i++) { const b2 = p.locator("button", { hasText: /Commencer|Je commence|Continuer/ }).first(); if (await b2.count()) { await b2.click().catch(() => {}); await p.waitForTimeout(700); } }
+    await ecran("mariage-lecture", "Lecture guidée, besoin « Me marier » : l’invocation du parcours.");
+  });
   // ---------- Suivi ----------
   await heure("14:05"); await seed(base());
   await essai("suivi", async () => { await p.goto(B + "/suivi"); await p.waitForTimeout(2600); await ecran("suivi", "Suivi : prières, invocations, Coran sur la période, et le cycle de 30 jours."); });

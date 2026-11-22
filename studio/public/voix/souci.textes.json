@@ -1,0 +1,22 @@
+{
+ "dua": {
+  "ref": "programme:azwaj",
+  "kind": "dua",
+  "title": "Pour un foyer qui réjouit le cœur",
+  "moment": "Dans la journée et dans la prosternation",
+  "ar": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
+  "ph": "Rabbanâ hab lanâ min azwâjinâ wa dhurriyyâtinâ qurrata aʿyun, wajʿalnâ lil-muttaqîna imâmâ.",
+  "fr": "Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de nous un modèle pour les pieux.",
+  "grade": "coran",
+  "src": "Coran, Al-Furqân 25:74",
+  "note": "Allah la cite parmi les invocations des « serviteurs du Tout Miséricordieux ». Elle demande non seulement un foyer, mais un foyer qui apaise."
+ },
+ "a1": {
+  "ref": "parcours:mariage.actions.0",
+  "texte": "Écris les trois qualités essentielles que tu recherches."
+ },
+ "a2": {
+  "ref": "parcours:mariage.actions.2",
+  "texte": "Parle de ton projet à une personne de confiance de ta famille."
+ }
+}

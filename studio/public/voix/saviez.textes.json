@@ -1,0 +1,15 @@
+{
+ "dua": {
+  "ref": "programme:fajr",
+  "kind": "dua",
+  "title": "Invocation après le Fajr",
+  "moment": "Après la prière du Fajr",
+  "when": "fajr",
+  "ar": "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا",
+  "ph": "Allâhumma innî as’aluka ʿilman nâfiʿan, wa rizqan tayyiban, wa ʿamalan mutaqabbalan.",
+  "fr": "Ô Allah, je Te demande une science utile, une subsistance pure et des œuvres acceptées.",
+  "grade": "sahih",
+  "src": "Ibn Mâjah (n° 925), authentifié par Al-Albânî",
+  "note": "Le Prophète ﷺ la disait après avoir terminé la prière du Fajr. Elle place le rizq « pur » au cœur de la journée, dès son ouverture."
+ }
+}

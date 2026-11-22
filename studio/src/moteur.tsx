@@ -221,3 +221,15 @@ export const Son: React.FC<{ voix: string; sfx: Sfx[]; off?: number }> = ({ voix
     {sfx.map(([n, at, v], i) => <Sequence key={i} from={Math.max(0, Math.round(at))}><Audio src={staticFile(`sfx-el/${n}.mp3`)} volume={Math.min(1, v) * 0.5} /></Sequence>)}
   </>
 );
+
+/** Le rectangle qui englobe plusieurs zones du manifeste (ex. le titre et la ligne dessous d’une même carte). */
+export function englobe(...zs: { x: number; y: number; w: number; h: number }[]) {
+  const x = Math.min(...zs.map((z) => z.x)), y = Math.min(...zs.map((z) => z.y));
+  return { x, y, w: Math.max(...zs.map((z) => z.x + z.w)) - x, h: Math.max(...zs.map((z) => z.y + z.h)) - y };
+}
+/** Le n-ième mot de la phrase `ligne` (pour caler un effet sur un mot précis sans ambiguïté). */
+export const motDe = (T: Minutage, ligne: number, re: RegExp) => {
+  const m = T.MOTS.find((m) => m.ligne === ligne && re.test(m.w.replace(/^[«  ]+/, "")));
+  if (!m) throw new Error(`mot introuvable : ${re} dans la phrase ${ligne}`);
+  return m.a;
+};

@@ -1,0 +1,14 @@
+{
+ "appel": {
+  "ref": "textes:MOMENTS_FAVORABLES.appel",
+  "label": "entre l’appel à la prière et l’iqâma",
+  "source": "Abû Dâwûd (n° 521)"
+ },
+ "force": {
+  "ref": "textes:FORCE_DU_PROGRAMME.3",
+  "titre": "Les moments où l’invocation est exaucée",
+  "texte": "Le dernier tiers de la nuit, entre l’appel à la prière et l’iqâma, et pendant la prosternation.",
+  "label": "Sources",
+  "source": "Al-Bukhârî (n° 1145) ; Abû Dâwûd (n° 521) ; Muslim (n° 482)"
+ }
+}
