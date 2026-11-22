@@ -16,7 +16,7 @@ const jour = (n) => { const d = new Date(T0); d.setDate(d.getDate() + n); return
 const k = jour(0);
 // L’état de démo vient de captures/demo.ts, calculé avec la logique de l’appli (jours réellement « tenus »).
 const APP = process.argv[2] || "../Sabab";
-const DEMO = JSON.parse(require("child_process").execSync(`npx tsx ${__dirname}/demo.ts`, { cwd: APP, encoding: "utf8", maxBuffer: 1e8 }));
+const DEMO = JSON.parse(require("child_process").execSync(`npx -y tsx ${__dirname}/demo.ts`, { cwd: APP, encoding: "utf8", maxBuffer: 1e8 }));
 DEMO.cycles = { [DEMO.start]: { vu: k } }; // le bilan du premier cycle a déjà été vu : l’accueil reste propre
 const base = (extra = {}) => { const s = JSON.parse(JSON.stringify(DEMO)); s.days[k] = { ...s.days[k], ...extra }; s.gratitude = { ...s.gratitude }; return s; };
 
