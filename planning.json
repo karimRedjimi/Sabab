@@ -1,0 +1,51 @@
+{
+  "_explication": "Chaque nuit, 7 vidéos : une par format, dans cet ordre (du plus simple au plus long). Le numéro sert de préfixe au fichier final. Pour varier, chaque format a une liste d’angles : prendre celui qui a été utilisé le moins récemment (voir historique.json).",
+  "voix": { "nom": "Guillaume", "id": "ohItIVrXTBI80RrUECOD", "vitesse": 1.12 },
+  "formats": [
+    {
+      "n": 1, "id": "saviez", "nom": "Le saviez-vous ?",
+      "duree": "22–32 s",
+      "principe": "Un fait sourcé et surprenant sur une invocation ou un hadith présent dans content/. Accroche par une question. Texte arabe, phonétique, traduction et source EXACTS (copiés du fichier, jamais retouchés). Montrer l’invocation dans l’appli à la fin (bibliothèque, lecture ou apprendre). Fin : « Enregistre cette vidéo pour ne pas l’oublier. »",
+      "exemple": "studio/src/exemples/Saviez.tsx",
+      "angles": ["l’invocation la plus fréquente", "une invocation courte au grand mérite", "une invocation pour un moment précis de la journée", "ce que le Prophète ﷺ disait dans une situation", "une invocation enseignée à un proche"]
+    },
+    {
+      "n": 2, "id": "fonction", "nom": "Une fonction à fond",
+      "duree": "30–45 s",
+      "principe": "Une seule fonction de l’appli, expliquée concrètement avec 3 à 5 vrais écrans entiers, chaque détail surligné au moment où la voix le dit. Le bénéfice pour la personne d’abord, la fonction ensuite.",
+      "exemple": "studio/src/videos/communaute.tsx",
+      "angles": ["la communauté (invoquer les uns pour les autres)", "la journée par moments sur l’accueil", "le suivi des prières et de la régularité", "le ciel et le journal du soir", "apprendre par cœur", "la bibliothèque de plus de 300 invocations sourcées", "le moment favorable et la prochaine prière", "les cycles de 30 jours et le bilan", "le carnet des du’â exaucées", "le geste concret pour son besoin", "un jour, un verset (réciter et écouter)", "les rappels choisis"]
+    },
+    {
+      "n": 3, "id": "quiz", "nom": "Quiz",
+      "duree": "18–28 s",
+      "principe": "« Tu sais ce qu’on dit quand… ? » Trois secondes de suspense (compte à rebours, sons), puis la réponse sourcée, puis « Tu avais trouvé ? Dis-le en commentaire. » et l’invocation dans l’appli.",
+      "angles": ["en sortant de chez soi", "avant de dormir", "au réveil", "en entrant à la mosquée", "quand on est inquiet", "quand on a une dette", "après la prière", "quand il pleut", "quand on est malade", "en voyage"]
+    },
+    {
+      "n": 4, "id": "souci", "nom": "Commente ton souci",
+      "duree": "30–45 s",
+      "principe": "Réponse à un souci courant (comme une réponse à un commentaire). Empathie d’abord, puis une invocation sourcée pour ce souci, puis comment Sabab aide concrètement (le parcours du besoin, la journée, le geste). JAMAIS promettre que la du’â « marche » : on parle de demander, de se confier, de tenir.",
+      "exemple": "studio/src/exemples/Poids.tsx",
+      "angles": ["une dette qui empêche de dormir", "chercher un conjoint depuis longtemps", "chercher un travail", "l’angoisse et le souci", "un proche malade", "les études et les examens", "un enfant à protéger", "la famille divisée", "le manque de régularité dans la prière", "se sentir loin d’Allah"]
+    },
+    {
+      "n": 5, "id": "avant", "nom": "Avant / Maintenant",
+      "duree": "25–35 s",
+      "principe": "Écran coupé en deux ou bascule : avant (désordre, oublis, notifications, culpabilité : en graphisme, sans écran de l’appli) / maintenant (la journée claire dans Sabab, vrais écrans). Ton bienveillant, jamais moralisateur, jamais « péché ».",
+      "angles": ["les adhkâr du matin oubliés", "les prières en retard", "ne pas savoir quelle du’â faire pour son besoin", "commencer fort puis tout lâcher", "ne pas voir ses progrès", "le soir sans prendre de recul"]
+    },
+    {
+      "n": 6, "id": "moment", "nom": "Le moment du calendrier",
+      "duree": "22–32 s",
+      "principe": "Ce qui est vrai le jour où la vidéo sera publiée (le lendemain de la nuit de fabrication) : jour de la semaine (vendredi…), mois hégirien en cours, jours blancs, approche de Ramadan, dix jours de Dhou al-Hijja, ‘Âchoura… Uniquement des pratiques sourcées présentes dans content/ ; sinon, prendre le jour de la semaine et le moment favorable du jour (content/textes.ts MOMENTS_FAVORABLES).",
+      "angles": ["le vendredi", "le mois hégirien en cours", "les jours blancs", "la dernière heure du vendredi", "le dernier tiers de la nuit", "entre l’appel et l’iqâma"]
+    },
+    {
+      "n": 7, "id": "apaisant", "nom": "Apaisant (ASMR)",
+      "duree": "15–25 s",
+      "principe": "Peu de voix (2 à 4 phrases courtes, posées), beaucoup de sons doux : cocher les moments de la journée un à un, la barre qui se remplit, les étoiles qui s’allument dans le ciel, la page qui se tourne. Rythme lent, pas de flash. Fin : « Sabab. Une journée à la fois. »",
+      "angles": ["clôturer sa journée", "remplir sa journée moment par moment", "allumer son ciel", "réciter le verset du jour", "terminer ses 5 du’â pour les autres"]
+    }
+  ]
+}
