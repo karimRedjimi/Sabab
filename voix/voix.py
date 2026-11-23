@@ -35,9 +35,10 @@ for l in lignes:
 EQ = {v: k for k, vs in LEX["entendus"].items() for v in vs}
 VOIX_REGLAGES = {"stability": 0.5, "similarity_boost": 0.8, "style": 0.25, "use_speaker_boost": True, "speed": float(os.environ.get("VITESSE", "1.12"))}
 H = {"xi-api-key": "proxy-injected"}
-def norm(t):
+def norm(t, sans_et=True):
   t = unicodedata.normalize("NFD", t.lower()); t = "".join(c for c in t if unicodedata.category(c) != "Mn")
-  t = re.sub(r"\d+", lambda m: en_lettres(int(m.group())), t).replace("-", " ").replace(" et ", " ")
+  t = re.sub(r"\d+", lambda m: en_lettres(int(m.group())), t).replace("-", " ")
+  if sans_et: t = t.replace(" et ", " ")
   for a, b in (("inch allah", "inchallah"), ("in cha allah", "inchallah"), ("macha allah", "machallah"), ("ma cha allah", "machallah"), ("al hamdou lillah", "al hamdoulillah"), ("soubhana allah", "soubhanallah")): t = t.replace(a, b)
   w = re.findall(r"[a-z]+", t.replace("’", " ").replace("'", " "))
   # Les orthographes de « dou’a » entendues par la transcription comptent pour un seul mot.
@@ -75,17 +76,20 @@ for i, l in enumerate(lignes):
    meilleur = None
    for essai in range(6):
      d = tts(i); p = f"{out}-l{i}-e{essai}.mp3"; open(p, "wb").write(base64.b64decode(d["audio_base64"]))
-     lu = norm(stt(p))
-     doublon = any(lu[k] == lu[k - 1] and lu[k] not in ("de", "la", "le", "nous", "vous") for k in range(1, len(lu)))
+     brut = stt(p); lu = norm(brut)
+     # Un mot en trop (souvent un « et » ajouté à la fin de la phrase) : la comparaison ignore les « et », ce contrôle non.
+     trop = len(norm(brut, False)) > len(norm(l["dit"], False))
+     doublon = trop or any(lu[k] == lu[k - 1] and lu[k] not in ("de", "la", "le", "nous", "vous") for k in range(1, len(lu)))
      import difflib
      score = difflib.SequenceMatcher(None, lu, attendu).ratio() - (0.2 if doublon else 0)
      if not meilleur or score > meilleur[0]: meilleur = (score, d, p, lu, essai)
      if lu == attendu and not doublon: break
+     if trop: print(f"  ligne {i} essai {essai}: un mot en trop « {brut} »")
      print(f"  ligne {i} essai {essai}: entendu « {' '.join(lu)} »")
    else:
      print(f"  ligne {i}: AUCUN essai parfait, gardé le meilleur ({meilleur[0]:.2f}) — À VÉRIFIER À L’OREILLE")
    score, d, p, lu, essai = meilleur
-   r = {"ligne": i, "affiche": l["affiche"], "dit": l["dit"], "entendu": " ".join(lu), "parfait": lu == attendu, "essais": essai + 1, "score": round(score, 3)}
+   r = {"ligne": i, "affiche": l["affiche"], "dit": l["dit"], "entendu": " ".join(lu), "parfait": lu == attendu and score >= 1, "essais": essai + 1, "score": round(score, 3)}
    rapport.append(r)
    d = {"alignment": d["alignment"]}
    json.dump({"d": d, "p": p, "rapport": r}, open(cache, "w"), ensure_ascii=False)

@@ -78,5 +78,61 @@
   "contenu": "aucun texte religieux",
   "titre": "Clôturer sa journée",
   "fichier": "2026-11-23-7-apaisant.mp4"
+ },
+ {
+  "date": "2026-11-24",
+  "format": "saviez",
+  "angle": "une invocation pour un moment précis de la journée",
+  "contenu": "programme.ts · fajr (Ibn Mâjah n° 925, authentifié par Al-Albânî)",
+  "titre": "Ce que le Prophète ﷺ disait après le Fajr",
+  "fichier": "2026-11-24-1-saviez.mp4"
+ },
+ {
+  "date": "2026-11-24",
+  "format": "fonction",
+  "angle": "le suivi des prières et de la régularité",
+  "contenu": "aucun texte religieux dit",
+  "titre": "Ton suivi des prières",
+  "fichier": "2026-11-24-2-fonction.mp4"
+ },
+ {
+  "date": "2026-11-24",
+  "format": "quiz",
+  "angle": "avant de dormir",
+  "contenu": "citadelle.json · hm-115 (Al-Bukhârî avec Al-Fath 11/113)",
+  "titre": "Avant de dormir",
+  "fichier": "2026-11-24-3-quiz.mp4"
+ },
+ {
+  "date": "2026-11-24",
+  "format": "souci",
+  "angle": "chercher un conjoint depuis longtemps",
+  "contenu": "programme.ts · azwaj (Coran, Al-Furqân 25:74) ; PARCOURS.mariage (2 gestes)",
+  "titre": "Des années à chercher",
+  "fichier": "2026-11-24-4-souci.mp4"
+ },
+ {
+  "date": "2026-11-24",
+  "format": "avant",
+  "angle": "les prières en retard",
+  "contenu": "aucun texte religieux dit",
+  "titre": "La prière qui passait sans prévenir",
+  "fichier": "2026-11-24-5-avant.mp4"
+ },
+ {
+  "date": "2026-11-24",
+  "format": "moment",
+  "angle": "entre l’appel et l’iqâma",
+  "contenu": "textes.ts · MOMENTS_FAVORABLES.appel (Abû Dâwûd n° 521) ; mardi",
+  "titre": "Cinq rendez-vous ce mardi",
+  "fichier": "2026-11-24-6-moment.mp4"
+ },
+ {
+  "date": "2026-11-24",
+  "format": "apaisant",
+  "angle": "remplir sa journée moment par moment",
+  "contenu": "aucun texte religieux",
+  "titre": "Une journée, moment par moment",
+  "fichier": "2026-11-24-7-apaisant.mp4"
  }
 ]

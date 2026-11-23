@@ -3,7 +3,8 @@
 import { countable, slotsOf } from "@/lib/program";
 import { planDuJour } from "@/lib/journee";
 const key = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-const T0 = new Date(); T0.setHours(12, 0, 0, 0);
+// DECALAGE_JOURS=1 : l’état est daté du lendemain (jour de publication des vidéos).
+const T0 = new Date(); T0.setHours(12, 0, 0, 0); T0.setDate(T0.getDate() + Number(process.env.DECALAGE_JOURS || 0));
 const jour = (n: number) => { const d = new Date(T0); d.setDate(d.getDate() + n); return d; };
 const debut = key(jour(-36));
 const S: any = { onboarded: true, guide: "done", start: debut, rampDone: key(jour(-35)), prophete: { lvl: 2, since: debut },

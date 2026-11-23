@@ -38,7 +38,7 @@ Dossiers (adapter les chemins) : l’appli = le dépôt cloné (branche `main`, 
      (`character_limit - character_count`). Une vidéo coûte environ 1 000 caractères avec les essais.
      S’il n’y en a pas assez pour 7, faire les formats dans l’ordre jusqu’à épuisement et le dire dans le compte rendu.
 1. **Captures** (une fois pour les 7 vidéos)
-   - `captures/lancer.sh <appli>` puis `node captures/tout.cjs <appli> studio/public/ecrans` puis `/usr/bin/python3 qa/captures.py studio/public/ecrans`.
+   - `captures/lancer.sh <appli>` puis `DECALAGE_JOURS=1 node captures/tout.cjs <appli> studio/public/ecrans` (écrans datés du jour de publication) puis `/usr/bin/python3 qa/captures.py studio/public/ecrans`.
    - Toutes doivent passer (✓). Regarder une planche des captures (Pillow : utiliser `/usr/bin/python3`, le `python3` par défaut peut ne pas l’avoir) : écrans entiers, propres, à jour.
    - `studio/public/ecrans/manifeste.json` donne, pour chaque écran, la position de chaque texte visible
      (`b` = x, y, largeur, hauteur en fractions de l’image). S’en servir pour `<Surligne>` via `zone(ecran, /texte/, n)` du moteur (n = n-ième occurrence) : ne jamais deviner une position.
@@ -46,7 +46,8 @@ Dossiers (adapter les chemins) : l’appli = le dépôt cloné (branche `main`, 
      un titre avec `haut`/`hautTexte`, jamais coupée au milieu d’une carte), relancer, et le garder pour les nuits suivantes.
 2. **Pour chacune des 7 vidéos** (ordre de `planning.json`)
    0. Le texte arabe, la phonétique, la traduction et la source se copient par programme depuis `content/`
-      (lire le fichier, extraire le champ, écrire un JSON dans `studio/public/voix/<id>.textes.json`), jamais à la main.
+      (lire le fichier, extraire le champ, écrire un JSON dans `studio/public/voix/<id>.textes.json`), jamais à la main :
+      `npx -y tsx voix/textes.ts <appli> studio/public/voix/<id>.textes.json dua=programme:ITEMS.fajr` (ou `citadelle:hm-115`, `textes:MOMENTS_FAVORABLES.appel`).
    1. **Choisir** l’angle utilisé le moins récemment dans `historique.json` pour ce format, et un contenu jamais utilisé
       (même invocation = interdit à moins de 30 jours d’écart).
    2. **Écrire le script** : `studio/public/voix/<id>.lignes.json` = `[{"affiche": "…"}]`, une phrase par ligne.
@@ -82,8 +83,8 @@ Dossiers (adapter les chemins) : l’appli = le dépôt cloné (branche `main`, 
    6. **Rendu et finition** : `node studio/render.cjs <id>` puis
       `qa/finaliser.sh <id> <AAAA-MM-JJ>-<n>-<id>` (date = jour de publication prévu, le lendemain).
       Tous les contrôles doivent être ✓. Regarder la planche `-planche.jpg`.
-      Écouter n’est pas possible : relire `-qa.json` (volume, crête, silences) et, en cas de doute,
-      `voix/verif.sh` sur le fichier final.
+      Écouter n’est pas possible : relire `-qa.json` (volume, crête, silences) et TOUJOURS `voix/verif.sh` sur le son
+      du .mp4 final (un bruitage peut masquer un mot).
    7. **Noter** la vidéo dans `historique.json` (date, format, angle, contenu avec sa source, titre, fichier).
    Si une vidéo échoue deux fois aux contrôles, la laisser de côté, passer à la suivante et l’expliquer dans le compte rendu.
 3. **Livrer**

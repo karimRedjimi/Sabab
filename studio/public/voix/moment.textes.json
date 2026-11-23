@@ -1,0 +1,16 @@
+{
+ "appel": {
+  "label": "entre l’appel à la prière et l’iqâma",
+  "source": "Abû Dâwûd (n° 521)",
+  "_origine": "content/textes.ts · MOMENTS_FAVORABLES.appel"
+ },
+ "jour": {
+  "name": "Mardi",
+  "theme": "Se libérer des dettes",
+  "items": [
+   "dette",
+   "detteAct"
+  ],
+  "_origine": "content/programme.ts · DAYS.2"
+ }
+}

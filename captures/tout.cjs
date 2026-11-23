@@ -11,14 +11,16 @@ fs.mkdirSync(out, { recursive: true });
 
 // ---------- Un utilisateur de démo : 5 semaines d’usage régulier, tout est daté par rapport à aujourd’hui ----------
 const key = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-const T0 = new Date(); T0.setHours(12, 0, 0, 0);
+// DECALAGE_JOURS=1 : tout est daté du lendemain (le jour où les vidéos seront publiées).
+const T0 = new Date(); T0.setHours(12, 0, 0, 0); T0.setDate(T0.getDate() + Number(process.env.DECALAGE_JOURS || 0));
 const jour = (n) => { const d = new Date(T0); d.setDate(d.getDate() + n); return key(d); };
 const k = jour(0);
 // L’état de démo vient de captures/demo.ts, calculé avec la logique de l’appli (jours réellement « tenus »).
 const APP = process.argv[2] || "../Sabab";
 const DEMO = JSON.parse(require("child_process").execSync(`npx -y tsx ${__dirname}/demo.ts`, { cwd: APP, encoding: "utf8", maxBuffer: 1e8 }));
 DEMO.cycles = { [DEMO.start]: { vu: k } }; // le bilan du premier cycle a déjà été vu : l’accueil reste propre
-const base = (extra = {}) => { const s = JSON.parse(JSON.stringify(DEMO)); s.days[k] = { ...s.days[k], ...extra }; s.gratitude = { ...s.gratitude }; return s; };
+// patienceSeen : la bannière « La réponse prend parfois un autre chemin » et le souvenir de la semaine sont déjà vus (sinon elle est coupée en haut de « journee »).
+const base = (extra = {}) => { const s = JSON.parse(JSON.stringify(DEMO)); s.patienceSeen = k; s.souvenirVu = k; s.days[k] = { ...s.days[k], ...extra }; s.gratitude = { ...s.gratitude }; return s; };
 
 const manifeste = {};
 // Le faux serveur repart de zéro à chaque capture (compte de démo neuf, demandes d’exemple d’origine).
@@ -84,7 +86,7 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
   // ---------- Suivi ----------
   await heure("14:05"); await seed(base());
   await essai("suivi", async () => { await p.goto(B + "/suivi"); await p.waitForTimeout(2600); await ecran("suivi", "Suivi : prières, invocations, Coran sur la période, et le cycle de 30 jours."); });
-  await essai("suivi2", async () => { await hautTexte(/^Tes invocations$/i, 90); await ecran("suivi2", "Suivi plus bas : les moments jour par jour, la régularité."); });
+  await essai("suivi2", async () => { await hautTexte(/^Tes invocations$/i, 128); await ecran("suivi2", "Suivi plus bas : les moments jour par jour, la régularité."); });
   // ---------- Apprendre ----------
   await essai("apprendre", async () => { await p.goto(B + "/apprendre"); await p.waitForTimeout(2000); await ecran("apprendre", "Apprendre : les invocations à apprendre par cœur."); });
   await essai("biblio", async () => { await haut("#bibliotheque", 40); await ecran("biblio", "La bibliothèque : plus de 300 invocations sourcées, rangées par thème."); });
@@ -92,6 +94,8 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
   await essai("objectif", async () => { await p.goto(B + "/objectif"); await p.waitForTimeout(1800); await ecran("objectif", "Choisir son besoin (objectif)."); });
   await essai("rappels", async () => { await p.goto(B + "/notifications"); await p.waitForTimeout(1800); await ecran("rappels", "Les rappels (notifications) choisis par l’utilisateur."); });
   // ---------- Communauté (compte de démo sur le faux serveur) ----------
+  // Le compte du faux serveur vit à l’heure réelle (sinon, avec DECALAGE_JOURS, sa session paraît expirée).
+  await p.clock.setFixedTime(new Date());
   await essai("communaute", async () => {
     await p.goto(B + "/compte"); await p.locator(".page h1").waitFor();
     await p.getByRole("link", { name: "Créer un compte" }).or(p.getByRole("button", { name: "Créer un compte" })).first().click(); await p.waitForTimeout(500);
@@ -115,6 +119,29 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
     await ecran("communaute-verset", "Un jour, un verset : le verset du jour à écouter et à réciter.");
     await hautTexte(/^La communauté récite$/i, 140); await ecran("communaute-recitations", "Les récitations des membres, sans leur nom (« Mâ shâ Allâh »).");
   });
+  // ---------- Moments favorables (la ligne dépliée, juste avant l’appel du Maghreb) ----------
+  await heure("16:40"); await seed(base());
+  await essai("moments", async () => { await p.goto(B + "/"); await p.waitForTimeout(2400); await p.locator(".favsum").first().click(); await p.waitForTimeout(700); await haut(".fav", 330); await ecran("moments", "Accueil : les moments favorables dépliés (entre l’appel et l’iqâma, prosternation) avec leurs sources."); });
+  // ---------- Une invocation ouverte dans la bibliothèque (recherche) ----------
+  await heure("14:05"); await seed(base());
+  const fiche = async (nom, recherche, texte, desc) => essai(nom, async () => {
+    await p.goto(B + "/apprendre"); await p.waitForTimeout(1800); await haut("#bibliotheque", 40);
+    await p.fill("#bibliotheque input[type=search]", recherche); await p.waitForTimeout(700);
+    await p.locator(".bcard", { hasText: texte }).first().locator(".bhead").click(); await p.waitForTimeout(700);
+    await hautTexte(/^Hasbiyallâh$/, 18); await ecran(nom, desc); // en bas de page : cadré sur le début d’une ligne, jamais au milieu d’une carte
+  });
+  await fiche("fiche-dormir", "je meurs", "je meurs et je vis", "Bibliothèque : l’invocation avant de dormir ouverte (arabe, phonétique, traduction, source).");
+  await essai("fiche-fajr", async () => {
+    await p.goto(B + "/apprendre"); await p.waitForTimeout(1800); await haut("#bibliotheque", 40);
+    await p.locator(".bt", { hasText: "Du programme" }).click(); await p.waitForTimeout(900);
+    await p.locator(".bcard", { hasText: "Invocation après le Fajr" }).first().locator(".bhead").click(); await p.waitForTimeout(700);
+    await haut("#bibliotheque", 14); await ecran("fiche-fajr", "Bibliothèque, « Du programme » : l’invocation après le Fajr ouverte (arabe, phonétique, traduction, source).");
+  });
+  // ---------- Un autre besoin : le mariage ----------
+  const mariage = () => { const s = base(); s.objective = { ...s.objective, title: "Trouver mon conjoint", cat: "mariage", why: "Fonder un foyer apaisé" }; s.parcours = { ...s.parcours, id: "mariage" }; return s; };
+  await seed(mariage());
+  await essai("accueil-mariage", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("accueil-mariage", "Accueil avec le besoin « Trouver mon conjoint » (parcours mariage)."); });
+  await essai("parcours-mariage", async () => { await p.goto(B + "/parcours"); await p.waitForTimeout(2000); await ecran("parcours-mariage", "Le parcours du besoin « mariage » : ses invocations et ses gestes."); });
   fs.writeFileSync(out + "manifeste.json", JSON.stringify(manifeste, null, 1));
   if (erreurs.length) console.log("Erreurs de page :", erreurs.slice(0, 5));
   console.log(`${Object.keys(manifeste).length} écrans capturés`);

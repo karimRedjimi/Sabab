@@ -1,16 +1,16 @@
 #!/bin/bash
 # Finalise une vidéo et contrôle sa qualité.   qa/finaliser.sh <id de la composition> <nom du fichier final sans .mp4>
-#  1. son normalisé pour TikTok (deux passes : -14 LUFS, crête vraie -1,5 dB), vidéo H.264 crf 20
+#  1. son normalisé pour TikTok (deux passes : -14 LUFS, crête vraie -2 dB, marge pour le codage AAC), vidéo H.264 crf 20
 #  2. contrôles : format 1080×1920 à 30 i/s, durée 15–60 s, volume, crête, images noires, silences trop longs
 #  3. une planche de 12 images (à REGARDER) et une couverture
 # Sortie : studio/out/final/<nom>.mp4, <nom>-couverture.jpg, <nom>-planche.jpg, <nom>-qa.json. Code de sortie 1 si un contrôle échoue.
 set -e
 ID=$1; NOM=$2; D=$(cd "$(dirname "$0")/.." && pwd); IN="$D/studio/out/$ID.mp4"; O="$D/studio/out/final"; mkdir -p "$O"
 [ -f "$IN" ] || { echo "manque $IN (lancer d’abord node render.cjs $ID)"; exit 1; }
-M=$(ffmpeg -hide_banner -i "$IN" -af loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json -f null - 2>&1 | sed -n '/^{/,/^}/p')
+M=$(ffmpeg -hide_banner -i "$IN" -af loudnorm=I=-14:TP=-2:LRA=11:print_format=json -f null - 2>&1 | sed -n '/^{/,/^}/p')
 g() { echo "$M" | python3 -c "import json,sys;print(json.load(sys.stdin)['$1'])"; }
 ffmpeg -v error -y -i "$IN" -c:v libx264 -crf 20 -preset medium -pix_fmt yuv420p -movflags +faststart \
-  -af "loudnorm=I=-14:TP=-1.5:LRA=11:measured_I=$(g input_i):measured_TP=$(g input_tp):measured_LRA=$(g input_lra):measured_thresh=$(g input_thresh):offset=$(g target_offset):linear=true" \
+  -af "loudnorm=I=-14:TP=-2:LRA=11:measured_I=$(g input_i):measured_TP=$(g input_tp):measured_LRA=$(g input_lra):measured_thresh=$(g input_thresh):offset=$(g target_offset):linear=true" \
   -c:a aac -b:a 192k -ar 48000 "$O/$NOM.mp4"
 python3 - "$O/$NOM.mp4" "$O/$NOM" <<'P'
 import json, subprocess, sys, re

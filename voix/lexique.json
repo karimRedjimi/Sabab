@@ -38,7 +38,12 @@
   "sourate": "sourate",
   "n°": "numéro",
   "rizq": "la subsistance",
-  "Rizq": "La subsistance"
+  "Rizq": "La subsistance",
+  "Al-Albânî": "Al-Albani",
+  "Albânî": "Albani",
+  "Al-Furqân": "Al-Fourqane",
+  "l’iqâma": "l’ikama",
+  "iqâma": "ikama"
  },
  "_entendus": "Transcriptions acceptées pour un mot (la transcription automatique écrit parfois ces mots autrement).",
  "entendus": {
@@ -86,6 +91,12 @@
    "tirmidi",
    "tirmidhi",
    "tirmizi"
+  ],
+  "ikama": [
+   "ikama",
+   "iqama",
+   "iqamah",
+   "ikamah"
   ]
  }
 }
