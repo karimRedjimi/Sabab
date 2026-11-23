@@ -32,7 +32,8 @@ de fond, pas de 3D, pas de grain image par image : une vidéo se rend en 3 à 5 
 Dossiers (adapter les chemins) : l’appli = le dépôt cloné (branche `main`, souvent `../Sabab`), le studio = ce dossier.
 
 0. **Préparer**
-   - `git -C <appli> pull` (dernière version de l’appli) ; `cd studio && npm ci` si `node_modules` manque.
+   - `git -C <appli> pull` (dernière version de l’appli) ET `git pull` dans ce dossier (l’historique de la nuit précédente) ;
+     `cd studio && npm ci` si `node_modules` manque.
    - Vérifier le crédit ElevenLabs :
      `curl -s https://api.elevenlabs.io/v1/user/subscription -H "xi-api-key: proxy-injected"`
      (`character_limit - character_count`). Une vidéo coûte environ 1 000 caractères avec les essais.
@@ -47,7 +48,8 @@ Dossiers (adapter les chemins) : l’appli = le dépôt cloné (branche `main`, 
 2. **Pour chacune des 7 vidéos** (ordre de `planning.json`)
    0. Le texte arabe, la phonétique, la traduction et la source se copient par programme depuis `content/`
       (lire le fichier, extraire le champ, écrire un JSON dans `studio/public/voix/<id>.textes.json`), jamais à la main :
-      `npx -y tsx voix/textes.ts <appli> studio/public/voix/<id>.textes.json dua=programme:ITEMS.fajr` (ou `citadelle:hm-115`, `textes:MOMENTS_FAVORABLES.appel`).
+      `cd <appli> && npx -y tsx <studio>/voix/textes.ts <studio>/studio/public/voix/<id>.textes.json dua=programme:fadl` (ou `citadelle:hm-14`,
+      `parcours:rizq.actions.1`, `textes:MOMENTS_FAVORABLES.nuit`).
    1. **Choisir** l’angle utilisé le moins récemment dans `historique.json` pour ce format, et un contenu jamais utilisé
       (même invocation = interdit à moins de 30 jours d’écart).
    2. **Écrire le script** : `studio/public/voix/<id>.lignes.json` = `[{"affiche": "…"}]`, une phrase par ligne.

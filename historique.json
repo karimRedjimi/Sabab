@@ -80,11 +80,67 @@
   "fichier": "2026-11-23-7-apaisant.mp4"
  },
  {
-  "date": "2026-11-24",
+  "date": "2026-11-23",
   "format": "saviez",
   "angle": "une invocation pour un moment précis de la journée",
   "contenu": "programme.ts · fajr (Ibn Mâjah n° 925, authentifié par Al-Albânî)",
-  "titre": "Ce que le Prophète ﷺ disait après le Fajr",
+  "titre": "Ce qu’il disait après le Fajr",
+  "fichier": "2026-11-23-1-saviez.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "fonction",
+  "angle": "le ciel et le journal du soir",
+  "contenu": "aucun texte religieux dit",
+  "titre": "Le journal du soir et ton ciel",
+  "fichier": "2026-11-23-2-fonction.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "quiz",
+  "angle": "avant de dormir",
+  "contenu": "citadelle.json · hm-115 (Al-Bukhârî avec Al-Fath (Fath al-Bârî) 11/113)",
+  "titre": "Avant de dormir, on dit quoi ?",
+  "fichier": "2026-11-23-3-quiz.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "souci",
+  "angle": "chercher un conjoint depuis longtemps",
+  "contenu": "programme.ts · azwaj (Coran, Al-Furqân 25:74) ; PARCOURS.mariage actions 0 et 2",
+  "titre": "Chercher un conjoint depuis longtemps",
+  "fichier": "2026-11-23-4-souci.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "avant",
+  "angle": "les prières en retard",
+  "contenu": "aucun texte religieux",
+  "titre": "Le ‘Asr… et déjà le Maghreb ?",
+  "fichier": "2026-11-23-5-avant.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "moment",
+  "angle": "entre l’appel et l’iqâma",
+  "contenu": "textes.ts · MOMENTS_FAVORABLES.appel (Abû Dâwûd n° 521) ; FORCE_DU_PROGRAMME[3] (Al-Bukhârî n° 1145 ; Abû Dâwûd n° 521 ; Muslim n° 482)",
+  "titre": "Ce lundi, cinq moments pour invoquer",
+  "fichier": "2026-11-23-6-moment.mp4"
+ },
+ {
+  "date": "2026-11-23",
+  "format": "apaisant",
+  "angle": "remplir sa journée moment par moment",
+  "contenu": "aucun texte religieux",
+  "titre": "Une journée à la fois",
+  "fichier": "2026-11-23-7-apaisant.mp4"
+ },
+ {
+  "date": "2026-11-24",
+  "format": "saviez",
+  "angle": "ce que le Prophète ﷺ disait dans une situation",
+  "contenu": "citadelle.json · hm-259 (Muslim 4/1728)",
+  "titre": "Quand on a mal",
   "fichier": "2026-11-24-1-saviez.mp4"
  },
  {
@@ -98,41 +154,41 @@
  {
   "date": "2026-11-24",
   "format": "quiz",
-  "angle": "avant de dormir",
-  "contenu": "citadelle.json · hm-115 (Al-Bukhârî avec Al-Fath 11/113)",
-  "titre": "Avant de dormir",
+  "angle": "au réveil",
+  "contenu": "citadelle.json · hm-14 (Al-Bukhârî avec Al-Fath 11/113, Muslim 4/2083)",
+  "titre": "Au réveil",
   "fichier": "2026-11-24-3-quiz.mp4"
  },
  {
   "date": "2026-11-24",
   "format": "souci",
-  "angle": "chercher un conjoint depuis longtemps",
-  "contenu": "programme.ts · azwaj (Coran, Al-Furqân 25:74) ; PARCOURS.mariage (2 gestes)",
-  "titre": "Des années à chercher",
+  "angle": "chercher un travail",
+  "contenu": "programme.ts · fadl (Muslim n° 713) ; PARCOURS.rizq actions 1",
+  "titre": "Des mois de refus",
   "fichier": "2026-11-24-4-souci.mp4"
  },
  {
   "date": "2026-11-24",
   "format": "avant",
-  "angle": "les prières en retard",
+  "angle": "ne pas savoir quelle du’â faire pour son besoin",
   "contenu": "aucun texte religieux dit",
-  "titre": "La prière qui passait sans prévenir",
+  "titre": "Quelle du’â pour mon besoin ?",
   "fichier": "2026-11-24-5-avant.mp4"
  },
  {
   "date": "2026-11-24",
   "format": "moment",
-  "angle": "entre l’appel et l’iqâma",
-  "contenu": "textes.ts · MOMENTS_FAVORABLES.appel (Abû Dâwûd n° 521) ; mardi",
-  "titre": "Cinq rendez-vous ce mardi",
+  "angle": "le dernier tiers de la nuit",
+  "contenu": "textes.ts · MOMENTS_FAVORABLES.nuit (Al-Bukhârî n° 1145) ; mardi",
+  "titre": "Cette nuit, le dernier tiers",
   "fichier": "2026-11-24-6-moment.mp4"
  },
  {
   "date": "2026-11-24",
   "format": "apaisant",
-  "angle": "remplir sa journée moment par moment",
-  "contenu": "aucun texte religieux",
-  "titre": "Une journée, moment par moment",
+  "angle": "terminer ses 5 du’â pour les autres",
+  "contenu": "aucun texte religieux dit",
+  "titre": "Cinq du’â pour les autres",
   "fichier": "2026-11-24-7-apaisant.mp4"
  }
 ]

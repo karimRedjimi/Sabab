@@ -1,11 +1,11 @@
 {
  "dua": {
-  "id": "hm-115",
-  "ar": "«بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا».",
-  "ph": "Bismika Allāhumma amūtu wa aḥyā.",
-  "fr": "En Ton Nom, ô Allah, je meurs et je vis.",
-  "src": "Al-Bukhârî avec Al-Fath (Fath al-Bârî) 11/113",
-  "chapitre": "Évocations avant de dormir",
-  "_origine": "content/citadelle.json · hm-115"
+  "ref": "citadelle:hm-14",
+  "id": "hm-14",
+  "ar": "«الْحَمْدُ للهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ».",
+  "ph": "Al-ḥamdu lillāhi al-ladhī aḥyānā ba'da mā amātanā wa ilayhi an-nushūr.",
+  "fr": "Louange à Allah qui nous a rendu la vie après nous avoir fait mourir (sommeil), et c'est vers Lui que se fera le retour.",
+  "src": "Al-Bukhârî avec Al-Fath (Fath al-Bârî) 11/113, Muslim 4/2083",
+  "chapitre": "Invocations au réveil"
  }
 }

@@ -1,15 +1,11 @@
 {
  "dua": {
-  "kind": "dua",
-  "title": "Invocation après le Fajr",
-  "moment": "Après la prière du Fajr",
-  "when": "fajr",
-  "ar": "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا",
-  "ph": "Allâhumma innî as’aluka ʿilman nâfiʿan, wa rizqan tayyiban, wa ʿamalan mutaqabbalan.",
-  "fr": "Ô Allah, je Te demande une science utile, une subsistance pure et des œuvres acceptées.",
-  "grade": "sahih",
-  "src": "Ibn Mâjah (n° 925), authentifié par Al-Albânî",
-  "note": "Le Prophète ﷺ la disait après avoir terminé la prière du Fajr. Elle place le rizq « pur » au cœur de la journée, dès son ouverture.",
-  "_origine": "content/programme.ts · ITEMS.fajr"
+  "ref": "citadelle:hm-259",
+  "id": "hm-259",
+  "ar": "ضَعْ يَدَكَ عَلَى الَّذِي تَأَلَّمَ مِنْ جَسَدِكَ وَقُلْ: «بِسْمِ اللهِ» (ثَلَاثاً)، وَقُلْ (سَبْعَ مَرَّاتٍ): «أَعُوذُ بِاللهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ».",
+  "ph": "Bismi Llāh (3). A'ūdhu bi-Llāhi wa qudratihi min sharri mā ajidu wa uḥādhir (7).",
+  "fr": "Place ta main sur l'endroit douloureux et dis : « Au nom d'Allah » (3 fois), puis dis (7 fois) : « Je cherche protection auprès d'Allah et par Sa puissance contre le mal que je ressens et que je redoute. »",
+  "src": "Muslim 4/1728",
+  "chapitre": "Ce que dit et fait celui qui ressent une douleur dans son corps"
  }
 }

@@ -82,7 +82,21 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
     await ecran("geste", "Le rituel du soir : le geste concret pour son besoin.");
   });
   await seed(base({ clos: true }));
-  await essai("ciel", async () => { await p.goto(B + "/"); await p.waitForTimeout(2200); await haut(".cielacc", 40); await ecran("ciel", "Le ciel : chaque bienfait noté devient une étoile."); });
+  // Cadré sous la barre collante : la carte « Dans la journée » entière en haut, le ciel et « Demain » dessous.
+  await essai("ciel", async () => { await p.goto(B + "/"); await p.waitForTimeout(2200); await haut(".tr:has-text('Dans la journée')", 64); await ecran("ciel", "Le ciel : chaque bienfait noté devient une étoile (journée close, 11 étoiles)."); });
+  // ---------- Les moments favorables, dépliés (Abû Dâwûd n° 521 ; Al-Bukhârî n° 1145 ; Muslim n° 482) ----------
+  await heure("14:05"); await seed(base());
+  await essai("moments", async () => { await p.goto(B + "/"); await p.waitForTimeout(2400); await p.locator(".favsum").first().click(); await p.waitForTimeout(900); await ecran("moments", "Accueil : les moments favorables dépliés (à l’appel, la prosternation) avec leurs sources."); });
+  // ---------- Un autre besoin : le mariage (parcours « Le mariage ») ----------
+  const mariage = () => { const s = base(); s.objective = { title: "Me marier", cat: "mariage", why: "Fonder un foyer apaisé", since: DEMO.start }; s.parcours = { id: "mariage", start: DEMO.start }; return s; };
+  await seed(mariage());
+  await essai("mariage-accueil", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("mariage-accueil", "Accueil avec le besoin « Me marier » (parcours Le mariage)."); });
+  await essai("mariage-journee", async () => { await haut(".dprog", 70); await ecran("mariage-journee", "Accueil plus bas, besoin « Me marier » : la journée par moments."); });
+  await essai("mariage-lecture", async () => {
+    await p.locator(".tr", { hasText: "Dans la journée" }).first().locator(".rbody").click(); await p.waitForTimeout(1200);
+    for (let i = 0; i < 3; i++) { const b2 = p.locator("button", { hasText: /Commencer|Je commence|Continuer/ }).first(); if (await b2.count()) { await b2.click().catch(() => {}); await p.waitForTimeout(700); } }
+    await ecran("mariage-lecture", "Lecture guidée, besoin « Me marier » : l’invocation du parcours.");
+  });
   // ---------- Suivi ----------
   await heure("14:05"); await seed(base());
   await essai("suivi", async () => { await p.goto(B + "/suivi"); await p.waitForTimeout(2600); await ecran("suivi", "Suivi : prières, invocations, Coran sur la période, et le cycle de 30 jours."); });
@@ -112,6 +126,8 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
     await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(400);
     await p.getByRole("button", { name: "Commencer" }).click(); await p.locator(".wish").waitFor(); await p.waitForTimeout(400);
     await p.locator(".ritual").first().evaluate((e) => e.scrollIntoView({ block: "center" })); await ecran("communaute-demande", "Une demande d’un autre membre : « Cette personne demande la même chose que toi », bouton Âmîn.");
+    // La même, cadrée en haut de page (titre « Communauté » entier, aucune carte coupée).
+    await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(700); await ecran("communaute-demande-haut", "Une demande d’un autre membre, page vue depuis le haut (titre entier), bouton Âmîn.");
     for (let i = 0; i < 5; i++) { await p.getByRole("button", { name: /Âmîn/ }).click(); await p.waitForTimeout(600); }
     await p.locator(".ritual").first().evaluate((e) => e.scrollIntoView({ block: "center" })); await ecran("communaute-fin", "Fin de la série : « Qu’Allah les exauce. Tu as invoqué pour 5 personnes. Et pour toi de même. »");
     await p.goto(B + "/communaute"); await p.waitForTimeout(800);
@@ -119,29 +135,35 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
     await ecran("communaute-verset", "Un jour, un verset : le verset du jour à écouter et à réciter.");
     await hautTexte(/^La communauté récite$/i, 140); await ecran("communaute-recitations", "Les récitations des membres, sans leur nom (« Mâ shâ Allâh »).");
   });
-  // ---------- Moments favorables (la ligne dépliée, juste avant l’appel du Maghreb) ----------
-  await heure("16:40"); await seed(base());
-  await essai("moments", async () => { await p.goto(B + "/"); await p.waitForTimeout(2400); await p.locator(".favsum").first().click(); await p.waitForTimeout(700); await haut(".fav", 330); await ecran("moments", "Accueil : les moments favorables dépliés (entre l’appel et l’iqâma, prosternation) avec leurs sources."); });
-  // ---------- Une invocation ouverte dans la bibliothèque (recherche) ----------
+  // ---------- Une invocation ouverte dans la bibliothèque ----------
   await heure("14:05"); await seed(base());
+  // La bibliothèque est en bas de page : cadré sur le début d’une ligne de la liste au-dessus, jamais au milieu d’une carte.
   const fiche = async (nom, recherche, texte, desc) => essai(nom, async () => {
     await p.goto(B + "/apprendre"); await p.waitForTimeout(1800); await haut("#bibliotheque", 40);
     await p.fill("#bibliotheque input[type=search]", recherche); await p.waitForTimeout(700);
     await p.locator(".bcard", { hasText: texte }).first().locator(".bhead").click(); await p.waitForTimeout(700);
-    await hautTexte(/^Hasbiyallâh$/, 18); await ecran(nom, desc); // en bas de page : cadré sur le début d’une ligne, jamais au milieu d’une carte
+    // Le titre « Bibliothèque » en haut si la page le permet ; sinon (bas de page) le début d’une ligne de la liste au-dessus.
+    await haut("#bibliotheque", 14);
+    const y = await p.locator("#bibliotheque").evaluate((e) => e.getBoundingClientRect().top);
+    if (y > 30) await hautTexte(/^Hasbiyallâh$/, 18);
+    await ecran(nom, desc);
   });
-  await fiche("fiche-dormir", "je meurs", "je meurs et je vis", "Bibliothèque : l’invocation avant de dormir ouverte (arabe, phonétique, traduction, source).");
-  await essai("fiche-fajr", async () => {
+  // `avant` : le titre de la carte qui précède dans la liste, placé en haut de l’écran (jamais une carte coupée).
+  const ficheProgramme = async (nom, titre, avant, desc) => essai(nom, async () => {
     await p.goto(B + "/apprendre"); await p.waitForTimeout(1800); await haut("#bibliotheque", 40);
     await p.locator(".bt", { hasText: "Du programme" }).click(); await p.waitForTimeout(900);
-    await p.locator(".bcard", { hasText: "Invocation après le Fajr" }).first().locator(".bhead").click(); await p.waitForTimeout(700);
-    await haut("#bibliotheque", 14); await ecran("fiche-fajr", "Bibliothèque, « Du programme » : l’invocation après le Fajr ouverte (arabe, phonétique, traduction, source).");
+    await p.locator(".bcard", { hasText: titre }).first().locator(".bhead").click(); await p.waitForTimeout(700);
+    await hautTexte(new RegExp("^" + avant + "$"), 22); await ecran(nom, desc);
   });
-  // ---------- Un autre besoin : le mariage ----------
-  const mariage = () => { const s = base(); s.objective = { ...s.objective, title: "Trouver mon conjoint", cat: "mariage", why: "Fonder un foyer apaisé" }; s.parcours = { ...s.parcours, id: "mariage" }; return s; };
-  await seed(mariage());
-  await essai("accueil-mariage", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("accueil-mariage", "Accueil avec le besoin « Trouver mon conjoint » (parcours mariage)."); });
-  await essai("parcours-mariage", async () => { await p.goto(B + "/parcours"); await p.waitForTimeout(2000); await ecran("parcours-mariage", "Le parcours du besoin « mariage » : ses invocations et ses gestes."); });
+  await fiche("fiche-douleur", "douloureux", "endroit douloureux", "Bibliothèque : ce qu’on fait et dit quand on a mal (arabe, phonétique, traduction, source).");
+  await fiche("fiche-reveil", "rendu la vie", "nous a rendu la vie", "Bibliothèque : l’invocation du réveil ouverte (arabe, phonétique, traduction, source).");
+  await ficheProgramme("fiche-fadl", "Demander de la grâce d’Allah", "L’invocation de Yûnus", "Bibliothèque, « Du programme » : « Demander de la grâce d’Allah » ouverte.");
+  // ---------- Un autre besoin : l’emploi (parcours « Ouvrir les portes du rizq ») ----------
+  const emploi = () => { const s = base(); s.objective = { title: "Trouver un travail", cat: "emploi", why: "Subvenir aux besoins de ma famille", since: DEMO.start }; s.parcours = { id: "rizq", start: DEMO.start }; return s; };
+  await seed(emploi());
+  await essai("emploi-accueil", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("emploi-accueil", "Accueil avec le besoin « Trouver un travail » (parcours rizq)."); });
+  await essai("emploi-parcours", async () => { await p.goto(B + "/parcours"); await p.waitForTimeout(2000); await ecran("emploi-parcours", "Le parcours actif « Ouvrir les portes du rizq » : ses invocations et ses gestes."); });
+  await essai("emploi-objectif", async () => { await p.goto(B + "/objectif"); await p.waitForTimeout(1800); await ecran("emploi-objectif", "Mon objectif : « Trouver un travail », domaine, pourquoi."); });
   fs.writeFileSync(out + "manifeste.json", JSON.stringify(manifeste, null, 1));
   if (erreurs.length) console.log("Erreurs de page :", erreurs.slice(0, 5));
   console.log(`${Object.keys(manifeste).length} écrans capturés`);

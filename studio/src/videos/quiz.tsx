@@ -1,5 +1,5 @@
-// « Quiz » : ce qu’on dit avant de dormir (Hisn al-Muslim, hm-115 ; Al-Bukhârî).
-// Textes religieux : public/voix/quiz.textes.json (copiés par programme depuis content/citadelle.json · hm-115).
+// « Quiz » : ce qu’on dit au réveil (Hisn al-Muslim, hm-14 ; Al-Bukhârî et Muslim).
+// Textes religieux : public/voix/quiz.textes.json (copiés par programme depuis content/citadelle.json · hm-14).
 import React from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import { C, AR, FONT, GOLD, PLUM, W, H, minutage, zone, SousTitres, Voile, Fond, StarP, Scene, Flash, Phone, Pastille, Surligne, Logo, Son, type Sfx } from "../moteur";
@@ -12,30 +12,28 @@ const D = tx.dua;
 const DECOMPTE = [mot(/^Trois/, 1), mot(/^deux/, 1), mot(/^un/, 1)];
 const LIEN = mot(/^lien/, 5);
 
-// ---------- 1. L’accroche : « QUIZ », la lune et la nuit ----------
-const Nuit: React.FC = () => {
+// ---------- 1. L’accroche : « QUIZ », le réveil qui sonne et le soleil qui se lève ----------
+const Reveil: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const lune = spring({ frame: f - 2, fps, config: { damping: 12, stiffness: 120 } });
+  const r = spring({ frame: f - 2, fps, config: { damping: 12, stiffness: 140 } });
   const quiz = spring({ frame: f - 8, fps, config: { damping: 7, stiffness: 200 } });
-  const zz = (i: number) => interpolate((f + i * 20) % 60, [0, 60], [0, 1]);
+  const sol = interpolate(f, [0, L[1]], [0, 1], { ...C, easing: Easing.out(Easing.cubic) });
+  const vib = Math.sin(f * 1.9) * 6 * (f < mot(/^réveillant/) + 20 ? 1 : 0);
   return (
     <AbsoluteFill>
       <div style={{ position: "absolute", left: 0, right: 0, top: 220, textAlign: "center", transform: `scale(${quiz}) rotate(${(1 - quiz) * -12}deg)` }}>
         <span style={{ display: "inline-block", padding: "20px 60px", borderRadius: 30, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 110, letterSpacing: "0.08em", boxShadow: "0 0 80px rgba(233,196,106,0.7)" }}>QUIZ</span>
       </div>
-      {/* le croissant de lune (un disque masqué par un autre) */}
-      <svg width={440} height={440} viewBox="0 0 440 440" style={{ position: "absolute", left: 540 - 220, top: 520, overflow: "visible", transform: `scale(${lune}) rotate(${-20 + Math.sin(f / 20) * 4}deg)`, opacity: lune, filter: "drop-shadow(0 0 50px rgba(233,196,106,0.7))" }}>
-        <defs>
-          <radialGradient id="lune" cx="40%" cy="40%"><stop offset="0%" stopColor="#FFF6DC" /><stop offset="100%" stopColor="#E9C46A" /></radialGradient>
-          <mask id="croissant"><rect width={440} height={440} fill="#fff" /><circle cx={320} cy={160} r={200} fill="#000" /></mask>
-        </defs>
-        <circle cx={220} cy={220} r={220} fill="url(#lune)" mask="url(#croissant)" />
+      <div style={{ position: "absolute", left: 540 - 200, top: 1260 - 240 * sol, width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, #FFF1C4, #E9C46A 55%, rgba(233,196,106,0) 72%)", opacity: 0.9 }} />
+      <svg width={360} height={380} viewBox="-90 -100 180 190" style={{ position: "absolute", left: 540 - 180, top: 470, transform: `scale(${r}) rotate(${vib}deg)` }}>
+        <circle cx={-52} cy={-62} r={26} fill={GOLD} /><circle cx={52} cy={-62} r={26} fill={GOLD} />
+        <circle r={78} fill="#2A0F2A" stroke={GOLD} strokeWidth={10} />
+        <line x1={0} y1={0} x2={0} y2={-48} stroke="#fff" strokeWidth={8} strokeLinecap="round" />
+        <line x1={0} y1={0} x2={34} y2={14} stroke="#fff" strokeWidth={8} strokeLinecap="round" />
+        <line x1={-50} y1={70} x2={-62} y2={86} stroke={GOLD} strokeWidth={10} strokeLinecap="round" /><line x1={50} y1={70} x2={62} y2={86} stroke={GOLD} strokeWidth={10} strokeLinecap="round" />
       </svg>
-      {[0, 1, 2].map((i) => (
-        <div key={i} style={{ position: "absolute", left: 700 + i * 50 + zz(i) * 40, top: 640 - i * 70 - zz(i) * 120, fontFamily: FONT, fontWeight: 800, fontSize: 60 + i * 16, color: "#fff", opacity: lune * Math.sin(zz(i) * Math.PI) }}>z</div>
-      ))}
-      <div style={{ position: "absolute", left: 0, right: 0, top: 1080, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 76, color: "#fff", opacity: interpolate(f, [mot(/^dormir/), mot(/^dormir/) + 8], [0, 1], C) }}>
-        avant de <span style={{ color: GOLD }}>dormir</span> ?
+      <div style={{ position: "absolute", left: 0, right: 0, top: 880, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 76, color: "#fff", opacity: interpolate(f, [mot(/^réveillant/), mot(/^réveillant/) + 8], [0, 1], C) }}>
+        en se <span style={{ color: GOLD }}>réveillant</span> ?
       </div>
     </AbsoluteFill>
   );
@@ -70,11 +68,11 @@ const Reponse: React.FC = () => {
       <div style={{ position: "absolute", left: 0, right: 0, top: 230, textAlign: "center" }}>
         <span style={{ display: "inline-block", padding: "12px 34px", borderRadius: 999, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 44, letterSpacing: "0.06em", transform: `scale(${a})` }}>LA RÉPONSE</span>
       </div>
-      <div style={{ position: "absolute", left: 40, right: 40, top: 400, textAlign: "center", direction: "rtl", fontFamily: AR, fontSize: 86, lineHeight: 1.5, color: GOLD, opacity: a, transform: `scale(${0.85 + 0.15 * a})`,
+      <div style={{ position: "absolute", left: 40, right: 40, top: 400, textAlign: "center", direction: "rtl", fontFamily: AR, fontSize: 70, lineHeight: 1.6, color: GOLD, opacity: a, transform: `scale(${0.85 + 0.15 * a})`,
         textShadow: "0 0 50px rgba(233,196,106,0.7)" }}>{D.ar}</div>
-      <div style={{ position: "absolute", left: 80, right: 80, top: 640, textAlign: "center", fontFamily: FONT, fontStyle: "italic", fontSize: 48, color: "rgba(255,255,255,0.85)", opacity: ph }}>{D.ph}</div>
+      <div style={{ position: "absolute", left: 80, right: 80, top: 660, textAlign: "center", fontFamily: FONT, fontStyle: "italic", fontSize: 38, color: "rgba(255,255,255,0.85)", opacity: ph }}>{D.ph}</div>
       <div style={{ position: "absolute", left: 80, right: 80, top: 820, padding: "34px 40px", borderRadius: 36, background: "rgba(42,12,34,0.88)", boxShadow: "0 0 0 3px rgba(233,196,106,0.6)",
-        textAlign: "center", fontFamily: FONT, fontWeight: 700, fontSize: 58, lineHeight: 1.3, color: "#fff", opacity: fr, transform: `translateY(${(1 - fr) * 40}px)` }}>{D.fr}</div>
+        textAlign: "center", fontFamily: FONT, fontWeight: 700, fontSize: 48, lineHeight: 1.3, color: "#fff", opacity: fr, transform: `translateY(${(1 - fr) * 40}px)` }}>{D.fr}</div>
     </AbsoluteFill>
   );
 };
@@ -119,18 +117,18 @@ const Commentaire: React.FC = () => {
 };
 
 // ---------- 6. Dans Sabab : la fiche, entière ----------
-const E = "ecrans/fiche-dormir";
-const ZCARTE = zone(E, /^Évocations avant de dormir$/, 0), ZTR = zone(E, /^En Ton Nom, ô Allah/), ZAPP = zone(E, /^Apprendre par cœur$/);
-const Fiche: React.FC = () => <Phone ecran={E} from={L[5] - 4} to={LIEN - 2} entree="iris" sortie="recul" focus={[{ at: L[5] + 6, px: 0.5, py: 0.45, s: 1.1 }]}>
+const E = "ecrans/fiche-reveil";
+const ZTR = zone(E, /^Louange à Allah qui nous a rendu/), ZAPP = zone(E, /^Apprendre par cœur$/);
+const Fiche: React.FC = () => <Phone ecran={E} from={L[5] - 4} to={LIEN - 2} entree="iris" sortie="recul" focus={[{ at: L[5] + 6, px: 0.5, py: 0.45, s: 1.08 }]}>
   <Surligne at={mot(/^Sabab/, 5)} {...ZTR} fin={mot(/^apprendre/, 5) - 2} />
   <Surligne at={mot(/^apprendre/, 5)} {...ZAPP} />
-  <Pastille at={mot(/^Sabab/, 5) + 4} x={W * 0.5} y={H * 0.84} gold>Avant de dormir</Pastille>
+  <Pastille at={mot(/^Sabab/, 5) + 4} x={W * 0.5} y={H * 0.7} gold>Au réveil</Pastille>
 </Phone>;
 
 const Video: React.FC = () => (
   <AbsoluteFill style={{ background: "#0A0208" }}>
     <Fond T={T} k={[0, L[2] - 6, L[2] + 12, L[5] - 6, L[5] + 14, T.DUREE]} />
-    <Scene from={0} to={L[1] - 2} zin={0}><Nuit /></Scene>
+    <Scene from={0} to={L[1] - 2} zin={0}><Reveil /></Scene>
     <Scene from={L[1] - 4} to={L[2] - 2}><Decompte /></Scene>
     <Scene from={L[2] - 4} to={L[3] - 2}><Reponse /></Scene>
     <Scene from={L[3] - 4} to={L[4] - 2}><Source /></Scene>
@@ -139,12 +137,12 @@ const Video: React.FC = () => (
     <Scene from={LIEN - 4} to={T.DUREE + 10} zin={0}><Logo at={LIEN} phrase="Le lien est en bio" /></Scene>
     <Flash at={L[2]} />
     <Voile />
-    <SousTitres T={T} or={/^(dormir|Trois|deux|un…|Nom|meurs|vis|Al-Bukhârî|trouvé|commentaire|Sabab|cœur|bio)/i} grandsDes={99} />
+    <SousTitres T={T} or={/^(réveillant|Louange|Trois|deux|un…|vie|retour|Source|Al-Bukhârî|trouvé|commentaire|Sabab|cœur|bio)/i} grandsDes={99} />
     <Son voix="quiz.mp3" sfx={SFX} />
   </AbsoluteFill>
 );
 const SFX: Sfx[] = [
-  ["pop", 4, 0.6], ["impact", 10, 0.6], ["ding", mot(/^dormir/), 0.5],
+  ["pop", 4, 0.6], ["impact", 10, 0.6], ["alarme", 16, 0.3], ["ding", mot(/^réveillant/), 0.4],
   ...DECOMPTE.map((a) => ["tick", a, 0.8] as Sfx), ["riser", L[1], 0.3],
   ["shimmer", L[2] - 2, 0.7],
   ["whoosh", L[3] - 4, 0.5], ["pop", mot(/Bukhârî/, 3), 0.5],

@@ -1,35 +1,18 @@
 {
  "dua": {
+  "ref": "programme:fadl",
   "kind": "dua",
-  "title": "Pour un foyer qui réjouit le cœur",
-  "moment": "Dans la journée et dans la prosternation",
-  "ar": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
-  "ph": "Rabbanâ hab lanâ min azwâjinâ wa dhurriyyâtinâ qurrata aʿyun, wajʿalnâ lil-muttaqîna imâmâ.",
-  "fr": "Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de nous un modèle pour les pieux.",
-  "grade": "coran",
-  "src": "Coran, Al-Furqân 25:74",
-  "note": "Allah la cite parmi les invocations des « serviteurs du Tout Miséricordieux ». Elle demande non seulement un foyer, mais un foyer qui apaise.",
-  "_origine": "content/programme.ts · ITEMS.azwaj"
+  "title": "Demander de la grâce d’Allah",
+  "moment": "En sortant de la mosquée, et dans la journée",
+  "ar": "اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ",
+  "ph": "Allâhumma innî as’aluka min fadlik.",
+  "fr": "Ô Allah, je Te demande de Ta grâce.",
+  "grade": "sahih",
+  "src": "Muslim (n° 713)",
+  "note": "Le Prophète ﷺ enseignait de la dire en sortant de la mosquée : on y entre en demandant la miséricorde, on en sort en demandant la grâce, c’est-à-dire les biens de ce monde."
  },
- "parcours": {
-  "title": "Le mariage",
-  "intro": "Pour celui ou celle qui cherche un conjoint pieux et un foyer apaisé.",
-  "duas": [
-   "azwaj",
-   "musa"
-  ],
-  "actions": [
-   "Écris les trois qualités essentielles que tu recherches.",
-   "Écris ce que toi, tu apportes à un foyer.",
-   "Parle de ton projet à une personne de confiance de ta famille.",
-   "Travaille une qualité qui te manque encore.",
-   "Lis sur les droits et devoirs des époux.",
-   "Prie deux unités de prière et confie ton projet à Allah.",
-   "Demande à un proche s’il connaît une personne sérieuse.",
-   "Fais une invocation pour ton futur conjoint, où qu’il soit.",
-   "Revois tes critères : sont-ils ceux de la religion ou de l’image ?",
-   "Rends service à un couple marié de ton entourage."
-  ],
-  "_origine": "content/programme.ts · PARCOURS.mariage"
+ "geste": {
+  "ref": "parcours:rizq.actions.1",
+  "texte": "Envoie une candidature, une offre ou une relance que tu repoussais."
  }
 }
