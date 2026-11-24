@@ -1,26 +1,29 @@
 [
  {
-  "affiche": "Tu pries, mais tu ne sais jamais vraiment où tu en es ?"
+  "affiche": "Tu lis tes du’â sur ton téléphone, mais tu ne les connais pas par cœur ?"
  },
  {
-  "affiche": "Dans Sabab, tu notes chaque prière d’un simple geste."
+  "affiche": "Dans Sabab, l’onglet Apprendre t’aide à les retenir, une par une."
  },
  {
-  "affiche": "À l’heure, à la mosquée, ou plus tard : tu le précises si tu veux."
+  "affiche": "Chaque jour, tu révises seulement celles qui reviennent."
  },
  {
-  "affiche": "Ensuite, ton suivi te montre ta semaine, prière par prière."
+  "affiche": "Au début, un mot sur trois est caché : tu complètes de mémoire."
  },
  {
-  "affiche": "Il repère aussi ton moment le plus fragile, sans te juger."
+  "affiche": "Puis deux mots sur trois."
  },
  {
-  "affiche": "Et ta régularité se dessine : 24 jours tenus sur 30."
+  "affiche": "Puis tout le texte : tu la récites, et tu vérifies."
  },
  {
-  "affiche": "Pas de classement, pas de score public : c’est entre toi et Allah."
+  "affiche": "Tu la connais ? Elle reviendra plus tard. Sinon, elle revient demain."
  },
  {
-  "affiche": "Sabab. Avance à ton rythme, le lien est en bio."
+  "affiche": "Et plus de 300 invocations sourcées t’attendent dans la bibliothèque."
+ },
+ {
+  "affiche": "Sabab. Apprendre par cœur, sans forcer. Le lien est en bio."
  }
 ]

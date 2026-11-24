@@ -43,7 +43,11 @@
   "Albânî": "Albani",
   "Al-Furqân": "Al-Fourqane",
   "l’iqâma": "l’ikama",
-  "iqâma": "ikama"
+  "iqâma": "ikama",
+  "Fâtima": "Fatima",
+  "An-Nasâ’î": "An-Nassaï",
+  "Al-Hâkim": "Al-Hakim",
+  "At-Tirmidhî": "At-Tirmidi"
  },
  "_entendus": "Transcriptions acceptées pour un mot (la transcription automatique écrit parfois ces mots autrement).",
  "entendus": {
@@ -97,6 +101,10 @@
    "iqama",
    "iqamah",
    "ikamah"
+  ],
+  "nassai": [
+   "nassai",
+   "nasai"
   ]
  }
 }

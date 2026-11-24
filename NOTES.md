@@ -28,3 +28,11 @@
 - 2026-11-23 : homophones calculé/calculer, rapportée/rapporté → reformuler (« Source : … »).
 - 2026-11-23 : parenthèses dans un texte arabe affichées « )…) » : la police Amiri n’avait que le sous-ensemble arabe → ajout du sous-ensemble latin (fonts.ts, unicode-range).
 - 2026-11-23 : nouveaux écrans : fiche-douleur, fiche-reveil, fiche-fadl, emploi-accueil / emploi-parcours / emploi-objectif, communaute-demande-haut (titre entier).
+- 2026-11-24 : un focus bas dans l’écran (py > 0,6) faisait sortir le haut du téléphone de l’image → le moteur (Phone) garde maintenant toujours le haut du cadre visible.
+- 2026-11-24 : nouveaux écrans : apprendre-niveaux, revision-1 / revision-revele / revision-2 / revision-3 (masquage progressif), manque (« Hier n’a pas été tenu »), minimum (minimum du jour), epreuve-accueil / epreuve-parcours, fiche-malade, fiche-mosquee, fiche-hayy.
+- 2026-11-24 : ficheProgramme cherche le titre « avant » DANS #bibliotheque (il peut aussi être dans « Tes révisions », plus haut).
+- 2026-11-24 : la recherche de la bibliothèque ne montre que les 110 premiers caractères de la traduction quand la carte est fermée : chercher un mot du titre du chapitre (« entrant mosquée »).
+- 2026-11-24 : homophones encore : enseignée/enseigné, sue/su, projets/projet, arrêtais/arrêté → reformuler ; « An-Nasâ’î » transcrit « nasai » → ajouté aux « entendus ».
+- 2026-11-24 : un texte en bas d’écran caché par la barre d’onglets (ex. les sources des moments favorables) ne se surligne pas : mettre une pastille avec le texte copié du JSON à la place.
+- 2026-11-24 : une pastille longue (geste du parcours) : size={30} pour qu’elle tienne dans la largeur du téléphone.
+- 2026-11-24 : un whoosh 6 images avant le premier mot d’une phrase l’a masqué dans le mix (« Sur » entendu « Dans ») → whoosh 16 à 18 images avant, volume ≤ 0,5.

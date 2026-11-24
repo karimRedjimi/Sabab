@@ -1,11 +1,24 @@
 {
  "dua": {
-  "ref": "citadelle:hm-259",
-  "id": "hm-259",
-  "ar": "ضَعْ يَدَكَ عَلَى الَّذِي تَأَلَّمَ مِنْ جَسَدِكَ وَقُلْ: «بِسْمِ اللهِ» (ثَلَاثاً)، وَقُلْ (سَبْعَ مَرَّاتٍ): «أَعُوذُ بِاللهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ».",
-  "ph": "Bismi Llāh (3). A'ūdhu bi-Llāhi wa qudratihi min sharri mā ajidu wa uḥādhir (7).",
-  "fr": "Place ta main sur l'endroit douloureux et dis : « Au nom d'Allah » (3 fois), puis dis (7 fois) : « Je cherche protection auprès d'Allah et par Sa puissance contre le mal que je ressens et que je redoute. »",
-  "src": "Muslim 4/1728",
-  "chapitre": "Ce que dit et fait celui qui ressent une douleur dans son corps"
+  "ref": "programme:hayy",
+  "kind": "dua",
+  "title": "Yâ Hayyu yâ Qayyûm",
+  "moment": "Matin et soir",
+  "ar": "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+  "ph": "Yâ Hayyu yâ Qayyûm, bi rahmatika astaghîth, aslih lî sha’nî kullah, wa lâ takilnî ilâ nafsî tarfata ʿayn.",
+  "fr": "Ô Vivant, ô Celui qui subsiste par Lui-même, c’est par Ta miséricorde que je demande secours : arrange toutes mes affaires, et ne me confie pas à moi-même, ne serait-ce que le temps d’un clin d’œil.",
+  "grade": "hasan",
+  "src": "An-Nasâ’î (As-Sunan al-Kubrâ) et Al-Hâkim, jugé hasan par Al-Albânî",
+  "note": "Le Prophète ﷺ l’a enseignée à sa fille Fâtima pour le matin et le soir. Elle demande qu’Allah arrange « toutes » tes affaires : travail, projets, famille.",
+  "slots": [
+   {
+    "l": "Matin",
+    "t": 1
+   },
+   {
+    "l": "Soir",
+    "t": 1
+   }
+  ]
  }
 }

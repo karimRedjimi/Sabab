@@ -145,8 +145,12 @@ export const Phone: React.FC<{ ecran: string; from: number; to: number; entree?:
     const k = interpolate(f, [fc.at, fc.at + 14], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) }) * (fc.fin ? 1 - interpolate(f, [fc.fin, fc.fin + 12], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) }) : 1);
     if (k > 0) { z = 1 + (Math.min(fc.s ?? 1.08, ZOOM_MAX) - 1) * k; ox = fc.px; oy = fc.py; }
   }
-  const cx = PX + ox * W, cy = PY + oy * H, dx = ((540 - cx) * (z - 1)) / z, dy = ((700 - cy) * (z - 1)) / z;
+  const cx = PX + ox * W, cy = PY + oy * H, dx = ((540 - cx) * (z - 1)) / z;
   const drift = interpolate(f, [from, to], [0, -16], C);
+  // Le haut du téléphone (cadre compris) reste toujours visible, même avec un focus bas dans l’écran : jamais rogné.
+  let dy = ((700 - cy) * (z - 1)) / z;
+  const haut = cy + z * (PY - 16 - 14 + dy - cy);
+  if (haut < 16) dy += (16 - haut) / z;
   return (
     <div style={{ position: "absolute", inset: 0, perspective: 2200, transformOrigin: `${cx}px ${cy}px`, transform: `scale(${z}) translate(${dx}px, ${dy}px)` }}>
       <div style={{ position: "absolute", left: PX, top: PY + drift, width: W, height: H, transformOrigin: "50% 60%", transform: `${tIn} ${tOut}`, opacity: opIn * opOut, clipPath: clip, filter: blurIn + blurOut ? `blur(${blurIn + blurOut}px)` : undefined }}>

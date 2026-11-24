@@ -1,136 +1,135 @@
-// « Une fonction à fond » : le suivi des prières et de la régularité. Aucun texte religieux dit.
+// « Une fonction à fond » : apprendre par cœur (révision espacée, masquage progressif). Aucun texte religieux dit.
+// Les écrans montrent des invocations du programme (Hasbiyallâh, après le Fajr, contre les dettes) en cours de révision.
 import React from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
-import { C, FONT, GOLD, PLUM, W, H, minutage, zone, SousTitres, Voile, Fond, StarP, Scene, Flash, Phone, Pastille, Surligne, Check, Logo, Son, starPoints, type Sfx } from "../moteur";
+import { C, FONT, GOLD, PLUM, W, H, minutage, zone, englobe, SousTitres, Voile, Fond, StarP, Scene, Flash, Phone, Pastille, Surligne, Logo, Son, type Sfx } from "../moteur";
 import voix from "../../public/voix/fonction.json";
 
 const T = minutage(voix);
 const { L, mot } = T;
-type Z = { x: number; y: number; w: number; h: number };
-const union = (a: Z, b: Z): Z => { const x = Math.min(a.x, b.x), y = Math.min(a.y, b.y); return { x, y, w: Math.max(a.x + a.w, b.x + b.w) - x, h: Math.max(a.y + a.h, b.y + b.h) - y }; };
+const LIEN = mot(/^lien/, 8);
 
-// ---------- 1. L’accroche : cinq prières, cinq points d’interrogation ----------
-const PRIERES = ["Fajr", "Dhuhr", "ʿAsr", "Maghreb", "ʿIchâ"];
-const Doute: React.FC = () => {
+// ---------- 1. L’accroche : une du’â lue sur l’écran… et le cœur vide ----------
+const Accroche: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const q = spring({ frame: f - mot(/^où/), fps, config: { damping: 7, stiffness: 160 } });
+  const c = spring({ frame: f - 2, fps, config: { damping: 12, stiffness: 150 } });
+  const scan = (f % 40) / 40;
+  const coeur = interpolate(f, [mot(/^connais/), mot(/^cœur/) + 6], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) });
+  const q = spring({ frame: f - mot(/^cœur/), fps, config: { damping: 7, stiffness: 200 } });
   return (
     <AbsoluteFill>
-      {PRIERES.map((p, i) => {
-        const s = spring({ frame: f - 2 - i * 4, fps, config: { damping: 10, stiffness: 180 } });
-        const a = -Math.PI + (i / 4) * Math.PI, x = 540 + Math.cos(a) * 360, y = 820 + Math.sin(a) * 360;
-        const wob = Math.sin(f / 7 + i) * 10 * q;
-        return <div key={p} style={{ position: "absolute", left: x - 90, top: y - 90 + wob, width: 180, height: 180, borderRadius: "50%", background: "rgba(42,12,34,0.92)", transform: `scale(${s})`,
-          boxShadow: "0 0 0 4px rgba(255,255,255,0.25)", display: "grid", placeItems: "center", textAlign: "center" }}>
-          <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 36, color: "#fff" }}>{p}</div>
-          <div style={{ position: "absolute", top: -30, right: -10, fontFamily: FONT, fontWeight: 800, fontSize: 70, color: GOLD, transform: `scale(${q}) rotate(${(i - 2) * 10}deg)`, textShadow: "0 0 24px rgba(233,196,106,0.8)" }}>?</div>
-        </div>;
-      })}
-      <div style={{ position: "absolute", left: 0, right: 0, top: 860, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 150, color: "#fff", transform: `scale(${q})`, opacity: q, textShadow: "0 0 50px rgba(233,196,106,0.6)" }}>?</div>
+      <div style={{ position: "absolute", left: 200, right: 200, top: 230, height: 520, borderRadius: 60, background: "rgba(42,12,34,0.92)", boxShadow: "0 0 0 6px #160812, 0 0 0 8px rgba(255,255,255,0.18), 0 40px 100px rgba(0,0,0,0.5)",
+        transform: `translateY(${(1 - c) * 200}px) rotate(${(1 - c) * -8}deg)`, opacity: c, overflow: "hidden" }}>
+        {[0, 1, 2, 3, 4].map((i) => <div key={i} style={{ position: "absolute", left: 60, right: i % 2 ? 140 : 60, top: 90 + i * 80, height: 26, borderRadius: 13, background: "rgba(255,255,255,0.35)" }} />)}
+        <div style={{ position: "absolute", left: 40, right: 40, top: 70 + scan * 400, height: 60, borderRadius: 20, background: "rgba(233,196,106,0.18)", boxShadow: "0 0 30px rgba(233,196,106,0.35)" }} />
+      </div>
+      <svg width={300} height={280} viewBox="0 0 100 92" style={{ position: "absolute", left: 540 - 150, top: 860, filter: "drop-shadow(0 0 24px rgba(233,196,106,0.7))" }}>
+        <path d="M50 86 C10 58 4 36 14 20 C24 4 44 8 50 24 C56 8 76 4 86 20 C96 36 90 58 50 86z" fill="none" stroke={GOLD} strokeWidth={5} strokeLinejoin="round" pathLength={1} strokeDasharray={`${coeur} 1`} />
+      </svg>
+      <div style={{ position: "absolute", left: 540 - 60, top: 950, width: 120, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 110, color: "#fff", transform: `scale(${q})` }}>?</div>
     </AbsoluteFill>
   );
 };
 
-// ---------- 2. Noter une prière d’un geste (accueil) ----------
-const A = "ecrans/accueil";
-const ZQ = zone(A, /^Tu as prié le ʿAsr \?$/), ZOUI = zone(A, /^Oui, priée$/), ZDET = zone(A, /^Détails$/);
-const Noter: React.FC = () => <Phone ecran={A} from={L[1] - 4} to={L[3] + 2} entree="droite" sortie="gauche" focus={[{ at: L[1] + 6, px: 0.5, py: 0.5, s: 1.08 }]}>
-  <Surligne at={mot(/^notes/, 1)} {...ZQ} fin={mot(/^geste/, 1) - 2} />
-  <Surligne at={mot(/^geste/, 1)} {...ZOUI} fin={L[2] + 4} />
-  <Check at={mot(/^geste/, 1) + 4} x={(ZOUI.x - 0.07) * W} y={(ZOUI.y + ZOUI.h / 2) * H} size={52} />
-  <Surligne at={mot(/^précises/, 2)} {...ZDET} />
-  <Pastille at={mot(/^l’heure/, 2)} x={W * 0.25} y={H * 0.265}>À l’heure</Pastille>
-  <Pastille at={mot(/^mosquée/, 2)} x={W * 0.72} y={H * 0.265}>À la mosquée</Pastille>
-  <Pastille at={mot(/^tard/, 2)} x={W * 0.5} y={H * 0.335}>Plus tard</Pastille>
+// ---------- 2. L’onglet Apprendre ----------
+const EA = "ecrans/apprendre-niveaux";
+const ZTI = zone(EA, /^Apprendre par cœur$/), ZSU = englobe(zone(EA, /^2 \/ 5$/), zone(EA, /^du socle sues par cœur$/)), ZREV = zone(EA, /^Réviser 3 invocation/), ZLIST = zone(EA, /^Tes révisions$/);
+const Onglet: React.FC = () => <Phone ecran={EA} from={L[1] - 6} to={L[3] - 2} entree="droite" sortie="gauche" focus={[{ at: L[1] + 10, px: 0.5, py: 0.4, s: 1.05 }]}>
+  <Surligne at={mot(/^Apprendre/, 1)} {...ZTI} fin={mot(/^retenir/, 1) - 2} />
+  <Surligne at={mot(/^retenir/, 1)} {...ZSU} fin={L[2] - 2} />
+  <Surligne at={mot(/^révises/, 2)} {...ZREV} fin={mot(/^reviennent/, 2) - 2} />
+  <Surligne at={mot(/^reviennent/, 2)} {...ZLIST} />
+  <Pastille at={mot(/^une/, 1) + 4} x={W * 0.5} y={H * 0.404} gold>Une par une</Pastille>
 </Phone>;
 
-// ---------- 3. Le suivi : la semaine prière par prière, puis le moment fragile ----------
-const S = "ecrans/suivi";
-const ZPR = zone(S, /^Tes prières$/);
-const LIGNES = PRIERES.map((p) => { const z = zone(S, new RegExp(`^${p}$`)); return { x: 0.06, y: z.y - 0.012, w: 0.88, h: z.h + 0.024 }; });
-const ZFRAG = union(zone(S, /^Matin : 2 sur 6/), zone(S, /^C’est ton moment le plus fragile/));
-const Semaine: React.FC = () => {
-  const pp = mot(/^prière$/, 3), fin = L[4] - 2;
-  return <Phone ecran={S} from={L[3] - 4} to={L[5] + 2} entree="bas" sortie="traverse" focus={[{ at: L[3] + 6, px: 0.5, py: 0.42, s: 1.08, fin: L[4] - 6 }, { at: L[4] + 2, px: 0.5, py: 0.42, s: 1.1 }]}>
-    <Surligne at={mot(/^semaine/, 3)} {...ZPR} fin={pp - 2} />
-    {LIGNES.map((z, i) => <Surligne key={i} at={pp + i * 5} {...z} fin={i === 4 ? fin : pp + i * 5 + 6} />)}
-    <Surligne at={mot(/^fragile/, 4) - 4} {...ZFRAG} />
-    <Pastille at={mot(/^juger/, 4)} x={W * 0.5} y={H * 0.66} gold>Sans jugement</Pastille>
-  </Phone>;
+// ---------- 3 à 5. Le masquage progressif : un mot sur trois, deux sur trois, tout ----------
+// Le bloc arabe : de la première à la dernière ligne arabe du manifeste, sur la largeur de la carte de traduction.
+const blocArabe = (e: string, premier: RegExp, dernier: RegExp, carte: RegExp) => {
+  const a = zone(e, premier), b = zone(e, dernier), c = zone(e, carte);
+  return { x: c.x, w: c.w, y: a.y, h: b.y + b.h - a.y };
 };
+const E1 = "ecrans/revision-1", E2 = "ecrans/revision-2", E3 = "ecrans/revision-3";
+const Z1A = blocArabe(E1, /^حَسْبِيَ$/, /^الْعَظِيمِ$/, /^Allah me suffit/), Z1I = zone(E1, /^Récite-la en complétant/), Z1N = zone(E1, /^1 sur 3$/);
+const Z2A = blocArabe(E2, /^اللَّهُمَّ$/, /^طَيِّبًا،$/, /^Ô Allah, je Te demande une science/), Z2N = zone(E2, /^2 sur 3$/);
+const Z3I = zone(E3, /^Récite-la de mémoire/), Z3R = zone(E3, /^Révéler le texte$/), Z3N = zone(E3, /^3 sur 3$/);
+const Rev1: React.FC = () => <Phone ecran={E1} from={L[3] - 4} to={L[4] - 2} entree="zoom" sortie="recul">
+  <Surligne at={L[3] + 4} {...Z1N} fin={mot(/^caché/, 3) - 2} />
+  <Surligne at={mot(/^caché/, 3)} {...Z1A} fin={mot(/^complètes/, 3) - 2} />
+  <Surligne at={mot(/^complètes/, 3)} {...Z1I} />
+  <Pastille at={mot(/^mot/, 3)} x={W * 0.5} y={H * 0.88} gold>1 mot sur 3</Pastille>
+</Phone>;
+const Rev2: React.FC = () => <Phone ecran={E2} from={L[4] - 4} to={L[5] - 2} entree="bascule" sortie="gauche">
+  <Surligne at={L[4] + 2} {...Z2N} />
+  <Surligne at={mot(/^deux/, 4)} {...Z2A} />
+  <Pastille at={mot(/^deux/, 4) + 2} x={W * 0.5} y={H * 0.83} gold>2 mots sur 3</Pastille>
+</Phone>;
+const Rev3: React.FC = () => <Phone ecran={E3} from={L[5] - 4} to={L[6] - 2} entree="droite" sortie="traverse">
+  <Surligne at={L[5] + 2} {...Z3N} fin={mot(/^récites/, 5) - 2} />
+  <Surligne at={mot(/^récites/, 5)} {...Z3I} fin={mot(/^vérifies/, 5) - 2} />
+  <Surligne at={mot(/^vérifies/, 5)} {...Z3R} />
+</Phone>;
 
-// ---------- 4. La régularité : les jours tenus s’allument un à un ----------
-const R = "ecrans/suivi2";
-const CASES: Z[] = [];
-for (let n = 0; n < 60; n++) { try { const z = zone(R, /^\d{1,2}$/, n); if (z.y > 0.42 && z.y < 0.7) CASES.push(z); } catch { break; } }
-const Z24 = union(zone(R, /^24$/, 1), zone(R, /^jours tenus$/));
-const Regularite: React.FC = () => {
-  const f = useCurrentFrame();
-  const a = mot(/^régularité/, 5);
-  return <Phone ecran={R} from={L[5] - 4} to={L[6] + 2} entree="zoom" sortie="recul" focus={[{ at: L[5] + 4, px: 0.5, py: 0.45, s: 1.08 }]}>
-    {CASES.map((z, i) => {
-      const k = interpolate(f, [a + i * 1.2, a + i * 1.2 + 6, a + i * 1.2 + 16], [0, 1, 0.25], C);
-      return <div key={i} style={{ position: "absolute", left: z.x * W - 3, top: z.y * H - 3, width: z.w * W + 6, height: z.h * H + 6, borderRadius: 12, opacity: k, boxShadow: `0 0 0 3px ${GOLD}, 0 0 18px rgba(233,196,106,0.8)` }} />;
-    })}
-    <Surligne at={mot(/^24/, 5)} {...Z24} />
-    <Pastille at={mot(/^30/, 5)} x={W * 0.5} y={H * 0.2} gold>24 jours tenus sur 30</Pastille>
-  </Phone>;
-};
-
-// ---------- 5. Pas de classement : le podium s’efface, il reste une étoile ----------
-const EntreToiEtAllah: React.FC = () => {
+// ---------- 6. La révision espacée : sue, elle revient plus tard ; sinon, demain ----------
+const Espacee: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const pod = spring({ frame: f - L[6], fps, config: { damping: 12, stiffness: 160 } });
-  const barre = interpolate(f, [mot(/^classement/, 6), mot(/^classement/, 6) + 8], [0, 1], C);
-  const score = spring({ frame: f - mot(/^score/, 6), fps, config: { damping: 10, stiffness: 180 } });
-  const barre2 = interpolate(f, [mot(/^public/, 6), mot(/^public/, 6) + 8], [0, 1], C);
-  const toi = spring({ frame: f - mot(/^toi/, 6), fps, config: { damping: 11, stiffness: 140 } });
-  const part = 1 - toi;
-  const marches: [number, number, string][] = [[300, 240, "2"], [540, 340, "1"], [780, 170, "3"]];
+  const a = spring({ frame: f - L[6], fps, config: { damping: 12, stiffness: 160 } });
+  const loin = interpolate(f, [mot(/^plus/, 6), mot(/^tard/, 6) + 14], [0, 1], { ...C, easing: Easing.out(Easing.cubic) });
+  const b = spring({ frame: f - mot(/^Sinon/, 6), fps, config: { damping: 12, stiffness: 160 } });
+  const pres = interpolate(f, [mot(/^revient/, 6), mot(/^demain/, 6) + 10], [0, 1], { ...C, easing: Easing.out(Easing.cubic) });
+  const ligne = (y: number, s: number, bouton: string, or: boolean, p: number, dest: string) => (
+    <div style={{ position: "absolute", left: 70, right: 70, top: y, height: 220, opacity: s, transform: `translateX(${(1 - s) * -200}px)` }}>
+      <div style={{ position: "absolute", left: 0, top: 60, padding: "22px 34px", borderRadius: 26, background: or ? GOLD : "rgba(42,12,34,0.92)", boxShadow: or ? "0 0 40px rgba(233,196,106,0.6)" : `0 0 0 3px ${GOLD}`,
+        color: or ? PLUM : "#fff", fontFamily: FONT, fontWeight: 800, fontSize: 48 }}>{bouton}</div>
+      <div style={{ position: "absolute", left: 380, right: 0, top: 108, height: 6, borderRadius: 3, background: "rgba(255,255,255,0.2)" }} />
+      <div style={{ position: "absolute", left: 380, width: 520 * p, top: 108, height: 6, borderRadius: 3, background: GOLD }} />
+      <div style={{ position: "absolute", left: 380 + 520 * p - 30, top: 80, transform: `scale(${p > 0 ? 1 : 0})` }}><StarP size={60} glow={20} /></div>
+      <div style={{ position: "absolute", right: 0, top: 150, fontFamily: FONT, fontWeight: 800, fontSize: 46, color: or ? GOLD : "#fff", opacity: p }}>{dest}</div>
+    </div>
+  );
   return (
     <AbsoluteFill>
-      <div style={{ opacity: part }}>
-        {marches.map(([x, h, n], i) => (
-          <div key={n} style={{ position: "absolute", left: x - 110, top: 760 - h * pod, width: 220, height: h * pod, background: "rgba(42,12,34,0.92)", boxShadow: "0 0 0 3px rgba(255,255,255,0.3)",
-            borderRadius: "18px 18px 0 0", display: "grid", placeItems: "start center", paddingTop: 20, fontFamily: FONT, fontWeight: 800, fontSize: 80, color: "rgba(255,255,255,0.6)" }}>{n}</div>
-        ))}
-        <div style={{ position: "absolute", left: 140, top: 560, width: 800 * barre, height: 16, borderRadius: 99, background: GOLD, transform: "rotate(-14deg)", transformOrigin: "left", boxShadow: "0 0 30px rgba(233,196,106,0.9)" }} />
-        <div style={{ position: "absolute", left: 0, right: 0, top: 860, textAlign: "center", transform: `scale(${score})`, opacity: score }}>
-          <span style={{ position: "relative", display: "inline-block", padding: "20px 50px", borderRadius: 24, background: "rgba(42,12,34,0.92)", boxShadow: "0 0 0 3px rgba(255,255,255,0.3)", fontFamily: FONT, fontWeight: 800, fontSize: 80, color: "rgba(255,255,255,0.7)" }}>
-            9 850 pts
-            <span style={{ position: "absolute", left: -20, top: "50%", width: `calc(${barre2 * 100}% + 40px)`, height: 14, borderRadius: 99, background: GOLD, boxShadow: "0 0 30px rgba(233,196,106,0.9)" }} />
-          </span>
-        </div>
-      </div>
-      <div style={{ position: "absolute", left: 540 - 130, top: 520, transform: `scale(${toi})`, opacity: toi }}><StarP size={260} glow={60} /></div>
-      {[0, 1, 2].map((i) => { const k = ((f - mot(/^toi/, 6)) / 40 + i / 3) % 1; return toi > 0.1 ? <div key={i} style={{ position: "absolute", left: 540 - 300 * k, top: 650 - 300 * k, width: 600 * k, height: 600 * k, borderRadius: "50%", border: `3px solid ${GOLD}`, opacity: (1 - k) * 0.5 * toi }} /> : null; })}
+      {ligne(380, a, "Je l’ai sue", true, loin, "plus tard")}
+      {ligne(720, b, "À revoir", false, pres * 0.3, "demain")}
     </AbsoluteFill>
   );
 };
+
+// ---------- 7. La bibliothèque ----------
+const EB = "ecrans/biblio";
+const ZN = zone(EB, /^304 invocations$/), ZTH = englobe(zone(EB, /^Du programme 21/), zone(EB, /^Pardon et repentir 8/));
+const Biblio: React.FC = () => <Phone ecran={EB} from={L[7] - 4} to={LIEN - 2} entree="iris" sortie="recul" focus={[{ at: L[7] + 8, px: 0.5, py: 0.3, s: 1.06 }]}>
+  <Surligne at={mot(/^300/, 7)} {...ZN} fin={mot(/^bibliothèque/, 7) - 2} />
+  <Surligne at={mot(/^bibliothèque/, 7)} {...ZTH} />
+  <Pastille at={mot(/^sourcées/, 7)} x={W * 0.5} y={H * 0.115} gold>Toutes sourcées</Pastille>
+</Phone>;
+
+const SFX: Sfx[] = [
+  ["whoosh", 2, 0.5], ["tap", 14, 0.4], ["ding", mot(/^cœur/) + 4, 0.5],
+  ["whoosh", L[1] - 8, 0.6], ["tick", mot(/^Apprendre/, 1) + 4, 0.4], ["tick", mot(/^retenir/, 1) + 4, 0.4], ["pop", mot(/^une/, 1) + 10, 0.4],
+  ["tick", mot(/^révises/, 2) + 4, 0.4], ["tick", mot(/^reviennent/, 2) + 8, 0.4],
+  ["whoosh", L[3] - 6, 0.6], ["pop", mot(/^mot/, 3) + 6, 0.4], ["tick", mot(/^complètes/, 3) + 6, 0.4],
+  ["whoosh", L[4] - 6, 0.5], ["pop", mot(/^deux/, 4) + 8, 0.4],
+  ["whoosh", L[5] - 6, 0.6], ["tick", mot(/^récites/, 5) + 6, 0.4], ["tap", mot(/^vérifies/, 5) + 8, 0.4],
+  ["whoosh", L[6] - 6, 0.5], ["ding", mot(/^tard/, 6) + 8, 0.4], ["pop", mot(/^Sinon/, 6) + 2, 0.4],
+  ["whoosh", L[7] - 6, 0.6], ["tick", mot(/^300/, 7) + 10, 0.4], ["pop", mot(/^sourcées/, 7) + 6, 0.4],
+  ["impact", LIEN, 0.6], ["shimmer", LIEN + 2, 0.5],
+];
 
 const Video: React.FC = () => (
   <AbsoluteFill style={{ background: "#0A0208" }}>
-    <Fond T={T} k={[0, L[1] - 8, L[1] + 10, L[6] - 6, L[6] + 14, T.DUREE]} />
-    <Scene from={0} to={L[1] - 2} zin={0}><Doute /></Scene>
-    <Noter />
-    <Semaine />
-    <Regularite />
-    <Scene from={L[6] - 4} to={L[7] - 2}><EntreToiEtAllah /></Scene>
-    <Scene from={L[7] - 4} to={T.DUREE + 10} zin={0}><Logo at={L[7]} phrase="Avance à ton rythme" /></Scene>
-    <Flash at={L[7]} />
+    <Fond T={T} k={[0, L[1] - 8, L[1] + 10, L[7] - 6, L[8] - 10, T.DUREE]} />
+    <Scene from={0} to={L[1] - 4} zin={0}><Accroche /></Scene>
+    <Onglet />
+    <Rev1 />
+    <Rev2 />
+    <Rev3 />
+    <Scene from={L[6] - 4} to={L[7] - 2}><Espacee /></Scene>
+    <Biblio />
+    <Scene from={LIEN - 4} to={T.DUREE + 10} zin={0}><Logo at={LIEN} phrase="Apprendre par cœur" /></Scene>
+    <Flash at={L[1]} />
     <Voile />
-    <SousTitres T={T} or={/^(prières?|geste|l’heure|mosquée|tard|semaine|fragile|juger|régularité|24|30|classement|score|toi|Allah|Sabab|rythme)/i} grandsDes={7} />
+    <SousTitres T={T} or={/^(cœur|Apprendre|retenir|révises|caché|mémoire|deux|tout|vérifies|tard|demain|300|sourcées|Sabab)/i} grandsDes={99} />
     <Son voix="fonction.mp3" sfx={SFX} />
   </AbsoluteFill>
 );
-const SFX: Sfx[] = [
-  ...PRIERES.map((_, i) => ["pop", 2 + i * 4, 0.4] as Sfx), ["impact", mot(/^où/), 0.5],
-  ["whoosh", L[1] - 4, 0.7], ["tick", mot(/^notes/, 1), 0.5], ["ding", mot(/^geste/, 1) + 4, 0.6],
-  ["pop", mot(/^l’heure/, 2), 0.5], ["pop", mot(/^mosquée/, 2), 0.5], ["pop", mot(/^tard/, 2), 0.5], ["tick", mot(/^précises/, 2), 0.5],
-  ["whoosh", L[3] - 4, 0.7], ["tick", mot(/^semaine/, 3), 0.4], ...[0, 1, 2, 3, 4].map((i) => ["tick", mot(/^prière$/, 3) + i * 5, 0.35] as Sfx),
-  ["ding", mot(/^fragile/, 4) - 4, 0.5], ["pop", mot(/^juger/, 4), 0.5],
-  ["whoosh", L[5] - 4, 0.7], ["ding", L[5] - 3, 0.4], ["shimmer", mot(/^30/, 5) + 14, 0.3],
-  ["whoosh", L[6] - 4, 0.6], ["impact", mot(/^classement/, 6), 0.5], ["impact", mot(/^public/, 6), 0.5], ["shimmer", mot(/^toi/, 6), 0.6],
-  ["impact", L[7], 0.7], ["shimmer", L[7] + 2, 0.6],
-];
 export const video = { id: "fonction", component: Video, duree: T.DUREE };

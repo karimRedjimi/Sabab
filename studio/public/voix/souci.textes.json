@@ -1,18 +1,23 @@
 {
  "dua": {
-  "ref": "programme:fadl",
-  "kind": "dua",
-  "title": "Demander de la grâce d’Allah",
-  "moment": "En sortant de la mosquée, et dans la journée",
-  "ar": "اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ",
-  "ph": "Allâhumma innî as’aluka min fadlik.",
-  "fr": "Ô Allah, je Te demande de Ta grâce.",
-  "grade": "sahih",
-  "src": "Muslim (n° 713)",
-  "note": "Le Prophète ﷺ enseignait de la dire en sortant de la mosquée : on y entre en demandant la miséricorde, on en sort en demandant la grâce, c’est-à-dire les biens de ce monde."
+  "ref": "citadelle:hm-162",
+  "id": "hm-162",
+  "ar": "«أَسْأَلُ اللهَ الْعَظِيمَ رَبَّ الْعَرْشِ الْعَظِيمِ أَنْ يَشْفِيَكَ» (سَبْعَ مَرَّاتٍ).",
+  "ph": "As'alu Llāha al-'Aẓīma Rabba al-'arshi al-'aẓīmi an yashfiyak.",
+  "fr": "Je demande à Allah l'Immense, Seigneur du Trône immense, de te guérir (7 fois).",
+  "src": "At-Tirmidhî et Abû Dâwûd",
+  "chapitre": "Invocation en faveur du malade lors de sa visite"
+ },
+ "parcours": {
+  "ref": "parcours:epreuve.title",
+  "texte": "Traverser une épreuve"
+ },
+ "intro": {
+  "ref": "parcours:epreuve.intro",
+  "texte": "Pour un moment difficile : perte d’emploi, maladie d’un proche, échec."
  },
  "geste": {
-  "ref": "parcours:rizq.actions.1",
-  "texte": "Envoie une candidature, une offre ou une relance que tu repoussais."
+  "ref": "parcours:epreuve.actions.1",
+  "texte": "Parle à une personne de confiance."
  }
 }

@@ -1,7 +1,7 @@
-// « Commente ton souci » : chercher un travail depuis des mois. Invocation : « Demander de la grâce d’Allah » (Muslim n° 713).
-// Textes religieux : public/voix/souci.textes.json (copiés par programme depuis content/programme.ts · fadl et PARCOURS.rizq).
+// « Commente ton souci » : un proche malade. Invocation pour le malade qu’on visite (Hisn al-Muslim hm-162 ; At-Tirmidhî et Abû Dâwûd).
+// Textes religieux : public/voix/souci.textes.json (copiés par programme depuis content/citadelle.json · hm-162 et content/programme.ts · PARCOURS.epreuve).
 import React from "react";
-import { AbsoluteFill, interpolate, random, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
+import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import { C, AR, FONT, GOLD, PLUM, W, H, minutage, zone, SousTitres, Voile, Fond, StarP, Scene, Flash, Phone, Pastille, Surligne, Logo, Son, type Sfx } from "../moteur";
 import voix from "../../public/voix/souci.json";
 import tx from "../../public/voix/souci.textes.json";
@@ -9,156 +9,151 @@ import tx from "../../public/voix/souci.textes.json";
 const T = minutage(voix);
 const { L, mot } = T;
 const D = tx.dua;
-const GESTE = tx.geste.texte;
+const LIEN = mot(/^lien/, 8);
+const SEPT = mot(/^\(7/, 3);
 
-// ---------- 1. L’accroche : le souci, tel qu’on le lit souvent ----------
+// ---------- 1. L’accroche : le souci, écrit comme une carte ----------
 const Souci: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const s = spring({ frame: f - 2, fps, config: { damping: 11, stiffness: 170 } });
-  const rep = spring({ frame: f - 14, fps, config: { damping: 10, stiffness: 200 } });
+  const c = spring({ frame: f - 2, fps, config: { damping: 11, stiffness: 150 } });
+  const txt = "« Un proche est malade, et je me sens impuissant. »";
+  const n = Math.round(interpolate(f, [6, L[1] - 14], [0, txt.length], C));
   return (
     <AbsoluteFill>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 300, textAlign: "center", transform: `scale(${rep})` }}>
-        <span style={{ display: "inline-block", padding: "14px 34px", borderRadius: 999, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 42 }}>Un souci qu’on lit souvent</span>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 260, textAlign: "center", opacity: c }}>
+        <span style={{ display: "inline-block", padding: "14px 36px", borderRadius: 999, background: "rgba(42,12,34,0.92)", boxShadow: `0 0 0 3px ${GOLD}`, color: GOLD, fontFamily: FONT, fontWeight: 800, fontSize: 42, letterSpacing: "0.08em" }}>UN SOUCI FRÉQUENT</span>
       </div>
-      <div style={{ position: "absolute", left: 80, right: 80, top: 440, padding: "40px 44px", borderRadius: 40, background: "#fff", boxShadow: "0 30px 90px rgba(0,0,0,0.5)",
-        transform: `translateY(${(1 - s) * 140}px) rotate(${(1 - s) * -4}deg)`, opacity: s, display: "flex", gap: 30, alignItems: "center" }}>
-        <div style={{ flex: "none", width: 96, height: 96, borderRadius: "50%", background: "#E8DDE6", display: "grid", placeItems: "center" }}>
-          <svg width={60} height={60} viewBox="0 0 24 24" fill="#B79CB0"><circle cx="12" cy="8" r="4.2" /><path d="M3.5 21c.8-4.4 4.2-7 8.5-7s7.7 2.6 8.5 7z" /></svg>
-        </div>
-        <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 52, lineHeight: 1.25, color: PLUM }}>Je cherche du travail depuis des mois, et je n’ai que des refus.</div>
+      <div style={{ position: "absolute", left: 90, right: 90, top: 420, padding: "60px 56px", borderRadius: 48, background: "#fff", boxShadow: "0 40px 100px rgba(0,0,0,0.5)",
+        transform: `translateY(${(1 - c) * 300}px) rotate(${(1 - c) * 6 - 1.5}deg)`, opacity: c, minHeight: 360 }}>
+        <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 70, lineHeight: 1.2, color: PLUM }}>{txt.slice(0, n)}<span style={{ opacity: f % 20 < 10 ? 1 : 0, color: GOLD }}>|</span></div>
       </div>
     </AbsoluteFill>
   );
 };
 
-// ---------- 2. Un refus ne dit rien de ta valeur : les tampons s’effacent, l’étoile reste ----------
-const Refus: React.FC = () => {
+// ---------- 2. Ta présence compte : deux lumières côte à côte ----------
+const Presence: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const v = spring({ frame: f - mot(/^valeur/, 1), fps, config: { damping: 11, stiffness: 140 } });
+  const a = spring({ frame: f - L[1], fps, config: { damping: 14, stiffness: 110 } });
+  const b = spring({ frame: f - mot(/^présence/, 1), fps, config: { damping: 12, stiffness: 120 } });
+  const pulse = 1 + 0.06 * Math.sin(f / 7);
   return (
     <AbsoluteFill>
-      {[0, 1, 2, 3].map((i) => {
-        const s = spring({ frame: f - L[1] - i * 6, fps, config: { damping: 9, stiffness: 220 } });
-        return <div key={i} style={{ position: "absolute", left: 150 + (i % 2) * 380, top: 300 + Math.floor(i / 2) * 250, padding: "16px 30px", border: "6px solid rgba(255,255,255,0.55)", borderRadius: 18,
-          fontFamily: FONT, fontWeight: 800, fontSize: 56, letterSpacing: "0.1em", color: "rgba(255,255,255,0.6)", transform: `rotate(${(random("r" + i) - 0.5) * 24}deg) scale(${1.6 - 0.6 * s})`,
-          opacity: s * (1 - v) }}>REFUS</div>;
-      })}
-      <div style={{ position: "absolute", left: 540 - 130, top: 470, transform: `scale(${v})`, opacity: v }}><StarP size={260} glow={60} /></div>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 820, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 70, color: "#fff", opacity: v }}>ta valeur <span style={{ color: GOLD }}>reste</span></div>
+      <div style={{ position: "absolute", left: 300 - 110, top: 560, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle,rgba(255,255,255,0.55),rgba(255,255,255,0.08) 70%)", transform: `scale(${a})`, opacity: 0.8 }} />
+      <div style={{ position: "absolute", left: 780 - 130, top: 540, width: 260, height: 260, borderRadius: "50%", background: "radial-gradient(circle,#FFF1C4,#E9C46A 55%,rgba(233,196,106,0) 72%)", transform: `scale(${b * pulse})` }} />
+      <div style={{ position: "absolute", left: 300, top: 670, width: 480 * b, height: 6, borderRadius: 3, background: "linear-gradient(90deg,rgba(255,255,255,0.4),#E9C46A)" }} />
+      <div style={{ position: "absolute", left: 0, right: 0, top: 950, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 76, color: "#fff", opacity: b }}>ta <span style={{ color: GOLD }}>présence</span> compte</div>
     </AbsoluteFill>
   );
 };
 
-// ---------- 3. Une du’â très courte, puis l’invocation ----------
-const Courte: React.FC = () => {
+// ---------- 3. La visite : la porte qui s’ouvre, des pas ----------
+const Visite: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const s = spring({ frame: f - mot(/^courte/, 2), fps, config: { damping: 9, stiffness: 200 } });
+  const s = spring({ frame: f - L[2], fps, config: { damping: 13, stiffness: 140 } });
+  const pas = interpolate(f, [mot(/^rends/, 2), mot(/^visite/, 2) + 20], [0, 4], C);
+  const d = spring({ frame: f - mot(/^du’â/, 2), fps, config: { damping: 8, stiffness: 200 } });
   return (
     <AbsoluteFill>
-      <div style={{ position: "absolute", left: 340, right: 340, top: 520, height: 260, borderRadius: 40, background: "rgba(42,12,34,0.92)", boxShadow: `0 0 0 4px ${GOLD}, 0 0 60px rgba(233,196,106,0.5)`,
-        transform: `scale(${s})`, display: "grid", placeItems: "center", fontFamily: FONT, fontWeight: 800, fontSize: 60, color: GOLD }}>une phrase</div>
-    </AbsoluteFill>
-  );
-};
-const LaDua: React.FC = () => {
-  const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const a = spring({ frame: f - L[3], fps, config: { damping: 13, stiffness: 140 } });
-  return (
-    <AbsoluteFill>
-      <div style={{ position: "absolute", left: 40, right: 40, top: 300, textAlign: "center", direction: "rtl", fontFamily: AR, fontSize: 88, lineHeight: 1.5, color: GOLD, opacity: a, transform: `scale(${0.85 + 0.15 * a})`,
-        textShadow: "0 0 50px rgba(233,196,106,0.7)" }}>{D.ar}</div>
-      <div style={{ position: "absolute", left: 80, right: 80, top: 560, textAlign: "center", fontFamily: FONT, fontStyle: "italic", fontSize: 46, color: "rgba(255,255,255,0.85)", opacity: interpolate(f, [L[3] + 6, L[3] + 18], [0, 1], C) }}>{D.ph}</div>
-      <div style={{ position: "absolute", left: 100, right: 100, top: 700, padding: "36px 40px", borderRadius: 36, background: "rgba(42,12,34,0.9)", boxShadow: "0 0 0 3px rgba(233,196,106,0.6)",
-        textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 64, lineHeight: 1.3, color: "#fff", opacity: interpolate(f, [L[3] + 10, L[3] + 22], [0, 1], C) }}>{D.fr}</div>
+      <svg width={300} height={400} viewBox="0 0 100 130" style={{ position: "absolute", left: 540 - 150, top: 330, transform: `scale(${s})`, opacity: s }}>
+        <rect x={12} y={10} width={76} height={120} rx={6} fill="#FFF1C4" opacity={0.9} style={{ filter: "drop-shadow(0 0 20px rgba(233,196,106,0.8))" }} />
+        <rect x={12} y={10} width={76} height={120} rx={6} fill="#3A1236" stroke={GOLD} strokeWidth={3} transform={`translate(12 0) scale(${1 - 0.7 * Math.min(1, pas / 3)} 1) translate(-12 0)`} />
+      </svg>
+      {[0, 1, 2, 3].map((i) => <div key={i} style={{ position: "absolute", left: (i % 2 ? 570 : 470), top: 1100 - i * 90, width: 44, height: 70, borderRadius: "50%", background: GOLD, opacity: Math.max(0, Math.min(1, pas - i)) * 0.8 }} />)}
+      <div style={{ position: "absolute", left: 640, top: 820, padding: "18px 40px", borderRadius: 999, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 60, transform: `scale(${d}) rotate(${(1 - d) * 20}deg)` }}>une du’â</div>
     </AbsoluteFill>
   );
 };
 
-// ---------- 4. En sortant de la mosquée, et la source : la fiche dans l’appli ----------
-const E = "ecrans/fiche-fadl";
-const ZTITRE = zone(E, /^Demander de la grâce d’Allah$/, 1), ZSRC = zone(E, /^Source : Muslim \(n° 713\)$/);
-const Fiche: React.FC = () => <Phone ecran={E} from={L[4] - 4} to={L[6] + 2} entree="bas" sortie="gauche" focus={[{ at: L[4] + 6, px: 0.5, py: 0.3, s: 1.08 }]}>
-  <Surligne at={mot(/^Prophète/, 4)} {...ZTITRE} fin={mot(/^Muslim/, 5) - 2} />
-  <Pastille at={mot(/^mosquée/, 4)} x={W * 0.5} y={H * 0.6} gold>En sortant de la mosquée</Pastille>
-  <Surligne at={mot(/^Muslim/, 5)} {...ZSRC} />
+// ---------- 4. L’invocation : l’arabe, la phonétique, le compteur jusqu’à 7 ----------
+const Invocation: React.FC = () => {
+  const f = useCurrentFrame(), { fps } = useVideoConfig();
+  const a = spring({ frame: f - L[3], fps, config: { damping: 14, stiffness: 130 } });
+  const ph = interpolate(f, [L[3] + 14, L[3] + 30], [0, 1], C);
+  const n = Math.max(1, Math.min(7, Math.floor(interpolate(f, [SEPT - 6, SEPT + 24], [1, 7.99], C))));
+  const c = spring({ frame: f - SEPT + 6, fps, config: { damping: 9, stiffness: 200 } });
+  return (
+    <AbsoluteFill>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 200, textAlign: "center" }}>
+        <span style={{ display: "inline-block", padding: "10px 30px", borderRadius: 999, border: `3px solid ${GOLD}`, color: GOLD, fontFamily: FONT, fontWeight: 700, fontSize: 34, letterSpacing: "0.08em", opacity: a }}>EN VISITANT LE MALADE</span>
+      </div>
+      <div dir="rtl" lang="ar" style={{ position: "absolute", left: 60, right: 60, top: 320, textAlign: "center", unicodeBidi: "plaintext", fontFamily: AR, fontSize: 76, lineHeight: 1.75, color: "#fff", opacity: a,
+        transform: `translateY(${(1 - a) * 40}px)`, textShadow: "0 0 30px rgba(233,196,106,0.5)" }}>{D.ar}</div>
+      <div style={{ position: "absolute", left: 90, right: 90, top: 780, textAlign: "center", fontFamily: FONT, fontStyle: "italic", fontSize: 42, lineHeight: 1.45, color: "rgba(255,255,255,0.85)", opacity: ph }}>{D.ph}</div>
+      <div style={{ position: "absolute", left: 540 - 100, top: 1000, width: 200, height: 200, borderRadius: "50%", background: GOLD, display: "grid", placeItems: "center", boxShadow: "0 0 60px rgba(233,196,106,0.7)",
+        transform: `scale(${c})`, fontFamily: FONT, fontWeight: 800, fontSize: 100, color: PLUM }}>×{n}</div>
+    </AbsoluteFill>
+  );
+};
+
+// ---------- 5. La source, sur la fiche de la bibliothèque ----------
+const EF = "ecrans/fiche-malade";
+const ZST = zone(EF, /^Invocation en faveur du malade lors de sa visite$/, 1), ZSRC = zone(EF, /^Source : At-Tirmidhî et Abû Dâwûd$/);
+const Fiche: React.FC = () => <Phone ecran={EF} from={L[4] - 4} to={L[5] - 2} entree="bas" sortie="droite" focus={[{ at: L[4] + 6, px: 0.5, py: 0.62, s: 1.08 }]}>
+  <Surligne at={L[4] + 4} {...ZST} fin={mot(/^At-Tirmidhî/, 4) - 2} />
+  <Surligne at={mot(/^At-Tirmidhî/, 4)} {...ZSRC} />
+  <Pastille at={mot(/^rapporté/, 4)} x={W * 0.5} y={H * 0.29} gold>Hisn al-Muslim</Pastille>
 </Phone>;
 
-// ---------- 5. Tu demandes, et tu continues : les candidatures partent, les portes attendent ----------
-const Candidatures: React.FC = () => {
+// ---------- 6. Tu demandes, tu confies : la demande devient une étoile qui monte ----------
+const Confier: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const porte = spring({ frame: f - mot(/^porte/, 6), fps, config: { damping: 12, stiffness: 140 } });
+  const d = spring({ frame: f - mot(/^demandes/, 5), fps, config: { damping: 12, stiffness: 160 } });
+  const up = interpolate(f, [mot(/^confies/, 5), L[6] - 4], [0, 1], { ...C, easing: Easing.out(Easing.cubic) });
   return (
     <AbsoluteFill>
-      {[0, 1, 2, 3, 4].map((i) => {
-        const t = interpolate(f, [mot(/^candidatures/, 6) - 10 + i * 7, mot(/^candidatures/, 6) + 30 + i * 7], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) });
-        const x = 540 + (i - 2) * 190 * t, y = 980 - 520 * t;
-        return <svg key={i} width={130} height={100} viewBox="0 0 26 20" style={{ position: "absolute", left: x - 65, top: y - 50, opacity: t > 0 && t < 1 ? 1 : t >= 1 ? 0.35 : 0, transform: `rotate(${(i - 2) * 8 * t}deg)` }}>
-          <rect x={1} y={1} width={24} height={18} rx={3} fill="#fff" /><path d="M1 3l12 9 12-9" fill="none" stroke={PLUM} strokeWidth={1.6} />
-        </svg>;
-      })}
-      {[-1, 0, 1].map((k) => (
-        <div key={k} style={{ position: "absolute", left: 540 + k * 260 - 80, top: 260, width: 160, height: 240, borderRadius: "80px 80px 12px 12px", border: `6px solid ${GOLD}`,
-          background: k === 0 ? `rgba(233,196,106,${0.5 * porte})` : "rgba(42,12,34,0.6)", boxShadow: k === 0 ? `0 0 ${70 * porte}px rgba(233,196,106,0.9)` : "none", opacity: 0.5 + 0.5 * porte }} />
-      ))}
-      <div style={{ position: "absolute", left: 0, right: 0, top: 1110, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 62, color: "#fff", opacity: porte }}>d’où viendra la porte ? <span style={{ color: GOLD }}>Allah sait.</span></div>
+      <div style={{ position: "absolute", left: 540 - 60, top: 980 - 560 * up, transform: `scale(${d}) rotate(${up * 180}deg)` }}><StarP size={120} glow={20 + 40 * up} /></div>
+      <div style={{ position: "absolute", left: 535, top: 1100 - 560 * up, width: 10, height: 560 * up, borderRadius: 99, background: "linear-gradient(180deg,#FFF1C4,rgba(233,196,106,0))", opacity: 0.6 }} />
+      <div style={{ position: "absolute", left: 0, right: 0, top: 1150, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 64, color: "#fff", opacity: d }}>tu demandes, <span style={{ color: GOLD, opacity: up > 0 ? 1 : 0 }}>tu confies</span></div>
     </AbsoluteFill>
   );
 };
 
-// ---------- 6. Dans Sabab : le besoin sur l’accueil ----------
-const A = "ecrans/emploi-accueil";
-const ZBESOIN = zone(A, /^Trouver un travail$/), ZCONT = zone(A, /^Continuer · Le matin$/);
-const Besoin: React.FC = () => <Phone ecran={A} from={L[7] - 4} to={L[8] + 2} entree="droite" sortie="recul" focus={[{ at: L[7] + 6, px: 0.5, py: 0.45, s: 1.08 }]}>
-  <Surligne at={mot(/^besoin/, 7)} {...ZBESOIN} fin={mot(/^invocation/, 7) - 2} />
+// ---------- 7. Le parcours « Traverser une épreuve » ----------
+const EP = "ecrans/epreuve-parcours";
+const ZPT = zone(EP, new RegExp("^" + tx.parcours.texte + "$")), ZINTRO = zone(EP, /^Pour un moment difficile/);
+const Parcours: React.FC = () => <Phone ecran={EP} from={L[6] - 4} to={L[7] - 2} entree="droite" sortie="gauche" focus={[{ at: L[6] + 6, px: 0.5, py: 0.33, s: 1.06 }]}>
+  <Surligne at={mot(/^parcours/, 6)} {...ZPT} fin={mot(/^épreuve/, 6) + 6} />
+  <Surligne at={mot(/^épreuve/, 6) + 8} {...ZINTRO} />
+</Phone>;
+
+// ---------- 8. L’accueil : chaque jour, une invocation et un geste ----------
+const EA = "ecrans/epreuve-accueil";
+const ZOBJ = zone(EA, /^7 TON OBJECTIF Soutenir un proche malade/), ZCONT = zone(EA, /^Continuer · Le matin$/);
+const Accueil: React.FC = () => <Phone ecran={EA} from={L[7] - 4} to={LIEN - 2} entree="iris" sortie="recul" focus={[{ at: L[7] + 6, px: 0.5, py: 0.68, s: 1.06 }]}>
+  <Surligne at={L[7] + 4} {...ZOBJ} fin={mot(/^invocation/, 7) - 2} />
   <Surligne at={mot(/^invocation/, 7)} {...ZCONT} />
+  <Pastille at={mot(/^geste/, 7)} x={W * 0.5} y={H * 0.255} gold size={30}>{tx.geste.texte}</Pastille>
 </Phone>;
 
-// ---------- 7. Le geste du jour, tel qu’écrit dans le parcours ----------
-const Geste: React.FC = () => {
-  const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const s = spring({ frame: f - L[8] - 6, fps, config: { damping: 12, stiffness: 160 } });
-  return (
-    <AbsoluteFill>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 380, textAlign: "center", fontFamily: FONT, fontWeight: 700, fontSize: 40, letterSpacing: "0.1em", color: GOLD, opacity: s }}>LE GESTE DU JOUR</div>
-      <div style={{ position: "absolute", left: 80, right: 80, top: 470, padding: "44px 44px 44px 150px", borderRadius: 36, background: "rgba(42,12,34,0.92)", boxShadow: `0 0 0 3px ${GOLD}, 0 30px 70px rgba(0,0,0,0.4)`,
-        transform: `translateY(${(1 - s) * 200}px)`, opacity: s, fontFamily: FONT, fontWeight: 700, fontSize: 52, lineHeight: 1.3, color: "#fff" }}>
-        <div style={{ position: "absolute", left: 44, top: "50%", marginTop: -38, width: 76, height: 76, borderRadius: 20, border: `5px solid ${GOLD}`, display: "grid", placeItems: "center" }}>
-          <svg width={46} height={46} viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round" style={{ opacity: interpolate(f, [mot(/^repoussais/, 8), mot(/^repoussais/, 8) + 6], [0, 1], C) }}><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
-        </div>
-        {GESTE}
-      </div>
-    </AbsoluteFill>
-  );
-};
+const SFX: Sfx[] = [
+  ["message", 2, 0.5], ["clavier", 8, 0.3], ["pop", L[1] - 16, 0.4],
+  ["whoosh", L[1] - 6, 0.4], ["coeur", mot(/^présence/, 1), 0.4],
+  ["whoosh", L[2] - 6, 0.4], ["tap", mot(/^rends/, 2) + 4, 0.3], ["pop", mot(/^du’â/, 2) + 4, 0.5],
+  ["shimmer", L[3] - 4, 0.5],
+  ["whoosh", L[4] - 6, 0.6], ["tick", mot(/^At-Tirmidhî/, 4) + 4, 0.4],
+  ["whoosh", L[5] - 6, 0.4], ["shimmer", mot(/^confies/, 5) + 4, 0.4],
+  ["whoosh", L[6] - 6, 0.6], ["tick", mot(/^parcours/, 6) + 4, 0.4], ["pop", mot(/^épreuve/, 6) + 8, 0.4],
+  ["whoosh", L[7] - 6, 0.5], ["tick", mot(/^invocation/, 7) + 4, 0.4], ["pop", mot(/^geste/, 7) + 6, 0.4],
+  ["impact", LIEN, 0.6], ["shimmer", LIEN + 2, 0.6],
+];
 
 const Video: React.FC = () => (
   <AbsoluteFill style={{ background: "#0A0208" }}>
-    <Fond T={T} k={[0, L[2] - 8, L[3] + 10, L[7] - 6, L[9] - 4, T.DUREE]} />
+    <Fond T={T} k={[0, L[1] - 6, L[3] + 10, L[6] - 6, L[7] + 14, T.DUREE]} />
     <Scene from={0} to={L[1] - 2} zin={0}><Souci /></Scene>
-    <Scene from={L[1] - 4} to={L[2] - 2}><Refus /></Scene>
-    <Scene from={L[2] - 4} to={L[3] - 2}><Courte /></Scene>
-    <Scene from={L[3] - 4} to={L[4] - 2}><LaDua /></Scene>
+    <Scene from={L[1] - 4} to={L[2] - 2}><Presence /></Scene>
+    <Scene from={L[2] - 4} to={L[3] - 2}><Visite /></Scene>
+    <Scene from={L[3] - 4} to={L[4] - 2}><Invocation /></Scene>
     <Fiche />
-    <Scene from={L[6] - 4} to={L[7] - 2}><Candidatures /></Scene>
-    <Besoin />
-    <Scene from={L[8] - 4} to={L[9] - 2}><Geste /></Scene>
-    <Scene from={L[9] - 4} to={T.DUREE + 10} zin={0}><Logo at={L[9]} phrase="Demander, agir, tenir" /></Scene>
+    <Scene from={L[5] - 4} to={L[6] - 2}><Confier /></Scene>
+    <Parcours />
+    <Accueil />
+    <Scene from={LIEN - 4} to={T.DUREE + 10} zin={0}><Logo at={LIEN} phrase="Tu n’es pas seul" /></Scene>
     <Flash at={L[3]} />
     <Voile />
-    <SousTitres T={T} or={/^(refus|valeur|courte|grâce|Prophète|mosquée|Muslim|candidatures|porte|besoin|invocation|geste|candidature|Sabab|tenir)/i} grandsDes={9} />
+    <SousTitres T={T} or={/^(malade|impuissant|présence|visite|guérir|Immense|At-Tirmidhî|Abû|confies|épreuve|tenir|geste|seul|Sabab)/i} grandsDes={99} />
     <Son voix="souci.mp3" sfx={SFX} />
   </AbsoluteFill>
 );
-const SFX: Sfx[] = [
-  ["message", 3, 0.5], ["pop", 16, 0.4],
-  ["whoosh", L[1] - 6, 0.5], ...[0, 1, 2, 3].map((i) => ["impact", L[1] + i * 6, 0.25] as Sfx), ["shimmer", mot(/^valeur/, 1) + 8, 0.5],
-  ["whoosh", L[2] - 6, 0.4], ["pop", mot(/^courte/, 2) + 8, 0.5],
-  ["shimmer", L[3] - 4, 0.6],
-  ["whoosh", L[4] - 6, 0.5], ["ding", mot(/^mosquée/, 4) + 10, 0.4], ["tick", mot(/^Muslim/, 5) + 8, 0.4],
-  ["whoosh", L[6] - 6, 0.5], ["envol", mot(/^candidatures/, 6) + 14, 0.3], ["shimmer", mot(/^porte/, 6) + 8, 0.4],
-  ["whoosh", L[7] - 6, 0.6], ["tick", mot(/^besoin/, 7) + 8, 0.4],
-  ["whoosh", L[8] - 6, 0.5], ["pop", mot(/^repoussais/, 8) + 10, 0.5],
-  ["impact", L[9], 0.6], ["shimmer", L[9] + 2, 0.6],
-];
 export const video = { id: "souci", component: Video, duree: T.DUREE };

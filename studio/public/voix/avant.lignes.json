@@ -1,20 +1,26 @@
 [
  {
-  "affiche": "Avant, tu cherchais : quelle invocation pour mon travail ? Pour ma dette ?"
+  "affiche": "Le premier jour, tu fais tout. Le troisième, tu lâches tout ?"
  },
  {
-  "affiche": "Des vidéos, des listes, des sources qu’on ne retrouve jamais."
+  "affiche": "Avant, un seul jour manqué, et tu avais l’impression d’avoir tout perdu."
  },
  {
-  "affiche": "Maintenant, tu dis à Sabab ce dont tu as besoin."
+  "affiche": "Et là, souvent, on arrête tout."
  },
  {
-  "affiche": "Et tu as un parcours : des invocations sourcées pour ce besoin, et un geste par jour."
+  "affiche": "Maintenant, Sabab te le dit simplement : ce n’est pas grave, l’important est de reprendre."
  },
  {
-  "affiche": "Chaque jour, Sabab te montre quoi réciter, et à quel moment."
+  "affiche": "Un bouton, et tu commences par le minimum : trois invocations courtes."
  },
  {
-  "affiche": "Sabab. Ton besoin et tes invocations, au même endroit. Le lien est en bio."
+  "affiche": "Une journée chargée ? Le minimum est là aussi."
+ },
+ {
+  "affiche": "Et quand tu es prêt, tu reprends ta journée entière."
+ },
+ {
+  "affiche": "Sabab. Reprendre, sans culpabiliser. Le lien est en bio."
  }
 ]

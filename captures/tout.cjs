@@ -153,7 +153,9 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
     await p.goto(B + "/apprendre"); await p.waitForTimeout(1800); await haut("#bibliotheque", 40);
     await p.locator(".bt", { hasText: "Du programme" }).click(); await p.waitForTimeout(900);
     await p.locator(".bcard", { hasText: titre }).first().locator(".bhead").click(); await p.waitForTimeout(700);
-    await hautTexte(new RegExp("^" + avant + "$"), 22); await ecran(nom, desc);
+    // Le titre cherché DANS la bibliothèque (il peut aussi figurer plus haut, dans « Tes révisions »).
+    await p.locator("#bibliotheque .bcard", { hasText: new RegExp(avant) }).first().evaluate((e) => window.scrollTo(0, e.getBoundingClientRect().top + window.scrollY - 22)); await p.waitForTimeout(1200);
+    await ecran(nom, desc);
   });
   await fiche("fiche-douleur", "douloureux", "endroit douloureux", "Bibliothèque : ce qu’on fait et dit quand on a mal (arabe, phonétique, traduction, source).");
   await fiche("fiche-reveil", "rendu la vie", "nous a rendu la vie", "Bibliothèque : l’invocation du réveil ouverte (arabe, phonétique, traduction, source).");
@@ -164,6 +166,37 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
   await essai("emploi-accueil", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("emploi-accueil", "Accueil avec le besoin « Trouver un travail » (parcours rizq)."); });
   await essai("emploi-parcours", async () => { await p.goto(B + "/parcours"); await p.waitForTimeout(2000); await ecran("emploi-parcours", "Le parcours actif « Ouvrir les portes du rizq » : ses invocations et ses gestes."); });
   await essai("emploi-objectif", async () => { await p.goto(B + "/objectif"); await p.waitForTimeout(1800); await ecran("emploi-objectif", "Mon objectif : « Trouver un travail », domaine, pourquoi."); });
+  // ---------- Apprendre par cœur : des révisions à différents niveaux de masquage ----------
+  // hasbi niveau 1 (un mot sur trois masqué), fajr niveau 2 (deux sur trois), dette niveau 3 (tout masqué) ; istighfar et hayy sues.
+  const apprentissage = () => { const s = base();
+    s.learn = { hasbi: { lvl: 1, next: k }, fajr: { lvl: 2, next: k }, dette: { lvl: 3, next: k }, istighfar: { lvl: 5, next: jour(30), mastered: jour(-9) }, hayy: { lvl: 5, next: jour(25), mastered: jour(-3) }, sayyid: { lvl: 4, next: jour(6) } }; return s; };
+  await heure("14:05"); await seed(apprentissage());
+  await essai("apprendre-niveaux", async () => { await p.goto(B + "/apprendre"); await p.waitForTimeout(2000); await ecran("apprendre-niveaux", "Apprendre : 2 / 5 du socle sues, « Réviser 3 invocations maintenant », la liste des révisions avec les niveaux."); });
+  await essai("revision-1", async () => {
+    await p.getByRole("button", { name: /Réviser 3 invocations/ }).click(); await p.waitForTimeout(900);
+    await ecran("revision-1", "Révision 1 sur 3 : Hasbiyallâh, un mot sur trois masqué.");
+    await p.getByRole("button", { name: "Révéler le texte" }).click(); await p.waitForTimeout(600);
+    await ecran("revision-revele", "Révision 1 sur 3 : le texte révélé, « À revoir » / « Je l’ai sue ».");
+    await p.getByRole("button", { name: "Je l’ai sue" }).click(); await p.waitForTimeout(900);
+    await ecran("revision-2", "Révision 2 sur 3 : l’invocation après le Fajr, deux mots sur trois masqués.");
+    await p.getByRole("button", { name: "Révéler le texte" }).click(); await p.waitForTimeout(400);
+    await p.getByRole("button", { name: "Je l’ai sue" }).click(); await p.waitForTimeout(900);
+    await ecran("revision-3", "Révision 3 sur 3 : tout est masqué, « Récite-la de mémoire ».");
+  });
+  // ---------- Recommencer après un jour manqué : la bannière bienveillante, puis le minimum du jour ----------
+  const manque = () => { const s = base(); s.days[jour(-1)] = { c: {}, note: "" }; return s; };
+  await heure("14:05"); await seed(manque());
+  await essai("manque", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await hautTexte(/^Hier n’a pas été tenu/, 330); await ecran("manque", "Accueil après un jour manqué : « Hier n’a pas été tenu. Ce n’est pas grave, l’important est de reprendre. » et « Commencer par le minimum »."); });
+  await essai("minimum", async () => { await p.getByRole("button", { name: "Commencer par le minimum" }).click(); await p.waitForTimeout(1500); await hautTexte(/^Minimum du jour$/, 330); await ecran("minimum", "Accueil, minimum du jour : « Trois invocations courtes suffisent aujourd’hui. »"); });
+  // ---------- Un autre besoin : traverser une épreuve (un proche malade) ----------
+  const epreuve = () => { const s = base(); s.objective = { title: "Soutenir un proche malade", cat: "epreuve", why: "Être présent et patient", since: DEMO.start }; s.parcours = { id: "epreuve", start: DEMO.start }; return s; };
+  await seed(epreuve());
+  await essai("epreuve-accueil", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("epreuve-accueil", "Accueil avec le besoin « Soutenir un proche malade » (parcours Traverser une épreuve)."); });
+  await essai("epreuve-parcours", async () => { await p.goto(B + "/parcours"); await p.waitForTimeout(2000); await ecran("epreuve-parcours", "Le parcours actif « Traverser une épreuve » : ses invocations et ses gestes."); });
+  await heure("14:05"); await seed(base());
+  await fiche("fiche-malade", "te guérir", "de te guérir", "Bibliothèque : l’invocation pour le malade qu’on visite (7 fois), avec sa source.");
+  await fiche("fiche-mosquee", "entrant mosquée", "pied droit", "Bibliothèque : l’invocation en entrant dans la mosquée, avec sa source.");
+  await ficheProgramme("fiche-hayy", "Yâ Hayyu yâ Qayyûm", "Hasbiyallâh", "Bibliothèque, « Du programme » : « Yâ Hayyu yâ Qayyûm » ouverte (enseignée à Fâtima).");
   fs.writeFileSync(out + "manifeste.json", JSON.stringify(manifeste, null, 1));
   if (erreurs.length) console.log("Erreurs de page :", erreurs.slice(0, 5));
   console.log(`${Object.keys(manifeste).length} écrans capturés`);
