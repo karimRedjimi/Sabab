@@ -1,23 +1,19 @@
 {
  "dua": {
-  "ref": "programme:hayy",
+  "ref": "programme:istighfar",
   "kind": "dua",
-  "title": "Yâ Hayyu yâ Qayyûm",
-  "moment": "Matin et soir",
-  "ar": "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
-  "ph": "Yâ Hayyu yâ Qayyûm, bi rahmatika astaghîth, aslih lî sha’nî kullah, wa lâ takilnî ilâ nafsî tarfata ʿayn.",
-  "fr": "Ô Vivant, ô Celui qui subsiste par Lui-même, c’est par Ta miséricorde que je demande secours : arrange toutes mes affaires, et ne me confie pas à moi-même, ne serait-ce que le temps d’un clin d’œil.",
-  "grade": "hasan",
-  "src": "An-Nasâ’î (As-Sunan al-Kubrâ) et Al-Hâkim, jugé hasan par Al-Albânî",
-  "note": "Le Prophète ﷺ l’a enseignée à sa fille Fâtima pour le matin et le soir. Elle demande qu’Allah arrange « toutes » tes affaires : travail, projets, famille.",
+  "title": "Istighfâr",
+  "moment": "Tout au long de la journée",
+  "ar": "أَسْتَغْفِرُ اللَّهَ",
+  "ph": "Astaghfirullâh.",
+  "fr": "Je demande pardon à Allah.",
+  "grade": "coran",
+  "src": "Coran, Nûh 71:10-12 ; Muslim (n° 2702)",
+  "note": "« Implorez le pardon de votre Seigneur, Il pardonne tant ; Il vous enverra du ciel une pluie abondante, vous accordera biens et enfants, et vous donnera jardins et rivières. » Le Prophète ﷺ demandait lui-même pardon cent fois par jour.",
   "slots": [
    {
-    "l": "Matin",
-    "t": 1
-   },
-   {
-    "l": "Soir",
-    "t": 1
+    "l": "Objectif du jour",
+    "t": 100
    }
   ]
  }

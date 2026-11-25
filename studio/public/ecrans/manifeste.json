@@ -21,7 +21,7 @@
     ]
    },
    {
-    "t": "· 15 joumada ath-thania 1448",
+    "t": "· 16 joumada ath-thania 1448",
     "b": [
      0.046,
      0.073,
@@ -30,11 +30,11 @@
     ]
    },
    {
-    "t": "Mercredi 25 novembre",
+    "t": "Jeudi 26 novembre",
     "b": [
      0.046,
      0.075,
-     0.436,
+     0.368,
      0.025
     ]
    },
@@ -57,7 +57,7 @@
     ]
    },
    {
-    "t": "06:59 Fajr",
+    "t": "07:01 Fajr",
     "b": [
      0.036,
      0.343,
@@ -67,7 +67,7 @@
     "bouton": true
    },
    {
-    "t": "06:59",
+    "t": "07:01",
     "b": [
      0.036,
      0.351,
@@ -113,7 +113,7 @@
     ]
    },
    {
-    "t": "14:41 ʿAsr",
+    "t": "14:40 ʿAsr",
     "b": [
      0.409,
      0.343,
@@ -123,7 +123,7 @@
     "bouton": true
    },
    {
-    "t": "14:41",
+    "t": "14:40",
     "b": [
      0.409,
      0.351,
@@ -338,11 +338,11 @@
     ]
    },
    {
-    "t": "46",
+    "t": "50",
     "b": [
-     0.762,
+     0.758,
      0.894,
-     0.098,
+     0.102,
      0.05
     ]
    },
@@ -358,7 +358,7 @@
    {
     "t": "Matin",
     "b": [
-     0.249,
+     0.232,
      0.981,
      0.09,
      0.022
@@ -367,7 +367,7 @@
    {
     "t": "Journée",
     "b": [
-     0.467,
+     0.47,
      0.981,
      0.124,
      0.022
@@ -376,7 +376,7 @@
    {
     "t": "Soir",
     "b": [
-     0.706,
+     0.725,
      0.981,
      0.059,
      0.022
@@ -492,7 +492,7 @@
     ]
    },
    {
-    "t": "6 sur 13",
+    "t": "6 sur 12",
     "b": [
      0.046,
      0.037,
@@ -549,11 +549,11 @@
     ]
    },
    {
-    "t": "46",
+    "t": "50",
     "b": [
-     0.762,
+     0.758,
      0.15,
-     0.098,
+     0.102,
      0.05
     ]
    },
@@ -569,7 +569,7 @@
    {
     "t": "Matin",
     "b": [
-     0.249,
+     0.232,
      0.237,
      0.09,
      0.022
@@ -578,7 +578,7 @@
    {
     "t": "Journée",
     "b": [
-     0.467,
+     0.47,
      0.237,
      0.124,
      0.022
@@ -587,14 +587,14 @@
    {
     "t": "Soir",
     "b": [
-     0.706,
+     0.725,
      0.237,
      0.059,
      0.022
     ]
    },
    {
-    "t": "6 sur 13 · encore 7",
+    "t": "6 sur 12 · encore 6",
     "b": [
      0.097,
      0.265,
@@ -631,7 +631,7 @@
     ]
    },
    {
-    "t": "Le matin 3 sur 6 · à rattraper",
+    "t": "Le matin 3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.371,
@@ -650,7 +650,7 @@
     ]
    },
    {
-    "t": "3 sur 6 · à rattraper",
+    "t": "3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.42,
@@ -659,7 +659,7 @@
     ]
    },
    {
-    "t": "Dans la journée 1 sur 2 · à rattraper",
+    "t": "Dans la journée 1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.473,
@@ -678,7 +678,7 @@
     ]
    },
    {
-    "t": "1 sur 2 · à rattraper",
+    "t": "1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.522,
@@ -687,7 +687,7 @@
     ]
    },
    {
-    "t": "Le soir 2 sur 5 · maintenant",
+    "t": "Le soir 2 sur 4 · maintenant",
     "b": [
      0.333,
      0.575,
@@ -706,7 +706,7 @@
     ]
    },
    {
-    "t": "2 sur 5 · maintenant",
+    "t": "2 sur 4 · maintenant",
     "b": [
      0.333,
      0.624,
@@ -743,7 +743,7 @@
     ]
    },
    {
-    "t": "Thème du mercredi : chasser l’angoisse et la paresse",
+    "t": "Thème du jeudi : la patience et la constance",
     "b": [
      0.056,
      0.807,
@@ -872,7 +872,7 @@
     "bouton": true
    },
    {
-    "t": "Dans la journée",
+    "t": "Dans la journée · 1 sur 2",
     "b": [
      0.046,
      0.1,
@@ -944,7 +944,7 @@
     ]
    },
    {
-    "t": "Ô Allah, suffis-moi par Ton licite pour que je me passe de Ton illicite, et enrichis-moi p",
+    "t": "Ô Allah, suffis-moi par Ton licite pour que je me passe de Ton illicite, et enrichis-moi par Ta grâce pour que je n’aie besoin de personne d’autre que Toi.",
     "b": [
      0.046,
      0.691,
@@ -1027,7 +1027,7 @@
     ]
    },
    {
-    "t": "6 sur 13",
+    "t": "6 sur 12",
     "b": [
      0.046,
      0.037,
@@ -1084,11 +1084,11 @@
     ]
    },
    {
-    "t": "46",
+    "t": "50",
     "b": [
-     0.762,
+     0.758,
      0.15,
-     0.098,
+     0.102,
      0.05
     ]
    },
@@ -1104,7 +1104,7 @@
    {
     "t": "Matin",
     "b": [
-     0.249,
+     0.232,
      0.237,
      0.09,
      0.022
@@ -1113,7 +1113,7 @@
    {
     "t": "Journée",
     "b": [
-     0.467,
+     0.47,
      0.237,
      0.124,
      0.022
@@ -1122,14 +1122,14 @@
    {
     "t": "Soir",
     "b": [
-     0.706,
+     0.725,
      0.237,
      0.059,
      0.022
     ]
    },
    {
-    "t": "6 sur 13 · encore 7",
+    "t": "6 sur 12 · encore 6",
     "b": [
      0.097,
      0.265,
@@ -1166,7 +1166,7 @@
     ]
    },
    {
-    "t": "Le matin 3 sur 6 · à rattraper",
+    "t": "Le matin 3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.371,
@@ -1185,7 +1185,7 @@
     ]
    },
    {
-    "t": "3 sur 6 · à rattraper",
+    "t": "3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.42,
@@ -1194,7 +1194,7 @@
     ]
    },
    {
-    "t": "Dans la journée 1 sur 2 · à rattraper",
+    "t": "Dans la journée 1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.473,
@@ -1213,7 +1213,7 @@
     ]
    },
    {
-    "t": "1 sur 2 · à rattraper",
+    "t": "1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.522,
@@ -1222,7 +1222,7 @@
     ]
    },
    {
-    "t": "Le soir 2 sur 5 · maintenant",
+    "t": "Le soir 2 sur 4 · maintenant",
     "b": [
      0.333,
      0.575,
@@ -1241,7 +1241,7 @@
     ]
    },
    {
-    "t": "2 sur 5 · maintenant",
+    "t": "2 sur 4 · maintenant",
     "b": [
      0.333,
      0.624,
@@ -1278,7 +1278,7 @@
     ]
    },
    {
-    "t": "Thème du mercredi : chasser l’angoisse et la paresse",
+    "t": "Thème du jeudi : la patience et la constance",
     "b": [
      0.056,
      0.807,
@@ -1428,7 +1428,7 @@
     ]
    },
    {
-    "t": "6 sur 13",
+    "t": "6 sur 12",
     "b": [
      0.046,
      0.037,
@@ -1485,11 +1485,11 @@
     ]
    },
    {
-    "t": "46",
+    "t": "50",
     "b": [
-     0.762,
+     0.758,
      0.15,
-     0.098,
+     0.102,
      0.05
     ]
    },
@@ -1505,7 +1505,7 @@
    {
     "t": "Matin",
     "b": [
-     0.249,
+     0.232,
      0.237,
      0.09,
      0.022
@@ -1514,7 +1514,7 @@
    {
     "t": "Journée",
     "b": [
-     0.467,
+     0.47,
      0.237,
      0.124,
      0.022
@@ -1523,14 +1523,14 @@
    {
     "t": "Soir",
     "b": [
-     0.706,
+     0.725,
      0.237,
      0.059,
      0.022
     ]
    },
    {
-    "t": "6 sur 13 · encore 7",
+    "t": "6 sur 12 · encore 6",
     "b": [
      0.097,
      0.265,
@@ -1567,7 +1567,7 @@
     ]
    },
    {
-    "t": "Le matin 3 sur 6 · à rattraper",
+    "t": "Le matin 3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.371,
@@ -1586,7 +1586,7 @@
     ]
    },
    {
-    "t": "3 sur 6 · à rattraper",
+    "t": "3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.42,
@@ -1595,7 +1595,7 @@
     ]
    },
    {
-    "t": "Dans la journée 1 sur 2 · à rattraper",
+    "t": "Dans la journée 1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.473,
@@ -1614,7 +1614,7 @@
     ]
    },
    {
-    "t": "1 sur 2 · à rattraper",
+    "t": "1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.522,
@@ -1623,7 +1623,7 @@
     ]
    },
    {
-    "t": "Le soir 2 sur 5 · maintenant",
+    "t": "Le soir 2 sur 4 · maintenant",
     "b": [
      0.333,
      0.575,
@@ -1642,7 +1642,7 @@
     ]
    },
    {
-    "t": "2 sur 5 · maintenant",
+    "t": "2 sur 4 · maintenant",
     "b": [
      0.333,
      0.624,
@@ -1679,7 +1679,7 @@
     ]
    },
    {
-    "t": "Thème du mercredi : chasser l’angoisse et la paresse",
+    "t": "Thème du jeudi : la patience et la constance",
     "b": [
      0.056,
      0.807,
@@ -1788,7 +1788,7 @@
     ]
    },
    {
-    "t": "6 sur 13",
+    "t": "6 sur 12",
     "b": [
      0.046,
      0.037,
@@ -1807,7 +1807,7 @@
     "bouton": true
    },
    {
-    "t": "Le matin 3 sur 6 · à rattraper",
+    "t": "Le matin 3 sur 5 · à rattraper",
     "b": [
      0.333,
      -0.026,
@@ -1826,7 +1826,7 @@
     ]
    },
    {
-    "t": "3 sur 6 · à rattraper",
+    "t": "3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.023,
@@ -1835,7 +1835,7 @@
     ]
    },
    {
-    "t": "Dans la journée 1 sur 2 · à rattraper",
+    "t": "Dans la journée 1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.076,
@@ -1854,7 +1854,7 @@
     ]
    },
    {
-    "t": "1 sur 2 · à rattraper",
+    "t": "1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.125,
@@ -1863,7 +1863,7 @@
     ]
    },
    {
-    "t": "Le soir 2 sur 5 · maintenant",
+    "t": "Le soir 2 sur 4 · maintenant",
     "b": [
      0.333,
      0.178,
@@ -1882,7 +1882,7 @@
     ]
    },
    {
-    "t": "2 sur 5 · maintenant",
+    "t": "2 sur 4 · maintenant",
     "b": [
      0.333,
      0.227,
@@ -1919,7 +1919,7 @@
     ]
    },
    {
-    "t": "Thème du mercredi : chasser l’angoisse et la paresse",
+    "t": "Thème du jeudi : la patience et la constance",
     "b": [
      0.056,
      0.41,
@@ -2112,7 +2112,7 @@
     ]
    },
    {
-    "t": "· 15 joumada ath-thania 1448",
+    "t": "· 16 joumada ath-thania 1448",
     "b": [
      0.046,
      0.073,
@@ -2121,11 +2121,11 @@
     ]
    },
    {
-    "t": "Mercredi 25 novembre",
+    "t": "Jeudi 26 novembre",
     "b": [
      0.046,
      0.075,
-     0.436,
+     0.368,
      0.025
     ]
    },
@@ -2148,7 +2148,7 @@
     ]
    },
    {
-    "t": "06:59 Fajr",
+    "t": "07:01 Fajr",
     "b": [
      0.036,
      0.343,
@@ -2158,7 +2158,7 @@
     "bouton": true
    },
    {
-    "t": "06:59",
+    "t": "07:01",
     "b": [
      0.036,
      0.351,
@@ -2204,7 +2204,7 @@
     ]
    },
    {
-    "t": "14:41 ʿAsr",
+    "t": "14:40 ʿAsr",
     "b": [
      0.409,
      0.343,
@@ -2214,7 +2214,7 @@
     "bouton": true
    },
    {
-    "t": "14:41",
+    "t": "14:40",
     "b": [
      0.409,
      0.351,
@@ -2391,7 +2391,7 @@
     ]
    },
    {
-    "t": "Cette nuit, de 02:21 au Fajr (07:01)",
+    "t": "Cette nuit, de 02:21 au Fajr (07:02)",
     "b": [
      0.113,
      0.736,
@@ -2418,7 +2418,7 @@
     ]
    },
    {
-    "t": "Pour ta dette : garde ton invocation pour ces moments. Sources : Abû Dâwûd (n° 521) ; Al-B",
+    "t": "Pour ta dette : garde ton invocation pour ces moments. Sources : Abû Dâwûd (n° 521) ; Al-Bukhârî (n° 1145) ; Muslim (n° 482)",
     "b": [
      0.046,
      0.851,
@@ -2564,7 +2564,7 @@
     ]
    },
    {
-    "t": "· 15 joumada ath-thania 1448",
+    "t": "· 16 joumada ath-thania 1448",
     "b": [
      0.046,
      0.073,
@@ -2573,11 +2573,11 @@
     ]
    },
    {
-    "t": "Mercredi 25 novembre",
+    "t": "Jeudi 26 novembre",
     "b": [
      0.046,
      0.075,
-     0.436,
+     0.368,
      0.025
     ]
    },
@@ -2600,7 +2600,7 @@
     ]
    },
    {
-    "t": "06:59 Fajr",
+    "t": "07:01 Fajr",
     "b": [
      0.036,
      0.343,
@@ -2610,7 +2610,7 @@
     "bouton": true
    },
    {
-    "t": "06:59",
+    "t": "07:01",
     "b": [
      0.036,
      0.351,
@@ -2656,7 +2656,7 @@
     ]
    },
    {
-    "t": "14:41 ʿAsr",
+    "t": "14:40 ʿAsr",
     "b": [
      0.409,
      0.343,
@@ -2666,7 +2666,7 @@
     "bouton": true
    },
    {
-    "t": "14:41",
+    "t": "14:40",
     "b": [
      0.409,
      0.351,
@@ -2881,11 +2881,11 @@
     ]
    },
    {
-    "t": "46",
+    "t": "50",
     "b": [
-     0.762,
+     0.758,
      0.864,
-     0.098,
+     0.102,
      0.05
     ]
    },
@@ -2901,7 +2901,7 @@
    {
     "t": "Matin",
     "b": [
-     0.249,
+     0.232,
      0.951,
      0.09,
      0.022
@@ -2910,7 +2910,7 @@
    {
     "t": "Journée",
     "b": [
-     0.467,
+     0.47,
      0.951,
      0.124,
      0.022
@@ -2919,14 +2919,14 @@
    {
     "t": "Soir",
     "b": [
-     0.706,
+     0.725,
      0.951,
      0.059,
      0.022
     ]
    },
    {
-    "t": "6 sur 13 · encore 7",
+    "t": "6 sur 12 · encore 6",
     "b": [
      0.097,
      0.979,
@@ -3044,7 +3044,7 @@
     ]
    },
    {
-    "t": "6 sur 13",
+    "t": "6 sur 12",
     "b": [
      0.046,
      0.037,
@@ -3110,11 +3110,11 @@
     ]
    },
    {
-    "t": "46",
+    "t": "50",
     "b": [
-     0.762,
+     0.758,
      0.149,
-     0.098,
+     0.102,
      0.05
     ]
    },
@@ -3130,7 +3130,7 @@
    {
     "t": "Matin",
     "b": [
-     0.249,
+     0.232,
      0.236,
      0.09,
      0.022
@@ -3139,7 +3139,7 @@
    {
     "t": "Journée",
     "b": [
-     0.467,
+     0.47,
      0.236,
      0.124,
      0.022
@@ -3148,14 +3148,14 @@
    {
     "t": "Soir",
     "b": [
-     0.706,
+     0.725,
      0.236,
      0.059,
      0.022
     ]
    },
    {
-    "t": "6 sur 13 · encore 7",
+    "t": "6 sur 12 · encore 6",
     "b": [
      0.097,
      0.265,
@@ -3192,7 +3192,7 @@
     ]
    },
    {
-    "t": "Le matin 3 sur 6 · à rattraper",
+    "t": "Le matin 3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.371,
@@ -3211,7 +3211,7 @@
     ]
    },
    {
-    "t": "3 sur 6 · à rattraper",
+    "t": "3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.42,
@@ -3220,7 +3220,7 @@
     ]
    },
    {
-    "t": "Dans la journée 1 sur 2 · à rattraper",
+    "t": "Dans la journée 1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.473,
@@ -3239,7 +3239,7 @@
     ]
    },
    {
-    "t": "1 sur 2 · à rattraper",
+    "t": "1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.522,
@@ -3248,7 +3248,7 @@
     ]
    },
    {
-    "t": "Le soir 2 sur 5 · maintenant",
+    "t": "Le soir 2 sur 4 · maintenant",
     "b": [
      0.333,
      0.574,
@@ -3267,7 +3267,7 @@
     ]
    },
    {
-    "t": "2 sur 5 · maintenant",
+    "t": "2 sur 4 · maintenant",
     "b": [
      0.333,
      0.624,
@@ -3304,7 +3304,7 @@
     ]
    },
    {
-    "t": "Thème du mercredi : chasser l’angoisse et la paresse",
+    "t": "Thème du jeudi : la patience et la constance",
     "b": [
      0.056,
      0.807,
@@ -3433,7 +3433,7 @@
     "bouton": true
    },
    {
-    "t": "Dans la journée",
+    "t": "Dans la journée · 1 sur 2",
     "b": [
      0.046,
      0.1,
@@ -3487,7 +3487,7 @@
     ]
    },
    {
-    "t": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْم",
+    "t": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
     "b": [
      0.046,
      0.35,
@@ -3496,7 +3496,7 @@
     ]
    },
    {
-    "t": "Rabbanâ hab lanâ min azwâjinâ wa dhurriyyâtinâ qurrata aʿyun, wajʿalnâ lil-muttaqîna imâmâ",
+    "t": "Rabbanâ hab lanâ min azwâjinâ wa dhurriyyâtinâ qurrata aʿyun, wajʿalnâ lil-muttaqîna imâmâ.",
     "b": [
      0.046,
      0.608,
@@ -3505,7 +3505,7 @@
     ]
    },
    {
-    "t": "Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de n",
+    "t": "Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de nous un modèle pour les pieux.",
     "b": [
      0.046,
      0.724,
@@ -3646,18 +3646,18 @@
    {
     "t": "83 %",
     "b": [
-     0.765,
+     0.763,
      0.267,
      0.111,
      0.033
     ]
    },
    {
-    "t": "▲ 7",
+    "t": "▲ 5",
     "b": [
-     0.897,
+     0.894,
      0.273,
-     0.057,
+     0.06,
      0.022
     ]
    },
@@ -4025,7 +4025,7 @@
   "desc": "Suivi plus bas : les moments jour par jour, la régularité.",
   "zones": [
    {
-    "t": "10 min",
+    "t": "11 min",
     "b": [
      0.077,
      0.027,
@@ -4106,7 +4106,7 @@
     ]
    },
    {
-    "t": "J",
+    "t": "V",
     "b": [
      0.269,
      0.202,
@@ -4115,7 +4115,7 @@
     ]
    },
    {
-    "t": "V",
+    "t": "S",
     "b": [
      0.348,
      0.202,
@@ -4124,7 +4124,7 @@
     ]
    },
    {
-    "t": "S",
+    "t": "D",
     "b": [
      0.427,
      0.202,
@@ -4133,7 +4133,7 @@
     ]
    },
    {
-    "t": "D",
+    "t": "L",
     "b": [
      0.505,
      0.202,
@@ -4142,7 +4142,7 @@
     ]
    },
    {
-    "t": "L",
+    "t": "M",
     "b": [
      0.584,
      0.202,
@@ -4160,7 +4160,7 @@
     ]
    },
    {
-    "t": "M",
+    "t": "J",
     "b": [
      0.742,
      0.202,
@@ -4295,19 +4295,9 @@
     ]
    },
    {
-    "t": "27",
-    "b": [
-     0.087,
-     0.481,
-     0.107,
-     0.049
-    ],
-    "bouton": true
-   },
-   {
     "t": "28",
     "b": [
-     0.207,
+     0.087,
      0.481,
      0.107,
      0.049
@@ -4317,7 +4307,7 @@
    {
     "t": "29",
     "b": [
-     0.327,
+     0.207,
      0.481,
      0.107,
      0.049
@@ -4327,7 +4317,7 @@
    {
     "t": "30",
     "b": [
-     0.447,
+     0.327,
      0.481,
      0.107,
      0.049
@@ -4337,7 +4327,7 @@
    {
     "t": "31",
     "b": [
-     0.566,
+     0.447,
      0.481,
      0.107,
      0.049
@@ -4347,7 +4337,7 @@
    {
     "t": "1",
     "b": [
-     0.686,
+     0.566,
      0.481,
      0.107,
      0.049
@@ -4357,7 +4347,7 @@
    {
     "t": "2",
     "b": [
-     0.806,
+     0.686,
      0.481,
      0.107,
      0.049
@@ -4367,8 +4357,8 @@
    {
     "t": "3",
     "b": [
-     0.087,
-     0.537,
+     0.806,
+     0.481,
      0.107,
      0.049
     ],
@@ -4377,7 +4367,7 @@
    {
     "t": "4",
     "b": [
-     0.207,
+     0.087,
      0.537,
      0.107,
      0.049
@@ -4387,7 +4377,7 @@
    {
     "t": "5",
     "b": [
-     0.327,
+     0.207,
      0.537,
      0.107,
      0.049
@@ -4397,7 +4387,7 @@
    {
     "t": "6",
     "b": [
-     0.447,
+     0.327,
      0.537,
      0.107,
      0.049
@@ -4407,7 +4397,7 @@
    {
     "t": "7",
     "b": [
-     0.566,
+     0.447,
      0.537,
      0.107,
      0.049
@@ -4417,7 +4407,7 @@
    {
     "t": "8",
     "b": [
-     0.686,
+     0.566,
      0.537,
      0.107,
      0.049
@@ -4427,7 +4417,7 @@
    {
     "t": "9",
     "b": [
-     0.806,
+     0.686,
      0.537,
      0.107,
      0.049
@@ -4437,8 +4427,8 @@
    {
     "t": "10",
     "b": [
-     0.087,
-     0.592,
+     0.806,
+     0.537,
      0.107,
      0.049
     ],
@@ -4447,7 +4437,7 @@
    {
     "t": "11",
     "b": [
-     0.207,
+     0.087,
      0.592,
      0.107,
      0.049
@@ -4457,7 +4447,7 @@
    {
     "t": "12",
     "b": [
-     0.327,
+     0.207,
      0.592,
      0.107,
      0.049
@@ -4467,7 +4457,7 @@
    {
     "t": "13",
     "b": [
-     0.447,
+     0.327,
      0.592,
      0.107,
      0.049
@@ -4477,7 +4467,7 @@
    {
     "t": "14",
     "b": [
-     0.566,
+     0.447,
      0.592,
      0.107,
      0.049
@@ -4487,7 +4477,7 @@
    {
     "t": "15",
     "b": [
-     0.686,
+     0.566,
      0.592,
      0.107,
      0.049
@@ -4497,7 +4487,7 @@
    {
     "t": "16",
     "b": [
-     0.806,
+     0.686,
      0.592,
      0.107,
      0.049
@@ -4507,8 +4497,8 @@
    {
     "t": "17",
     "b": [
-     0.087,
-     0.647,
+     0.806,
+     0.592,
      0.107,
      0.049
     ],
@@ -4517,7 +4507,7 @@
    {
     "t": "18",
     "b": [
-     0.207,
+     0.087,
      0.647,
      0.107,
      0.049
@@ -4527,7 +4517,7 @@
    {
     "t": "19",
     "b": [
-     0.327,
+     0.207,
      0.647,
      0.107,
      0.049
@@ -4537,7 +4527,7 @@
    {
     "t": "20",
     "b": [
-     0.447,
+     0.327,
      0.647,
      0.107,
      0.049
@@ -4547,7 +4537,7 @@
    {
     "t": "21",
     "b": [
-     0.566,
+     0.447,
      0.647,
      0.107,
      0.049
@@ -4557,7 +4547,7 @@
    {
     "t": "22",
     "b": [
-     0.686,
+     0.566,
      0.647,
      0.107,
      0.049
@@ -4567,7 +4557,7 @@
    {
     "t": "23",
     "b": [
-     0.806,
+     0.686,
      0.647,
      0.107,
      0.049
@@ -4577,6 +4567,16 @@
    {
     "t": "24",
     "b": [
+     0.806,
+     0.647,
+     0.107,
+     0.049
+    ],
+    "bouton": true
+   },
+   {
+    "t": "25",
+    "b": [
      0.087,
      0.703,
      0.107,
@@ -4585,7 +4585,7 @@
     "bouton": true
    },
    {
-    "t": "25",
+    "t": "26",
     "b": [
      0.207,
      0.703,
@@ -4803,7 +4803,7 @@
     ]
    },
    {
-    "t": "Plus de 280 invocations du Coran et de la Sunna, classées par thème. Chacune revient au bo",
+    "t": "Plus de 280 invocations du Coran et de la Sunna, classées par thème. Chacune revient au bon moment, un peu plus masquée à chaque révision.",
     "b": [
      0.046,
      0.123,
@@ -5626,7 +5626,7 @@
     ]
    },
    {
-    "t": "« Votre Seigneur a dit : invoquez-Moi, Je vous répondrai. » (Coran, Ghâfir 40:60). La répo",
+    "t": "« Votre Seigneur a dit : invoquez-Moi, Je vous répondrai. » (Coran, Ghâfir 40:60). La réponse peut être ce que tu as demandé, un mal écarté, ou une récompense gardée pour l’au-delà (Ahmad, n° 11133).",
     "b": [
      0.046,
      0.813,
@@ -5754,7 +5754,7 @@
     ]
    },
    {
-    "t": "L’invocation et l’effort vont ensemble : chaque jour, une action concrète pour ton objecti",
+    "t": "L’invocation et l’effort vont ensemble : chaque jour, une action concrète pour ton objectif.",
     "b": [
      0.046,
      0.122,
@@ -5966,7 +5966,7 @@
     ]
    },
    {
-    "t": "Des rappels utiles, jamais pour ce qui est déjà fait, et pas plus de trois par jour en plu",
+    "t": "Des rappels utiles, jamais pour ce qui est déjà fait, et pas plus de trois par jour en plus des prières.",
     "b": [
      0.046,
      0.122,
@@ -6139,7 +6139,7 @@
     ]
    },
    {
-    "t": "Invocations du matin 1 h après le Fajr, si elles ne sont pas faites. Avec tes révisions du",
+    "t": "Invocations du matin 1 h après le Fajr, si elles ne sont pas faites. Avec tes révisions du jour.",
     "b": [
      0.046,
      0.795,
@@ -6370,7 +6370,7 @@
     "bouton": true
    },
    {
-    "t": "« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne di",
+    "t": "« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne dise : et pour toi de même. »",
     "b": [
      0.092,
      0.529,
@@ -6545,7 +6545,7 @@
     "bouton": true
    },
    {
-    "t": "« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne di",
+    "t": "« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne dise : et pour toi de même. »",
     "b": [
      0.092,
      0.166,
@@ -6766,7 +6766,7 @@
     "bouton": true
    },
    {
-    "t": "« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne di",
+    "t": "« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne dise : et pour toi de même. »",
     "b": [
      0.092,
      0.27,
@@ -7625,7 +7625,7 @@
     ]
    },
    {
-    "t": "« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne di",
+    "t": "« Il n’est pas un musulman qui invoque pour son frère en son absence sans qu’un ange ne dise : et pour toi de même. »",
     "b": [
      0.092,
      0.519,
@@ -7902,9 +7902,9 @@
     ]
    },
    {
-    "t": "24 novembre 2026",
+    "t": "25 novembre 2026",
     "b": [
-     0.586,
+     0.585,
      0.338,
      0.322,
      0.025
@@ -7951,30 +7951,114 @@
     "bouton": true
    },
    {
-    "t": "وَأَنكِحُواْ ٱلۡأَيَٰمَىٰ مِنكُمۡ وَٱلصَّـٰلِحِينَ مِنۡ عِبَادِكُمۡ وَإِمَآئِكُمۡۚ إِن يَ",
+    "t": "وَتَوَكَّلۡ عَلَى ٱللَّهِۚ وَكَفَىٰ بِٱللَّهِ وَكِيلٗا",
     "b": [
      0.092,
      0.485,
      0.815,
-     0.303
+     0.076
     ]
    },
    {
-    "t": "Waankihoo alayama minkum waalssaliheena min AAibadikum waimaikum in yakoonoo fuqaraa yughn",
+    "t": "Watawakkal AAala Allahi wakafa biAllahi wakeelan",
     "b": [
      0.092,
-     0.797,
+     0.57,
      0.815,
-     0.151
+     0.06
     ]
    },
    {
-    "t": "Mariez les célibataires d'entre vous et les gens de bien parmi vos esclaves, hommes et fem",
+    "t": "Et place ta confiance en Allah. Allah te suffit comme protecteur",
     "b": [
      0.092,
-     0.958,
+     0.64,
      0.815,
-     0.205
+     0.068
+    ]
+   },
+   {
+    "t": "Sourate Al-Ahzab (33), verset 3",
+    "b": [
+     0.092,
+     0.727,
+     0.497,
+     0.052
+    ]
+   },
+   {
+    "t": "Partager",
+    "b": [
+     0.62,
+     0.729,
+     0.288,
+     0.047
+    ],
+    "bouton": true
+   },
+   {
+    "t": "La communauté récite",
+    "b": [
+     0.062,
+     0.824,
+     0.509,
+     0.024
+    ]
+   },
+   {
+    "t": "2",
+    "b": [
+     0.918,
+     0.824,
+     0.02,
+     0.024
+    ]
+   },
+   {
+    "t": "Un membre",
+    "b": [
+     0.221,
+     0.87,
+     0.354,
+     0.031
+    ]
+   },
+   {
+    "t": "0:14 · il y a 31 min ·",
+    "b": [
+     0.221,
+     0.902,
+     0.354,
+     0.059
+    ]
+   },
+   {
+    "t": "signaler",
+    "b": [
+     0.221,
+     0.928,
+     0.134,
+     0.033
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Mâ shâ Allâh",
+    "b": [
+     0.6,
+     0.89,
+     0.318,
+     0.05
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Un membre",
+    "b": [
+     0.221,
+     0.986,
+     0.354,
+     0.031
     ]
    },
    {
@@ -8096,25 +8180,92 @@
   "desc": "Les récitations des membres, sans leur nom (« Mâ shâ Allâh »).",
   "zones": [
    {
-    "t": "Waankihoo alayama minkum waalssaliheena min AAibadikum waimaikum in yakoonoo fuqaraa yughn",
+    "t": "Un jour, un verset",
     "b": [
      0.092,
-     -0.012,
-     0.815,
-     0.151
+     -0.016,
+     0.389,
+     0.024
     ]
    },
    {
-    "t": "Mariez les célibataires d'entre vous et les gens de bien parmi vos esclaves, hommes et fem",
+    "t": "25 novembre 2026",
     "b": [
-     0.092,
-     0.149,
-     0.815,
-     0.205
+     0.585,
+     -0.017,
+     0.322,
+     0.025
     ]
    },
    {
-    "t": "Sourate An-Nur (24), verset 32",
+    "t": "Arabe",
+    "b": [
+     0.1,
+     0.016,
+     0.158,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Phonétique",
+    "b": [
+     0.268,
+     0.016,
+     0.249,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Français",
+    "b": [
+     0.528,
+     0.016,
+     0.199,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Écouter",
+    "b": [
+     0.62,
+     0.068,
+     0.288,
+     0.047
+    ],
+    "bouton": true
+   },
+   {
+    "t": "وَتَوَكَّلۡ عَلَى ٱللَّهِۚ وَكَفَىٰ بِٱللَّهِ وَكِيلٗا",
+    "b": [
+     0.092,
+     0.129,
+     0.815,
+     0.076
+    ]
+   },
+   {
+    "t": "Watawakkal AAala Allahi wakafa biAllahi wakeelan",
+    "b": [
+     0.092,
+     0.215,
+     0.815,
+     0.06
+    ]
+   },
+   {
+    "t": "Et place ta confiance en Allah. Allah te suffit comme protecteur",
+    "b": [
+     0.092,
+     0.284,
+     0.815,
+     0.068
+    ]
+   },
+   {
+    "t": "Sourate Al-Ahzab (33), verset 3",
     "b": [
      0.092,
      0.372,
@@ -8126,7 +8277,7 @@
     "t": "Partager",
     "b": [
      0.62,
-     0.375,
+     0.374,
      0.288,
      0.047
     ],
@@ -8154,7 +8305,7 @@
     "t": "Un membre",
     "b": [
      0.221,
-     0.515,
+     0.514,
      0.354,
      0.031
     ]
@@ -8163,7 +8314,7 @@
     "t": "0:14 · il y a 31 min ·",
     "b": [
      0.221,
-     0.547,
+     0.546,
      0.354,
      0.059
     ]
@@ -8172,7 +8323,7 @@
     "t": "signaler",
     "b": [
      0.221,
-     0.573,
+     0.572,
      0.134,
      0.033
     ],
@@ -8182,7 +8333,7 @@
     "t": "Mâ shâ Allâh",
     "b": [
      0.6,
-     0.536,
+     0.535,
      0.318,
      0.05
     ],
@@ -8192,7 +8343,7 @@
     "t": "Un membre",
     "b": [
      0.221,
-     0.631,
+     0.63,
      0.354,
      0.031
     ]
@@ -8201,7 +8352,7 @@
     "t": "0:21 · il y a 2 h ·",
     "b": [
      0.221,
-     0.663,
+     0.662,
      0.354,
      0.059
     ]
@@ -8210,7 +8361,7 @@
     "t": "signaler",
     "b": [
      0.221,
-     0.689,
+     0.688,
      0.134,
      0.033
     ],
@@ -8220,7 +8371,7 @@
     "t": "Mâ shâ Allâh",
     "b": [
      0.6,
-     0.652,
+     0.651,
      0.318,
      0.05
     ],
@@ -8239,7 +8390,257 @@
     "t": "Une minute au plus · tu t’écoutes avant de partager",
     "b": [
      0.231,
-     0.806,
+     0.805,
+     0.703,
+     0.043
+    ]
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.106,
+     0.955,
+     0.058,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.247,
+     0.955,
+     0.141,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.652,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.838,
+     0.955,
+     0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "verset-jour": {
+  "desc": "Un jour, un verset, daté du jour de publication : le verset à écouter et à réciter.",
+  "zones": [
+   {
+    "t": "Sabab",
+    "b": [
+     0.133,
+     0.025,
+     0.152,
+     0.035
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.046,
+     0.076,
+     0.908,
+     0.042
+    ]
+   },
+   {
+    "t": "Invoquer les uns pour les autres, réciter ensemble. Sans nom, sans classement.",
+    "b": [
+     0.046,
+     0.123,
+     0.908,
+     0.056
+    ]
+   },
+   {
+    "t": "Du’â",
+    "b": [
+     0.056,
+     0.199,
+     0.438,
+     0.051
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Un jour, un verset",
+    "b": [
+     0.505,
+     0.199,
+     0.438,
+     0.051
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Un jour, un verset",
+    "b": [
+     0.092,
+     0.339,
+     0.389,
+     0.024
+    ]
+   },
+   {
+    "t": "26 novembre 2026",
+    "b": [
+     0.585,
+     0.338,
+     0.323,
+     0.025
+    ]
+   },
+   {
+    "t": "Arabe",
+    "b": [
+     0.1,
+     0.372,
+     0.158,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Phonétique",
+    "b": [
+     0.268,
+     0.372,
+     0.249,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Français",
+    "b": [
+     0.528,
+     0.372,
+     0.199,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Écouter",
+    "b": [
+     0.62,
+     0.423,
+     0.288,
+     0.047
+    ],
+    "bouton": true
+   },
+   {
+    "t": "وَقَالَ رَبُّكُمُ ٱدۡعُونِيٓ أَسۡتَجِبۡ لَكُمۡۚ إِنَّ ٱلَّذِينَ يَسۡتَكۡبِرُونَ عَنۡ عِبَادَتِي سَيَدۡخُلُونَ جَهَنَّمَ دَاخِرِينَ",
+    "b": [
+     0.092,
+     0.485,
+     0.815,
+     0.227
+    ]
+   },
+   {
+    "t": "Waqala rabbukumu odAAoonee astajib lakum inna allatheena yastakbiroona AAan AAibadatee sayadkhuloona jahannama dakhireena",
+    "b": [
+     0.092,
+     0.722,
+     0.815,
+     0.121
+    ]
+   },
+   {
+    "t": "Et votre Seigneur dit: «Appelez-Moi, Je vous répondrai. Ceux qui, par orgueil, se refusent à M'adorer entreront bientôt dans l'Enfer, humiliés»",
+    "b": [
+     0.092,
+     0.852,
+     0.815,
+     0.171
+    ]
+   },
+   {
+    "t": "Réciter le verset",
+    "b": [
+     0.231,
+     0.805,
+     0.703,
+     0.03
+    ]
+   },
+   {
+    "t": "Une minute au plus · tu t’écoutes avant de partager",
+    "b": [
+     0.231,
+     0.836,
      0.703,
      0.043
     ]
@@ -8421,7 +8822,7 @@
     ]
    },
    {
-    "t": "ضَعْ يَدَكَ عَلَى الَّذِي تَأَلَّمَ مِنْ جَسَدِكَ وَقُلْ: «بِسْمِ اللهِ» (ثَلَاثاً)، وَقُل",
+    "t": "ضَعْ يَدَكَ عَلَى الَّذِي تَأَلَّمَ مِنْ جَسَدِكَ وَقُلْ: «بِسْمِ اللهِ» (ثَلَاثاً)، وَقُلْ (سَبْعَ مَرَّاتٍ): «أَعُوذُ بِاللهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ».",
     "b": [
      0.082,
      0.312,
@@ -8439,7 +8840,7 @@
     ]
    },
    {
-    "t": "Place ta main sur l'endroit douloureux et dis : « Au nom d'Allah » (3 fois), puis dis (7 f",
+    "t": "Place ta main sur l'endroit douloureux et dis : « Au nom d'Allah » (3 fois), puis dis (7 fois) : « Je cherche protection auprès d'Allah et par Sa puissance contre le mal que je ressens et que je redoute. »",
     "b": [
      0.082,
      0.66,
@@ -8467,7 +8868,7 @@
     "bouton": true
    },
    {
-    "t": "Source : Hisn al-Muslim (La Citadelle du musulman), Sa'îd ibn 'Alî ibn Wahf al-Qahtânî , a",
+    "t": "Source : Hisn al-Muslim (La Citadelle du musulman), Sa'îd ibn 'Alî ibn Wahf al-Qahtânî , avec la référence de chaque invocation. Traduction française de l’édition AR-FR libre de diffusion. Livre distribué gratuitement par son auteur.",
     "b": [
      0.056,
      0.954,
@@ -8670,7 +9071,7 @@
     ]
    },
    {
-    "t": "Louange à Allah qui nous a rendu la vie après nous avoir fait mourir (sommeil), et c'est v",
+    "t": "Louange à Allah qui nous a rendu la vie après nous avoir fait mourir (sommeil), et c'est vers Lui que se fera le retour.",
     "b": [
      0.082,
      0.487,
@@ -8698,7 +9099,7 @@
     "bouton": true
    },
    {
-    "t": "Source : Hisn al-Muslim (La Citadelle du musulman), Sa'îd ibn 'Alî ibn Wahf al-Qahtânî , a",
+    "t": "Source : Hisn al-Muslim (La Citadelle du musulman), Sa'îd ibn 'Alî ibn Wahf al-Qahtânî , avec la référence de chaque invocation. Traduction française de l’édition AR-FR libre de diffusion. Livre distribué gratuitement par son auteur.",
     "b": [
      0.056,
      0.744,
@@ -8807,7 +9208,7 @@
   "desc": "Bibliothèque, « Du programme » : « Demander de la grâce d’Allah » ouverte.",
   "zones": [
    {
-    "t": "Le bien des deux mondes Seigneur, accorde-nous une belle part ici-bas, une belle part dans",
+    "t": "Le bien des deux mondes Seigneur, accorde-nous une belle part ici-bas, une belle part dans l’au-delà, et protège-nous du châtiment du …",
     "b": [
      0.046,
      -0.109,
@@ -8817,7 +9218,7 @@
     "bouton": true
    },
    {
-    "t": "Seigneur, accorde-nous une belle part ici-bas, une belle part dans l’au-delà, et protège-n",
+    "t": "Seigneur, accorde-nous une belle part ici-bas, une belle part dans l’au-delà, et protège-nous du châtiment du …",
     "b": [
      0.082,
      -0.069,
@@ -8826,7 +9227,7 @@
     ]
    },
    {
-    "t": "L’invocation de Yûnus Il n’y a de divinité que Toi, gloire à Toi ! J’ai été parmi les inju",
+    "t": "L’invocation de Yûnus Il n’y a de divinité que Toi, gloire à Toi ! J’ai été parmi les injustes.",
     "b": [
      0.046,
      0.026,
@@ -8919,7 +9320,7 @@
     "bouton": true
    },
    {
-    "t": "Refuge contre la pauvreté Ô Allah, je cherche refuge auprès de Toi contre la mécréance et ",
+    "t": "Refuge contre la pauvreté Ô Allah, je cherche refuge auprès de Toi contre la mécréance et la pauvreté.",
     "b": [
      0.046,
      0.468,
@@ -8947,7 +9348,7 @@
     ]
    },
    {
-    "t": "Pour un foyer qui réjouit le cœur Seigneur, fais que nos épouses et nos descendants soient",
+    "t": "Pour un foyer qui réjouit le cœur Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de nous un modèle pour l…",
     "b": [
      0.046,
      0.58,
@@ -8966,7 +9367,7 @@
     ]
    },
    {
-    "t": "Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de n",
+    "t": "Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de nous un modèle pour l…",
     "b": [
      0.082,
      0.621,
@@ -9003,7 +9404,7 @@
     ]
    },
    {
-    "t": "L’invocation avant l’épreuve orale Seigneur, ouvre-moi ma poitrine, facilite-moi ma tâche,",
+    "t": "L’invocation avant l’épreuve orale Seigneur, ouvre-moi ma poitrine, facilite-moi ma tâche, et dénoue le nœud de ma langue, afin qu’ils comprennen…",
     "b": [
      0.046,
      0.803,
@@ -9022,7 +9423,7 @@
     ]
    },
    {
-    "t": "Seigneur, ouvre-moi ma poitrine, facilite-moi ma tâche, et dénoue le nœud de ma langue, af",
+    "t": "Seigneur, ouvre-moi ma poitrine, facilite-moi ma tâche, et dénoue le nœud de ma langue, afin qu’ils comprennen…",
     "b": [
      0.082,
      0.844,
@@ -9031,7 +9432,7 @@
     ]
    },
    {
-    "t": "Une science qui profite Ô Allah, fais-moi profiter de ce que Tu m’as appris, apprends-moi ",
+    "t": "Une science qui profite Ô Allah, fais-moi profiter de ce que Tu m’as appris, apprends-moi ce qui me sera utile, et accroît ma science.",
     "b": [
      0.046,
      0.938,
@@ -9050,7 +9451,7 @@
     ]
    },
    {
-    "t": "Ô Allah, fais-moi profiter de ce que Tu m’as appris, apprends-moi ce qui me sera utile, et",
+    "t": "Ô Allah, fais-moi profiter de ce que Tu m’as appris, apprends-moi ce qui me sera utile, et accroît ma science.",
     "b": [
      0.082,
      0.979,
@@ -9177,7 +9578,7 @@
     ]
    },
    {
-    "t": "· 15 joumada ath-thania 1448",
+    "t": "· 16 joumada ath-thania 1448",
     "b": [
      0.046,
      0.073,
@@ -9186,11 +9587,11 @@
     ]
    },
    {
-    "t": "Mercredi 25 novembre",
+    "t": "Jeudi 26 novembre",
     "b": [
      0.046,
      0.075,
-     0.436,
+     0.368,
      0.025
     ]
    },
@@ -9213,7 +9614,7 @@
     ]
    },
    {
-    "t": "06:59 Fajr",
+    "t": "07:01 Fajr",
     "b": [
      0.036,
      0.343,
@@ -9223,7 +9624,7 @@
     "bouton": true
    },
    {
-    "t": "06:59",
+    "t": "07:01",
     "b": [
      0.036,
      0.351,
@@ -9269,7 +9670,7 @@
     ]
    },
    {
-    "t": "14:41 ʿAsr",
+    "t": "14:40 ʿAsr",
     "b": [
      0.409,
      0.343,
@@ -9279,7 +9680,7 @@
     "bouton": true
    },
    {
-    "t": "14:41",
+    "t": "14:40",
     "b": [
      0.409,
      0.351,
@@ -9494,11 +9895,11 @@
     ]
    },
    {
-    "t": "46",
+    "t": "50",
     "b": [
-     0.762,
+     0.758,
      0.864,
-     0.098,
+     0.102,
      0.05
     ]
    },
@@ -9514,7 +9915,7 @@
    {
     "t": "Matin",
     "b": [
-     0.249,
+     0.232,
      0.951,
      0.09,
      0.022
@@ -9523,7 +9924,7 @@
    {
     "t": "Journée",
     "b": [
-     0.467,
+     0.47,
      0.951,
      0.124,
      0.022
@@ -9532,14 +9933,14 @@
    {
     "t": "Soir",
     "b": [
-     0.706,
+     0.725,
      0.951,
      0.059,
      0.022
     ]
    },
    {
-    "t": "6 sur 13 · encore 7",
+    "t": "6 sur 12 · encore 6",
     "b": [
      0.097,
      0.979,
@@ -9667,7 +10068,7 @@
     ]
    },
    {
-    "t": "Des invocations ciblées et un geste concret chaque jour, par cycles de 30 jours qui s’ench",
+    "t": "Des invocations ciblées et un geste concret chaque jour, par cycles de 30 jours qui s’enchaînent, et un cycle à part pendant Ramadan. Un parcours à la fois.",
     "b": [
      0.046,
      0.122,
@@ -9740,7 +10141,7 @@
     ]
    },
    {
-    "t": "Invocation contre les dettes · Refuge contre le souci et la paresse · Refuge contre la pau",
+    "t": "Invocation contre les dettes · Refuge contre le souci et la paresse · Refuge contre la pauvreté",
     "b": [
      0.087,
      0.744,
@@ -9896,7 +10297,7 @@
     ]
    },
    {
-    "t": "L’invocation et l’effort vont ensemble : chaque jour, une action concrète pour ton objecti",
+    "t": "L’invocation et l’effort vont ensemble : chaque jour, une action concrète pour ton objectif.",
     "b": [
      0.046,
      0.122,
@@ -10107,7 +10508,7 @@
     ]
    },
    {
-    "t": "Plus de 280 invocations du Coran et de la Sunna, classées par thème. Chacune revient au bo",
+    "t": "Plus de 280 invocations du Coran et de la Sunna, classées par thème. Chacune revient au bon moment, un peu plus masquée à chaque révision.",
     "b": [
      0.046,
      0.123,
@@ -10448,7 +10849,7 @@
     "bouton": true
    },
    {
-    "t": "Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le",
+    "t": "Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le Seigneur du Trône immense.",
     "b": [
      0.092,
      0.261,
@@ -10769,7 +11170,7 @@
     "bouton": true
    },
    {
-    "t": "Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le",
+    "t": "Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le Seigneur du Trône immense.",
     "b": [
      0.092,
      0.261,
@@ -11412,7 +11813,7 @@
     "bouton": true
    },
    {
-    "t": "Ô Allah, suffis-moi par Ton licite pour que je me passe de Ton illicite, et enrichis-moi p",
+    "t": "Ô Allah, suffis-moi par Ton licite pour que je me passe de Ton illicite, et enrichis-moi par Ta grâce pour que je n’aie besoin de personne d’autre que Toi.",
     "b": [
      0.092,
      0.312,
@@ -11550,7 +11951,7 @@
     ]
    },
    {
-    "t": "6 sur 13",
+    "t": "6 sur 12",
     "b": [
      0.046,
      0.037,
@@ -11730,11 +12131,11 @@
     ]
    },
    {
-    "t": "46",
+    "t": "50",
     "b": [
-     0.762,
+     0.758,
      0.544,
-     0.098,
+     0.102,
      0.05
     ]
    },
@@ -11750,7 +12151,7 @@
    {
     "t": "Matin",
     "b": [
-     0.249,
+     0.232,
      0.631,
      0.09,
      0.022
@@ -11759,7 +12160,7 @@
    {
     "t": "Journée",
     "b": [
-     0.467,
+     0.47,
      0.631,
      0.124,
      0.022
@@ -11768,14 +12169,14 @@
    {
     "t": "Soir",
     "b": [
-     0.706,
+     0.725,
      0.631,
      0.059,
      0.022
     ]
    },
    {
-    "t": "6 sur 13 · encore 7",
+    "t": "6 sur 12 · encore 6",
     "b": [
      0.097,
      0.66,
@@ -11812,7 +12213,7 @@
     ]
    },
    {
-    "t": "Le matin 3 sur 6 · à rattraper",
+    "t": "Le matin 3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.766,
@@ -11831,7 +12232,7 @@
     ]
    },
    {
-    "t": "3 sur 6 · à rattraper",
+    "t": "3 sur 5 · à rattraper",
     "b": [
      0.333,
      0.815,
@@ -11840,7 +12241,7 @@
     ]
    },
    {
-    "t": "Dans la journée 1 sur 2 · à rattraper",
+    "t": "Dans la journée 1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.867,
@@ -11859,7 +12260,7 @@
     ]
    },
    {
-    "t": "1 sur 2 · à rattraper",
+    "t": "1 sur 3 · à rattraper",
     "b": [
      0.333,
      0.917,
@@ -11868,7 +12269,7 @@
     ]
    },
    {
-    "t": "Le soir 2 sur 5 · maintenant",
+    "t": "Le soir 2 sur 4 · maintenant",
     "b": [
      0.333,
      0.969,
@@ -12413,7 +12814,7 @@
     ]
    },
    {
-    "t": "· 15 joumada ath-thania 1448",
+    "t": "· 16 joumada ath-thania 1448",
     "b": [
      0.046,
      0.073,
@@ -12422,11 +12823,11 @@
     ]
    },
    {
-    "t": "Mercredi 25 novembre",
+    "t": "Jeudi 26 novembre",
     "b": [
      0.046,
      0.075,
-     0.436,
+     0.368,
      0.025
     ]
    },
@@ -12449,7 +12850,7 @@
     ]
    },
    {
-    "t": "06:59 Fajr",
+    "t": "07:01 Fajr",
     "b": [
      0.036,
      0.343,
@@ -12459,7 +12860,7 @@
     "bouton": true
    },
    {
-    "t": "06:59",
+    "t": "07:01",
     "b": [
      0.036,
      0.351,
@@ -12505,7 +12906,7 @@
     ]
    },
    {
-    "t": "14:41 ʿAsr",
+    "t": "14:40 ʿAsr",
     "b": [
      0.409,
      0.343,
@@ -12515,7 +12916,7 @@
     "bouton": true
    },
    {
-    "t": "14:41",
+    "t": "14:40",
     "b": [
      0.409,
      0.351,
@@ -12730,11 +13131,11 @@
     ]
    },
    {
-    "t": "46",
+    "t": "50",
     "b": [
-     0.762,
+     0.758,
      0.894,
-     0.098,
+     0.102,
      0.05
     ]
    },
@@ -12750,7 +13151,7 @@
    {
     "t": "Matin",
     "b": [
-     0.249,
+     0.232,
      0.981,
      0.09,
      0.022
@@ -12759,7 +13160,7 @@
    {
     "t": "Journée",
     "b": [
-     0.467,
+     0.47,
      0.981,
      0.124,
      0.022
@@ -12768,7 +13169,7 @@
    {
     "t": "Soir",
     "b": [
-     0.706,
+     0.725,
      0.981,
      0.059,
      0.022
@@ -12894,7 +13295,7 @@
     ]
    },
    {
-    "t": "Des invocations ciblées et un geste concret chaque jour, par cycles de 30 jours qui s’ench",
+    "t": "Des invocations ciblées et un geste concret chaque jour, par cycles de 30 jours qui s’enchaînent, et un cycle à part pendant Ramadan. Un parcours à la fois.",
     "b": [
      0.046,
      0.122,
@@ -13282,7 +13683,7 @@
     "bouton": true
    },
    {
-    "t": "Source : Hisn al-Muslim (La Citadelle du musulman), Sa'îd ibn 'Alî ibn Wahf al-Qahtânî , a",
+    "t": "Source : Hisn al-Muslim (La Citadelle du musulman), Sa'îd ibn 'Alî ibn Wahf al-Qahtânî , avec la référence de chaque invocation. Traduction française de l’édition AR-FR libre de diffusion. Livre distribué gratuitement par son auteur.",
     "b": [
      0.056,
      0.92,
@@ -13467,7 +13868,7 @@
     ]
    },
    {
-    "t": "«(يَبْدَأُ بِرِجْلِهِ الْيُمْنَى)، وَيَقُولُ: أَعُوذُ بِاللهِ الْعَظِيمِ، وَبِوَجْهِهِ الْ",
+    "t": "«(يَبْدَأُ بِرِجْلِهِ الْيُمْنَى)، وَيَقُولُ: أَعُوذُ بِاللهِ الْعَظِيمِ، وَبِوَجْهِهِ الْكَرِيمِ، وَسُلْطَانِهِ الْقَدِيمِ، مِنَ الشَّيْطَانِ الرَّجِيمِ، بِسْمِ اللهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللهِ، اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ».",
     "b": [
      0.082,
      0.286,
@@ -13476,7 +13877,7 @@
     ]
    },
    {
-    "t": "Yabda'u bi-rijlihi al-yumnā, wa yaqūlu: A'ūdhu bi-Llāhi al-'Aẓīm, wa bi-wajhihi al-karīm, ",
+    "t": "Yabda'u bi-rijlihi al-yumnā, wa yaqūlu: A'ūdhu bi-Llāhi al-'Aẓīm, wa bi-wajhihi al-karīm, wa sulṭānihi al-qadīm, mina ash-shayṭāni ar-rajīm. Bismi Allāh, waṣ-ṣalātu was-salāmu 'alā Rasūli Allāh. Allāhumma iftaḥ lī abwāba raḥmatik.",
     "b": [
      0.082,
      0.59,
@@ -13485,7 +13886,7 @@
     ]
    },
    {
-    "t": "(Il commence par le pied droit) et dit : « Je cherche protection auprès d'Allah le Très-Gr",
+    "t": "(Il commence par le pied droit) et dit : « Je cherche protection auprès d'Allah le Très-Grand, par Son noble Visage et Son pouvoir éternel, contre le Diable banni. Au nom d'Allah, que la prière et le salut soient sur le Messager d'Allah. Ô Allah, ouvre-moi les portes de Ta miséricorde ».",
     "b": [
      0.082,
      0.784,
@@ -13613,7 +14014,7 @@
     ]
    },
    {
-    "t": "Hasbiyallâh Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, ",
+    "t": "Hasbiyallâh Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le Seigneur du Trône i… En révision",
     "b": [
      0.046,
      0.026,
@@ -13632,7 +14033,7 @@
     ]
    },
    {
-    "t": "Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le",
+    "t": "Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le Seigneur du Trône i…",
     "b": [
      0.082,
      0.066,
@@ -13678,7 +14079,7 @@
     ]
    },
    {
-    "t": "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِل",
+    "t": "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
     "b": [
      0.082,
      0.247,
@@ -13687,7 +14088,7 @@
     ]
    },
    {
-    "t": "Yâ Hayyu yâ Qayyûm, bi rahmatika astaghîth, aslih lî sha’nî kullah, wa lâ takilnî ilâ nafs",
+    "t": "Yâ Hayyu yâ Qayyûm, bi rahmatika astaghîth, aslih lî sha’nî kullah, wa lâ takilnî ilâ nafsî tarfata ʿayn.",
     "b": [
      0.082,
      0.434,
@@ -13696,7 +14097,7 @@
     ]
    },
    {
-    "t": "Ô Vivant, ô Celui qui subsiste par Lui-même, c’est par Ta miséricorde que je demande secou",
+    "t": "Ô Vivant, ô Celui qui subsiste par Lui-même, c’est par Ta miséricorde que je demande secours : arrange toutes mes affaires, et ne me confie pas à moi-même, ne serait-ce que le temps d’un clin d’œil.",
     "b": [
      0.082,
      0.536,
@@ -13751,7 +14152,7 @@
     ]
    },
    {
-    "t": "Invocation contre les dettes Ô Allah, suffis-moi par Ton licite pour que je me passe de To",
+    "t": "Invocation contre les dettes Ô Allah, suffis-moi par Ton licite pour que je me passe de Ton illicite, et enrichis-moi par Ta grâce pour que…",
     "b": [
      0.046,
      0.961,
@@ -13861,6 +14262,3406 @@
      0.838,
      0.955,
      0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "bilan": {
+  "desc": "Le bilan de la semaine et du mois : jours tenus, prières, invocations.",
+  "zones": [
+   {
+    "t": "Retour",
+    "b": [
+     0.021,
+     0.007,
+     0.236,
+     0.052
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Mon bilan",
+    "b": [
+     0.046,
+     0.073,
+     0.908,
+     0.041
+    ]
+   },
+   {
+    "t": "Semaine",
+    "b": [
+     0.056,
+     0.126,
+     0.438,
+     0.051
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Mois",
+    "b": [
+     0.505,
+     0.126,
+     0.438,
+     0.051
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Cette semaine",
+    "b": [
+     0.185,
+     0.201,
+     0.631,
+     0.03
+    ]
+   },
+   {
+    "t": "Du 23 novembre au 29 novembre",
+    "b": [
+     0.185,
+     0.231,
+     0.631,
+     0.058
+    ]
+   },
+   {
+    "t": "3 / 4",
+    "b": [
+     0.092,
+     0.322,
+     0.815,
+     0.04
+    ]
+   },
+   {
+    "t": "jours tenus jusqu’ici , avec une moyenne de 78 %.",
+    "b": [
+     0.092,
+     0.37,
+     0.815,
+     0.058
+    ]
+   },
+   {
+    "t": "Aussi régulier que la semaine précédente.",
+    "b": [
+     0.092,
+     0.435,
+     0.815,
+     0.029
+    ]
+   },
+   {
+    "t": "Lun",
+    "b": [
+     0.078,
+     0.55,
+     0.057,
+     0.02
+    ]
+   },
+   {
+    "t": "Mar",
+    "b": [
+     0.208,
+     0.55,
+     0.06,
+     0.02
+    ]
+   },
+   {
+    "t": "Mer",
+    "b": [
+     0.339,
+     0.55,
+     0.06,
+     0.02
+    ]
+   },
+   {
+    "t": "Jeu",
+    "b": [
+     0.472,
+     0.55,
+     0.056,
+     0.02
+    ]
+   },
+   {
+    "t": "Ven",
+    "b": [
+     0.601,
+     0.55,
+     0.059,
+     0.02
+    ]
+   },
+   {
+    "t": "Sam",
+    "b": [
+     0.728,
+     0.55,
+     0.068,
+     0.02
+    ]
+   },
+   {
+    "t": "Dim",
+    "b": [
+     0.863,
+     0.55,
+     0.062,
+     0.02
+    ]
+   },
+   {
+    "t": "400",
+    "b": [
+     0.082,
+     0.608,
+     0.836,
+     0.033
+    ]
+   },
+   {
+    "t": "istighfâr",
+    "b": [
+     0.082,
+     0.641,
+     0.836,
+     0.022
+    ]
+   },
+   {
+    "t": "Prières",
+    "b": [
+     0.062,
+     0.696,
+     0.188,
+     0.024
+    ]
+   },
+   {
+    "t": "17",
+    "b": [
+     0.082,
+     0.743,
+     0.217,
+     0.033
+    ]
+   },
+   {
+    "t": "/ 18",
+    "b": [
+     0.137,
+     0.752,
+     0.049,
+     0.024
+    ]
+   },
+   {
+    "t": "notées ( 94 %)",
+    "b": [
+     0.082,
+     0.777,
+     0.217,
+     0.044
+    ]
+   },
+   {
+    "t": "7",
+    "b": [
+     0.391,
+     0.743,
+     0.217,
+     0.033
+    ]
+   },
+   {
+    "t": "à la mosquée",
+    "b": [
+     0.391,
+     0.777,
+     0.217,
+     0.044
+    ]
+   },
+   {
+    "t": "10 min",
+    "b": [
+     0.701,
+     0.743,
+     0.217,
+     0.033
+    ]
+   },
+   {
+    "t": "après l’appel",
+    "b": [
+     0.701,
+     0.777,
+     0.217,
+     0.022
+    ]
+   },
+   {
+    "t": "2 min plus tôt après l’appel que la période précédente.",
+    "b": [
+     0.062,
+     0.847,
+     0.877,
+     0.058
+    ]
+   },
+   {
+    "t": "Ce qui a bien marché",
+    "b": [
+     0.062,
+     0.933,
+     0.472,
+     0.024
+    ]
+   },
+   {
+    "t": "Invocation après le Fajr",
+    "b": [
+     0.082,
+     0.971,
+     0.836,
+     0.079
+    ]
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.106,
+     0.955,
+     0.058,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.247,
+     0.955,
+     0.141,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.65,
+     0.955,
+     0.065,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.838,
+     0.955,
+     0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "cycle": {
+  "desc": "Le cycle de 30 jours en cours : jours tenus, progression.",
+  "zones": [
+   {
+    "t": "Fin du cycle 1 · du 21 oct. au 19 nov.",
+    "b": [
+     0.051,
+     0.057,
+     0.897,
+     0.023
+    ]
+   },
+   {
+    "t": "Ton cycle 1 s’achève. Qu’Allah l’accepte.",
+    "b": [
+     0.051,
+     0.089,
+     0.897,
+     0.081
+    ]
+   },
+   {
+    "t": "24",
+    "b": [
+     0.082,
+     0.48,
+     0.377,
+     0.045
+    ]
+   },
+   {
+    "t": "/ 30",
+    "b": [
+     0.16,
+     0.495,
+     0.078,
+     0.021
+    ]
+   },
+   {
+    "t": "jours tenus",
+    "b": [
+     0.082,
+     0.531,
+     0.175,
+     0.02
+    ]
+   },
+   {
+    "t": "21",
+    "b": [
+     0.541,
+     0.48,
+     0.377,
+     0.045
+    ]
+   },
+   {
+    "t": "Fajr à l’heure",
+    "b": [
+     0.541,
+     0.531,
+     0.198,
+     0.02
+    ]
+   },
+   {
+    "t": "26",
+    "b": [
+     0.082,
+     0.593,
+     0.377,
+     0.045
+    ]
+   },
+   {
+    "t": "gestes pour ton besoin",
+    "b": [
+     0.082,
+     0.644,
+     0.362,
+     0.02
+    ]
+   },
+   {
+    "t": "9",
+    "b": [
+     0.541,
+     0.593,
+     0.377,
+     0.045
+    ]
+   },
+   {
+    "t": "bienfait s , autant d’étoiles",
+    "b": [
+     0.541,
+     0.644,
+     0.254,
+     0.05
+    ]
+   },
+   {
+    "t": "210",
+    "b": [
+     0.082,
+     0.737,
+     0.377,
+     0.045
+    ]
+   },
+   {
+    "t": "versets lus",
+    "b": [
+     0.082,
+     0.788,
+     0.169,
+     0.02
+    ]
+   },
+   {
+    "t": "24 jours tenus sur 30",
+    "b": [
+     0.09,
+     0.862,
+     0.446,
+     0.026
+    ]
+   },
+   {
+    "t": "Passer au niveau 3 de la journée du Prophète ﷺ pour ton cycle 2 : « Les sunna du jour » ?",
+    "b": [
+     0.09,
+     0.896,
+     0.821,
+     0.05
+    ]
+   },
+   {
+    "t": "Monter",
+    "b": [
+     0.09,
+     0.957,
+     0.4,
+     0.083
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Rester au niveau 2",
+    "b": [
+     0.51,
+     0.957,
+     0.4,
+     0.083
+    ],
+    "bouton": true
+   }
+  ]
+ },
+ "annee": {
+  "desc": "L’année : chaque jour tenu, d’un coup d’œil.",
+  "zones": [
+   {
+    "t": "Avant Ramadan",
+    "b": [
+     0.051,
+     0.057,
+     0.897,
+     0.023
+    ]
+   },
+   {
+    "t": "Ton année 1448 , avant d’accueillir Ramadan",
+    "b": [
+     0.051,
+     0.089,
+     0.897,
+     0.122
+    ]
+   },
+   {
+    "t": "Cycle 1 9 étoiles",
+    "b": [
+     0.072,
+     0.239,
+     0.272,
+     0.137
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Cycle 1",
+    "b": [
+     0.082,
+     0.315,
+     0.251,
+     0.021
+    ]
+   },
+   {
+    "t": "9 étoiles",
+    "b": [
+     0.152,
+     0.345,
+     0.111,
+     0.017
+    ]
+   },
+   {
+    "t": "Cycle 2 en cours",
+    "b": [
+     0.364,
+     0.239,
+     0.272,
+     0.137
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Cycle 2",
+    "b": [
+     0.374,
+     0.315,
+     0.251,
+     0.021
+    ]
+   },
+   {
+    "t": "en cours",
+    "b": [
+     0.444,
+     0.345,
+     0.113,
+     0.017
+    ]
+   },
+   {
+    "t": "182",
+    "b": [
+     0.082,
+     0.419,
+     0.224,
+     0.045
+    ]
+   },
+   {
+    "t": "prières notées",
+    "b": [
+     0.082,
+     0.47,
+     0.11,
+     0.05
+    ]
+   },
+   {
+    "t": "×1,4",
+    "b": [
+     0.388,
+     0.419,
+     0.224,
+     0.045
+    ]
+   },
+   {
+    "t": "Fajr à l’heure depuis ton premier cycle de l’année",
+    "b": [
+     0.388,
+     0.47,
+     0.215,
+     0.111
+    ]
+   },
+   {
+    "t": "2",
+    "b": [
+     0.694,
+     0.419,
+     0.224,
+     0.045
+    ]
+   },
+   {
+    "t": "niveau atteint",
+    "b": [
+     0.694,
+     0.47,
+     0.216,
+     0.02
+    ]
+   },
+   {
+    "t": "273",
+    "b": [
+     0.082,
+     0.623,
+     0.224,
+     0.045
+    ]
+   },
+   {
+    "t": "versets lus",
+    "b": [
+     0.082,
+     0.674,
+     0.169,
+     0.02
+    ]
+   },
+   {
+    "t": "0",
+    "b": [
+     0.388,
+     0.623,
+     0.224,
+     0.045
+    ]
+   },
+   {
+    "t": "invocations sues",
+    "b": [
+     0.388,
+     0.674,
+     0.18,
+     0.05
+    ]
+   },
+   {
+    "t": "0",
+    "b": [
+     0.694,
+     0.623,
+     0.224,
+     0.045
+    ]
+   },
+   {
+    "t": "du’â exaucée",
+    "b": [
+     0.694,
+     0.674,
+     0.207,
+     0.02
+    ]
+   },
+   {
+    "t": "Prépare ton Ramadan",
+    "b": [
+     0.09,
+     0.778,
+     0.46,
+     0.026
+    ]
+   },
+   {
+    "t": "Choisis ton niveau et ton intention pour le mois béni.",
+    "b": [
+     0.09,
+     0.812,
+     0.821,
+     0.05
+    ]
+   },
+   {
+    "t": "Commencer",
+    "b": [
+     0.09,
+     0.873,
+     0.4,
+     0.056
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus tard",
+    "b": [
+     0.51,
+     0.873,
+     0.4,
+     0.056
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Rien que pour toi : ces chiffres ne sont ni publiés ni comparés.",
+    "b": [
+     0.051,
+     0.961,
+     0.897,
+     0.047
+    ]
+   }
+  ]
+ },
+ "biblio-recherche": {
+  "desc": "Bibliothèque : la recherche « dormir » et les invocations trouvées.",
+  "zones": [
+   {
+    "t": "Bibliothèque",
+    "b": [
+     0.062,
+     0.017,
+     0.308,
+     0.024
+    ]
+   },
+   {
+    "t": "304 invocations",
+    "b": [
+     0.679,
+     0.017,
+     0.26,
+     0.024
+    ]
+   },
+   {
+    "t": "Arabe",
+    "b": [
+     0.054,
+     0.134,
+     0.158,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Phonétique",
+    "b": [
+     0.222,
+     0.134,
+     0.249,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Français",
+    "b": [
+     0.481,
+     0.134,
+     0.199,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "13 résultats",
+    "b": [
+     0.046,
+     0.193,
+     0.908,
+     0.026
+    ]
+   },
+   {
+    "t": "Évocations avant de dormir Joindre les mains, souffler dedans et réciter les sourates Al-Ikhlas, Al-Falaq et An-Nas, puis essuyer ce qui …",
+    "b": [
+     0.046,
+     0.228,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Évocations avant de dormir",
+    "b": [
+     0.082,
+     0.242,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Joindre les mains, souffler dedans et réciter les sourates Al-Ikhlas, Al-Falaq et An-Nas, puis essuyer ce qui …",
+    "b": [
+     0.082,
+     0.269,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Évocations avant de dormir Réciter le Verset du Trône (Ayat al-Kursi) avant de dormir.",
+    "b": [
+     0.046,
+     0.363,
+     0.908,
+     0.102
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Évocations avant de dormir",
+    "b": [
+     0.082,
+     0.378,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Réciter le Verset du Trône (Ayat al-Kursi) avant de dormir.",
+    "b": [
+     0.082,
+     0.404,
+     0.792,
+     0.047
+    ]
+   },
+   {
+    "t": "Évocations avant de dormir Réciter les deux derniers versets de la sourate Al-Baqara.",
+    "b": [
+     0.046,
+     0.475,
+     0.908,
+     0.102
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Évocations avant de dormir",
+    "b": [
+     0.082,
+     0.489,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Réciter les deux derniers versets de la sourate Al-Baqara.",
+    "b": [
+     0.082,
+     0.515,
+     0.792,
+     0.047
+    ]
+   },
+   {
+    "t": "Évocations avant de dormir En Ton Nom, mon Seigneur, je pose mon flanc et par Toi je le relève. Si Tu reprends mon âme, fais-lui misérico…",
+    "b": [
+     0.046,
+     0.587,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Évocations avant de dormir",
+    "b": [
+     0.082,
+     0.601,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "En Ton Nom, mon Seigneur, je pose mon flanc et par Toi je le relève. Si Tu reprends mon âme, fais-lui misérico…",
+    "b": [
+     0.082,
+     0.627,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Évocations avant de dormir Ô Allah, Tu as créé mon âme et c'est Toi qui la fais mourir. À Toi appartiennent sa mort et sa vie. Si Tu lui …",
+    "b": [
+     0.046,
+     0.722,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Évocations avant de dormir",
+    "b": [
+     0.082,
+     0.736,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Ô Allah, Tu as créé mon âme et c'est Toi qui la fais mourir. À Toi appartiennent sa mort et sa vie. Si Tu lui …",
+    "b": [
+     0.082,
+     0.762,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Évocations avant de dormir Ô Allah, préserve-moi de Ton châtiment le jour où Tu ressusciteras Tes serviteurs (3 fois).",
+    "b": [
+     0.046,
+     0.857,
+     0.908,
+     0.102
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Évocations avant de dormir",
+    "b": [
+     0.082,
+     0.871,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Ô Allah, préserve-moi de Ton châtiment le jour où Tu ressusciteras Tes serviteurs (3 fois).",
+    "b": [
+     0.082,
+     0.898,
+     0.792,
+     0.047
+    ]
+   },
+   {
+    "t": "Évocations avant de dormir En Ton Nom, ô Allah, je meurs et je vis.",
+    "b": [
+     0.046,
+     0.969,
+     0.908,
+     0.078
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Évocations avant de dormir",
+    "b": [
+     0.082,
+     0.983,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.106,
+     0.955,
+     0.058,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.243,
+     0.955,
+     0.148,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.652,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.838,
+     0.955,
+     0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "fiche-recherche": {
+  "desc": "Bibliothèque : recherche « dormir », la première invocation trouvée ouverte, avec sa source.",
+  "zones": [
+   {
+    "t": "Bibliothèque",
+    "b": [
+     0.062,
+     0.017,
+     0.308,
+     0.024
+    ]
+   },
+   {
+    "t": "304 invocations",
+    "b": [
+     0.679,
+     0.017,
+     0.26,
+     0.024
+    ]
+   },
+   {
+    "t": "Arabe",
+    "b": [
+     0.054,
+     0.134,
+     0.158,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Phonétique",
+    "b": [
+     0.222,
+     0.134,
+     0.249,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Français",
+    "b": [
+     0.481,
+     0.134,
+     0.199,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "13 résultats",
+    "b": [
+     0.046,
+     0.193,
+     0.908,
+     0.026
+    ]
+   },
+   {
+    "t": "Évocations avant de dormir",
+    "b": [
+     0.046,
+     0.228,
+     0.908,
+     0.054
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Évocations avant de dormir",
+    "b": [
+     0.082,
+     0.242,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "«يَجْمَعُ كَفَّيْهِ ثُمَّ يَنْفُثُ فِيهِمَا فَيَقْرَأُ: ﴿قُلْ هُوَ اللهُ أَحَدٌ﴾، ﴿قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ﴾، ﴿قُلْ أَعُوذُ بِرَبِّ النَّاسِ﴾ ثُمَّ يَمْسَحُ بِهِمَا مَا اسْتَطَاعَ مِنْ جَسَدِهِ...» (ثَلَاثَ مَرَّاتٍ).",
+    "b": [
+     0.082,
+     0.286,
+     0.836,
+     0.292
+    ]
+   },
+   {
+    "t": "Yajma'u kaffayhi thumma yanfuthu fīhimā fa-yaqra'u: Qul Huwa Allāhu Aḥad, Qul a'ūdhu bi-Rabbi al-Falaq, Qul a'ūdhu bi-Rabbi an-Nās...",
+    "b": [
+     0.082,
+     0.59,
+     0.836,
+     0.121
+    ]
+   },
+   {
+    "t": "Joindre les mains, souffler dedans et réciter les sourates Al-Ikhlas, Al-Falaq et An-Nas, puis essuyer ce qui est possible du corps en commençant par la tête et le visage (3 fois).",
+    "b": [
+     0.082,
+     0.723,
+     0.836,
+     0.156
+    ]
+   },
+   {
+    "t": "Source : Al-Bukhârî avec Al-Fath (Fath al-Bârî) 9/62",
+    "b": [
+     0.082,
+     0.891,
+     0.836,
+     0.024
+    ]
+   },
+   {
+    "t": "Apprendre par cœur",
+    "b": [
+     0.082,
+     0.929,
+     0.836,
+     0.053
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.106,
+     0.955,
+     0.058,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.243,
+     0.955,
+     0.148,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.652,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.838,
+     0.955,
+     0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "fiche-inquiet": {
+  "desc": "Bibliothèque : « Allah, Allah est mon Seigneur, je ne Lui associe rien » (grande détresse) ouverte, avec sa source.",
+  "zones": [
+   {
+    "t": "Évocation après le salut final du witr Gloire au Souverain, le Saint (3 fois). Il élève la voix à la troisième fois [et ajoute : Seigneur des Anges e…",
+    "b": [
+     0.046,
+     -0.11,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Gloire au Souverain, le Saint (3 fois). Il élève la voix à la troisième fois [et ajoute : Seigneur des Anges e…",
+    "b": [
+     0.082,
+     -0.069,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Invocation de la grande détresse Il n'y a de divinité digne d'adoration qu'Allah, l'Immense, le Longanime. Il n'y a de divinité digne d'adorati…",
+    "b": [
+     0.046,
+     0.026,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Invocation de la grande détresse",
+    "b": [
+     0.082,
+     0.04,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Il n'y a de divinité digne d'adoration qu'Allah, l'Immense, le Longanime. Il n'y a de divinité digne d'adorati…",
+    "b": [
+     0.082,
+     0.066,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Invocation de la grande détresse",
+    "b": [
+     0.046,
+     0.161,
+     0.908,
+     0.054
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Invocation de la grande détresse",
+    "b": [
+     0.082,
+     0.175,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "«اللهُ اللهُ رَبِّي لَا أُشْرِكُ بِهِ شَيْئًا».",
+    "b": [
+     0.082,
+     0.219,
+     0.836,
+     0.058
+    ]
+   },
+   {
+    "t": "Allāhu Allāhu Rabbī lā ushriku bihi shay'ā.",
+    "b": [
+     0.082,
+     0.289,
+     0.836,
+     0.03
+    ]
+   },
+   {
+    "t": "Allah, Allah est mon Seigneur, je ne Lui associe rien.",
+    "b": [
+     0.082,
+     0.332,
+     0.836,
+     0.062
+    ]
+   },
+   {
+    "t": "Source : Abû Dâwûd 2/87, Sahîh Ibn Mâjah 2/335",
+    "b": [
+     0.082,
+     0.406,
+     0.836,
+     0.024
+    ]
+   },
+   {
+    "t": "Apprendre par cœur",
+    "b": [
+     0.082,
+     0.444,
+     0.836,
+     0.053
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Invocation de celui qui craint l'injustice d'un dirigeant Ô Allah, Seigneur des sept cieux et Seigneur du Trône immense. Sois pour moi un protecteur contre untel fils d…",
+    "b": [
+     0.046,
+     0.523,
+     0.908,
+     0.151
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Invocation de celui qui craint l'injustice d'un dirigeant",
+    "b": [
+     0.082,
+     0.537,
+     0.792,
+     0.05
+    ]
+   },
+   {
+    "t": "Ô Allah, Seigneur des sept cieux et Seigneur du Trône immense. Sois pour moi un protecteur contre untel fils d…",
+    "b": [
+     0.082,
+     0.589,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Invocation en faveur du malade lors de sa visite Je demande à Allah l'Immense, Seigneur du Trône immense, de te guérir (7 fois).",
+    "b": [
+     0.046,
+     0.683,
+     0.908,
+     0.127
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Invocation en faveur du malade lors de sa visite",
+    "b": [
+     0.082,
+     0.698,
+     0.792,
+     0.05
+    ]
+   },
+   {
+    "t": "Je demande à Allah l'Immense, Seigneur du Trône immense, de te guérir (7 fois).",
+    "b": [
+     0.082,
+     0.749,
+     0.792,
+     0.047
+    ]
+   },
+   {
+    "t": "Invocation en fermant les yeux du défunt Ô Allah, pardonne à [nommer la personne], élève son rang parmi les bien-guidés, accorde-lui un successeur parm…",
+    "b": [
+     0.046,
+     0.82,
+     0.908,
+     0.151
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Invocation en fermant les yeux du défunt",
+    "b": [
+     0.082,
+     0.834,
+     0.792,
+     0.05
+    ]
+   },
+   {
+    "t": "Ô Allah, pardonne à [nommer la personne], élève son rang parmi les bien-guidés, accorde-lui un successeur parm…",
+    "b": [
+     0.082,
+     0.886,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Invocation à la vue du nouveau croissant de lune Allah est le plus Grand. Ô Allah, fais que ce croissant se lève sur nous avec la sécurité et la foi, le salut …",
+    "b": [
+     0.046,
+     0.98,
+     0.908,
+     0.151
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Invocation à la vue du nouveau croissant de lune",
+    "b": [
+     0.082,
+     0.995,
+     0.792,
+     0.05
+    ]
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.106,
+     0.955,
+     0.058,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.243,
+     0.955,
+     0.148,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.652,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.838,
+     0.955,
+     0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "fiche-istighfar": {
+  "desc": "Bibliothèque, « Du programme » : « Istighfâr » ouverte.",
+  "zones": [
+   {
+    "t": "Invocation après le Fajr Ô Allah, je Te demande une science utile, une subsistance pure et des œuvres acceptées. En révision",
+    "b": [
+     0.046,
+     -0.109,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Ô Allah, je Te demande une science utile, une subsistance pure et des œuvres acceptées.",
+    "b": [
+     0.082,
+     -0.068,
+     0.559,
+     0.071
+    ]
+   },
+   {
+    "t": "Sayyid al-istighfâr Ô Allah, Tu es mon Seigneur, il n’y a de divinité que Toi. Tu m’as créé et je suis Ton serviteur. Je respecte … En révision",
+    "b": [
+     0.046,
+     0.026,
+     0.908,
+     0.149
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Sayyid al-istighfâr",
+    "b": [
+     0.082,
+     0.041,
+     0.559,
+     0.025
+    ]
+   },
+   {
+    "t": "Ô Allah, Tu es mon Seigneur, il n’y a de divinité que Toi. Tu m’as créé et je suis Ton serviteur. Je respecte …",
+    "b": [
+     0.082,
+     0.067,
+     0.559,
+     0.095
+    ]
+   },
+   {
+    "t": "En révision",
+    "b": [
+     0.666,
+     0.087,
+     0.208,
+     0.029
+    ]
+   },
+   {
+    "t": "Istighfâr En révision",
+    "b": [
+     0.046,
+     0.185,
+     0.908,
+     0.057
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Istighfâr",
+    "b": [
+     0.082,
+     0.201,
+     0.559,
+     0.025
+    ]
+   },
+   {
+    "t": "En révision",
+    "b": [
+     0.666,
+     0.199,
+     0.208,
+     0.029
+    ]
+   },
+   {
+    "t": "أَسْتَغْفِرُ اللَّهَ",
+    "b": [
+     0.082,
+     0.247,
+     0.836,
+     0.058
+    ]
+   },
+   {
+    "t": "Astaghfirullâh.",
+    "b": [
+     0.082,
+     0.318,
+     0.836,
+     0.03
+    ]
+   },
+   {
+    "t": "Je demande pardon à Allah.",
+    "b": [
+     0.082,
+     0.36,
+     0.836,
+     0.031
+    ]
+   },
+   {
+    "t": "Source : Coran, Nûh 71:10-12 ; Muslim (n° 2702)",
+    "b": [
+     0.082,
+     0.403,
+     0.836,
+     0.024
+    ]
+   },
+   {
+    "t": "Dans tes révisions",
+    "b": [
+     0.082,
+     0.441,
+     0.836,
+     0.026
+    ]
+   },
+   {
+    "t": "Hasbiyallâh Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le Seigneur du Trône i… En révision",
+    "b": [
+     0.046,
+     0.493,
+     0.908,
+     0.149
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Hasbiyallâh",
+    "b": [
+     0.082,
+     0.507,
+     0.559,
+     0.025
+    ]
+   },
+   {
+    "t": "Allah me suffit, il n’y a de divinité que Lui ; en Lui je place ma confiance, et Il est le Seigneur du Trône i…",
+    "b": [
+     0.082,
+     0.534,
+     0.559,
+     0.095
+    ]
+   },
+   {
+    "t": "En révision",
+    "b": [
+     0.666,
+     0.553,
+     0.208,
+     0.029
+    ]
+   },
+   {
+    "t": "Yâ Hayyu yâ Qayyûm Ô Vivant, ô Celui qui subsiste par Lui-même, c’est par Ta miséricorde que je demande secours : arrange toutes … En révision",
+    "b": [
+     0.046,
+     0.652,
+     0.908,
+     0.149
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Yâ Hayyu yâ Qayyûm",
+    "b": [
+     0.082,
+     0.666,
+     0.559,
+     0.025
+    ]
+   },
+   {
+    "t": "Ô Vivant, ô Celui qui subsiste par Lui-même, c’est par Ta miséricorde que je demande secours : arrange toutes …",
+    "b": [
+     0.082,
+     0.693,
+     0.559,
+     0.095
+    ]
+   },
+   {
+    "t": "En révision",
+    "b": [
+     0.666,
+     0.712,
+     0.208,
+     0.029
+    ]
+   },
+   {
+    "t": "L’invocation de Moïse Seigneur, j’ai grand besoin du bien que Tu feras descendre vers moi.",
+    "b": [
+     0.046,
+     0.811,
+     0.908,
+     0.102
+    ],
+    "bouton": true
+   },
+   {
+    "t": "L’invocation de Moïse",
+    "b": [
+     0.082,
+     0.825,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Seigneur, j’ai grand besoin du bien que Tu feras descendre vers moi.",
+    "b": [
+     0.082,
+     0.852,
+     0.792,
+     0.047
+    ]
+   },
+   {
+    "t": "Invocation contre les dettes Ô Allah, suffis-moi par Ton licite pour que je me passe de Ton illicite, et enrichis-moi par Ta grâce pour que…",
+    "b": [
+     0.046,
+     0.923,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Invocation contre les dettes",
+    "b": [
+     0.082,
+     0.937,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Ô Allah, suffis-moi par Ton licite pour que je me passe de Ton illicite, et enrichis-moi par Ta grâce pour que…",
+    "b": [
+     0.082,
+     0.963,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.106,
+     0.955,
+     0.058,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.243,
+     0.955,
+     0.148,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.652,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.838,
+     0.955,
+     0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "fiche-sharh": {
+  "desc": "Bibliothèque, « Du programme » : « L’invocation avant l’épreuve orale » ouverte (Tâ-Hâ 20:25-28).",
+  "zones": [
+   {
+    "t": "Pour un foyer qui réjouit le cœur Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de nous un modèle pour l…",
+    "b": [
+     0.046,
+     -0.11,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Seigneur, fais que nos épouses et nos descendants soient la joie de nos yeux, et fais de nous un modèle pour l…",
+    "b": [
+     0.082,
+     -0.069,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Accroître sa science Seigneur, accroît ma science.",
+    "b": [
+     0.046,
+     0.026,
+     0.908,
+     0.078
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Accroître sa science",
+    "b": [
+     0.082,
+     0.04,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Seigneur, accroît ma science.",
+    "b": [
+     0.082,
+     0.066,
+     0.792,
+     0.024
+    ]
+   },
+   {
+    "t": "L’invocation avant l’épreuve orale",
+    "b": [
+     0.046,
+     0.114,
+     0.908,
+     0.054
+    ],
+    "bouton": true
+   },
+   {
+    "t": "L’invocation avant l’épreuve orale",
+    "b": [
+     0.082,
+     0.128,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "رَبِّ اشْرَحْ لِي صَدْرِي، وَيَسِّرْ لِي أَمْرِي، وَاحْلُلْ عُقْدَةً مِنْ لِسَانِي، يَفْقَهُوا قَوْلِي",
+    "b": [
+     0.082,
+     0.172,
+     0.836,
+     0.117
+    ]
+   },
+   {
+    "t": "Rabbi-shrah lî sadrî, wa yassir lî amrî, wahlul ʿuqdatan min lisânî, yafqahû qawlî.",
+    "b": [
+     0.082,
+     0.301,
+     0.836,
+     0.06
+    ]
+   },
+   {
+    "t": "Seigneur, ouvre-moi ma poitrine, facilite-moi ma tâche, et dénoue le nœud de ma langue, afin qu’ils comprennent mes paroles.",
+    "b": [
+     0.082,
+     0.373,
+     0.836,
+     0.125
+    ]
+   },
+   {
+    "t": "Source : Coran, Tâ-Hâ 20:25-28",
+    "b": [
+     0.082,
+     0.51,
+     0.836,
+     0.024
+    ]
+   },
+   {
+    "t": "Apprendre par cœur",
+    "b": [
+     0.082,
+     0.548,
+     0.836,
+     0.053
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Une science qui profite Ô Allah, fais-moi profiter de ce que Tu m’as appris, apprends-moi ce qui me sera utile, et accroît ma science.",
+    "b": [
+     0.046,
+     0.627,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Une science qui profite",
+    "b": [
+     0.082,
+     0.641,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Ô Allah, fais-moi profiter de ce que Tu m’as appris, apprends-moi ce qui me sera utile, et accroît ma science.",
+    "b": [
+     0.082,
+     0.667,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "L’invocation dans l’épreuve Nous appartenons à Allah et c’est vers Lui que nous retournons. Ô Allah, récompense-moi dans mon épreuve et do…",
+    "b": [
+     0.046,
+     0.762,
+     0.908,
+     0.126
+    ],
+    "bouton": true
+   },
+   {
+    "t": "L’invocation dans l’épreuve",
+    "b": [
+     0.082,
+     0.776,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Nous appartenons à Allah et c’est vers Lui que nous retournons. Ô Allah, récompense-moi dans mon épreuve et do…",
+    "b": [
+     0.082,
+     0.802,
+     0.792,
+     0.071
+    ]
+   },
+   {
+    "t": "Pour la personne disparue Ô Allah, pardonne-lui, fais-lui miséricorde, préserve-le et efface ses fautes.",
+    "b": [
+     0.046,
+     0.897,
+     0.908,
+     0.102
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Pour la personne disparue",
+    "b": [
+     0.082,
+     0.911,
+     0.792,
+     0.025
+    ]
+   },
+   {
+    "t": "Ô Allah, pardonne-lui, fais-lui miséricorde, préserve-le et efface ses fautes.",
+    "b": [
+     0.082,
+     0.938,
+     0.792,
+     0.047
+    ]
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.106,
+     0.955,
+     0.058,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.243,
+     0.955,
+     0.148,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.652,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.838,
+     0.955,
+     0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "etudes-accueil": {
+  "desc": "Accueil avec le besoin « Réussir mon examen » (parcours Études et examens).",
+  "zones": [
+   {
+    "t": "Sabab",
+    "b": [
+     0.133,
+     0.028,
+     0.152,
+     0.035
+    ]
+   },
+   {
+    "t": "Aujourd’hui",
+    "b": [
+     0.605,
+     0.031,
+     0.246,
+     0.028
+    ]
+   },
+   {
+    "t": "· 16 joumada ath-thania 1448",
+    "b": [
+     0.046,
+     0.073,
+     0.908,
+     0.056
+    ]
+   },
+   {
+    "t": "Jeudi 26 novembre",
+    "b": [
+     0.046,
+     0.075,
+     0.368,
+     0.025
+    ]
+   },
+   {
+    "t": "Prochaine prière : Maghreb",
+    "b": [
+     0.046,
+     0.146,
+     0.652,
+     0.035
+    ]
+   },
+   {
+    "t": "dans 1 h 55",
+    "b": [
+     0.724,
+     0.149,
+     0.229,
+     0.03
+    ]
+   },
+   {
+    "t": "07:01 Fajr",
+    "b": [
+     0.036,
+     0.343,
+     0.182,
+     0.067
+    ],
+    "bouton": true
+   },
+   {
+    "t": "07:01",
+    "b": [
+     0.036,
+     0.351,
+     0.182,
+     0.03
+    ]
+   },
+   {
+    "t": "Fajr",
+    "b": [
+     0.036,
+     0.381,
+     0.182,
+     0.022
+    ]
+   },
+   {
+    "t": "12:40 Dhuhr",
+    "b": [
+     0.223,
+     0.343,
+     0.182,
+     0.067
+    ],
+    "bouton": true
+   },
+   {
+    "t": "12:40",
+    "b": [
+     0.223,
+     0.351,
+     0.182,
+     0.03
+    ]
+   },
+   {
+    "t": "Dhuhr",
+    "b": [
+     0.223,
+     0.381,
+     0.182,
+     0.022
+    ]
+   },
+   {
+    "t": "14:40 ʿAsr",
+    "b": [
+     0.409,
+     0.343,
+     0.182,
+     0.067
+    ],
+    "bouton": true
+   },
+   {
+    "t": "14:40",
+    "b": [
+     0.409,
+     0.351,
+     0.182,
+     0.03
+    ]
+   },
+   {
+    "t": "ʿAsr",
+    "b": [
+     0.409,
+     0.381,
+     0.182,
+     0.022
+    ]
+   },
+   {
+    "t": "17:00 Maghreb",
+    "b": [
+     0.596,
+     0.343,
+     0.182,
+     0.067
+    ],
+    "bouton": true
+   },
+   {
+    "t": "17:00",
+    "b": [
+     0.596,
+     0.351,
+     0.182,
+     0.03
+    ]
+   },
+   {
+    "t": "Maghreb",
+    "b": [
+     0.596,
+     0.381,
+     0.182,
+     0.022
+    ]
+   },
+   {
+    "t": "18:15 ʿIchâ",
+    "b": [
+     0.783,
+     0.343,
+     0.182,
+     0.067
+    ],
+    "bouton": true
+   },
+   {
+    "t": "18:15",
+    "b": [
+     0.783,
+     0.351,
+     0.182,
+     0.03
+    ]
+   },
+   {
+    "t": "ʿIchâ",
+    "b": [
+     0.783,
+     0.381,
+     0.182,
+     0.022
+    ]
+   },
+   {
+    "t": "Tu as prié le ʿAsr ?",
+    "b": [
+     0.21,
+     0.436,
+     0.713,
+     0.03
+    ]
+   },
+   {
+    "t": "Son temps court jusqu’à 17:00",
+    "b": [
+     0.21,
+     0.467,
+     0.713,
+     0.025
+    ]
+   },
+   {
+    "t": "Oui, priée",
+    "b": [
+     0.21,
+     0.503,
+     0.234,
+     0.043
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Détails",
+    "b": [
+     0.46,
+     0.503,
+     0.186,
+     0.043
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Pas encore",
+    "b": [
+     0.661,
+     0.503,
+     0.215,
+     0.043
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Moment favorable · à l’appel, 17:00",
+    "b": [
+     0.046,
+     0.564,
+     0.908,
+     0.052
+    ],
+    "bouton": true
+   },
+   {
+    "t": "· à l’appel, 17:00",
+    "b": [
+     0.133,
+     0.577,
+     0.741,
+     0.027
+    ]
+   },
+   {
+    "t": "Moment favorable",
+    "b": [
+     0.133,
+     0.578,
+     0.336,
+     0.024
+    ]
+   },
+   {
+    "t": "7 TON OBJECTIF Réussir mon examen Cycle 2 · jour 7 sur 30",
+    "b": [
+     0.097,
+     0.647,
+     0.805,
+     0.085
+    ],
+    "bouton": true
+   },
+   {
+    "t": "7",
+    "b": [
+     0.097,
+     0.654,
+     0.159,
+     0.073
+    ]
+   },
+   {
+    "t": "Ton objectif",
+    "b": [
+     0.292,
+     0.649,
+     0.554,
+     0.024
+    ]
+   },
+   {
+    "t": "Réussir mon examen",
+    "b": [
+     0.292,
+     0.674,
+     0.554,
+     0.03
+    ]
+   },
+   {
+    "t": "Cycle 2 · jour 7 sur 30",
+    "b": [
+     0.292,
+     0.706,
+     0.554,
+     0.027
+    ]
+   },
+   {
+    "t": "Continuer · Le matin",
+    "b": [
+     0.097,
+     0.749,
+     0.805,
+     0.062
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Ta journée",
+    "b": [
+     0.097,
+     0.884,
+     0.285,
+     0.025
+    ]
+   },
+   {
+    "t": "50",
+    "b": [
+     0.758,
+     0.864,
+     0.102,
+     0.05
+    ]
+   },
+   {
+    "t": "%",
+    "b": [
+     0.865,
+     0.881,
+     0.038,
+     0.026
+    ]
+   },
+   {
+    "t": "Matin",
+    "b": [
+     0.232,
+     0.951,
+     0.09,
+     0.022
+    ]
+   },
+   {
+    "t": "Journée",
+    "b": [
+     0.47,
+     0.951,
+     0.124,
+     0.022
+    ]
+   },
+   {
+    "t": "Soir",
+    "b": [
+     0.725,
+     0.951,
+     0.059,
+     0.022
+    ]
+   },
+   {
+    "t": "6 sur 12 · encore 6",
+    "b": [
+     0.097,
+     0.979,
+     0.805,
+     0.025
+    ]
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.104,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.247,
+     0.955,
+     0.141,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.652,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.838,
+     0.955,
+     0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "etudes-journee": {
+  "desc": "Accueil plus bas, besoin « Réussir mon examen » : la journée par moments.",
+  "zones": [
+   {
+    "t": "Réussir mon examen",
+    "b": [
+     0.046,
+     0.013,
+     0.419,
+     0.024
+    ]
+   },
+   {
+    "t": "6 sur 12",
+    "b": [
+     0.046,
+     0.037,
+     0.419,
+     0.025
+    ]
+   },
+   {
+    "t": "Continuer",
+    "b": [
+     0.649,
+     0.012,
+     0.304,
+     0.052
+    ],
+    "bouton": true
+   },
+   {
+    "t": "7 TON OBJECTIF Réussir mon examen Cycle 2 · jour 7 sur 30",
+    "b": [
+     0.097,
+     -0.067,
+     0.805,
+     0.085
+    ],
+    "bouton": true
+   },
+   {
+    "t": "7",
+    "b": [
+     0.097,
+     -0.06,
+     0.159,
+     0.073
+    ]
+   },
+   {
+    "t": "Cycle 2 · jour 7 sur 30",
+    "b": [
+     0.292,
+     -0.009,
+     0.554,
+     0.027
+    ]
+   },
+   {
+    "t": "Continuer · Le matin",
+    "b": [
+     0.097,
+     0.034,
+     0.805,
+     0.062
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Ta journée",
+    "b": [
+     0.097,
+     0.169,
+     0.285,
+     0.025
+    ]
+   },
+   {
+    "t": "50",
+    "b": [
+     0.758,
+     0.149,
+     0.102,
+     0.05
+    ]
+   },
+   {
+    "t": "%",
+    "b": [
+     0.865,
+     0.167,
+     0.038,
+     0.026
+    ]
+   },
+   {
+    "t": "Matin",
+    "b": [
+     0.232,
+     0.236,
+     0.09,
+     0.022
+    ]
+   },
+   {
+    "t": "Journée",
+    "b": [
+     0.47,
+     0.236,
+     0.124,
+     0.022
+    ]
+   },
+   {
+    "t": "Soir",
+    "b": [
+     0.725,
+     0.236,
+     0.059,
+     0.022
+    ]
+   },
+   {
+    "t": "6 sur 12 · encore 6",
+    "b": [
+     0.097,
+     0.265,
+     0.805,
+     0.025
+    ]
+   },
+   {
+    "t": "Journée du Prophète ﷺ · niveau 2",
+    "b": [
+     0.056,
+     0.321,
+     0.887,
+     0.038
+    ],
+    "bouton": true
+   },
+   {
+    "t": "· niveau 2",
+    "b": [
+     0.241,
+     0.327,
+     0.659,
+     0.026
+    ]
+   },
+   {
+    "t": "Journée du Prophète ﷺ",
+    "b": [
+     0.241,
+     0.327,
+     0.427,
+     0.024
+    ]
+   },
+   {
+    "t": "Le matin 3 sur 5 · à rattraper",
+    "b": [
+     0.333,
+     0.371,
+     0.456,
+     0.09
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Le matin",
+    "b": [
+     0.333,
+     0.386,
+     0.456,
+     0.031
+    ]
+   },
+   {
+    "t": "3 sur 5 · à rattraper",
+    "b": [
+     0.333,
+     0.42,
+     0.456,
+     0.025
+    ]
+   },
+   {
+    "t": "Dans la journée 1 sur 3 · à rattraper",
+    "b": [
+     0.333,
+     0.473,
+     0.456,
+     0.09
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Dans la journée",
+    "b": [
+     0.333,
+     0.488,
+     0.456,
+     0.031
+    ]
+   },
+   {
+    "t": "1 sur 3 · à rattraper",
+    "b": [
+     0.333,
+     0.522,
+     0.456,
+     0.025
+    ]
+   },
+   {
+    "t": "Le soir 2 sur 4 · maintenant",
+    "b": [
+     0.333,
+     0.574,
+     0.456,
+     0.09
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Le soir",
+    "b": [
+     0.333,
+     0.59,
+     0.456,
+     0.031
+    ]
+   },
+   {
+    "t": "2 sur 4 · maintenant",
+    "b": [
+     0.333,
+     0.624,
+     0.456,
+     0.025
+    ]
+   },
+   {
+    "t": "Clôturer ta journée 3 questions · 30 secondes",
+    "b": [
+     0.144,
+     0.676,
+     0.81,
+     0.09
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Clôturer ta journée",
+    "b": [
+     0.333,
+     0.692,
+     0.456,
+     0.031
+    ]
+   },
+   {
+    "t": "3 questions · 30 secondes",
+    "b": [
+     0.333,
+     0.726,
+     0.456,
+     0.025
+    ]
+   },
+   {
+    "t": "Thème du jeudi : la patience et la constance",
+    "b": [
+     0.056,
+     0.807,
+     0.517,
+     0.053
+    ]
+   },
+   {
+    "t": "Journée chargée ?",
+    "b": [
+     0.604,
+     0.807,
+     0.339,
+     0.052
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.104,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.247,
+     0.955,
+     0.141,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.652,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.838,
+     0.955,
+     0.053,
+     0.02
+    ]
+   }
+  ]
+ },
+ "etudes-parcours": {
+  "desc": "Le parcours actif « Études et examens » : ses invocations et ses gestes.",
+  "zones": [
+   {
+    "t": "Retour",
+    "b": [
+     0.021,
+     0.007,
+     0.236,
+     0.052
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Parcours",
+    "b": [
+     0.046,
+     0.073,
+     0.908,
+     0.041
+    ]
+   },
+   {
+    "t": "Des invocations ciblées et un geste concret chaque jour, par cycles de 30 jours qui s’enchaînent, et un cycle à part pendant Ramadan. Un parcours à la fois.",
+    "b": [
+     0.046,
+     0.122,
+     0.908,
+     0.118
+    ]
+   },
+   {
+    "t": "Études et examens",
+    "b": [
+     0.087,
+     0.285,
+     0.826,
+     0.031
+    ]
+   },
+   {
+    "t": "Pour réviser avec régularité et aborder les épreuves avec calme.",
+    "b": [
+     0.087,
+     0.321,
+     0.826,
+     0.058
+    ]
+   },
+   {
+    "t": "Accroître sa science · L’invocation avant l’épreuve orale · Une science qui profite",
+    "b": [
+     0.087,
+     0.39,
+     0.826,
+     0.054
+    ]
+   },
+   {
+    "t": "Cycle 2 · jour 7 sur 30",
+    "b": [
+     0.087,
+     0.468,
+     0.826,
+     0.027
+    ]
+   },
+   {
+    "t": "Arrêter ce parcours",
+    "b": [
+     0.087,
+     0.507,
+     0.386,
+     0.052
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Ouvrir les portes du rizq",
+    "b": [
+     0.087,
+     0.609,
+     0.826,
+     0.031
+    ]
+   },
+   {
+    "t": "Pour une recherche d’emploi, un lancement d’activité ou des revenus à faire grandir.",
+    "b": [
+     0.087,
+     0.645,
+     0.826,
+     0.087
+    ]
+   },
+   {
+    "t": "Demander de la grâce d’Allah · L’invocation de Moïse · La barakah dans ce qu’on a",
+    "b": [
+     0.087,
+     0.744,
+     0.826,
+     0.054
+    ]
+   },
+   {
+    "t": "Choisir ce parcours",
+    "b": [
+     0.087,
+     0.81,
+     0.475,
+     0.053
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Sortir des dettes",
+    "b": [
+     0.087,
+     0.912,
+     0.826,
+     0.031
+    ]
+   },
+   {
+    "t": "Pour voir clair, rembourser pas à pas et retrouver la sérénité.",
+    "b": [
+     0.087,
+     0.948,
+     0.826,
+     0.058
+    ]
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.044,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Jour",
+    "b": [
+     0.106,
+     0.955,
+     0.058,
+     0.02
+    ]
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.226,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Apprendre",
+    "b": [
+     0.247,
+     0.955,
+     0.141,
+     0.02
+    ]
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.409,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Communauté",
+    "b": [
+     0.414,
+     0.955,
+     0.172,
+     0.02
+    ]
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.591,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Suivi",
+    "b": [
+     0.652,
+     0.955,
+     0.061,
+     0.02
+    ]
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.774,
+     0.916,
+     0.183,
+     0.066
+    ],
+    "bouton": true
+   },
+   {
+    "t": "Plus",
+    "b": [
+     0.837,
+     0.955,
+     0.057,
      0.02
     ]
    }

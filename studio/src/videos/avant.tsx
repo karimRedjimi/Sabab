@@ -1,8 +1,8 @@
-// « Avant / Maintenant » : commencer fort puis tout lâcher. Aucun texte religieux dit.
-// Maintenant : la bannière bienveillante après un jour manqué, le minimum du jour, « Journée chargée ? », reprendre sa journée.
+// « Avant / Maintenant » : ne pas voir ses progrès. Aucun texte religieux dit.
+// Avant (graphisme, gris) : des efforts sans trace, un jour manqué qui cache tout. Maintenant : le suivi, la régularité sur 30 jours, le bilan de la semaine.
 import React from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
-import { C, FONT, GOLD, PLUM, W, H, minutage, zone, englobe, SousTitres, Voile, Fond, Scene, Flash, Phone, Pastille, Surligne, Logo, Son, type Sfx } from "../moteur";
+import { C, FONT, GOLD, PLUM, W, H, minutage, zone, englobe, SousTitres, Voile, Fond, StarP, Scene, Flash, Phone, Pastille, Surligne, Logo, Son, type Sfx } from "../moteur";
 import voix from "../../public/voix/avant.json";
 
 const T = minutage(voix);
@@ -26,93 +26,120 @@ const Etiquette: React.FC<{ texte: string; at: number; or?: boolean; top?: numbe
   </div>;
 };
 
-// ---------- 1. Avant : jour 1 plein, jour 2 plein, jour 3 vide ----------
-const Jours: React.FC = () => {
+// ---------- 1. Avant : une courbe plate, et un point d’interrogation ----------
+const Plat: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const at = [mot(/^premier/), mot(/^fais/) + 6, mot(/^troisième/)];
-  const crash = spring({ frame: f - mot(/^lâches/), fps, config: { damping: 8, stiffness: 160 } });
+  const trace = interpolate(f, [8, mot(/^avancer/)], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) });
+  const q = spring({ frame: f - mot(/^avancer/), fps, config: { damping: 7, stiffness: 200 } });
   return (
     <AbsoluteFill>
       <Etiquette texte="AVANT" at={2} />
-      {[0, 1, 2].map((i) => {
-        const s = spring({ frame: f - at[i], fps, config: { damping: 12, stiffness: 160 } });
-        const haut = i < 2 ? 520 * s : 520 * s * (1 - crash);
-        return (
-          <div key={i} style={{ position: "absolute", left: 180 + i * 260, top: 400, width: 200, height: 640, opacity: Math.min(1, s * 2) }}>
-            <div style={{ position: "absolute", left: 0, right: 0, bottom: 80, height: 540, borderRadius: 30, background: "rgba(255,255,255,0.08)" }} />
-            <div style={{ position: "absolute", left: 10, right: 10, bottom: 90, height: haut, borderRadius: 24, background: i < 2 ? "linear-gradient(180deg,#9A9AA6,#6A6A76)" : "#7A7A86" }} />
-            <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 46, color: "rgba(255,255,255,0.75)" }}>jour {i + 1}</div>
-            {i === 2 && <div style={{ position: "absolute", left: 40, top: 160, fontFamily: FONT, fontWeight: 800, fontSize: 140, color: "#E07A5F", opacity: crash, transform: `scale(${crash})` }}>✕</div>}
-          </div>
-        );
-      })}
+      <svg width={900} height={700} style={{ position: "absolute", left: 90, top: 400 }}>
+        <path d="M60 40 V620 H860" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth={8} strokeLinecap="round" />
+        <path d="M60 470 C200 440 260 500 380 460 S600 490 840 470" fill="none" stroke="#9A9AA6" strokeWidth={12} strokeLinecap="round" pathLength={1} strokeDasharray={`${trace} 1`} />
+      </svg>
+      <div style={{ position: "absolute", left: 540 - 70, top: 560, width: 140, height: 140, borderRadius: "50%", background: "#3A3A44", display: "grid", placeItems: "center",
+        fontFamily: FONT, fontWeight: 800, fontSize: 96, color: "#fff", transform: `scale(${q}) rotate(${(1 - q) * -30}deg)` }}>?</div>
     </AbsoluteFill>
   );
 };
 
-// ---------- 2. Avant : un seul jour manqué, et tout semble perdu ----------
-const Perdu: React.FC = () => {
+// ---------- 2. Avant : des efforts qui s’effacent ----------
+const SansTrace: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const manque = mot(/^manqué/, 1), perdu = mot(/^perdu/, 1);
+  const efface = mot(/^aucune/, 1);
   return (
     <AbsoluteFill>
       <Etiquette texte="AVANT" at={L[1] - 6} />
       {Array.from({ length: 7 }, (_, i) => {
-        const s = spring({ frame: f - L[1] - i * 2, fps, config: { damping: 12, stiffness: 180 } });
-        const trou = i === 4 ? interpolate(f, [manque, manque + 6], [1, 0], C) : 1;
-        const chute = interpolate(f, [perdu - 4 + i * 2, perdu + 16 + i * 2], [0, 1], { ...C, easing: Easing.in(Easing.cubic) });
-        return <div key={i} style={{ position: "absolute", left: 125 + i * 120, top: 640 + chute * 700, width: 90, height: 90, borderRadius: "50%", transform: `scale(${s}) rotate(${chute * 90}deg)`,
-          background: trou < 1 && i === 4 ? `rgba(224,122,95,${1 - trou})` : "#8A8A96", border: i === 4 && trou < 1 ? "4px dashed #E07A5F" : "none", opacity: (1 - chute) }} />;
+        const s = spring({ frame: f - L[1] - i * 3, fps, config: { damping: 12, stiffness: 180 } });
+        const o = interpolate(f, [efface - 4 + i * 2, efface + 12 + i * 2], [1, 0], C);
+        return <div key={i} style={{ position: "absolute", left: 125 + i * 120, top: 640, width: 90, height: 90, borderRadius: "50%", background: "#9A9AA6", transform: `scale(${s})`, opacity: o, filter: `blur(${(1 - o) * 12}px)` }} />;
       })}
-      <div style={{ position: "absolute", left: 0, right: 0, top: 900, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 70, color: "rgba(255,255,255,0.8)", opacity: interpolate(f, [perdu, perdu + 8], [0, 1], C) }}>tout perdu ?</div>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 860, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 70, color: "rgba(255,255,255,0.8)", opacity: interpolate(f, [efface + 6, efface + 16], [0, 1], C) }}>aucune trace</div>
     </AbsoluteFill>
   );
 };
 
-// ---------- 3. Avant : on arrête tout ----------
-const Arret: React.FC = () => {
+// ---------- 3. Avant : un jour manqué qui cache tout ----------
+const Manque: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const s = spring({ frame: f - L[2], fps, config: { damping: 12, stiffness: 160 } });
-  const off = interpolate(f, [mot(/^arrête/, 2), mot(/^tout/, 2) + 10], [0, 1], C);
+  const m = mot(/^manqué/, 2), grand = spring({ frame: f - mot(/^voyais/, 2), fps, config: { damping: 14, stiffness: 90 } });
   return (
     <AbsoluteFill>
       <Etiquette texte="AVANT" at={L[2] - 6} />
-      <div style={{ position: "absolute", left: 540 - 160, top: 480, width: 320, height: 320, borderRadius: "50%", border: "16px solid #8A8A96", transform: `scale(${s})`, opacity: 1 - 0.6 * off }}>
-        <div style={{ position: "absolute", left: 128, top: -40, width: 32, height: 170, borderRadius: 16, background: "#8A8A96", boxShadow: "0 0 0 16px #24242C" }} />
-      </div>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 900, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 70, color: "rgba(255,255,255,0.75)", opacity: off }}>on arrête</div>
+      {Array.from({ length: 7 }, (_, i) => {
+        const s = spring({ frame: f - L[2] - i * 2, fps, config: { damping: 12, stiffness: 180 } });
+        const x = i === 3;
+        const sc = x ? 1 + 2.6 * grand : 1;
+        return <div key={i} style={{ position: "absolute", left: 125 + i * 120, top: 640, width: 90, height: 90, borderRadius: "50%", transform: `scale(${s * sc})`, zIndex: x ? 2 : 1,
+          background: x && f >= m ? "#2E2E36" : "#9A9AA6", border: x && f >= m ? "5px solid #E07A5F" : "none", opacity: x ? 1 : 1 - 0.75 * grand,
+          display: "grid", placeItems: "center", fontFamily: FONT, fontWeight: 800, fontSize: 50, color: "#E07A5F" }}>{x && f >= m ? "✕" : ""}</div>;
+      })}
     </AbsoluteFill>
   );
 };
 
-// ---------- 4 et 5. Maintenant : la bannière bienveillante, puis le minimum ----------
-const EM = "ecrans/manque";
-const ZHIER = englobe(zone(EM, /^Hier n’a pas été tenu\.$/), zone(EM, /^Ce n’est pas grave/)), ZBTN = zone(EM, /^Commencer par le minimum$/);
-const Manque: React.FC = () => <Phone ecran={EM} from={BASCULE + 18} to={L[5] - 2} entree="zoom" sortie="gauche" focus={[{ at: BASCULE + 30, px: 0.5, py: 0.42, s: 1.08 }]}>
-  <Surligne at={mot(/^grave/, 3) - 6} {...ZHIER} fin={mot(/^bouton/, 4) - 2} />
-  <Surligne at={mot(/^bouton/, 4)} {...ZBTN} />
-</Phone>;
-const EJ = "ecrans/journee";
-const ZCH = zone(EJ, /^Journée chargée \?$/);
-const Chargee: React.FC = () => <Phone ecran={EJ} from={L[5] - 4} to={L[6] - 2} entree="droite" sortie="bas" focus={[{ at: L[5] + 6, px: 0.6, py: 0.75, s: 1.08 }]}>
-  <Surligne at={mot(/^chargée/, 5)} {...ZCH} />
-  <Pastille at={mot(/^minimum/, 5)} x={W * 0.62} y={H * 0.885} gold>Minimum du jour</Pastille>
-</Phone>;
-const EN = "ecrans/minimum";
-const ZMIN = englobe(zone(EN, /^Minimum du jour$/), zone(EN, /^Trois invocations courtes/)), ZREP = zone(EN, /^Reprendre ma journée$/);
-const Minimum: React.FC = () => <Phone ecran={EN} from={L[6] - 4} to={LIEN - 2} entree="bas" sortie="recul" focus={[{ at: L[6] + 6, px: 0.5, py: 0.42, s: 1.08 }]}>
-  <Surligne at={L[6] + 4} {...ZMIN} fin={mot(/^reprends/, 6) - 2} />
-  <Surligne at={mot(/^reprends/, 6)} {...ZREP} />
+// ---------- 4. Maintenant : le suivi ----------
+const ES = "ecrans/suivi";
+const ZTI = zone(ES, /^Ton suivi$/), ZR = englobe(zone(ES, /^Prières$/), zone(ES, /^Coran$/), zone(ES, /^100 %$/)), ZM = englobe(zone(ES, /^Matin : 2 sur 6/), zone(ES, /^C’est ton moment le plus fragile/));
+const Suivi: React.FC = () => <Phone ecran={ES} from={BASCULE + 16} to={L[4] - 2} entree="zoom" sortie="gauche">
+  <Surligne at={mot(/^trace/, 3)} {...ZTI} fin={mot(/^chaque/, 3) + 4} />
+  <Surligne at={mot(/^journée/, 3)} {...ZR} fin={mot(/^matin/, 3) - 2} />
+  <Surligne at={mot(/^matin/, 3)} {...ZM} />
 </Phone>;
 
+// ---------- 5. Maintenant : la régularité sur 30 jours ----------
+const E2 = "ecrans/suivi2";
+const ZREG = englobe(zone(E2, /^Ta régularité$/), zone(E2, /^30 derniers jours$/)), ZCAL = englobe(zone(E2, /^28$/), zone(E2, /^26$/)), Z24 = englobe(zone(E2, /^24$/, 1), zone(E2, /^jours tenus$/));
+const Regularite: React.FC = () => <Phone ecran={E2} from={L[4] - 4} to={L[5] - 2} entree="droite" sortie="traverse" focus={[{ at: L[4] + 6, px: 0.5, py: 0.55, s: 1.06 }]}>
+  <Surligne at={mot(/^30/, 4)} {...ZREG} fin={mot(/^régularité/, 4) - 2} />
+  <Surligne at={mot(/^régularité/, 4)} {...{ ...ZCAL, x: ZCAL.x, w: zone(E2, /^3$/).x + zone(E2, /^3$/).w - ZCAL.x }} fin={mot(/^24/, 4) - 2} />
+  <Surligne at={mot(/^24/, 4)} {...Z24} />
+</Phone>;
+
+// ---------- 6. Maintenant : le bilan de la semaine ----------
+const EB = "ecrans/bilan";
+const ZB = englobe(zone(EB, /^3 \/ 4$/), zone(EB, /^Aussi régulier/)), ZBT = zone(EB, /^Mon bilan$/);
+const Bilan: React.FC = () => <Phone ecran={EB} from={L[5] - 4} to={L[6] - 2} entree="bascule" sortie="recul">
+  <Surligne at={mot(/^bilan/, 5)} {...ZBT} fin={mot(/^simple/, 5) + 2} />
+  <Surligne at={mot(/^simple/, 5) + 4} {...ZB} />
+  <Pastille at={mot(/^jugement/, 5)} x={W * 0.5} y={H * 0.262} gold>Sans jugement</Pastille>
+</Phone>;
+
+// ---------- 7. Pas de classement : le podium s’efface, un seul chemin reste ----------
+const Chemin: React.FC = () => {
+  const f = useCurrentFrame(), { fps } = useVideoConfig();
+  const pod = spring({ frame: f - L[6], fps, config: { damping: 12, stiffness: 160 } });
+  const barre = interpolate(f, [mot(/^classement/, 6), mot(/^classement/, 6) + 10], [0, 1], C);
+  const out = interpolate(f, [mot(/^Juste/, 6) - 6, mot(/^Juste/, 6) + 6], [1, 0], C);
+  const ch = interpolate(f, [mot(/^Juste/, 6), mot(/^chemin/, 6) + 14], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) });
+  return (
+    <AbsoluteFill>
+      <div style={{ opacity: pod * out }}>
+        {[[1, 340, 260], [0, 470, 380], [2, 600, 200]].map(([k, x, h]) => (
+          <div key={k} style={{ position: "absolute", left: x - 60, top: 900 - h, width: 120, height: h, borderRadius: 18, background: "rgba(255,255,255,0.2)", transform: `scaleY(${pod})`, transformOrigin: "bottom" }} />
+        ))}
+        <svg width={600} height={600} style={{ position: "absolute", left: 240, top: 360 }}>
+          <path d="M60 60 L540 540" stroke="#E07A5F" strokeWidth={22} strokeLinecap="round" pathLength={1} strokeDasharray={`${barre} 1`} />
+        </svg>
+      </div>
+      <svg width={1080} height={1000} style={{ position: "absolute", left: 0, top: 260 }}>
+        <path d="M540 900 C 300 760, 820 600, 540 460 S 420 200, 540 120" fill="none" stroke={GOLD} strokeWidth={14} strokeLinecap="round" pathLength={1} strokeDasharray={`${ch} 1`} style={{ filter: "drop-shadow(0 0 16px rgba(233,196,106,0.8))" }} />
+      </svg>
+      <div style={{ position: "absolute", left: 540 - 50, top: 260 + 120 - 50, transform: `scale(${ch > 0.95 ? 1 : 0})` }}><StarP size={100} glow={30} /></div>
+    </AbsoluteFill>
+  );
+};
+
 const SFX: Sfx[] = [
-  ["whoosh", 2, 0.4], ["pop", mot(/^premier/) + 4, 0.4], ["pop", mot(/^fais/) + 10, 0.4], ["pop", mot(/^troisième/) + 4, 0.4], ["impact", mot(/^lâches/) + 6, 0.5],
-  ["whoosh", L[1] - 6, 0.4], ["tick", mot(/^manqué/, 1) + 2, 0.5], ["vibration", mot(/^perdu/, 1) + 4, 0.4],
-  ["whoosh", L[2] - 6, 0.4], ["tap", mot(/^arrête/, 2) + 4, 0.4],
-  ["riser", BASCULE - 24, 0.3], ["impact", BASCULE + 2, 0.6], ["shimmer", BASCULE + 4, 0.4], ["ding", mot(/^grave/, 3) + 4, 0.4],
-  ["tap", mot(/^bouton/, 4) + 2, 0.5],
-  ["whoosh", L[5] - 6, 0.5], ["tick", mot(/^chargée/, 5) + 4, 0.4], ["pop", mot(/^minimum/, 5) + 6, 0.4],
-  ["whoosh", L[6] - 6, 0.5], ["tick", mot(/^reprends/, 6) + 4, 0.4],
+  ["whoosh", 2, 0.4], ["pop", mot(/^avancer/) + 10, 0.45],
+  ["pop", L[1] + 6, 0.3], ["tick", mot(/^trace/, 1) + 10, 0.35],
+  ["tick", mot(/^manqué/, 2) + 8, 0.45], ["vibration", mot(/^celui-là/, 2) + 8, 0.3],
+  ["impact", BASCULE + 2, 0.55], ["shimmer", BASCULE + 4, 0.35], ["tick", mot(/^journée/, 3) + 10, 0.35],
+  ["whoosh", L[4] - 16, 0.45], ["tick", mot(/^régularité/, 4) + 12, 0.35], ["ding", L[5] - 14, 0.35],
+  ["whoosh", L[5] - 16, 0.45], ["pop", mot(/^jugement/, 5) + 12, 0.4],
+  ["whoosh", L[6] - 16, 0.4], ["tap", mot(/^classement/, 6) + 10, 0.35], ["shimmer", mot(/^Juste/, 6) + 4, 0.35],
   ["impact", LIEN, 0.6], ["shimmer", LIEN + 2, 0.6],
 ];
 
@@ -120,17 +147,18 @@ const Video: React.FC = () => (
   <AbsoluteFill style={{ background: "#0A0208" }}>
     <Fond T={T} k={[0, BASCULE - 2, BASCULE + 14, L[6] - 6, L[7] + 10, T.DUREE]} />
     <Gris />
-    <Scene from={0} to={L[1] - 2} zin={0}><Jours /></Scene>
-    <Scene from={L[1] - 4} to={L[2] - 2}><Perdu /></Scene>
-    <Scene from={L[2] - 4} to={BASCULE - 2}><Arret /></Scene>
+    <Scene from={0} to={L[1] - 2} zin={0}><Plat /></Scene>
+    <Scene from={L[1] - 4} to={L[2] - 2}><SansTrace /></Scene>
+    <Scene from={L[2] - 4} to={BASCULE - 2}><Manque /></Scene>
     <Scene from={BASCULE - 2} to={BASCULE + 22} zin={0.1} zout={0.6}><Etiquette texte="MAINTENANT" at={BASCULE} or top={620} taille={78} /></Scene>
-    <Manque />
-    <Chargee />
-    <Minimum />
-    <Scene from={LIEN - 4} to={T.DUREE + 10} zin={0}><Logo at={LIEN} phrase="Reprendre, sans culpabiliser" /></Scene>
+    <Suivi />
+    <Regularite />
+    <Bilan />
+    <Scene from={L[6] - 4} to={LIEN - 2}><Chemin /></Scene>
+    <Scene from={LIEN - 4} to={T.DUREE + 10} zin={0}><Logo at={LIEN} phrase="Voir le chemin parcouru" /></Scene>
     <Flash at={BASCULE} />
     <Voile />
-    <SousTitres T={T} or={/^(tout|manqué|perdu|arrête|Maintenant|grave|reprendre|minimum|chargée|reprends|Sabab)/i} grandsDes={99} />
+    <SousTitres T={T} or={/^(avancer|trace|manqué|Maintenant|journée|30|régularité|24|bilan|jugement|classement|chemin|Sabab)/i} grandsDes={99} />
     <Son voix="avant.mp3" sfx={SFX} />
   </AbsoluteFill>
 );

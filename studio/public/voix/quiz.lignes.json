@@ -1,18 +1,19 @@
 [
  {
-  "affiche": "Tu sais ce qu’on dit en entrant à la mosquée ?"
+  "affiche": "Tu sais ce qu’on dit quand l’angoisse te serre le cœur ?"
  },
  {
   "affiche": "Trois… deux… un…"
  },
  {
-  "affiche": "On entre du pied droit, et on dit :"
+  "affiche": "Une invocation très courte, à dire dans la détresse :"
  },
  {
-  "affiche": "« Je cherche protection auprès d'Allah le Très-Grand, par Son noble Visage et Son pouvoir éternel, contre le Diable banni. Au nom d'Allah, que la prière et le salut soient sur le Messager d'Allah. Ô Allah, ouvre-moi les portes de Ta miséricorde »"
+  "affiche": "« Allah, Allah est mon Seigneur, je ne Lui associe rien. »",
+  "dit": "« Allah. Allah est mon Seigneur, je ne Lui associe rien. »"
  },
  {
-  "affiche": "C’est rapporté par Abû Dâwûd, Muslim et At-Tirmidhî."
+  "affiche": "C’est rapporté par Abû Dâwûd et Ibn Mâjah."
  },
  {
   "affiche": "Tu avais trouvé ? Dis-le en commentaire."

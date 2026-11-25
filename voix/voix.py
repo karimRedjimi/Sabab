@@ -88,7 +88,9 @@ for i, l in enumerate(lignes):
      brut = stt(p); lu = norm(brut)
      # Un mot en trop (souvent un « et » ajouté à la fin de la phrase) : la comparaison ignore les « et », ce contrôle non.
      trop = len(norm(brut, False)) > len(norm(l["dit"], False))
-     doublon = trop or any(lu[k] == lu[k - 1] and lu[k] not in ("de", "la", "le", "nous", "vous") for k in range(1, len(lu)))
+     # Un mot répété volontairement dans le texte (« Allah, Allah ») n’est pas un doublon.
+     voulus = {attendu[j] for j in range(1, len(attendu)) if attendu[j] == attendu[j - 1]}
+     doublon = trop or any(lu[k] == lu[k - 1] and lu[k] not in ("de", "la", "le", "nous", "vous") and lu[k] not in voulus for k in range(1, len(lu)))
      import difflib
      score = difflib.SequenceMatcher(None, lu, attendu).ratio() - (0.2 if doublon else 0)
      if not meilleur or score > meilleur[0]: meilleur = (score, d, p, lu, essai)

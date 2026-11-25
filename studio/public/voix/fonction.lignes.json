@@ -1,29 +1,23 @@
 [
  {
-  "affiche": "Tu lis tes du’â sur ton téléphone, mais tu ne les connais pas par cœur ?"
+  "affiche": "Tu cherches une du’â pour un moment précis, sans savoir où la trouver ?"
  },
  {
-  "affiche": "Dans Sabab, l’onglet Apprendre t’aide à les retenir, une par une."
+  "affiche": "Dans Sabab, la bibliothèque en réunit plus de 300, toutes sourcées."
  },
  {
-  "affiche": "Chaque jour, tu révises seulement celles qui reviennent."
+  "affiche": "Elles sont rangées par thème : matin et soir, sommeil, prière, protection."
  },
  {
-  "affiche": "Au début, un mot sur trois est caché : tu complètes de mémoire."
+  "affiche": "Tu peux aussi chercher un mot, par exemple : dormir."
  },
  {
-  "affiche": "Puis deux mots sur trois."
+  "affiche": "Tu ouvres une invocation : l’arabe, la phonétique, la traduction, et la source."
  },
  {
-  "affiche": "Puis tout le texte : tu la récites, et tu vérifies."
+  "affiche": "Et pour la retenir, un bouton : apprendre par cœur."
  },
  {
-  "affiche": "Tu la connais ? Elle reviendra plus tard. Sinon, elle revient demain."
- },
- {
-  "affiche": "Et plus de 300 invocations sourcées t’attendent dans la bibliothèque."
- },
- {
-  "affiche": "Sabab. Apprendre par cœur, sans forcer. Le lien est en bio."
+  "affiche": "Sabab. Plus de 300 invocations dans ta poche. Le lien est en bio."
  }
 ]

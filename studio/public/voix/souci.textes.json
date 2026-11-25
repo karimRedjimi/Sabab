@@ -1,23 +1,22 @@
 {
  "dua": {
-  "ref": "citadelle:hm-162",
-  "id": "hm-162",
-  "ar": "«أَسْأَلُ اللهَ الْعَظِيمَ رَبَّ الْعَرْشِ الْعَظِيمِ أَنْ يَشْفِيَكَ» (سَبْعَ مَرَّاتٍ).",
-  "ph": "As'alu Llāha al-'Aẓīma Rabba al-'arshi al-'aẓīmi an yashfiyak.",
-  "fr": "Je demande à Allah l'Immense, Seigneur du Trône immense, de te guérir (7 fois).",
-  "src": "At-Tirmidhî et Abû Dâwûd",
-  "chapitre": "Invocation en faveur du malade lors de sa visite"
- },
- "parcours": {
-  "ref": "parcours:epreuve.title",
-  "texte": "Traverser une épreuve"
- },
- "intro": {
-  "ref": "parcours:epreuve.intro",
-  "texte": "Pour un moment difficile : perte d’emploi, maladie d’un proche, échec."
+  "ref": "programme:sharh",
+  "kind": "dua",
+  "title": "L’invocation avant l’épreuve orale",
+  "moment": "Avant un examen, un entretien, une prise de parole",
+  "ar": "رَبِّ اشْرَحْ لِي صَدْرِي، وَيَسِّرْ لِي أَمْرِي، وَاحْلُلْ عُقْدَةً مِنْ لِسَانِي، يَفْقَهُوا قَوْلِي",
+  "ph": "Rabbi-shrah lî sadrî, wa yassir lî amrî, wahlul ʿuqdatan min lisânî, yafqahû qawlî.",
+  "fr": "Seigneur, ouvre-moi ma poitrine, facilite-moi ma tâche, et dénoue le nœud de ma langue, afin qu’ils comprennent mes paroles.",
+  "grade": "coran",
+  "src": "Coran, Tâ-Hâ 20:25-28",
+  "note": "Moïse la prononce au moment d’être envoyé parler à Pharaon. Elle convient à toute situation où il faut convaincre."
  },
  "geste": {
-  "ref": "parcours:epreuve.actions.1",
-  "texte": "Parle à une personne de confiance."
+  "ref": "parcours:etudes.actions.1",
+  "texte": "Révise 45 minutes sans téléphone."
+ },
+ "titre": {
+  "ref": "parcours:etudes.title",
+  "texte": "Études et examens"
  }
 }

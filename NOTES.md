@@ -36,3 +36,10 @@
 - 2026-11-24 : un texte en bas d’écran caché par la barre d’onglets (ex. les sources des moments favorables) ne se surligne pas : mettre une pastille avec le texte copié du JSON à la place.
 - 2026-11-24 : une pastille longue (geste du parcours) : size={30} pour qu’elle tienne dans la largeur du téléphone.
 - 2026-11-24 : un whoosh 6 images avant le premier mot d’une phrase l’a masqué dans le mix (« Sur » entendu « Dans ») → whoosh 16 à 18 images avant, volume ≤ 0,5.
+- 2026-11-25 : la capture « communaute-verset » était datée du jour réel (verset de la veille) → nouvel écran « verset-jour » : l’horloge passe au jour de publication une fois le compte ouvert.
+- 2026-11-25 : les fiches de la Citadelle en bas de page montrent la mention « Livre distribué gratuitement » (mot interdit) et une recherche « voyage » montrait « péché » → choisir une recherche avec d’autres cartes dessous (fiche-inquiet : recherche « Seigneur ») et vérifier le manifeste (textes gardés sur 300 caractères désormais).
+- 2026-11-25 : nouveaux écrans : bilan, cycle, annee, biblio-recherche / fiche-recherche (« dormir »), fiche-inquiet (hm-138), fiche-istighfar, fiche-sharh, etudes-accueil / etudes-journee / etudes-parcours, verset-jour.
+- 2026-11-25 : voix/textes.ts lit aussi coran:<s:v> et jour:<AAAA-MM-JJ> (verset du jour) ; voix.py n’appelle plus doublon un mot répété dans le texte même (« Allah, Allah »).
+- 2026-11-25 : « Allah, Allah est » lu « Allah, Allah était » → champ "dit" avec un point (« Allah. Allah est… ») ; « soucis » / « prières, invocations » entendus au singulier → reformuler sans pluriel ambigu.
+- 2026-11-25 : un riser (2,5 s) lancé avant la fin d’une phrase a masqué « Tu le savais ? » (entendu « Vous le savez ? ») ; un shimmer sur « Sabab » l’a fait entendre « Ça babe » → sons longs seulement dans les silences, jamais sous un mot.
+- 2026-11-25 : les mots avec apostrophe encore (« l’angoisse », « l’écoutes ») : mot() sans ^.

@@ -53,7 +53,7 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
         if (r.width < 4 || r.height < 4 || r.bottom < 0 || r.top > H || cs.visibility === "hidden" || cs.opacity === "0") continue;
         const txt = t || (el.innerText || "").replace(/\s+/g, " ").trim();
         if (!txt) continue;
-        res.push({ t: txt.slice(0, 90), b: [r.left / W, r.top / H, r.width / W, r.height / H].map((v) => Math.round(v * 1000) / 1000), ...(role ? { bouton: true } : {}) });
+        res.push({ t: txt.slice(0, 300), b: [r.left / W, r.top / H, r.width / W, r.height / H].map((v) => Math.round(v * 1000) / 1000), ...(role ? { bouton: true } : {}) });
       }
       return res.slice(0, 160);
     });
@@ -135,6 +135,13 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
     await ecran("communaute-verset", "Un jour, un verset : le verset du jour à écouter et à réciter.");
     await hautTexte(/^La communauté récite$/i, 140); await ecran("communaute-recitations", "Les récitations des membres, sans leur nom (« Mâ shâ Allâh »).");
   });
+  // Le verset du jour de PUBLICATION : l’horloge passe au jour décalé une fois le compte ouvert (la session reste valable).
+  await essai("verset-jour", async () => {
+    await p.clock.setFixedTime(new Date(`${k}T14:05:00`));
+    await p.goto(B + "/communaute"); await p.waitForTimeout(1500);
+    await p.getByRole("link", { name: "Un jour, un verset" }).or(p.getByRole("button", { name: "Un jour, un verset" })).first().click(); await p.waitForTimeout(1800);
+    await ecran("verset-jour", "Un jour, un verset, daté du jour de publication : le verset à écouter et à réciter.");
+  });
   // ---------- Une invocation ouverte dans la bibliothèque ----------
   await heure("14:05"); await seed(base());
   // La bibliothèque est en bas de page : cadré sur le début d’une ligne de la liste au-dessus, jamais au milieu d’une carte.
@@ -197,6 +204,32 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
   await fiche("fiche-malade", "te guérir", "de te guérir", "Bibliothèque : l’invocation pour le malade qu’on visite (7 fois), avec sa source.");
   await fiche("fiche-mosquee", "entrant mosquée", "pied droit", "Bibliothèque : l’invocation en entrant dans la mosquée, avec sa source.");
   await ficheProgramme("fiche-hayy", "Yâ Hayyu yâ Qayyûm", "Hasbiyallâh", "Bibliothèque, « Du programme » : « Yâ Hayyu yâ Qayyûm » ouverte (enseignée à Fâtima).");
+  // ---------- Nuit du 25/11 : bilan et progrès, études, inquiétude, istighfâr ----------
+  await heure("14:05"); await seed(base());
+  await essai("bilan", async () => { await p.goto(B + "/bilan"); await p.waitForTimeout(2200); await ecran("bilan", "Le bilan de la semaine et du mois : jours tenus, prières, invocations."); });
+  await essai("cycle", async () => { await p.goto(B + "/cycle"); await p.waitForTimeout(2200); await ecran("cycle", "Le cycle de 30 jours en cours : jours tenus, progression."); });
+  await essai("annee", async () => { await p.goto(B + "/annee"); await p.waitForTimeout(2200); await ecran("annee", "L’année : chaque jour tenu, d’un coup d’œil."); });
+  await essai("biblio-recherche", async () => {
+    await p.goto(B + "/apprendre"); await p.waitForTimeout(1800); await haut("#bibliotheque", 40);
+    await p.fill("#bibliotheque input[type=search]", "dormir"); await p.waitForTimeout(900); await haut("#bibliotheque", 14);
+    await ecran("biblio-recherche", "Bibliothèque : la recherche « dormir » et les invocations trouvées.");
+  });
+  await fiche("fiche-recherche", "dormir", /./, "Bibliothèque : recherche « dormir », la première invocation trouvée ouverte, avec sa source.");
+  // Recherche large (« Seigneur ») : d’autres cartes suivent, la carte ouverte n’est pas en bas de page.
+  await essai("fiche-inquiet", async () => {
+    await p.goto(B + "/apprendre"); await p.waitForTimeout(1800); await haut("#bibliotheque", 40);
+    await p.fill("#bibliotheque input[type=search]", "Seigneur"); await p.waitForTimeout(900);
+    await p.locator(".bcard", { hasText: "associe rien" }).first().locator(".bhead").click(); await p.waitForTimeout(700);
+    await p.locator(".bcard", { hasText: "associe rien" }).first().evaluate((e) => { const a = e.previousElementSibling || e; window.scrollTo(0, a.getBoundingClientRect().top + window.scrollY - 22); }); await p.waitForTimeout(1200);
+    await ecran("fiche-inquiet", "Bibliothèque : « Allah, Allah est mon Seigneur, je ne Lui associe rien » (grande détresse) ouverte, avec sa source.");
+  });
+  await ficheProgramme("fiche-istighfar", /^Istighfâr/, "Sayyid al-istighfâr", "Bibliothèque, « Du programme » : « Istighfâr » ouverte.");
+  await ficheProgramme("fiche-sharh", "L’invocation avant l’épreuve orale", "Accroître sa science", "Bibliothèque, « Du programme » : « L’invocation avant l’épreuve orale » ouverte (Tâ-Hâ 20:25-28).");
+  const etudes = () => { const s = base(); s.objective = { title: "Réussir mon examen", cat: "etudes", why: "Obtenir mon diplôme cette année", since: DEMO.start }; s.parcours = { id: "etudes", start: DEMO.start }; return s; };
+  await seed(etudes());
+  await essai("etudes-accueil", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("etudes-accueil", "Accueil avec le besoin « Réussir mon examen » (parcours Études et examens)."); });
+  await essai("etudes-journee", async () => { await haut(".dprog", 70); await ecran("etudes-journee", "Accueil plus bas, besoin « Réussir mon examen » : la journée par moments."); });
+  await essai("etudes-parcours", async () => { await p.goto(B + "/parcours"); await p.waitForTimeout(2000); await ecran("etudes-parcours", "Le parcours actif « Études et examens » : ses invocations et ses gestes."); });
   fs.writeFileSync(out + "manifeste.json", JSON.stringify(manifeste, null, 1));
   if (erreurs.length) console.log("Erreurs de page :", erreurs.slice(0, 5));
   console.log(`${Object.keys(manifeste).length} écrans capturés`);

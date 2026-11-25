@@ -1,7 +1,21 @@
 {
- "sujud": {
-  "ref": "textes:MOMENTS_FAVORABLES.sujud",
-  "label": "pendant la prosternation",
-  "source": "Muslim (n° 482)"
+ "kahf": {
+  "ref": "programme:kahf",
+  "kind": "action",
+  "title": "Lire la sourate Al-Kahf",
+  "desc": "Entre le coucher du soleil du jeudi et celui du vendredi.",
+  "grade": "sahih",
+  "src": "Al-Hâkim et Al-Bayhaqî, authentifié par Al-Albânî",
+  "note": "Celui qui la lit le vendredi est éclairé d’une lumière jusqu’au vendredi suivant."
+ },
+ "jeudi": {
+  "ref": "programme:jeuneJeu",
+  "kind": "action",
+  "title": "Jeûner le jeudi",
+  "optional": true,
+  "desc": "Sunna recommandée, facultative. Elle ne compte pas dans ton pourcentage.",
+  "grade": "sahih",
+  "src": "At-Tirmidhî (n° 747)",
+  "note": "Les œuvres sont présentées à Allah le lundi et le jeudi."
  }
 }
