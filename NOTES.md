@@ -43,3 +43,11 @@
 - 2026-11-25 : « Allah, Allah est » lu « Allah, Allah était » → champ "dit" avec un point (« Allah. Allah est… ») ; « soucis » / « prières, invocations » entendus au singulier → reformuler sans pluriel ambigu.
 - 2026-11-25 : un riser (2,5 s) lancé avant la fin d’une phrase a masqué « Tu le savais ? » (entendu « Vous le savez ? ») ; un shimmer sur « Sabab » l’a fait entendre « Ça babe » → sons longs seulement dans les silences, jamais sous un mot.
 - 2026-11-25 : les mots avec apostrophe encore (« l’angoisse », « l’écoutes ») : mot() sans ^.
+- 2026-11-26 : captures/lancer.sh lancé dans un tube (`| tail`) ne rend jamais la main (les processus détachés gardent le tube) → le lancer sans tube, puis tout.cjs à part.
+- 2026-11-26 : `heure()` de tout.cjs est en heure du conteneur (UTC) : 15:15 = 16:15 à Paris en hiver. Pour un écran « pendant la dernière heure du vendredi », viser l’heure UTC.
+- 2026-11-26 : nouvelle option `SEUL=<regex>` de tout.cjs : ne refait que ces écrans et garde les autres dans le manifeste (2 min au lieu de 15).
+- 2026-11-26 : sayyid (Sayyid al-istighfâr) contient « péché » dans sa traduction → inutilisable en pub ; vérifier chaque texte copié contre les mots interdits avant de l’écrire.
+- 2026-11-26 : citadelle hm-150/151 (dette) = mêmes invocations que programme dette/hamm → l’angle quiz « dette » n’a pas de contenu neuf avant fin décembre.
+- 2026-11-26 : homophones encore : « Tu la dis » entendu « tu l’as dit » → « Tu la récites » ; « Dans Sabab » en début de phrase entendu « dans sa bave / sababe » → « … de Sabab » en fin de groupe.
+- 2026-11-26 : la recherche « salut final » remonte d’abord le tachahhoud ; chercher un morceau du début de la traduction (« la paix vient ») et, pour une carte dont le texte cherché est après 110 caractères, un mot du début (« paroles parfaites »).
+- 2026-11-26 : nouveaux écrans : fiche-zidni, fiche-salam (hm-82), fiche-enfants (hm-160), vendredi-accueil / vendredi-journee / vendredi-moments (« Maintenant : Dernière heure du vendredi »).

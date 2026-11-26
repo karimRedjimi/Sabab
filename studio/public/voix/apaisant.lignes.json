@@ -1,12 +1,18 @@
 [
  {
-  "affiche": "Chaque jour, un verset du Coran."
+  "affiche": "Le matin, une invocation."
  },
  {
-  "affiche": "Tu l’écoutes, une fois, puis une autre."
+  "affiche": "Puis une autre, dans la journée."
  },
  {
-  "affiche": "Puis tu le récites, à ta voix, sans te presser."
+  "affiche": "Le soir, la dernière."
+ },
+ {
+  "affiche": "La barre se remplit, doucement."
+ },
+ {
+  "affiche": "Ta journée est complète."
  },
  {
   "affiche": "Sabab. Une journée à la fois."

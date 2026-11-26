@@ -1,147 +1,132 @@
-// « Le moment du calendrier » : ce jeudi soir commence le temps de la sourate Al-Kahf (programme.ts · kahf ; Al-Hâkim et Al-Bayhaqî, authentifié par Al-Albânî),
-// et le thème du jeudi dans Sabab (la patience et la constance).
-// Textes religieux : public/voix/moment.textes.json (copiés par programme depuis content/programme.ts · kahf).
+// « Le moment du calendrier » : vendredi 27 novembre 2026, la dernière heure du vendredi (programme.ts · heure ; Abû Dâwûd n° 1048).
+// Textes religieux : public/voix/moment.textes.json (copiés par programme). On affiche seulement la fin de la note (« le hadith indique… »), coupée, jamais modifiée.
+// Aucune promesse : on parle de chercher cette heure, d’y garder ses demandes.
 import React from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
-import { C, FONT, GOLD, PLUM, minutage, zone, SousTitres, Voile, Fond, StarP, Scene, Flash, Phone, Surligne, Logo, Son, type Sfx } from "../moteur";
+import { C, FONT, GOLD, PLUM, W, H, minutage, zone, englobe, SousTitres, Voile, Fond, StarP, Scene, Flash, Phone, Pastille, Surligne, Logo, Son, type Sfx } from "../moteur";
 import voix from "../../public/voix/moment.json";
 import tx from "../../public/voix/moment.textes.json";
 
 const T = minutage(voix);
 const { L, mot } = T;
-const K = tx.kahf;
-const LIEN = mot(/^lien/, 5);
+const D = tx.heure;
+const EXTRAIT = D.note.slice(D.note.indexOf("le hadith indique")); // « le hadith indique de la chercher à la dernière heure après le ʿAsr. »
 
-// Un livre ouvert, qui s’éclaire (l = 0 à 1).
-const Livre: React.FC<{ size: number; l: number }> = ({ size, l }) => (
-  <svg width={size} height={size * 0.75} viewBox="0 0 120 90" style={{ overflow: "visible", filter: `drop-shadow(0 0 ${10 + 50 * l}px rgba(233,196,106,${0.4 + 0.6 * l}))` }}>
-    <path d="M60 18 C44 8 22 8 6 14 V80 C22 74 44 74 60 84 C76 74 98 74 114 80 V14 C98 8 76 8 60 18z" fill={l > 0.5 ? "#FFF1C4" : "rgba(42,12,34,0.92)"} stroke={GOLD} strokeWidth={3} strokeLinejoin="round" />
-    <path d="M60 18 V84" stroke={GOLD} strokeWidth={3} />
-  </svg>
-);
-
-// ---------- 1. L’accroche : « CE JEUDI », le soleil qui se couche, la sourate ----------
-const Accroche: React.FC = () => {
+// ---------- 1. L’accroche : la page du calendrier qui tombe sur vendredi, puis un sablier ----------
+const Calendrier: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const pill = spring({ frame: f - 2, fps, config: { damping: 9, stiffness: 180 } });
-  const sol = interpolate(f, [mot(/^coucher/) - 6, mot(/^soleil/) + 20], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) });
-  const b = spring({ frame: f - mot(/^sourate/), fps, config: { damping: 11, stiffness: 160 } });
+  const tourne = interpolate(f, [2, mot(/^vendredi/)], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) });
+  const v = spring({ frame: f - mot(/^vendredi/), fps, config: { damping: 9, stiffness: 180 } });
+  const h = spring({ frame: f - mot(/^heure/), fps, config: { damping: 10, stiffness: 160 } });
+  const sable = interpolate(f, [mot(/^heure/), L[1]], [0, 1], C);
   return (
     <AbsoluteFill>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 200, textAlign: "center", transform: `scale(${pill})` }}>
-        <span style={{ display: "inline-block", padding: "18px 44px", borderRadius: 999, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 64, letterSpacing: "0.06em", boxShadow: "0 0 70px rgba(233,196,106,0.7)" }}>CE JEUDI SOIR</span>
+      <div style={{ position: "absolute", left: 540 - 260, top: 230, width: 520, height: 560, perspective: 1800 }}>
+        <div style={{ position: "absolute", inset: 0, borderRadius: 40, background: "#fff", boxShadow: "0 40px 100px rgba(0,0,0,0.5)", overflow: "hidden", transform: `scale(${0.9 + 0.1 * v})` }}>
+          <div style={{ height: 130, background: GOLD, display: "grid", placeItems: "center", fontFamily: FONT, fontWeight: 800, fontSize: 52, color: PLUM, letterSpacing: "0.1em" }}>VENDREDI</div>
+          <div style={{ textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 250, lineHeight: 1.2, color: PLUM }}>27</div>
+          <div style={{ textAlign: "center", fontFamily: FONT, fontWeight: 700, fontSize: 48, color: "rgba(42,12,34,0.6)" }}>novembre</div>
+        </div>
+        {/* La page de jeudi qui se tourne vers le haut */}
+        <div style={{ position: "absolute", inset: 0, borderRadius: 40, background: "#EDE4EA", transformOrigin: "50% 0%", transform: `rotateX(${tourne * 105}deg)`, backfaceVisibility: "hidden", opacity: tourne < 0.95 ? 1 : 0, overflow: "hidden" }}>
+          <div style={{ height: 130, background: "#B9A6B3", display: "grid", placeItems: "center", fontFamily: FONT, fontWeight: 800, fontSize: 52, color: "#fff", letterSpacing: "0.1em" }}>JEUDI</div>
+          <div style={{ textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 250, lineHeight: 1.2, color: "rgba(42,12,34,0.5)" }}>26</div>
+        </div>
       </div>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 420, height: 500, overflow: "hidden" }}>
-        <div style={{ position: "absolute", left: 540 - 150, top: 80 + sol * 330, width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle,#FFF1C4,#E9C46A 55%,#E07A5F)", boxShadow: "0 0 120px rgba(233,140,90,0.8)" }} />
+      <div style={{ position: "absolute", left: 540 - 70, top: 880, transform: `scale(${h})`, opacity: h }}>
+        <svg width={140} height={210} viewBox="0 0 40 60" style={{ filter: "drop-shadow(0 0 20px rgba(233,196,106,0.7))" }}>
+          <path d="M6 3h28M6 57h28M9 3c0 14 11 18 11 27S9 43 9 57M31 3c0 14-11 18-11 27s11 13 11 27" fill="none" stroke={GOLD} strokeWidth={3} strokeLinecap="round" />
+          <path d={`M${12 + 8 * sable} ${8 + 18 * sable}h${16 - 16 * sable}L20 29z`} fill={GOLD} />
+          <path d={`M20 ${57 - 14 * sable}L${12 - 0 * sable} 55h16z`} fill={GOLD} opacity={sable} />
+        </svg>
       </div>
-      <div style={{ position: "absolute", left: 120, right: 120, top: 916, height: 6, borderRadius: 3, background: "rgba(255,241,196,0.7)" }} />
-      <div style={{ position: "absolute", left: 540 - 120, top: 1000, transform: `scale(${b})`, opacity: b }}><Livre size={240} l={0} /></div>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 1110, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 70, color: "#fff", opacity: h }}>une <span style={{ color: GOLD }}>heure</span> à ne pas laisser passer</div>
     </AbsoluteFill>
   );
 };
 
-// ---------- 2. Al-Kahf : du coucher du soleil du jeudi à celui du vendredi ----------
-const Fenetre: React.FC = () => {
+// ---------- 2 et 3. La journée du vendredi : la dernière heure avant le Maghreb s’allume ; l’extrait et sa source ----------
+const Ligne: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const t = spring({ frame: f - L[1], fps, config: { damping: 13, stiffness: 140 } });
-  const p = interpolate(f, [mot(/^jeudi/, 1), mot(/^vendredi/, 1) + 6], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) });
-  const borne = (x: number, s: number, j: string) => (
-    <div style={{ position: "absolute", left: x - 140, top: 790, width: 280, textAlign: "center", opacity: s, transform: `scale(${s})` }}>
-      <div style={{ width: 40, height: 40, margin: "0 auto", borderRadius: "50%", background: GOLD, boxShadow: "0 0 30px rgba(233,196,106,0.8)" }} />
-      <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 54, color: "#fff", marginTop: 26 }}>{j}</div>
-      <div style={{ fontFamily: FONT, fontWeight: 600, fontSize: 36, color: GOLD }}>au Maghreb</div>
-    </div>
-  );
+  const a = spring({ frame: f - L[1], fps, config: { damping: 14, stiffness: 120 } });
+  const asr = spring({ frame: f - mot(/Asr/, 1), fps, config: { damping: 10, stiffness: 180 } });
+  const der = interpolate(f, [mot(/^dernière/, 1), mot(/^heure/, 1) + 8], [0, 1], { ...C, easing: Easing.out(Easing.cubic) });
+  const c = spring({ frame: f - mot(/^chercher/, 1), fps, config: { damping: 14, stiffness: 120 } });
+  const s = spring({ frame: f - L[2], fps, config: { damping: 9, stiffness: 190 } });
+  const X0 = 110, X1 = 970, pos = (k: number) => X0 + (X1 - X0) * k;
+  const repères: [string, number][] = [["Fajr", 0], ["Dhuhr", 0.45], ["ʿAsr", 0.7], ["Maghreb", 1]];
   return (
     <AbsoluteFill>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 260, textAlign: "center", opacity: t, transform: `translateY(${(1 - t) * 40}px)` }}>
-        <Livre size={200} l={0.3} />
-        <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 76, color: "#fff", marginTop: 20 }}>{K.title}</div>
-      </div>
-      <div style={{ position: "absolute", left: 200, right: 200, top: 806, height: 8, borderRadius: 4, background: "rgba(255,255,255,0.18)" }} />
-      <div style={{ position: "absolute", left: 200, width: 680 * p, top: 806, height: 8, borderRadius: 4, background: GOLD, boxShadow: "0 0 20px rgba(233,196,106,0.8)" }} />
-      {borne(200, spring({ frame: f - mot(/^jeudi/, 1), fps, config: { damping: 10, stiffness: 180 } }), "jeudi")}
-      {borne(880, spring({ frame: f - mot(/^vendredi/, 1), fps, config: { damping: 10, stiffness: 180 } }), "vendredi")}
-      <div style={{ position: "absolute", left: 110, right: 110, top: 1080, textAlign: "center", fontFamily: FONT, fontWeight: 600, fontSize: 40, lineHeight: 1.4, color: "rgba(255,255,255,0.85)", opacity: interpolate(f, [mot(/^vendredi/, 1), mot(/^vendredi/, 1) + 12], [0, 1], C) }}>{K.desc}</div>
-    </AbsoluteFill>
-  );
-};
-
-// ---------- 3. La lumière, d’un vendredi au suivant ----------
-const JOURS = ["V", "S", "D", "L", "M", "M", "J", "V"];
-const Lumiere: React.FC = () => {
-  const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const l = interpolate(f, [mot(/^éclairé/, 2) - 4, mot(/^lumière/, 2) + 10], [0, 1], C);
-  const s = spring({ frame: f - L[2], fps, config: { damping: 14, stiffness: 130 } });
-  const sem = interpolate(f, [mot(/^jusqu’au/, 2), mot(/^suivant/, 2) + 10], [0, JOURS.length], C);
-  return (
-    <AbsoluteFill>
-      <svg width={1080} height={900} style={{ position: "absolute", left: 0, top: 200, opacity: l }}>
-        {Array.from({ length: 16 }, (_, i) => { const a = (i / 16) * Math.PI * 2 + f / 90; return <line key={i} x1={540 + Math.cos(a) * 170} y1={360 + Math.sin(a) * 140} x2={540 + Math.cos(a) * (300 + 30 * Math.sin(f / 8 + i))} y2={360 + Math.sin(a) * (260 + 30 * Math.sin(f / 8 + i))} stroke={GOLD} strokeWidth={6} strokeLinecap="round" opacity={0.6} />; })}
-      </svg>
-      <div style={{ position: "absolute", left: 540 - 150, top: 450, transform: `scale(${s})`, opacity: s }}><Livre size={300} l={l} /></div>
-      <div style={{ position: "absolute", left: 120, right: 120, top: 1040, display: "flex", justifyContent: "space-between" }}>
-        {JOURS.map((j, i) => {
-          const on = sem > i;
-          return <div key={i} style={{ width: 86, height: 86, borderRadius: "50%", display: "grid", placeItems: "center", fontFamily: FONT, fontWeight: 800, fontSize: 38,
-            background: on ? GOLD : "rgba(255,255,255,0.12)", color: on ? PLUM : "rgba(255,255,255,0.6)", boxShadow: on ? "0 0 20px rgba(233,196,106,0.7)" : "none" }}>{j}</div>;
+      <div style={{ position: "absolute", left: 0, right: 0, top: 200, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 46, color: "rgba(255,255,255,0.8)", letterSpacing: "0.12em", opacity: a }}>CE VENDREDI</div>
+      <svg width={1080} height={420} style={{ position: "absolute", left: 0, top: 260, opacity: a }}>
+        <line x1={X0} y1={200} x2={X1} y2={200} stroke="rgba(255,255,255,0.3)" strokeWidth={14} strokeLinecap="round" />
+        <line x1={pos(1 - 0.16 * der)} y1={200} x2={pos(1)} y2={200} stroke={GOLD} strokeWidth={26} strokeLinecap="round" style={{ filter: "drop-shadow(0 0 18px rgba(233,196,106,0.95))" }} opacity={der > 0 ? 1 : 0} />
+        {repères.map(([n, k]) => {
+          const on = n === "ʿAsr" ? asr : 1;
+          return <g key={n} transform={`translate(${pos(k)} 200)`}>
+            <circle r={n === "ʿAsr" ? 18 + 6 * asr : 14} fill={n === "ʿAsr" && asr > 0.1 ? GOLD : "#fff"} />
+            <text y={n === "Maghreb" || n === "ʿAsr" ? 74 : -40} textAnchor={k === 0 ? "start" : k === 1 ? "end" : "middle"} x={k === 0 ? -14 : k === 1 ? 14 : 0} fontFamily="DM Sans" fontWeight={700} fontSize={40} fill={n === "ʿAsr" ? GOLD : "rgba(255,255,255,0.85)"} opacity={n === "ʿAsr" ? on : 1}>{n}</text>
+          </g>;
         })}
+        <text x={pos(0.92)} y={140} textAnchor="middle" fontFamily="DM Sans" fontWeight={800} fontSize={40} fill={GOLD} opacity={der}>dernière heure</text>
+      </svg>
+      <div style={{ position: "absolute", left: 90, right: 90, top: 720, padding: "44px 46px", borderRadius: 44, background: "rgba(42,12,34,0.92)", boxShadow: "0 0 0 3px rgba(233,196,106,0.55), 0 40px 100px rgba(0,0,0,0.5)", textAlign: "center",
+        opacity: c, transform: `translateY(${(1 - c) * 60}px)` }}>
+        <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 52, lineHeight: 1.3, color: "#fff" }}>« … {EXTRAIT} »</div>
+        <div style={{ marginTop: 28, height: 70 }}>
+          <span style={{ display: "inline-block", padding: "12px 36px", borderRadius: 999, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 44, transform: `scale(${s})` }}>{D.src}</span>
+        </div>
       </div>
     </AbsoluteFill>
   );
 };
 
-// ---------- 4. La source ----------
-const Source: React.FC = () => {
-  const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const s = spring({ frame: f - L[3], fps, config: { damping: 14, stiffness: 140 } });
-  const g = spring({ frame: f - mot(/^authentifié/, 3), fps, config: { damping: 9, stiffness: 200 } });
-  return (
-    <AbsoluteFill>
-      <div style={{ position: "absolute", left: 90, right: 90, top: 520, padding: "56px 50px", borderRadius: 48, background: "rgba(42,12,34,0.9)", boxShadow: "0 0 0 3px rgba(233,196,106,0.6), 0 40px 100px rgba(0,0,0,0.5)",
-        transform: `translateY(${(1 - s) * 200}px)`, opacity: s, textAlign: "center" }}>
-        <div style={{ fontFamily: FONT, fontSize: 34, color: "rgba(255,255,255,0.7)", fontWeight: 600, letterSpacing: "0.12em" }}>SOURCE</div>
-        <div style={{ fontFamily: FONT, fontSize: 54, color: "#fff", fontWeight: 800, lineHeight: 1.3, marginTop: 20 }}>{K.src}</div>
-      </div>
-      <div style={{ position: "absolute", left: 540 - 50, top: 380, transform: `scale(${g}) rotate(${f}deg)` }}><StarP size={100} glow={30} /></div>
-    </AbsoluteFill>
-  );
-};
-
-// ---------- 5. Dans Sabab : jeudi 26 novembre, puis le thème du jeudi ----------
-const EA = "ecrans/accueil", EJ = "ecrans/journee";
-const ZJ = zone(EA, /^Jeudi 26 novembre$/), ZM = zone(EA, /^17:00 Maghreb$/), ZT = zone(EJ, /^Thème du jeudi/);
-const THEME = mot(/^thème/, 4);
-const Accueil: React.FC = () => <Phone ecran={EA} from={L[4] - 4} to={THEME - 2} entree="iris" sortie="gauche">
-  <Surligne at={mot(/^jeudi/, 4)} {...ZJ} />
-  <Surligne at={mot(/^Sabab/, 4) + 2} {...ZM} />
+// ---------- 4. L’accueil, un vendredi : la dernière heure calculée pour la ville ----------
+const EA = "ecrans/accueil";
+const ZD = zone(EA, /^Dernière heure du vendredi, de/);
+const Accueil: React.FC = () => <Phone ecran={EA} from={L[3] - 4} to={L[4] + 10} entree="gauche" sortie="recul" focus={[{ at: L[3] + 8, px: 0.5, py: 0.45, s: 1.08 }]}>
+  <Surligne at={mot(/^calculée/, 3)} {...ZD} />
 </Phone>;
-const Theme: React.FC = () => <Phone ecran={EJ} from={THEME - 4} to={LIEN - 2} entree="droite" sortie="recul" focus={[{ at: THEME + 6, px: 0.5, py: 0.6, s: 1.08 }]}>
-  <Surligne at={THEME + 4} {...ZT} />
+
+// ---------- 5. Quand elle commence : « Maintenant » (la même page, pendant la dernière heure) ----------
+const EV = "ecrans/vendredi-accueil";
+const ZM = zone(EV, /^Maintenant : Dernière heure du vendredi/), ZF = zone(EV, /^Moment favorable maintenant$/);
+const Maintenant: React.FC = () => <Phone ecran={EV} from={L[4] + 2} to={L[5] - 2} entree="iris" sortie="gauche" focus={[{ at: L[4] + 2, px: 0.5, py: 0.5, s: 1.08 }]}>
+  <Surligne at={mot(/^commence/, 4)} {...ZM} />
+  <Surligne at={mot(/^maintenant/, 4)} {...ZF} />
+  <Pastille at={mot(/^maintenant/, 4) + 4} x={W * 0.5} y={H * 0.27} gold>Maintenant</Pastille>
+</Phone>;
+
+// ---------- 6. Garde-la pour tes demandes : les moments favorables du vendredi ----------
+const EM = "ecrans/vendredi-moments";
+const ZH = englobe(zone(EM, /^La dernière heure du vendredi$/), zone(EM, /^Maintenant, jusqu’au Maghreb/));
+const Moments: React.FC = () => <Phone ecran={EM} from={L[5] - 4} to={L[6] - 2} entree="droite" sortie="traverse" focus={[{ at: L[5] + 4, px: 0.5, py: 0.7, s: 1.08 }]}>
+  <Surligne at={mot(/^Garde/, 5) + 4} {...ZH} />
+  <Pastille at={mot(/^demandes/, 5)} x={W * 0.5} y={H * 0.27} size={34}>{D.title}</Pastille>
 </Phone>;
 
 const SFX: Sfx[] = [
-  ["impact", 2, 0.5], ["shimmer", mot(/^coucher/) - 4, 0.3], ["pop", mot(/^sourate/) + 10, 0.4],
-  ["whoosh", L[1] - 16, 0.4], ["tick", mot(/^jeudi/, 1) + 8, 0.35], ["tick", mot(/^vendredi/, 1) + 10, 0.35],
-  ["shimmer", L[2] - 4, 0.4],
-  ["whoosh", L[3] - 16, 0.4], ["ding", mot(/^authentifié/, 3) + 12, 0.35],
-  ["whoosh", L[4] - 16, 0.45], ["tick", mot(/^jeudi/, 4) + 8, 0.35], ["whoosh", THEME - 14, 0.35], ["tick", THEME + 14, 0.35],
-  ["impact", LIEN, 0.6], ["shimmer", LIEN + 2, 0.5],
+  ["whoosh", 2, 0.35], ["pop", mot(/^vendredi/) + 6, 0.55], ["impact", mot(/^vendredi/) + 2, 0.35], ["tick", mot(/^heure/) + 10, 0.4],
+  ["whoosh", L[1] - 18, 0.45], ["pop", mot(/Asr/, 1) + 10, 0.35],
+  ["shimmer", L[2] - 6, 0.3], ["pop", L[2] + 30, 0.3],
+  ["whoosh", L[3] - 18, 0.45], ["tick", mot(/^calculée/, 3) + 10, 0.35],
+  ["shimmer", L[4] + 2, 0.3], ["ding", mot(/^maintenant/, 4) + 12, 0.45],
+  ["whoosh", L[5] - 18, 0.4], ["tick", mot(/^demandes/, 5) + 10, 0.35],
+  ["whoosh", L[6] - 18, 0.4], ["impact", L[6] - 2, 0.5], ["shimmer", mot(/^lien/, 6) + 12, 0.4],
 ];
 
 const Video: React.FC = () => (
   <AbsoluteFill style={{ background: "#0A0208" }}>
-    <Fond T={T} k={[0, L[1] - 8, L[2] + 10, L[4] - 6, L[5] - 10, T.DUREE]} />
-    <Scene from={0} to={L[1] - 2} zin={0}><Accroche /></Scene>
-    <Scene from={L[1] - 4} to={L[2] - 2}><Fenetre /></Scene>
-    <Scene from={L[2] - 4} to={L[3] - 2}><Lumiere /></Scene>
-    <Scene from={L[3] - 4} to={L[4] - 2}><Source /></Scene>
+    <Fond T={T} k={[0, L[1], L[2], L[5], L[6], T.DUREE]} />
+    <Scene from={0} to={L[1] - 2} zin={0}><Calendrier /></Scene>
+    <Scene from={L[1] - 4} to={L[3] - 2}><Ligne /></Scene>
     <Accueil />
-    <Theme />
-    <Scene from={LIEN - 4} to={T.DUREE + 10} zin={0}><Logo at={LIEN} phrase="Chaque jour a ses moments" /></Scene>
-    <Flash at={L[2]} />
+    <Maintenant />
+    <Moments />
+    <Scene from={L[6] - 4} to={T.DUREE + 10} zin={0}><Logo at={L[6]} phrase="Chaque vendredi a son heure" /></Scene>
+    <Flash at={mot(/^vendredi/)} />
     <Voile />
-    <SousTitres T={T} or={/^(jeudi|soleil|sourate|Al-Kahf|vendredi|lumière|Al-Hâkim|Al-Bayhaqî|Sabab|patience|constance)/i} grandsDes={99} />
+    <SousTitres T={T} or={/^(vendredi|heure|hadith|dernière|‘Asr|Abû|Dâwûd|ville|accueil|maintenant|Garde-la|demandes|Sabab)/i} grandsDes={6} />
     <Son voix="moment.mp3" sfx={SFX} />
   </AbsoluteFill>
 );

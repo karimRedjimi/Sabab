@@ -1,23 +1,26 @@
 [
  {
-  "affiche": "Tu cherches une du’â pour un moment précis, sans savoir où la trouver ?"
+  "affiche": "Tu sais dans combien de temps est la prochaine prière ?"
  },
  {
-  "affiche": "Dans Sabab, la bibliothèque en réunit plus de 300, toutes sourcées."
+  "affiche": "Sur l’accueil de Sabab, elle est tout en haut, avec le temps qui reste."
  },
  {
-  "affiche": "Elles sont rangées par thème : matin et soir, sommeil, prière, protection."
+  "affiche": "Les cinq horaires sont calculés pour ta ville, directement sur ton téléphone."
  },
  {
-  "affiche": "Tu peux aussi chercher un mot, par exemple : dormir."
+  "affiche": "Et une seule question : tu as prié le ‘Asr ?"
  },
  {
-  "affiche": "Tu ouvres une invocation : l’arabe, la phonétique, la traduction, et la source."
+  "affiche": "Juste en dessous, les moments favorables pour invoquer."
  },
  {
-  "affiche": "Et pour la retenir, un bouton : apprendre par cœur."
+  "affiche": "Entre l’appel à la prière et l’iqâma, ou pendant la prosternation."
  },
  {
-  "affiche": "Sabab. Plus de 300 invocations dans ta poche. Le lien est en bio."
+  "affiche": "Et si tu veux, un rappel quelques minutes avant chaque prière."
+ },
+ {
+  "affiche": "Sabab. Chaque prière à son heure. Le lien est en bio."
  }
 ]

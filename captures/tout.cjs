@@ -22,7 +22,9 @@ DEMO.cycles = { [DEMO.start]: { vu: k } }; // le bilan du premier cycle a déjà
 // patienceSeen : la bannière « La réponse prend parfois un autre chemin » et le souvenir de la semaine sont déjà vus (sinon elle est coupée en haut de « journee »).
 const base = (extra = {}) => { const s = JSON.parse(JSON.stringify(DEMO)); s.patienceSeen = k; s.souvenirVu = k; s.days[k] = { ...s.days[k], ...extra }; s.gratitude = { ...s.gratitude }; return s; };
 
-const manifeste = {};
+// SEUL=<regex> : ne refait que les écrans dont le nom correspond (les autres gardent leur capture et leur place dans le manifeste).
+const SEUL = process.env.SEUL ? new RegExp(process.env.SEUL) : null;
+const manifeste = SEUL && fs.existsSync(out + "manifeste.json") ? JSON.parse(fs.readFileSync(out + "manifeste.json", "utf8")) : {};
 // Le faux serveur repart de zéro à chaque capture (compte de démo neuf, demandes d’exemple d’origine).
 const { execSync, spawn } = require("child_process");
 try { execSync("pkill -f faux-serveur.cjs"); } catch {}
@@ -60,7 +62,7 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
     manifeste[nom] = { desc, zones };
     console.log("✓", nom);
   };
-  const essai = async (nom, f) => { try { await f(); } catch (e) { console.log("✗", nom, "—", e.message.split("\n")[0]); } };
+  const essai = async (nom, f) => { if (SEUL && !SEUL.test(nom)) return; try { await f(); } catch (e) { console.log("✗", nom, "—", e.message.split("\n")[0]); } };
 
   // ---------- Accueil et journée ----------
   await heure("14:05"); await seed(base());
@@ -230,6 +232,17 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
   await essai("etudes-accueil", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("etudes-accueil", "Accueil avec le besoin « Réussir mon examen » (parcours Études et examens)."); });
   await essai("etudes-journee", async () => { await haut(".dprog", 70); await ecran("etudes-journee", "Accueil plus bas, besoin « Réussir mon examen » : la journée par moments."); });
   await essai("etudes-parcours", async () => { await p.goto(B + "/parcours"); await p.waitForTimeout(2000); await ecran("etudes-parcours", "Le parcours actif « Études et examens » : ses invocations et ses gestes."); });
+  // ---------- Nuit du 26/11 : science, après la prière, enfants, vendredi ----------
+  await heure("14:05"); await seed(base());
+  await ficheProgramme("fiche-zidni", "Accroître sa science", "Pour un foyer qui réjouit le cœur", "Bibliothèque, « Du programme » : « Accroître sa science » ouverte (Tâ-Hâ 20:114).");
+  await fiche("fiche-salam", "la paix vient", "Tu es la Paix", "Bibliothèque : recherche « salut final », l’évocation après la prière (Muslim) ouverte.");
+  await fiche("fiche-enfants", "enfants", "paroles parfaites", "Bibliothèque : recherche « enfants », la protection demandée pour les enfants ouverte.");
+  // Le vendredi (jour de publication), pendant la dernière heure avant le Maghreb : « Maintenant : Dernière heure du vendredi ».
+  // Attention : heure() est en heure du conteneur (UTC) ; 15:15 = 16:15 à Paris en hiver.
+  await heure("15:15"); await seed(base());
+  await essai("vendredi-accueil", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("vendredi-accueil", "Accueil un vendredi, pendant la dernière heure : « Maintenant : Dernière heure du vendredi »."); });
+  await essai("vendredi-journee", async () => { await haut(".dprog", 70); await ecran("vendredi-journee", "Accueil plus bas, un vendredi : la journée par moments."); });
+  await essai("vendredi-moments", async () => { await p.goto(B + "/"); await p.waitForTimeout(2400); await p.locator(".favsum").first().click(); await p.waitForTimeout(900); await ecran("vendredi-moments", "Un vendredi pendant la dernière heure : les moments favorables dépliés (la dernière heure du vendredi)."); });
   fs.writeFileSync(out + "manifeste.json", JSON.stringify(manifeste, null, 1));
   if (erreurs.length) console.log("Erreurs de page :", erreurs.slice(0, 5));
   console.log(`${Object.keys(manifeste).length} écrans capturés`);

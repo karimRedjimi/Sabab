@@ -302,5 +302,61 @@
   "contenu": "verset du jour affiché (non dit) : Ghâfir 40:60 (coran-extraits.ts)",
   "titre": "Un verset, chaque jour",
   "fichier": "2026-11-26-7-apaisant.mp4"
+ },
+ {
+  "date": "2026-11-27",
+  "format": "saviez",
+  "angle": "une invocation pour un moment précis de la journée",
+  "contenu": "programme.ts · zidni (Coran, Tâ-Hâ 20:114)",
+  "titre": "La seule chose à demander davantage",
+  "fichier": "2026-11-27-1-saviez.mp4"
+ },
+ {
+  "date": "2026-11-27",
+  "format": "fonction",
+  "angle": "le moment favorable et la prochaine prière",
+  "contenu": "aucun texte religieux dit (pastilles : MOMENTS_FAVORABLES.appel Abû Dâwûd n° 521, .sujud Muslim n° 482)",
+  "titre": "La prochaine prière et les moments favorables",
+  "fichier": "2026-11-27-2-fonction.mp4"
+ },
+ {
+  "date": "2026-11-27",
+  "format": "quiz",
+  "angle": "après la prière",
+  "contenu": "citadelle.json · hm-82 (Muslim 1/414)",
+  "titre": "Juste après la prière, on dit quoi ?",
+  "fichier": "2026-11-27-3-quiz.mp4"
+ },
+ {
+  "date": "2026-11-27",
+  "format": "souci",
+  "angle": "un enfant à protéger",
+  "contenu": "citadelle.json · hm-160 (Al-Bukhârî 4/119) ; écran communauté (Muslim n° 2733 visible)",
+  "titre": "J’ai peur pour mon enfant",
+  "fichier": "2026-11-27-4-souci.mp4"
+ },
+ {
+  "date": "2026-11-27",
+  "format": "avant",
+  "angle": "le soir sans prendre de recul",
+  "contenu": "aucun texte religieux dit",
+  "titre": "Le soir, prendre le temps",
+  "fichier": "2026-11-27-5-avant.mp4"
+ },
+ {
+  "date": "2026-11-27",
+  "format": "moment",
+  "angle": "la dernière heure du vendredi",
+  "contenu": "programme.ts · heure (Abû Dâwûd n° 1048) ; vendredi 27/11",
+  "titre": "Vendredi : une heure à ne pas laisser passer",
+  "fichier": "2026-11-27-6-moment.mp4"
+ },
+ {
+  "date": "2026-11-27",
+  "format": "apaisant",
+  "angle": "remplir sa journée moment par moment",
+  "contenu": "aucun texte religieux",
+  "titre": "Ta journée, moment par moment",
+  "fichier": "2026-11-27-7-apaisant.mp4"
  }
 ]

@@ -1,21 +1,12 @@
 {
- "kahf": {
-  "ref": "programme:kahf",
+ "heure": {
+  "ref": "programme:heure",
   "kind": "action",
-  "title": "Lire la sourate Al-Kahf",
-  "desc": "Entre le coucher du soleil du jeudi et celui du vendredi.",
+  "title": "Invoquer avant le Maghreb",
+  "when": "lastHour",
+  "desc": "Garde la dernière heure avant le Maghreb pour tes demandes personnelles : rizq, projets, famille.",
   "grade": "sahih",
-  "src": "Al-Hâkim et Al-Bayhaqî, authentifié par Al-Albânî",
-  "note": "Celui qui la lit le vendredi est éclairé d’une lumière jusqu’au vendredi suivant."
- },
- "jeudi": {
-  "ref": "programme:jeuneJeu",
-  "kind": "action",
-  "title": "Jeûner le jeudi",
-  "optional": true,
-  "desc": "Sunna recommandée, facultative. Elle ne compte pas dans ton pourcentage.",
-  "grade": "sahih",
-  "src": "At-Tirmidhî (n° 747)",
-  "note": "Les œuvres sont présentées à Allah le lundi et le jeudi."
+  "src": "Abû Dâwûd (n° 1048)",
+  "note": "Il y a le vendredi une heure où aucun musulman ne demande quelque chose à Allah sans qu’Il le lui accorde ; le hadith indique de la chercher à la dernière heure après le ʿAsr."
  }
 }

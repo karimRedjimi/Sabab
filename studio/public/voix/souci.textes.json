@@ -1,22 +1,11 @@
 {
  "dua": {
-  "ref": "programme:sharh",
-  "kind": "dua",
-  "title": "L’invocation avant l’épreuve orale",
-  "moment": "Avant un examen, un entretien, une prise de parole",
-  "ar": "رَبِّ اشْرَحْ لِي صَدْرِي، وَيَسِّرْ لِي أَمْرِي، وَاحْلُلْ عُقْدَةً مِنْ لِسَانِي، يَفْقَهُوا قَوْلِي",
-  "ph": "Rabbi-shrah lî sadrî, wa yassir lî amrî, wahlul ʿuqdatan min lisânî, yafqahû qawlî.",
-  "fr": "Seigneur, ouvre-moi ma poitrine, facilite-moi ma tâche, et dénoue le nœud de ma langue, afin qu’ils comprennent mes paroles.",
-  "grade": "coran",
-  "src": "Coran, Tâ-Hâ 20:25-28",
-  "note": "Moïse la prononce au moment d’être envoyé parler à Pharaon. Elle convient à toute situation où il faut convaincre."
- },
- "geste": {
-  "ref": "parcours:etudes.actions.1",
-  "texte": "Révise 45 minutes sans téléphone."
- },
- "titre": {
-  "ref": "parcours:etudes.title",
-  "texte": "Études et examens"
+  "ref": "citadelle:hm-160",
+  "id": "hm-160",
+  "ar": "«أُعِيذُكُمَا بِكَلِمَاتِ اللهِ التَّامَّةِ، مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ، وَمِنْ كُلِّ عَيْنٍ لَامَّةٍ».",
+  "ph": "U'īdhukumā bi-kalimāti Llāhi at-tāmmati, min kulli shayṭānin wa hāmmatin, wa min kulli 'aynin lāmmah.",
+  "fr": "Je cherche pour vous protection auprès des paroles parfaites d'Allah contre tout démon, tout animal venimeux et contre tout mauvais œil.",
+  "src": "Al-Bukhârî 4/119",
+  "chapitre": "La protection demandée pour les enfants"
  }
 }

@@ -1,68 +1,72 @@
-// « Apaisant » : réciter le verset du jour. « Un jour, un verset » du jeudi 26 novembre 2026 (Ghâfir 40:60, affiché par l’appli, non dit par la voix).
-// Peu de voix, sons doux (pop, tick, shimmer), pas de flash. Texte du verset : public/voix/apaisant.textes.json (copié par programme, versetDuJour).
+// « Apaisant » : remplir sa journée moment par moment (matin, journée, soir), la barre qui se remplit. Aucun texte religieux.
+// Peu de voix, sons doux (pop, tick, shimmer), pas de flash, rythme lent.
 import React from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
-import { C, FONT, GOLD, W, H, minutage, zone, englobe, SousTitres, Voile, Fond, Scene, Phone, Surligne, Logo, Son, type Sfx } from "../moteur";
+import { C, FONT, GOLD, W, H, minutage, zone, englobe, SousTitres, Voile, Fond, StarP, Scene, Phone, Surligne, Check, Logo, Son, type Sfx } from "../moteur";
 import voix from "../../public/voix/apaisant.json";
 
 const T = minutage(voix, 6, 90);
 const { L, mot } = T;
-const MICRO = mot(/^sans/, 2);
 
-// Des ondes douces autour d’un point (en pixels de l’écran du téléphone), une par instant donné.
-const Ondes: React.FC<{ x: number; y: number; at: number[] }> = ({ x, y, at }) => {
-  const f = useCurrentFrame();
-  return <>{at.map((a, i) => {
-    const k = interpolate(f, [a, a + 50], [0, 1], { ...C, easing: Easing.out(Easing.cubic) });
-    if (f < a) return null;
-    return <div key={i} style={{ position: "absolute", left: x - 40 - 120 * k, top: y - 40 - 120 * k, width: 80 + 240 * k, height: 80 + 240 * k, borderRadius: "50%", border: `4px solid ${GOLD}`, opacity: 0.8 * (1 - k) }} />;
-  })}</>;
-};
-
-// ---------- 1 à 3. Le verset du jour : la date, écouter, puis réciter ----------
-const E = "ecrans/verset-jour";
-const ZT = zone(E, /^Un jour, un verset$/, 1), ZD = zone(E, /^26 novembre 2026$/), ZE = zone(E, /^Écouter$/), ZR = zone(E, /^Réciter le verset$/);
-const Verset: React.FC = () => <Phone ecran={E} from={0} to={MICRO} entree="bas" sortie="recul" focus={[{ at: L[1] - 10, px: 0.6, py: 0.45, s: 1.05 }]}>
-  <Surligne at={mot(/^verset/)} {...ZT} fin={mot(/^Coran/) + 14} />
-  <Surligne at={mot(/^Coran/) + 4} {...ZD} fin={L[1] - 6} />
-  <Surligne at={mot(/écoutes/, 1)} {...ZE} fin={L[2] - 6} />
-  <Ondes x={(ZE.x + ZE.w * 0.15) * W} y={(ZE.y + ZE.h / 2) * H} at={[mot(/^fois/, 1), mot(/^autre/, 1)]} />
-  <Surligne at={mot(/^récites/, 2)} {...englobe(ZR, zone(E, /^Une minute au plus/))} />
+// ---------- 1 à 3. La journée par moments : chaque moment se coche, un à un ----------
+const E = "ecrans/journee";
+const MOMENTS = [
+  { re: /^Le matin$/, info: /^3 sur 5 · à rattraper$/, n: 0, at: () => mot(/^invocation/, 0) },
+  { re: /^Dans la journée$/, info: /^1 sur 5 · à rattraper$/, n: 0, at: () => mot(/^journée/, 1) },
+  { re: /^Le soir$/, info: /^2 sur 5 · maintenant$/, n: 0, at: () => mot(/^dernière/, 2) },
+].map((m) => { const z = zone(E, m.re, m.n); return { z, carte: englobe(z, zone(E, m.info)), at: m.at() }; });
+const Journee: React.FC = () => <Phone ecran={E} from={0} to={L[3] - 4} entree="bas" sortie="recul" focus={[{ at: 20, px: 0.5, py: 0.5, s: 1.05 }]}>
+  {MOMENTS.map((m, i) => <React.Fragment key={i}>
+    <Surligne at={m.at - 4} {...m.carte} fin={i < 2 ? MOMENTS[i + 1].at - 8 : undefined} />
+    <Check at={m.at + 2} x={W * 0.085} y={(m.z.y + m.z.h / 2) * H} size={44} />
+  </React.Fragment>)}
 </Phone>;
 
-// ---------- 4. À ta voix, sans te presser : le micro et des ondes lentes ----------
-const Micro: React.FC = () => {
+// ---------- 4 et 5. La barre qui se remplit, doucement, puis la journée complète ----------
+const Barre: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const s = spring({ frame: f - MICRO, fps, config: { damping: 20, stiffness: 60 } });
+  const a = spring({ frame: f - L[3], fps, config: { damping: 20, stiffness: 60 } });
+  const p = interpolate(f, [mot(/^remplit/, 3) - 6, L[4] + 6], [0.4, 1], { ...C, easing: Easing.inOut(Easing.sin) });
+  const c = spring({ frame: f - mot(/^complète/, 4), fps, config: { damping: 18, stiffness: 70 } });
+  const X0 = 140, X1 = 940;
   return (
-    <AbsoluteFill>
-      {[0, 1, 2, 3].map((i) => {
-        const k = ((f - MICRO + i * 22) % 88) / 88;
-        return <div key={i} style={{ position: "absolute", left: 540 - 130 - 260 * k, top: 640 - 130 - 260 * k, width: 260 + 520 * k, height: 260 + 520 * k, borderRadius: "50%", border: `3px solid ${GOLD}`, opacity: s * 0.6 * (1 - k) }} />;
-      })}
-      <div style={{ position: "absolute", left: 540 - 130, top: 640 - 130, width: 260, height: 260, borderRadius: "50%", background: "rgba(42,12,34,0.95)", boxShadow: `0 0 0 4px ${GOLD}, 0 0 60px rgba(233,196,106,0.5)`, display: "grid", placeItems: "center", transform: `scale(${s})`, opacity: s }}>
-        <svg width={120} height={120} viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round"><rect x={9} y={3} width={6} height={11} rx={3} /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>
+    <AbsoluteFill style={{ opacity: a }}>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 380, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 64, color: "rgba(255,255,255,0.85)", letterSpacing: "0.1em" }}>TA JOURNÉE</div>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 470, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 150, color: GOLD, fontVariantNumeric: "tabular-nums", textShadow: `0 0 ${30 + 40 * c}px rgba(233,196,106,0.6)` }}>{Math.round(p * 100)} %</div>
+      <div style={{ position: "absolute", left: X0, width: X1 - X0, top: 720, height: 48, borderRadius: 24, background: "rgba(255,255,255,0.14)" }}>
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${p * 100}%`, borderRadius: 24, background: GOLD, boxShadow: `0 0 ${20 + 30 * c}px rgba(233,196,106,0.8)` }} />
       </div>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 1000, textAlign: "center", fontFamily: FONT, fontWeight: 600, fontSize: 52, color: GOLD, opacity: interpolate(f, [mot(/^presser/, 2) - 6, mot(/^presser/, 2) + 14], [0, 1], C) }}>à ton rythme</div>
+      {["Matin", "Journée", "Soir"].map((n, i) => {
+        const x = X0 + (X1 - X0) * (i + 0.5) / 3;
+        return <div key={n} style={{ position: "absolute", left: x - 120, width: 240, top: 800, textAlign: "center", fontFamily: FONT, fontWeight: 700, fontSize: 44, color: p >= (i + 1) / 3 - 0.01 ? GOLD : "rgba(255,255,255,0.6)" }}>{n}</div>;
+      })}
+      {[0, 1, 2, 3, 4].map((i) => {
+        const s = spring({ frame: f - mot(/^complète/, 4) - i * 5, fps, config: { damping: 14, stiffness: 90 } });
+        const x = 540 + (i - 2) * 150, y = 1000 + Math.abs(i - 2) * 30;
+        return <div key={i} style={{ position: "absolute", left: x - 40, top: y - 40, transform: `scale(${s})`, opacity: s }}><StarP size={80} glow={20} /></div>;
+      })}
     </AbsoluteFill>
   );
 };
 
 const SFX: Sfx[] = [
-  ["shimmer", 4, 0.35], ["tick", mot(/^verset/) + 10, 0.25], ["tick", mot(/^Coran/) + 14, 0.2],
-  ["pop", mot(/^fois/, 1) + 8, 0.25], ["pop", mot(/^autre/, 1) + 12, 0.25],
-  ["tick", mot(/^récites/, 2) + 14, 0.25], ["shimmer", MICRO + 4, 0.3],
-  ["shimmer", L[3] - 22, 0.3], ["tick", L[3] + 46, 0.2],
+  ["shimmer", 4, 0.3],
+  ...MOMENTS.map((m) => ["pop", m.at + 10, 0.35] as Sfx),
+  ...MOMENTS.map((m) => ["tick", m.at + 18, 0.2] as Sfx),
+  ["shimmer", L[3] - 16, 0.3], ["tick", mot(/^doucement/, 3) + 16, 0.2],
+  // Le shimmer dure 1,5 s : il doit finir avant « Sabab » (sinon « Sabab » est entendu « Ça va »).
+  ["pop", mot(/^complète/, 4) + 14, 0.25],
+  ["shimmer", T.FIN + 4, 0.3], ["pop", T.FIN + 2, 0.25],
 ];
 
 const Video: React.FC = () => (
   <AbsoluteFill style={{ background: "#0A0208" }}>
-    <Fond T={T} k={[0, L[1], L[2], MICRO + 10, L[3], T.DUREE]} />
-    <Verset />
-    <Scene from={MICRO - 4} to={L[3] - 4} zin={0.05} zout={0.05}><Micro /></Scene>
-    <Scene from={L[3] - 6} to={T.DUREE + 10} zin={0.05}><Logo at={L[3]} phrase="Une journée à la fois" /></Scene>
+    <Fond T={T} k={[0, L[1], L[3], L[4], L[5], T.DUREE]} />
+    <Journee />
+    <Scene from={L[3] - 6} to={L[5] - 4} zin={0.05} zout={0.05}><Barre /></Scene>
+    <Scene from={L[5] - 6} to={T.DUREE + 10} zin={0.05}><Logo at={L[5]} phrase="Une journée à la fois" /></Scene>
     <Voile />
-    <SousTitres T={T} or={/^(verset|Coran|l’écoutes|autre|récites|voix|presser|Sabab|fois)/i} grandsDes={3} />
+    <SousTitres T={T} or={/^(matin|invocation|journée|soir|dernière|barre|doucement|complète|Sabab|fois)/i} grandsDes={5} />
     <Son voix="apaisant.mp3" sfx={SFX} />
   </AbsoluteFill>
 );

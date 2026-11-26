@@ -1,0 +1,17 @@
+{
+ "nuit": {
+  "ref": "textes:MOMENTS_FAVORABLES.nuit",
+  "label": "Le dernier tiers de la nuit",
+  "source": "Al-Bukhârî (n° 1145)"
+ },
+ "appel": {
+  "ref": "textes:MOMENTS_FAVORABLES.appel",
+  "label": "entre l’appel à la prière et l’iqâma",
+  "source": "Abû Dâwûd (n° 521)"
+ },
+ "sujud": {
+  "ref": "textes:MOMENTS_FAVORABLES.sujud",
+  "label": "pendant la prosternation",
+  "source": "Muslim (n° 482)"
+ }
+}

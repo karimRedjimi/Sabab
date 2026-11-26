@@ -1,20 +1,14 @@
 {
  "dua": {
-  "ref": "programme:istighfar",
+  "ref": "programme:zidni",
   "kind": "dua",
-  "title": "Istighfâr",
-  "moment": "Tout au long de la journée",
-  "ar": "أَسْتَغْفِرُ اللَّهَ",
-  "ph": "Astaghfirullâh.",
-  "fr": "Je demande pardon à Allah.",
+  "title": "Accroître sa science",
+  "moment": "Avant chaque séance de travail",
+  "ar": "رَبِّ زِدْنِي عِلْمًا",
+  "ph": "Rabbi zidnî ʿilmâ.",
+  "fr": "Seigneur, accroît ma science.",
   "grade": "coran",
-  "src": "Coran, Nûh 71:10-12 ; Muslim (n° 2702)",
-  "note": "« Implorez le pardon de votre Seigneur, Il pardonne tant ; Il vous enverra du ciel une pluie abondante, vous accordera biens et enfants, et vous donnera jardins et rivières. » Le Prophète ﷺ demandait lui-même pardon cent fois par jour.",
-  "slots": [
-   {
-    "l": "Objectif du jour",
-    "t": 100
-   }
-  ]
+  "src": "Coran, Tâ-Hâ 20:114",
+  "note": "C’est la seule chose dont Allah a ordonné à Son Prophète ﷺ de demander davantage."
  }
 }
