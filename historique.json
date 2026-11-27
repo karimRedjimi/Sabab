@@ -358,5 +358,61 @@
   "contenu": "aucun texte religieux",
   "titre": "Ta journée, moment par moment",
   "fichier": "2026-11-27-7-apaisant.mp4"
+ },
+ {
+  "date": "2026-11-28",
+  "format": "saviez",
+  "angle": "ce que le Prophète ﷺ disait dans une situation",
+  "contenu": "citadelle.json · hm-211 (At-Tirmidhî 3/153, Ibn Mâjah 2/321)",
+  "titre": "Cent fois dans une même assise",
+  "fichier": "2026-11-28-1-saviez.mp4"
+ },
+ {
+  "date": "2026-11-28",
+  "format": "fonction",
+  "angle": "les cycles de 30 jours et le bilan",
+  "contenu": "aucun texte religieux dit (écran du cycle : « Qu’Allah l’accepte »)",
+  "titre": "Les cycles de 30 jours et ton bilan",
+  "fichier": "2026-11-28-2-fonction.mp4"
+ },
+ {
+  "date": "2026-11-28",
+  "format": "quiz",
+  "angle": "quand il pleut",
+  "contenu": "citadelle.json · hm-188 (note arabe : البخاري مع الفتح 2/518) ; hm-189 (note arabe : والبخاري 1/205 ،مسلم 1/83)",
+  "titre": "Quand il pleut, on dit quoi ?",
+  "fichier": "2026-11-28-3-quiz.mp4"
+ },
+ {
+  "date": "2026-11-28",
+  "format": "souci",
+  "angle": "le manque de régularité dans la prière",
+  "contenu": "citadelle.json · hm-75 (Abû Dâwûd 2/86, An-Nasâ'î 3/53) ; écrans accueil et minimum du jour",
+  "titre": "Je rate des prières",
+  "fichier": "2026-11-28-4-souci.mp4"
+ },
+ {
+  "date": "2026-11-28",
+  "format": "avant",
+  "angle": "les adhkâr du matin oubliés",
+  "contenu": "aucun texte religieux dit (écran de lecture : programme.ts · dette, At-Tirmidhî n° 3563, affiché)",
+  "titre": "Le matin, d’abord",
+  "fichier": "2026-11-28-5-avant.mp4"
+ },
+ {
+  "date": "2026-11-28",
+  "format": "moment",
+  "angle": "le jour de la semaine : le samedi (thème « La barakah dans ce qu’on a »)",
+  "contenu": "programme.ts · anas (Al-Bukhârî n° 6334 ; Muslim n° 2481) ; rahim (titre et description seulement) ; DAYS Samedi",
+  "titre": "Ce samedi, la barakah dans ce qu’on a",
+  "fichier": "2026-11-28-6-moment.mp4"
+ },
+ {
+  "date": "2026-11-28",
+  "format": "apaisant",
+  "angle": "clôturer sa journée",
+  "contenu": "aucun texte religieux",
+  "titre": "Ta journée se referme",
+  "fichier": "2026-11-28-7-apaisant.mp4"
  }
 ]

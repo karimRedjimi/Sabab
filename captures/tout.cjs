@@ -243,6 +243,20 @@ spawn("node", [__dirname + "/faux-serveur.cjs"], { detached: true, stdio: "ignor
   await essai("vendredi-accueil", async () => { await p.goto(B + "/"); await p.waitForTimeout(2600); await ecran("vendredi-accueil", "Accueil un vendredi, pendant la dernière heure : « Maintenant : Dernière heure du vendredi »."); });
   await essai("vendredi-journee", async () => { await haut(".dprog", 70); await ecran("vendredi-journee", "Accueil plus bas, un vendredi : la journée par moments."); });
   await essai("vendredi-moments", async () => { await p.goto(B + "/"); await p.waitForTimeout(2400); await p.locator(".favsum").first().click(); await p.waitForTimeout(900); await ecran("vendredi-moments", "Un vendredi pendant la dernière heure : les moments favorables dépliés (la dernière heure du vendredi)."); });
+  // ---------- Nuit du 27/11 : l’assemblée (hm-211), la pluie (hm-188), l’aide pour adorer (hm-75) ----------
+  await heure("14:05"); await seed(base());
+  await fiche("fiche-assise", "assemblée", "On comptait", "Bibliothèque : recherche « assemblée », « Seigneur, pardonne-moi et accepte mon repentir » (cent fois dans une assise) ouverte.");
+  await fiche("fiche-pluie", "pluie", "bénéfique", "Bibliothèque : recherche « pluie », l’invocation quand la pluie tombe ouverte, avec sa source.");
+  await fiche("fiche-aide", "remercier", "aide-moi", "Bibliothèque : recherche « remercier », « Ô Allah, aide-moi à T’évoquer, à Te remercier et à T’adorer » ouverte.");
+  // Le samedi : « La barakah dans ce qu’on a » (programme · anas), ouverte dans « Du programme », la carte d’avant en haut.
+  await essai("fiche-anas", async () => {
+    await p.goto(B + "/apprendre"); await p.waitForTimeout(1800); await haut("#bibliotheque", 40);
+    await p.locator(".bt", { hasText: "Du programme" }).click(); await p.waitForTimeout(900);
+    const carte = p.locator("#bibliotheque .bcard", { hasText: "La barakah dans ce qu’on a" }).first();
+    await carte.locator(".bhead").click(); await p.waitForTimeout(700);
+    await carte.evaluate((e) => { const a = e.previousElementSibling || e; window.scrollTo(0, a.getBoundingClientRect().top + window.scrollY - 22); }); await p.waitForTimeout(1200);
+    await ecran("fiche-anas", "Bibliothèque, « Du programme » : « La barakah dans ce qu’on a » ouverte (faite pour Anas).");
+  });
   fs.writeFileSync(out + "manifeste.json", JSON.stringify(manifeste, null, 1));
   if (erreurs.length) console.log("Erreurs de page :", erreurs.slice(0, 5));
   console.log(`${Object.keys(manifeste).length} écrans capturés`);

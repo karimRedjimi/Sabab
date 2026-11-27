@@ -1,11 +1,22 @@
 {
  "dua": {
-  "ref": "citadelle:hm-82",
-  "id": "hm-82",
-  "ar": "«أَسْتَغْفِرُ اللهَ (ثَلَاثًا)، اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ».",
-  "ph": "Astaghfiru Allāh (3x). Allāhumma Anta as-Salāmu wa minka as-salāmu, tabārakta yā Dha-l-jalāli wal-ikrām.",
-  "fr": "Je demande pardon à Allah (3 fois). Ô Allah, Tu es la Paix et la paix vient de Toi. Béni sois-Tu, ô Détenteur de la majesté et de la générosité.",
-  "src": "Muslim 1/414",
-  "chapitre": "Évocations après le salut final de la prière"
+  "ref": "citadelle:hm-188",
+  "id": "hm-188",
+  "ar": "اللَّهُمَّ صَيِّباً نَافِعاً",
+  "ph": "Allāhumma ṣayyiban nāfi'ā.",
+  "fr": "Ô Allah, fais que ce soit une pluie bénéfique.",
+  "src": "",
+  "srcAr": "البخاري مع الفتح 2/518",
+  "chapitre": "Invocation lorsque la pluie tombe"
+ },
+ "apres": {
+  "ref": "citadelle:hm-189",
+  "id": "hm-189",
+  "ar": "مُطِرْنَا بِفَضْلِ اللهِ وَرَحْمَتِهِ",
+  "ph": "Muṭirnā bi-faḍli Llāhi wa raḥmatih.",
+  "fr": "Nous avons reçu la pluie par la grâce d'Allah et Sa miséricorde.",
+  "src": "",
+  "srcAr": "والبخاري 1/205 ،مسلم 1/83",
+  "chapitre": "Évocation après la pluie"
  }
 }

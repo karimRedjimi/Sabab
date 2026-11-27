@@ -1,12 +1,32 @@
 {
- "heure": {
-  "ref": "programme:heure",
-  "kind": "action",
-  "title": "Invoquer avant le Maghreb",
-  "when": "lastHour",
-  "desc": "Garde la dernière heure avant le Maghreb pour tes demandes personnelles : rizq, projets, famille.",
+ "dua": {
+  "ref": "programme:anas",
+  "kind": "dua",
+  "title": "La barakah dans ce qu’on a",
+  "moment": "Dans la journée",
+  "ar": "اللَّهُمَّ أَكْثِرْ مَالِي وَوَلَدِي، وَبَارِكْ لِي فِيمَا أَعْطَيْتَنِي",
+  "ph": "Allâhumma akthir mâlî wa waladî, wa bârik lî fîmâ aʿtaytanî.",
+  "fr": "Ô Allah, augmente mes biens et ma descendance, et bénis-moi dans ce que Tu m’as donné.",
   "grade": "sahih",
-  "src": "Abû Dâwûd (n° 1048)",
-  "note": "Il y a le vendredi une heure où aucun musulman ne demande quelque chose à Allah sans qu’Il le lui accorde ; le hadith indique de la chercher à la dernière heure après le ʿAsr."
+  "src": "Al-Bukhârî (n° 6334) ; Muslim (n° 2481)",
+  "note": "Le Prophète ﷺ l’a faite pour Anas, à la demande de sa mère ; elle est ici adaptée à la première personne. Anas raconta plus tard que ses biens et sa descendance étaient devenus très nombreux."
+ },
+ "geste": {
+  "ref": "programme:rahim",
+  "kind": "action",
+  "title": "Appeler ou visiter un proche",
+  "desc": "Un parent, un frère, une tante, quelqu’un avec qui le lien s’est distendu.",
+  "grade": "sahih",
+  "src": "Al-Bukhârî (n° 5986)",
+  "note": "Que celui qui aime voir sa subsistance élargie et sa vie prolongée entretienne les liens de parenté."
+ },
+ "jour": {
+  "ref": "semaine:Samedi",
+  "name": "Samedi",
+  "theme": "La barakah dans ce qu’on a",
+  "items": [
+   "anas",
+   "rahim"
+  ]
  }
 }

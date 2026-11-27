@@ -1,43 +1,47 @@
-// « Quiz » : ce qu’on dit juste après la prière (Hisn al-Muslim, hm-82 ; Muslim 1/414).
-// Textes religieux : public/voix/quiz.textes.json (copiés par programme depuis content/citadelle.json · hm-82).
-// L’arabe, la phonétique et la traduction sont seulement COUPÉS en deux (après « trois fois »), jamais modifiés.
+// « Quiz » : ce qu’on dit quand il pleut (Hisn al-Muslim, hm-188 « Invocation lorsque la pluie tombe » et hm-189 « Évocation après la pluie »).
+// Textes religieux : public/voix/quiz.textes.json (copiés par programme depuis content/citadelle.json · hm-188, hm-189).
+// Ces deux fiches n’ont que la note de source du livre arabe (srcAr) : elle est affichée telle quelle, comme dans l’appli.
 import React from "react";
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
-import { C, AR, FONT, GOLD, PLUM, W, H, minutage, zone, englobe, SousTitres, Voile, Fond, StarP, Scene, Flash, Phone, Pastille, Surligne, Logo, Son, type Sfx } from "../moteur";
+import { AbsoluteFill, interpolate, random, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
+import { C, AR, FONT, GOLD, PLUM, minutage, zone, englobe, SousTitres, Voile, Fond, StarP, Scene, Flash, Phone, Surligne, Logo, Son, type Sfx } from "../moteur";
 import voix from "../../public/voix/quiz.json";
 import tx from "../../public/voix/quiz.textes.json";
 
 const T = minutage(voix);
 const { L, mot } = T;
-const D = tx.dua;
-const coupe = (s: string, apres: string) => { const i = s.indexOf(apres) + apres.length; return [s.slice(0, i).trim(), s.slice(i).trim()]; };
-const AR2 = coupe(D.ar, "(ثَلَاثًا)،"), PH2 = coupe(D.ph, "(3x)."), FR2 = coupe(D.fr, "(3 fois).");
+const D1 = tx.dua, D2 = tx.apres;
 const DECOMPTE = [mot(/^Trois/, 1), mot(/^deux/, 1), mot(/^un/, 1)];
 const LIEN = mot(/^lien/, 6);
 
-// L’arche d’un mihrab (la prière), dessinée trait par trait.
-const Arche: React.FC<{ p: number; size: number; lueur?: number }> = ({ p, size, lueur = 0 }) => (
-  <svg width={size} height={size * 1.2} viewBox="0 0 100 120" style={{ overflow: "visible", filter: `drop-shadow(0 0 ${12 + 30 * lueur}px rgba(233,196,106,${0.4 + 0.5 * lueur}))` }}>
-    <path d="M14 116 V56 C14 30 34 12 50 4 C66 12 86 30 86 56 V116" fill="none" stroke={GOLD} strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray={`${p} 1`} />
-    <path d="M28 116 V62 C28 44 40 30 50 24 C60 30 72 44 72 62 V116" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth={3} strokeLinecap="round" pathLength={1} strokeDasharray={`${Math.max(0, p * 1.3 - 0.3)} 1`} />
-    <path d="M4 116 H96" stroke={GOLD} strokeWidth={5} strokeLinecap="round" pathLength={1} strokeDasharray={`${p} 1`} />
+// Les gouttes : des traits dorés qui tombent (toujours les mêmes, tirées au sort une fois).
+const GOUTTES = Array.from({ length: 70 }, (_, i) => ({ x: random("gx" + i) * 1080, v: 14 + random("gv" + i) * 12, d: random("gd" + i) * 1920, l: 30 + random("gl" + i) * 40 }));
+const Pluie: React.FC<{ force: number; haut?: number }> = ({ force, haut = 0 }) => {
+  const f = useCurrentFrame();
+  return <svg width={1080} height={1920} style={{ position: "absolute", inset: 0 }}>
+    {GOUTTES.map((g, i) => { const y = (g.d + f * g.v) % 1920; return y < haut ? null : <line key={i} x1={g.x} y1={y} x2={g.x - 6} y2={y + g.l} stroke={i % 3 ? "rgba(255,255,255,0.5)" : GOLD} strokeWidth={4} strokeLinecap="round" opacity={force * (i % 3 ? 0.5 : 0.8)} />; })}
+  </svg>;
+};
+const Nuage: React.FC<{ p: number; size: number }> = ({ p, size }) => (
+  <svg width={size} height={size * 0.62} viewBox="0 0 100 62" style={{ overflow: "visible", filter: "drop-shadow(0 0 24px rgba(233,196,106,0.55))" }}>
+    <path d="M22 56 H80 C92 56 98 46 96 37 C94 27 84 22 76 25 C73 12 61 5 49 8 C38 10 31 19 30 28 C20 26 10 33 10 43 C10 51 15 56 22 56 Z" fill="rgba(42,12,34,0.92)" stroke={GOLD} strokeWidth={4} strokeLinejoin="round" pathLength={1} strokeDasharray={`${p} 1`} />
   </svg>
 );
 
-// ---------- 1. L’accroche : « QUIZ » et l’arche qui se dessine ----------
+// ---------- 1. L’accroche : « QUIZ », le nuage se dessine, la pluie commence ----------
 const Accroche: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
   const quiz = spring({ frame: f - 3, fps, config: { damping: 7, stiffness: 200 } });
-  const p = interpolate(f, [6, mot(/^prière/) + 4], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) });
-  const t = spring({ frame: f - mot(/^après/), fps, config: { damping: 12, stiffness: 150 } });
+  const p = interpolate(f, [6, mot(/^pleut/) + 2], [0, 1], { ...C, easing: Easing.inOut(Easing.cubic) });
+  const t = spring({ frame: f - mot(/^pleut/), fps, config: { damping: 12, stiffness: 150 } });
   return (
     <AbsoluteFill>
+      <Pluie force={t} haut={700} />
       <div style={{ position: "absolute", left: 0, right: 0, top: 200, textAlign: "center", transform: `scale(${quiz}) rotate(${(1 - quiz) * -12}deg)` }}>
         <span style={{ display: "inline-block", padding: "20px 60px", borderRadius: 30, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 110, letterSpacing: "0.08em", boxShadow: "0 0 80px rgba(233,196,106,0.7)" }}>QUIZ</span>
       </div>
-      <div style={{ position: "absolute", left: 540 - 170, top: 420 }}><Arche p={p} size={340} lueur={t} /></div>
-      <div style={{ position: "absolute", left: 60, right: 60, top: 900, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 78, lineHeight: 1.2, color: "#fff", opacity: t, transform: `translateY(${(1 - t) * 30}px)` }}>
-        juste <span style={{ color: GOLD }}>après</span> la prière ?
+      <div style={{ position: "absolute", left: 540 - 230, top: 440 }}><Nuage p={p} size={460} /></div>
+      <div style={{ position: "absolute", left: 60, right: 60, top: 980, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 82, lineHeight: 1.2, color: "#fff", opacity: t, transform: `translateY(${(1 - t) * 30}px)`, textShadow: "0 4px 20px rgba(0,0,0,0.6)" }}>
+        quand il <span style={{ color: GOLD }}>pleut</span> ?
       </div>
     </AbsoluteFill>
   );
@@ -52,8 +56,9 @@ const Decompte: React.FC = () => {
   const p = interpolate(f, [L[1], L[2]], [0, 1], C);
   return (
     <AbsoluteFill>
+      <Pluie force={0.5} />
       <svg width={1080} height={1440} style={{ position: "absolute", inset: 0 }}>
-        <circle cx={540} cy={700} r={300} fill="rgba(42,12,34,0.85)" stroke="rgba(255,255,255,0.15)" strokeWidth={18} />
+        <circle cx={540} cy={700} r={300} fill="rgba(42,12,34,0.88)" stroke="rgba(255,255,255,0.15)" strokeWidth={18} />
         <circle cx={540} cy={700} r={300} fill="none" stroke={GOLD} strokeWidth={18} strokeLinecap="round" pathLength={1} strokeDasharray={`${1 - p} 1`} transform="rotate(-90 540 700)" style={{ filter: "drop-shadow(0 0 16px rgba(233,196,106,0.8))" }} />
       </svg>
       <div style={{ position: "absolute", left: 0, right: 0, top: 700 - 190, textAlign: "center", fontFamily: FONT, fontWeight: 800, fontSize: 340, lineHeight: 1.1, color: "#fff", transform: `scale(${s})`, textShadow: "0 0 60px rgba(233,196,106,0.7)" }}>{3 - i}</div>
@@ -61,69 +66,48 @@ const Decompte: React.FC = () => {
   );
 };
 
-// La carte d’une partie de la réponse : arabe, phonétique, traduction.
-const Carte: React.FC<{ at: number; ar: string; ph: string; fr: string; taille: number; top: number }> = ({ at, ar, ph, fr, taille, top }) => {
+// La carte d’une réponse : arabe, phonétique, traduction (copiés à l’identique).
+const Carte: React.FC<{ at: number; ar: string; ph: string; fr: string; top: number; etiquette: string }> = ({ at, ar, ph, fr, top, etiquette }) => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
   const a = spring({ frame: f - at, fps, config: { damping: 14, stiffness: 120 } });
   const b = interpolate(f, [at + 12, at + 28], [0, 1], C);
   return (
-    <div style={{ position: "absolute", left: 60, right: 60, top, padding: "44px 40px", borderRadius: 48, background: "rgba(42,12,34,0.9)", boxShadow: "0 0 0 3px rgba(233,196,106,0.55), 0 40px 100px rgba(0,0,0,0.5)", textAlign: "center",
-      opacity: a, transform: `translateY(${(1 - a) * 80}px)` }}>
-      <div dir="rtl" lang="ar" style={{ fontFamily: AR, fontSize: taille, lineHeight: 1.75, color: GOLD, unicodeBidi: "plaintext", textShadow: "0 0 30px rgba(233,196,106,0.45)" }}>{ar}</div>
-      <div style={{ fontFamily: FONT, fontStyle: "italic", fontSize: 40, lineHeight: 1.4, color: "rgba(255,255,255,0.8)", marginTop: 14, opacity: b }}>{ph}</div>
-      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 46, lineHeight: 1.3, color: "#fff", marginTop: 20, opacity: b }}>{fr}</div>
-    </div>
+    <>
+      <div style={{ position: "absolute", left: 0, right: 0, top: top - 120, textAlign: "center", transform: `scale(${a})` }}>
+        <span style={{ display: "inline-block", padding: "12px 34px", borderRadius: 999, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 44, letterSpacing: "0.06em" }}>{etiquette}</span>
+      </div>
+      <div style={{ position: "absolute", left: 60, right: 60, top, padding: "50px 40px", borderRadius: 48, background: "rgba(42,12,34,0.92)", boxShadow: "0 0 0 3px rgba(233,196,106,0.55), 0 40px 100px rgba(0,0,0,0.5)", textAlign: "center",
+        opacity: a, transform: `translateY(${(1 - a) * 80}px)` }}>
+        <div dir="rtl" lang="ar" style={{ fontFamily: AR, fontSize: 120, lineHeight: 1.6, color: GOLD, textShadow: "0 0 30px rgba(233,196,106,0.45)" }}>{ar}</div>
+        <div style={{ fontFamily: FONT, fontStyle: "italic", fontSize: 44, lineHeight: 1.4, color: "rgba(255,255,255,0.8)", marginTop: 14, opacity: b }}>{ph}</div>
+        <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 54, lineHeight: 1.3, color: "#fff", marginTop: 22, opacity: b }}>{fr}</div>
+      </div>
+    </>
   );
 };
 
-// ---------- 3. D’abord : trois fois ----------
-const Dabord: React.FC = () => {
-  const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const e = spring({ frame: f - L[2], fps, config: { damping: 10, stiffness: 180 } });
-  const t3 = mot(/^trois/, 2);
-  return (
-    <AbsoluteFill>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 210, textAlign: "center", transform: `scale(${e})` }}>
-        <span style={{ display: "inline-block", padding: "12px 34px", borderRadius: 999, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 44, letterSpacing: "0.06em" }}>LA RÉPONSE · 1</span>
-      </div>
-      <Carte at={L[2] + 2} ar={AR2[0]} ph={PH2[0]} fr={FR2[0]} taille={110} top={340} />
-      <div style={{ position: "absolute", left: 0, right: 0, top: 940, display: "flex", justifyContent: "center", gap: 50 }}>
-        {[0, 1, 2].map((i) => {
-          const s = spring({ frame: f - t3 - i * 6, fps, config: { damping: 8, stiffness: 220 } });
-          return <div key={i} style={{ width: 120, height: 120, borderRadius: "50%", background: GOLD, color: PLUM, display: "grid", placeItems: "center", fontFamily: FONT, fontWeight: 800, fontSize: 60, transform: `scale(${s})`, boxShadow: "0 0 40px rgba(233,196,106,0.7)" }}>{i + 1}</div>;
-        })}
-      </div>
-    </AbsoluteFill>
-  );
-};
+// ---------- 3 et 4. Les deux réponses ----------
+const Reponse1: React.FC = () => <AbsoluteFill><Pluie force={0.35} /><Carte at={L[2] + 2} ar={D1.ar} ph={D1.ph} fr={D1.fr} top={420} etiquette="QUAND LA PLUIE TOMBE" /></AbsoluteFill>;
+const Reponse2: React.FC = () => <AbsoluteFill><Carte at={mot(/^pluie/, 3) + 4} ar={D2.ar} ph={D2.ph} fr={D2.fr} top={420} etiquette="APRÈS LA PLUIE" /></AbsoluteFill>;
 
-// ---------- 4. Puis : la suite, entière ----------
-const Puis: React.FC = () => {
-  const f = useCurrentFrame(), { fps } = useVideoConfig();
-  const e = spring({ frame: f - L[3], fps, config: { damping: 10, stiffness: 180 } });
-  return (
-    <AbsoluteFill>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 160, textAlign: "center", transform: `scale(${e})` }}>
-        <span style={{ display: "inline-block", padding: "12px 34px", borderRadius: 999, background: GOLD, color: PLUM, fontFamily: FONT, fontWeight: 800, fontSize: 44, letterSpacing: "0.06em" }}>LA RÉPONSE · 2</span>
-      </div>
-      <Carte at={L[3] + 2} ar={AR2[1]} ph={PH2[1]} fr={FR2[1]} taille={84} top={280} />
-    </AbsoluteFill>
-  );
-};
-
-// ---------- 5. La source ----------
+// ---------- 5. La source : les notes du livre arabe, telles quelles ----------
 const Source: React.FC = () => {
   const f = useCurrentFrame(), { fps } = useVideoConfig();
   const s = spring({ frame: f - L[4], fps, config: { damping: 14, stiffness: 150 } });
-  const b = spring({ frame: f - mot(/^Muslim/, 4), fps, config: { damping: 9, stiffness: 200 } });
+  const b = spring({ frame: f - L[4] - 8, fps, config: { damping: 9, stiffness: 200 } });
+  const Ligne: React.FC<{ titre: string; src: string }> = ({ titre, src }) => <div style={{ marginTop: 26 }}>
+    <div style={{ fontFamily: FONT, fontSize: 32, color: "rgba(255,255,255,0.75)", fontWeight: 600, letterSpacing: "0.06em" }}>{titre.toUpperCase()}</div>
+    <div dir="rtl" lang="ar" style={{ fontFamily: AR, fontSize: 66, color: "#fff", lineHeight: 1.5, unicodeBidi: "plaintext" }}>{src}</div>
+  </div>;
   return (
     <AbsoluteFill>
-      <div style={{ position: "absolute", left: 100, right: 100, top: 520, padding: "56px 50px", borderRadius: 48, background: "rgba(42,12,34,0.9)", boxShadow: "0 0 0 3px rgba(233,196,106,0.6), 0 40px 100px rgba(0,0,0,0.5)",
+      <div style={{ position: "absolute", left: 90, right: 90, top: 470, padding: "40px 50px 50px", borderRadius: 48, background: "rgba(42,12,34,0.92)", boxShadow: "0 0 0 3px rgba(233,196,106,0.6), 0 40px 100px rgba(0,0,0,0.5)",
         transform: `perspective(1600px) rotateY(${(1 - s) * 70}deg)`, opacity: s, textAlign: "center" }}>
-        <div style={{ fontFamily: FONT, fontSize: 32, color: "rgba(255,255,255,0.7)", fontWeight: 600, letterSpacing: "0.1em", lineHeight: 1.4 }}>HISN AL-MUSLIM · {D.chapitre.toUpperCase()}</div>
-        <div style={{ fontFamily: FONT, fontSize: 64, color: "#fff", fontWeight: 800, lineHeight: 1.3, marginTop: 24, transform: `scale(${0.92 + 0.08 * b})` }}>{D.src}</div>
+        <div style={{ fontFamily: FONT, fontSize: 34, color: GOLD, fontWeight: 700, letterSpacing: "0.08em" }}>HISN AL-MUSLIM · NOTE DU LIVRE ARABE</div>
+        <Ligne titre={D1.chapitre} src={D1.srcAr} />
+        <Ligne titre={D2.chapitre} src={D2.srcAr} />
       </div>
-      <div style={{ position: "absolute", left: 540 - 50, top: 370, transform: `scale(${b}) rotate(${f}deg)` }}><StarP size={100} glow={30} /></div>
+      <div style={{ position: "absolute", left: 540 - 50, top: 320, transform: `scale(${b}) rotate(${f}deg)` }}><StarP size={100} glow={30} /></div>
     </AbsoluteFill>
   );
 };
@@ -150,21 +134,21 @@ const Commentaire: React.FC = () => {
 };
 
 // ---------- 7. Dans Sabab : la fiche, entière ----------
-const E = "ecrans/fiche-salam";
-const ZT = zone(E, /^Évocations après le salut final de la prière$/, 1), ZA = englobe(zone(E, /^«أَسْتَغْفِرُ/), zone(E, /^Je demande pardon à Allah \(3 fois\)/)), ZS = zone(E, /^Source : Muslim 1\/414$/);
-const Fiche: React.FC = () => <Phone ecran={E} from={L[6] - 4} to={LIEN - 2} entree="gauche" sortie="recul" focus={[{ at: L[6] + 6, px: 0.5, py: 0.45, s: 1.05 }]}>
+const E = "ecrans/fiche-pluie";
+const ZT = zone(E, /^Invocation lorsque la pluie tombe$/, 1), ZA = englobe(zone(E, new RegExp("^" + D1.ar.slice(0, 9))), zone(E, /^Ô Allah, fais que ce soit une pluie bénéfique\.$/)), ZS = englobe(zone(E, /^Source \(note du livre arabe\)/), zone(E, new RegExp("^" + D1.srcAr.slice(0, 7))));
+const Fiche: React.FC = () => <Phone ecran={E} from={L[6] - 4} to={LIEN - 2} entree="zoom" sortie="recul" focus={[{ at: L[6] + 6, px: 0.5, py: 0.5, s: 1.05 }]}>
   <Surligne at={mot(/^bibliothèque/, 6)} {...ZT} fin={mot(/^Sabab/, 6) - 2} />
   <Surligne at={mot(/^Sabab/, 6)} {...ZA} />
   <Surligne at={mot(/^Sabab/, 6) + 8} {...ZS} />
 </Phone>;
 
 const SFX: Sfx[] = [
-  ["pop", 3, 0.6], ["impact", 9, 0.6], ["whoosh", mot(/^après/) - 18, 0.35],
+  ["pop", 3, 0.6], ["impact", 9, 0.55], ["whoosh", mot(/^pleut/) - 18, 0.35],
   ...DECOMPTE.map((a) => ["tick", a, 0.8] as Sfx),
-  ["whoosh", L[2] - 18, 0.45], ...[0, 1, 2].map((i) => ["pop", mot(/^trois/, 2) + i * 6 + 6, 0.35] as Sfx),
-  ["shimmer", L[3] - 8, 0.4],
-  ["whoosh", L[4] - 18, 0.45], ["pop", mot(/^Muslim/, 4) + 14, 0.45],
-  ["whoosh", L[5] - 18, 0.4], ["message", L[5] - 6, 0.4], ["pop", mot(/^commentaire/, 5) + 16, 0.4],
+  ["whoosh", L[2] - 18, 0.45], ["shimmer", L[2] + 2, 0.3],
+  ["whoosh", L[3] - 18, 0.4],
+  ["whoosh", L[4] - 18, 0.45], ["pop", L[5] - 10, 0.4],
+  ["message", L[5] - 4, 0.4], ["pop", mot(/^commentaire/, 5) + 16, 0.4],
   ["whoosh", L[6] - 18, 0.5], ["tick", mot(/^bibliothèque/, 6) + 10, 0.4], ["ding", mot(/^Sabab/, 6) + 12, 0.45],
   ["impact", LIEN - 2, 0.6], ["shimmer", LIEN + 12, 0.5],
 ];
@@ -174,15 +158,15 @@ const Video: React.FC = () => (
     <Fond T={T} k={[0, L[2] - 6, L[2] + 12, L[6] - 6, L[6] + 14, T.DUREE]} />
     <Scene from={0} to={L[1] - 2} zin={0}><Accroche /></Scene>
     <Scene from={L[1] - 4} to={L[2] - 2}><Decompte /></Scene>
-    <Scene from={L[2] - 4} to={L[3] - 2}><Dabord /></Scene>
-    <Scene from={L[3] - 4} to={L[4] - 2}><Puis /></Scene>
+    <Scene from={L[2] - 4} to={mot(/^pluie/, 3)}><Reponse1 /></Scene>
+    <Scene from={mot(/^pluie/, 3) - 2} to={L[4] - 2}><Reponse2 /></Scene>
     <Scene from={L[4] - 4} to={L[5] - 2}><Source /></Scene>
     <Scene from={L[5] - 4} to={L[6] - 2}><Commentaire /></Scene>
     <Fiche />
     <Scene from={LIEN - 4} to={T.DUREE + 10} zin={0}><Logo at={LIEN} phrase="Le lien est en bio" /></Scene>
     <Flash at={L[2]} />
     <Voile />
-    <SousTitres T={T} or={/^(prière|Trois|deux|un…|pardon|fois|Paix|Béni|majesté|générosité|Muslim|trouvé|commentaire|Sabab|bio)/i} grandsDes={99} />
+    <SousTitres T={T} or={/^(pleut|Trois|deux|un…|Allah|bénéfique|pluie|grâce|miséricorde|Al-Bukhârî|trouvé|commentaire|Sabab|bio)/i} grandsDes={99} />
     <Son voix="quiz.mp3" sfx={SFX} />
   </AbsoluteFill>
 );

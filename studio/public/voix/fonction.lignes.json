@@ -1,26 +1,23 @@
 [
  {
-  "affiche": "Tu sais dans combien de temps est la prochaine prière ?"
+  "affiche": "Trente jours. Tu sais vraiment où tu en es ?"
  },
  {
-  "affiche": "Sur l’accueil de Sabab, elle est tout en haut, avec le temps qui reste."
+  "affiche": "Dans l’appli, ton chemin avance cycle par cycle : un cycle, c’est trente jours."
  },
  {
-  "affiche": "Les cinq horaires sont calculés pour ta ville, directement sur ton téléphone."
+  "affiche": "À la fin du cycle, tout est là : 24 jours tenus sur 30, et chaque étoile de ton ciel."
  },
  {
-  "affiche": "Et une seule question : tu as prié le ‘Asr ?"
+  "affiche": "Chaque semaine, ton bilan : les jours tenus, les prières, ce qui progresse."
  },
  {
-  "affiche": "Juste en dessous, les moments favorables pour invoquer."
+  "affiche": "Et dans ton suivi, ta régularité sur trente jours, d’un coup d’œil."
  },
  {
-  "affiche": "Entre l’appel à la prière et l’iqâma, ou pendant la prosternation."
+  "affiche": "Rien que pour toi : ces chiffres ne sont ni publiés ni comparés."
  },
  {
-  "affiche": "Et si tu veux, un rappel quelques minutes avant chaque prière."
- },
- {
-  "affiche": "Sabab. Chaque prière à son heure. Le lien est en bio."
+  "affiche": "Sabab. Trente jours, puis les suivants. Le lien est en bio."
  }
 ]

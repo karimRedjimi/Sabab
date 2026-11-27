@@ -1,14 +1,11 @@
 {
  "dua": {
-  "ref": "programme:zidni",
-  "kind": "dua",
-  "title": "Accroître sa science",
-  "moment": "Avant chaque séance de travail",
-  "ar": "رَبِّ زِدْنِي عِلْمًا",
-  "ph": "Rabbi zidnî ʿilmâ.",
-  "fr": "Seigneur, accroît ma science.",
-  "grade": "coran",
-  "src": "Coran, Tâ-Hâ 20:114",
-  "note": "C’est la seule chose dont Allah a ordonné à Son Prophète ﷺ de demander davantage."
+  "ref": "citadelle:hm-211",
+  "id": "hm-211",
+  "ar": "عَنِ ابْنِ عُمَرَ قَالَ: كَانَ يُعَدُّ لِرَسُولِ اللهِ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ فِي الْمَجْلِسِ الْوَاحِدِ مِائَةُ مَرَّةٍ مِنْ قَبْلِ أَنْ يَقُومَ: «رَبِّ اغْفِرْ لِي، وَتُبْ عَلَيَّ، إِنَّكَ أَنْتَ التَّوَّابُ الْغَفُورُ».",
+  "ph": "‘An Ibni ‘Umara qāla: kāna yu‘addu li-Rasūli Llāhi ṣallā Llāhu ‘alayhi wa sallama fī-l-majlisi-l-wāḥidi mi’ata marratin min qabli an yaqūma: «Rabbi-ghfir lī, wa tub ‘alayya, innaka Anta-t-Tawwābu-l-Ghafūr».",
+  "fr": "Selon Ibn 'Umar : On comptait au Messager d'Allah ﷺ, au cours d'une même assise et avant qu'il ne se lève, cent répétitions de : « Seigneur, pardonne-moi et accepte mon repentir, car Tu es certes Celui qui accepte le repentir, le Pardonneur. »",
+  "src": "At-Tirmidhî 3/153, Ibn Mâjah 2/321",
+  "chapitre": "Ce que l'on dit dans une assemblée"
  }
 }

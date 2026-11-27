@@ -51,3 +51,11 @@
 - 2026-11-26 : homophones encore : « Tu la dis » entendu « tu l’as dit » → « Tu la récites » ; « Dans Sabab » en début de phrase entendu « dans sa bave / sababe » → « … de Sabab » en fin de groupe.
 - 2026-11-26 : la recherche « salut final » remonte d’abord le tachahhoud ; chercher un morceau du début de la traduction (« la paix vient ») et, pour une carte dont le texte cherché est après 110 caractères, un mot du début (« paroles parfaites »).
 - 2026-11-26 : nouveaux écrans : fiche-zidni, fiche-salam (hm-82), fiche-enfants (hm-160), vendredi-accueil / vendredi-journee / vendredi-moments (« Maintenant : Dernière heure du vendredi »).
+- 2026-11-27 : l’angle saviez « l’invocation la plus fréquente » n’a pas de contenu neuf avant fin décembre (atina et hamm déjà pris) → angle suivant.
+- 2026-11-27 : homophones encore : seul/seule, tenus/tenu, cycles/cycle, rapportées/rapportés → reformuler ; « est close » est entendu « éclose » dans le fichier entier (même si la phrase seule passe) → « se referme ».
+- 2026-11-27 : « An-Nasâ’î » transcrit « nasa i » (deux mots, pas rattrapable par le lexique) → dire « notamment par Abû Dâwûd » ; la source complète reste affichée.
+- 2026-11-27 : ne jamais taper de l’arabe dans une regex de zone() (ordre des signes différent) → `new RegExp("^" + texte.ar.slice(0, 9))` ou `/^[\u0621-\u064A]/`.
+- 2026-11-27 : Fond : les 6 images clés doivent être strictement croissantes (L[6] = FIN quand il n’y a que 7 phrases) ; liste.ts réduite aux vidéos prêtes pendant la mise au point (une vidéo cassée bloque le bundle des autres).
+- 2026-11-27 : voix/textes.ts lit aussi semaine:<Jour> (thème du jour, content/programme.ts · DAYS).
+- 2026-11-27 : nouveaux écrans : fiche-assise (hm-211), fiche-pluie (hm-188), fiche-aide (hm-75), fiche-anas (programme · anas, « Du programme »).
+- 2026-11-27 : citadelle hm-188/189 n’ont que la note de source arabe (srcAr) : l’afficher telle quelle, comme l’appli (« Source (note du livre arabe) »).
